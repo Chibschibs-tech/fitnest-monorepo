@@ -1,0 +1,10 @@
+# Never commit secrets
+.env
+.env.local
+
+# Node / Next / builds
+node_modules
+.next
+dist
+.turbo
+.vercel
