@@ -2,7 +2,7 @@
 .env
 .env.local
 
-# Node / Next / builds
+# Node/Next/build
 node_modules
 .next
 dist
