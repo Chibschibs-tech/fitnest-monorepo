@@ -1,58 +1,25 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export function middleware(req: NextRequest) {
+  const USER = process.env.ADMIN_USER || "";
+  const PASS = process.env.ADMIN_PASS || "";
 
-  // Crée un client Supabase côté middleware (Edge) avec gestion des cookies
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return req.cookies.getAll();
-        },
-        setAll(cookies) {
-          cookies.forEach(({ name, value, options }) => {
-            // propage les cookies sur la réponse
-            res.cookies.set(name, value, options);
-          });
-        },
-      },
-    }
-  );
+  // Si pas de creds -> on laisse passer (utile en dev local)
+  if (!USER || !PASS) return NextResponse.next();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const auth = req.headers.get("authorization") || "";
+  const creds = auth.startsWith("Basic ") ? Buffer.from(auth.slice(6), "base64").toString() : "";
+  const [u, p] = creds.split(":");
 
-  const path = req.nextUrl.pathname;
+  if (u === USER && p === PASS) return NextResponse.next();
 
-  // routes publiques
-  const publicPaths = ["/login", "/_next", "/favicon", "/images", "/fonts"];
-  if (publicPaths.some((p) => path.startsWith(p))) {
-    return res;
-  }
-
-  // routes protégées (comme on a enlevé le préfixe /admin)
-  const protectedRoots = ["/", "/meals", "/plans"];
-  const isProtected = protectedRoots.some(
-    (p) => path === p || path.startsWith(p + "/")
-  );
-
-  if (isProtected && !user) {
-    const url = req.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  return res;
+  return new NextResponse("Auth required", {
+    status: 401,
+    headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
+  });
 }
 
 export const config = {
-  // protège tout sauf l’API, les assets, favicon
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next|.*\\.(?:png|jpg|jpeg|svg|gif|ico|css|js|map)).*)"],
 };
