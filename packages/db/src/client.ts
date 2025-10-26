@@ -1,19 +1,17 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import pg from "pg";
+import { createClient } from "@supabase/supabase-js";
 
-const url = process.env.DATABASE_URL;
-if (!url) {
-  throw new Error("DATABASE_URL is not set");
-}
+// Admin/server: prefer service role if available; otherwise anon (for local dev).
+const url =
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  process.env.SUPABASE_URL; // fallback if you name it differently
+if (!url) throw new Error("SUPABASE URL env missing");
 
-// Force TLS for Supabase. (Even if sslmode param is missing, we enforce it.)
-const pool = new pg.Pool({
-  connectionString: url,
-  ssl: { rejectUnauthorized: false }
+const key =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+if (!key) throw new Error("SUPABASE key env missing");
+
+// Single client for server usage
+export const supabase = createClient(url, key, {
+  auth: { persistSession: false },
 });
-
-pool.on("error", (err) => {
-  console.error("❌ PG Pool error:", err.message);
-});
-
-export const db = drizzle(pool);
