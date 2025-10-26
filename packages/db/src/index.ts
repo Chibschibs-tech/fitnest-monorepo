@@ -1,2 +1,3 @@
-export * from "./schema";
-export { db } from "./client";
+// packages/db/src/index.ts
+export { supabase } from "./client";
+
