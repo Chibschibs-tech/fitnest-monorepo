@@ -1,16 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Meal = "Breakfast" | "Lunch" | "Dinner";
 
 export default function SubscribePage(){
-  const [plan, setPlan] = useState("Weight Loss");
+  // Lire le plan depuis l'URL ?plan=Weight%20Loss
+  const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const urlPlan = useMemo(() => (search?.get("plan") || "Weight Loss"), [search]);
+
+  const [plan, setPlan] = useState(urlPlan);
   const [meals, setMeals] = useState<Meal[]>(["Breakfast","Lunch"]);
   const [days, setDays] = useState(5);
   const [duration, setDuration] = useState(4);
   const [out, setOut] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // si l'URL change (navigations internes), on sync le plan
+  useEffect(()=>{ setPlan(urlPlan); }, [urlPlan]);
 
   function toggle(meal: Meal){
     setMeals(m => m.includes(meal) ? m.filter(x=>x!==meal) : [...m, meal]);
@@ -27,9 +34,7 @@ export default function SubscribePage(){
       const j = await r.json();
       if(!r.ok){ setError(j.error || "Error"); setOut(null); return; }
       setOut(j);
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   }
 
   return (
