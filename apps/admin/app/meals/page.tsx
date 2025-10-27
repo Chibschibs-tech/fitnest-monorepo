@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 type Meal = {
-  id?: number;
+  id?: string; // UUID
   title: string;
   meal_type: "Breakfast" | "Lunch" | "Dinner";
   description?: string;
@@ -14,37 +14,53 @@ type Meal = {
   day_of_week?: number;
   week_number?: number;
   is_active?: boolean;
+  created_at?: string;
 };
 
 export default function AdminMeals(){
   const [items, setItems] = useState<Meal[]>([]);
   const [form, setForm] = useState<Meal>({ title:"", meal_type:"Breakfast", is_active:true });
+  const [error, setError] = useState<string|null>(null);
 
   async function load(){
+    setError(null);
     const r = await fetch("/api/meals");
-    const j = await r.json();
+    let j:any = {};
+    try { j = await r.json(); } catch {}
+    if(!r.ok){ setError(j?.error || `GET /api/meals failed ${r.status}`); return; }
     setItems(j.items || []);
   }
   useEffect(()=>{ load(); },[]);
 
   async function save(){
-    await fetch("/api/meals",{
+    setError(null);
+    const r = await fetch("/api/meals",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
       body: JSON.stringify(form),
     });
+    let j:any = {};
+    try { j = await r.json(); } catch {}
+    if(!r.ok){ setError(j?.error || `POST /api/meals failed ${r.status}`); return; }
     setForm({ title:"", meal_type:"Breakfast", is_active:true });
     await load();
   }
-  async function del(id:number){
+
+  async function del(id:string){
     if(!confirm("Supprimer ce repas ?")) return;
-    await fetch(`/api/meals?id=${id}`,{ method:"DELETE" });
+    setError(null);
+    const r = await fetch(`/api/meals?id=${encodeURIComponent(id)}`,{ method:"DELETE" });
+    let j:any = {};
+    try { j = await r.json(); } catch {}
+    if(!r.ok){ setError(j?.error || `DELETE /api/meals failed ${r.status}`); return; }
     await load();
   }
 
   return (
     <main style={{padding:24, display:"grid", gap:16}}>
       <h1>Admin — Meals</h1>
+      {error && <pre style={{color:"crimson", whiteSpace:"pre-wrap"}}>{error}</pre>}
+
       <div style={{display:"grid", gap:8, gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))"}}>
         <input placeholder="Titre" value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/>
         <select value={form.meal_type} onChange={e=>setForm({...form,meal_type:e.target.value as any})}>
