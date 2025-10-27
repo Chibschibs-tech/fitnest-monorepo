@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@fitnest/db";
 
+function slugify(s: string) {
+  return s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^\x00-\x7F]/g, "")          // remove accents
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
+
 export async function GET() {
   const { data, error } = await supabase
     .from("meals")
@@ -12,10 +21,19 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const body = await req.json();
+
+  const title = String(body.title || "").trim();
+  if (!title) return NextResponse.json({ error: "title required" }, { status: 400 });
+
+  const base = slugify(title);
+  const random = Math.random().toString(36).slice(2, 6);
+  const slug = `${base}-${random}`;
+
   const { data, error } = await supabase
     .from("meals")
     .insert({
-      title: body.title,
+      slug,                               // ✅ slug généré côté serveur
+      title,
       meal_type: body.meal_type,
       description: body.description ?? null,
       calories: body.calories ?? null,
@@ -29,6 +47,7 @@ export async function POST(req: Request) {
     })
     .select("*")
     .single();
+
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ item: data });
 }
