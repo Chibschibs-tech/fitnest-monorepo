@@ -1,9 +1,10 @@
+import MealCard from "../../components/MealCard";
+
 export const metadata = { title: "Fitnest — Menu" };
 
 async function getMeals() {
-  // Relative fetch marche en dev & preview
-  const r = await fetch("/api/meals", { cache: "no-store" });
-  if (!r.ok) return [];
+  const r = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || ""}/api/meals`, { cache: "no-store" }).catch(()=>null);
+  if(!r?.ok) return [];
   const j = await r.json();
   return j.items || [];
 }
@@ -11,38 +12,44 @@ async function getMeals() {
 export default async function MenuPage(){
   const items = await getMeals();
 
+  // groupage par semaine → jour
+  const grouped: Record<string, Record<string, any[]>> = {};
+  for(const it of items){
+    const wk = String(it.week_number ?? 0);
+    const day = String(it.day_of_week ?? 0);
+    grouped[wk] ??= {}; grouped[wk][day] ??= []; grouped[wk][day].push(it);
+  }
+
   return (
-    <main style={{maxWidth:1100, margin:"0 auto", padding:"32px 16px"}}>
-      <h1 style={{fontSize:32, marginBottom:16}}>Menu</h1>
+    <main className="container" style={{padding:"24px 0"}}>
+      <h1>Menu</h1>
       {items.length === 0 && <p>Menu à venir…</p>}
-      {items.length > 0 && (
-        <div style={{display:"grid", gap:24}}>
-          {Object.entries(
-            items.reduce((acc:any, it:any)=>{
-              const wk = it.week_number ?? 0;
-              const day = it.day_of_week ?? 0;
-              acc[wk] ??= {}; acc[wk][day] ??= []; acc[wk][day].push(it);
-              return acc;
-            }, {})
-          ).map(([wk, days])=>(
-            <section key={wk} style={{display:"grid", gap:12}}>
-              <h2 style={{margin:"8px 0"}}>Semaine {wk}</h2>
-              <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))", gap:16}}>
-                {Object.entries(days as any).map(([day, arr]: any)=>(
-                  <article key={day} style={{border:"1px solid #eee", borderRadius:12, padding:12}}>
-                    <h3 style={{marginTop:0}}>Jour {day}</h3>
-                    <ul style={{margin:0, paddingLeft:16}}>
-                      {arr.map((m:any)=>(
-                        <li key={m.id}><b>{m.meal_type}:</b> {m.title}</li>
-                      ))}
-                    </ul>
-                  </article>
-                ))}
+
+      {Object.entries(grouped).map(([wk, days])=>(
+        <section key={wk} className="card pad" style={{margin:"12px 0"}}>
+          <h2 style={{marginTop:0}}>Semaine {wk}</h2>
+          <div className="grid" style={{gridTemplateColumns:"repeat(auto-fit, minmax(220px,1fr))"}}>
+            {Object.entries(days).map(([day, arr])=>(
+              <div key={day}>
+                <div className="label" style={{margin:"8px 0"}}>Jour {day}</div>
+                <div className="grid" style={{gridTemplateColumns:"1fr", gap:12}}>
+                  {(arr as any[]).map((m)=>(
+                    <MealCard key={m.id}
+                      title={m.title}
+                      meal_type={m.meal_type}
+                      calories={m.calories}
+                      protein_g={m.protein_g}
+                      carbs_g={m.carbs_g}
+                      fat_g={m.fat_g}
+                      image_url={m.image_url}
+                    />
+                  ))}
+                </div>
               </div>
-            </section>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        </section>
+      ))}
     </main>
   );
 }

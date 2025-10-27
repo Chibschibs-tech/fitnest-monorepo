@@ -2,53 +2,34 @@ export const metadata = { title: "Fitnest — Catalogue" };
 
 export default function CataloguePage(){
   return (
-    <main style={{maxWidth:1200, margin:"0 auto", padding:"32px 16px"}}>
-      {/* Hero */}
-      <section style={{display:"grid", gap:16, marginBottom:32}}>
-        <h1 style={{fontSize:36, lineHeight:1.2}}>Mangez sain. Gagnez du temps.<br/>Plans adaptés à vos objectifs.</h1>
-        <p style={{maxWidth:700}}>Remplacez ce texte par le contenu de fitnest.ma (section Hero). CTA ci-dessous.</p>
-        <div style={{display:"flex", gap:12}}>
-          <a href="/subscribe" style={{padding:"10px 16px", border:"1px solid #111", borderRadius:8}}>Je m’abonne</a>
-          <a href="/plans" style={{padding:"10px 16px", border:"1px solid #ddd", borderRadius:8}}>Voir les formules</a>
+    <main className="container" style={{padding:"24px 0", display:"grid", gap:24}}>
+      <section className="hero" style={{textAlign:"left"}}>
+        <h1>Des repas adaptés à vos objectifs</h1>
+        <p>Perte de poids, maintien, prise de masse. Ingrédients frais, portions contrôlées, livraison quotidienne.</p>
+        <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+          <a href="/subscribe" className="btn brand">Configurer mon abonnement</a>
+          <a href="/menu" className="btn">Voir le menu</a>
         </div>
       </section>
 
-      {/* Avantages (3 colonnes) */}
-      <section style={{display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:16, marginBottom:32}}>
-        {[
-          {t:"Fraîcheur quotidienne", d:"Remplacez par le texte exact."},
-          {t:"Plans personnalisés", d:"Exact wording du site actuel."},
-          {t:"Livraison flexible", d:"Idem."},
-        ].map((b,i)=>(
-          <article key={i} style={{padding:16, border:"1px solid #eee", borderRadius:12}}>
-            <h3 style={{margin:"0 0 6px 0"}}>{b.t}</h3>
-            <p style={{opacity:.8, margin:0}}>{b.d}</p>
-          </article>
-        ))}
+      <section className="grid" style={{gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))"}}>
+        <article className="card pad"><h3>Qualité</h3><div className="label">Produits frais, recettes équilibrées.</div></article>
+        <article className="card pad"><h3>Pratique</h3><div className="label">Livraison et portions prêtes à consommer.</div></article>
+        <article className="card pad"><h3>Flexible</h3><div className="label">Choix des repas, jours/semaine, durée.</div></article>
       </section>
 
-      {/* Showcase de repas */}
-      <section style={{display:"grid", gap:16, marginBottom:32}}>
-        <h2>Exemples de repas</h2>
-        <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:16}}>
-          {[1,2,3,4,5,6].map(i=>(
-            <div key={i} style={{border:"1px solid #eee", borderRadius:12, overflow:"hidden", background:"#fafafa", height:160, display:"grid", placeItems:"center"}}>
-              <span>Image {i} (remplacer)</span>
-            </div>
-          ))}
+      <section className="card pad">
+        <h2 style={{marginTop:0}}>Nos formules</h2>
+        <div className="grid" style={{gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))"}}>
+          <div className="card pad"><b>Weight Loss</b><div className="label">Réduction calorique maîtrisée.</div><a href="/subscribe?plan=Weight%20Loss" className="btn brand" style={{marginTop:8}}>Choisir</a></div>
+          <div className="card pad"><b>Stay Fit</b><div className="label">Équilibre et constance.</div><a href="/subscribe?plan=Stay%20Fit" className="btn brand" style={{marginTop:8}}>Choisir</a></div>
+          <div className="card pad"><b>Muscle Gain</b><div className="label">Apport protéique renforcé.</div><a href="/subscribe?plan=Muscle%20Gain" className="btn brand" style={{marginTop:8}}>Choisir</a></div>
         </div>
       </section>
 
-      {/* Témoignages / FAQ / Footer links — placeholders */}
-      <section style={{display:"grid", gap:12, marginBottom:48}}>
-        <h2>Témoignages</h2>
-        <p>Remplacer par les témoignages/notes du site actuel.</p>
-      </section>
-
-      <section style={{display:"grid", gap:12}}>
-        <h2>FAQ</h2>
-        <details><summary>Question 1</summary><p>Réponse à remplacer.</p></details>
-        <details><summary>Question 2</summary><p>Réponse à remplacer.</p></details>
+      <section className="card pad">
+        <h2 style={{marginTop:0}}>Exemple de semaine</h2>
+        <div className="label">Parcourez le <a href="/menu" style={{textDecoration:"underline"}}>menu complet</a> pour voir le détail.</div>
       </section>
     </main>
   );
