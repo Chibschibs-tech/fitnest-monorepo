@@ -1,0 +1,59 @@
+/* Scoped DayPicker overrides for Fitnest calendar */
+
+.fitnest-calendar {
+  --fitnest-green: #015033;
+}
+
+/* Remove any default rings/outline from the DayPicker buttons */
+.fitnest-calendar .rdp-day_button {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  transition: background-color 120ms ease-in-out, color 120ms ease-in-out;
+  border-radius: 9999px !important;
+}
+
+/* Solid green for selected days */
+.fitnest-calendar .rdp-selected .rdp-day_button,
+.fitnest-calendar .rdp-day_button[aria-selected="true"] {
+  background: var(--fitnest-green) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Today style (subtle ring) */
+.fitnest-calendar .rdp-day_today .rdp-day_button {
+  border: 1px solid #d1d5db !important; /* gray-300 */
+  background: transparent !important;
+}
+
+/* Disabled days */
+.fitnest-calendar .rdp-day_disabled .rdp-day_button,
+.fitnest-calendar .rdp-day_disabled {
+  color: #9ca3af !important; /* gray-400 */
+  background: #f3f4f6 !important; /* gray-100 */
+  cursor: not-allowed !important;
+}
+
+/* Outside month days */
+.fitnest-calendar .rdp-day_outside {
+  color: #9ca3af !important; /* gray-400 */
+  opacity: 0.5;
+}
+
+/* Caption alignment for clean two-month layout */
+.fitnest-calendar .rdp-caption {
+  min-height: 2rem;
+}
+
+/* Navigation buttons (we keep shadcn look, but ensure no blue focus) */
+.fitnest-calendar .rdp-nav_button {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Table sizing for a balanced grid */
+.fitnest-calendar .rdp-table {
+  width: 100%;
+}

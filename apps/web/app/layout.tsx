@@ -1,18 +1,32 @@
-import "./globals.css";
-import type { ReactNode } from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import type React from "react"
+import type { Metadata } from "next"
+import { ClientLayout } from "./client-layout"
+import "./globals.css"
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export const metadata = { title: "Fitnest.ma", description: "Healthy meal delivery service" };
+// Metadata needs to be in a separate file for client components
+const metadata: Metadata = {
+  title: "Fitnest.ma",
+  description: "Healthy meal delivery service",
+  icons: {
+    icon: "/favicon.ico",
+  },
+    generator: 'v0.app'
+}
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export { metadata }
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="fr">
-      <body className="min-h-screen flex flex-col bg-white">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+    <html lang="en">
+      <body>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
-  );
+  )
 }
