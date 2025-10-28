@@ -6,7 +6,6 @@ type Meal = {
   image_url: string|null; week: number|null; day: number|null; is_active: boolean;
 };
 const placeholder = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1200&q=60&auto=format&fit=crop";
-export const metadata = { title: "Fitnest — Menu" };
 
 export default function MenuPage(){
   const [items, setItems] = useState<Meal[]>([]);
