@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { mad } from "../../lib/format";
 type Meal = "Breakfast" | "Lunch" | "Dinner";
 
 export default function SubscribePage(){
@@ -15,10 +16,7 @@ export default function SubscribePage(){
   const [error, setError] = useState<string | null>(null);
 
   useEffect(()=>{ setPlan(urlPlan); }, [urlPlan]);
-
-  function toggle(meal: Meal){
-    setMeals(m => m.includes(meal) ? m.filter(x=>x!==meal) : [...m, meal]);
-  }
+  function toggle(meal: Meal){ setMeals(m => m.includes(meal) ? m.filter(x=>x!==meal) : [...m, meal]); }
 
   async function calc(){
     try{
@@ -34,64 +32,62 @@ export default function SubscribePage(){
     } finally { setLoading(false); }
   }
 
-  return (
-    <main className="container" style={{padding:"24px 0", display:"grid", gap:16}}>
-      <h1>Choisir mon abonnement</h1>
+  const checkoutHref = `/subscribe/checkout?plan=${encodeURIComponent(plan)}${meals.map(m=>`&meals=${encodeURIComponent(m)}`).join("")}&days=${days}&duration=${duration}`;
 
-      <section className="card pad">
-        <div className="label" style={{marginBottom:8}}>Formule</div>
-        <div className="form-row">
-          <select value={plan} onChange={e=>setPlan(e.target.value)}>
-            <option>Weight Loss</option>
-            <option>Stay Fit</option>
-            <option>Muscle Gain</option>
+  return (
+    <div className="container py-8 space-y-6">
+      <h1 className="text-2xl font-bold">Choose your plan</h1>
+
+      <section className="rounded-xl border p-4 bg-white space-y-4">
+        <div>
+          <div className="text-xs text-gray-500 mb-1">Plan</div>
+          <select value={plan} onChange={e=>setPlan(e.target.value)} className="rounded-md border px-3 py-2">
+            <option>Weight Loss</option><option>Stay Fit</option><option>Muscle Gain</option>
           </select>
         </div>
-
-        <div className="label" style={{margin:"16px 0 8px"}}>Repas / jour</div>
-        <div className="form-row">
-          {(["Breakfast","Lunch","Dinner"] as Meal[]).map(m=>(
-            <label key={m} className="checkbox">
-              <input type="checkbox" checked={meals.includes(m)} onChange={()=>toggle(m)} /> {m}
-            </label>
-          ))}
+        <div>
+          <div className="text-xs text-gray-500 mb-1">Meals per day</div>
+          <div className="flex gap-2 flex-wrap">
+            {(["Breakfast","Lunch","Dinner"] as Meal[]).map(m=>(
+              <label key={m} className={`rounded-md border px-3 py-2 cursor-pointer ${meals.includes(m) ? "border-fitnest-green text-fitnest-green" : ""}`}>
+                <input type="checkbox" className="mr-2" checked={meals.includes(m)} onChange={()=>toggle(m)} /> {m}
+              </label>
+            ))}
+          </div>
         </div>
-
-        <div className="form-row" style={{marginTop:16}}>
+        <div className="flex gap-4 flex-wrap">
           <div>
-            <div className="label">Jours / semaine</div>
-            <input type="number" min={1} max={7} value={days} onChange={e=>setDays(Number(e.target.value))}/>
+            <div className="text-xs text-gray-500 mb-1">Days / week</div>
+            <input type="number" min={1} max={7} value={days} onChange={e=>setDays(Number(e.target.value))} className="rounded-md border px-3 py-2 w-28"/>
           </div>
           <div>
-            <div className="label">Durée (semaines)</div>
-            <input type="number" min={1} value={duration} onChange={e=>setDuration(Number(e.target.value))}/>
+            <div className="text-xs text-gray-500 mb-1">Duration (weeks)</div>
+            <input type="number" min={1} value={duration} onChange={e=>setDuration(Number(e.target.value))} className="rounded-md border px-3 py-2 w-28"/>
           </div>
-          <div style={{alignSelf:"end"}}>
-            <button className="btn brand" onClick={calc} disabled={loading}>{loading?"Calcul…":"Calculer"}</button>
+          <div className="self-end">
+            <button className="rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600" onClick={calc} disabled={loading}>
+              {loading?"Calcul…":"Calculate"}
+            </button>
           </div>
         </div>
       </section>
 
-      {error && <div className="card pad" style={{borderColor:"crimson", color:"crimson"}}>{error}</div>}
+      {error && <div className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
 
       {out && (
-        <section className="card pad price-box">
-          <h2 style={{marginTop:0}}>Récapitulatif</h2>
-          <div className="grid" style={{gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))"}}>
-            <div><div className="label">Base / jour</div><div style={{fontSize:20,fontWeight:700}}>{out.basePerDay} MAD</div></div>
-            <div><div className="label">Brut / semaine</div><div style={{fontSize:20,fontWeight:700}}>{out.grossWeekly} MAD</div></div>
-            <div><div className="label">Remise jours</div><div>{out.discounts.days*100}%</div></div>
-            <div><div className="label">Remise durée</div><div>{out.discounts.duration*100}%</div></div>
-            <div><div className="label">Total ({duration} sem.)</div><div style={{fontSize:24,fontWeight:800}}>{out.total} MAD</div></div>
+        <section className="rounded-xl border p-4 bg-white space-y-3">
+          <h2 className="text-lg font-semibold">Summary</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div><div className="text-xs text-gray-500">Base / day</div><div className="text-xl font-bold">{mad(out.basePerDay)}</div></div>
+            <div><div className="text-xs text-gray-500">Gross / week</div><div className="text-xl font-bold">{mad(out.grossWeekly)}</div></div>
+            <div><div className="text-xs text-gray-500">Total ({duration} weeks)</div><div className="text-2xl font-extrabold">{mad(out.total)}</div></div>
           </div>
-          <div className="label" style={{marginTop:12}}>Détail</div>
-          <pre className="card pad" style={{background:"#fff"}}>{JSON.stringify(out.breakdown, null, 2)}</pre>
-          <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
-            <a href="/subscribe/checkout" className="btn brand">Continuer</a>
-            <a href="/plans" className="btn">Voir les formules</a>
+          <div className="flex gap-3">
+            <a className="rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600" href={checkoutHref}>Continue</a>
+            <a className="rounded-md border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green" href="/plans">See plans</a>
           </div>
         </section>
       )}
-    </main>
+    </div>
   );
 }
