@@ -6,17 +6,11 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const planId = searchParams.get('plan_id')
-  
-  let query = supabase.from('meals').select('*, meal_plans(*)')
-  
-  if (planId) {
-    query = query.eq('plan_id', planId)
-  }
-  
-  const { data, error } = await query
+export async function GET() {
+  const { data, error } = await supabase
+    .from('coupons')
+    .select('*')
+    .order('created_at', { ascending: false })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
@@ -26,7 +20,7 @@ export async function POST(request: Request) {
   const body = await request.json()
   
   const { data, error } = await supabase
-    .from('meals')
+    .from('coupons')
     .insert(body)
     .select()
     .single()

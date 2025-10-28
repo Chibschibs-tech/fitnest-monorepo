@@ -6,22 +6,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function GET() {
-  const { data, error } = await supabase
-    .from('meal_plans')
-    .select('*')
-    .order('display_order', { ascending: true })
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
-}
-
-export async function POST(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   const body = await request.json()
   
   const { data, error } = await supabase
-    .from('meal_plans')
-    .insert(body)
+    .from('orders')
+    .update(body)
+    .eq('id', params.id)
     .select()
     .single()
 
