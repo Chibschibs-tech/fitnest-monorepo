@@ -4,57 +4,84 @@ import { NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { plan_name, meal_types, days_per_week, duration_weeks } = body
+    const { plan, meals, days, duration } = body
 
-    // Get base prices
-    const prices = await sql`
-      SELECT base_price_mad FROM meal_type_prices
-      WHERE plan_name = ${plan_name} AND meal_type = ANY(${meal_types})
+    // 1. Get base prices for selected meals using proper filtering
+    const mealPrices = await sql`
+      SELECT meal_type, base_price_mad
+      FROM meal_type_prices
+      WHERE plan_name = ${plan} 
+        AND meal_type IN (${meals.join(',')})
+        AND is_active = true
     `
 
-    if (!prices || prices.length === 0) {
+    if (!mealPrices || mealPrices.length === 0) {
       return NextResponse.json(
-        { error: "Prices not found for this plan" },
+        { error: "No meal prices found for this plan" },
         { status: 404 }
       )
     }
 
-    // Get discounts
-    const daysDiscount = await sql`
-      SELECT discount_percentage FROM discount_rules
-      WHERE discount_type = 'days_per_week' AND condition_value = ${days_per_week} AND is_active = true
+    // 2. Calculate price per day
+    const pricePerDay = (mealPrices as any[]).reduce(
+      (sum, m) => sum + parseFloat(m.base_price_mad || 0),
+      0
+    )
+    const grossWeekly = pricePerDay * days
+
+    // 3. Get applicable discounts
+    const discounts = await sql`
+      SELECT discount_type, condition_value, discount_percentage
+      FROM discount_rules
+      WHERE is_active = true
+      ORDER BY discount_type DESC
     `
 
-    const durationDiscount = await sql`
-      SELECT discount_percentage FROM discount_rules
-      WHERE discount_type = 'duration_weeks' AND condition_value <= ${duration_weeks} AND is_active = true
-      ORDER BY condition_value DESC LIMIT 1
-    `
+    let finalWeekly = grossWeekly
+    const discountsApplied: any[] = []
 
-    // Calculate total
-    const basePrice = prices.reduce((sum, p) => sum + parseFloat(p.base_price_mad), 0)
-    const weeklyPrice = basePrice * days_per_week
-    const daysDiscountRate = daysDiscount[0]?.discount_percentage || 0
-    const durationDiscountRate = durationDiscount[0]?.discount_percentage || 0
+    // Apply discounts
+    for (const discount of (discounts || []) as any[]) {
+      if (
+        (discount.discount_type === "days_per_week" && discount.condition_value === days) ||
+        (discount.discount_type === "duration_weeks" && discount.condition_value <= duration)
+      ) {
+        const discountAmount = finalWeekly * (discount.discount_percentage as number)
+        finalWeekly -= discountAmount
+        discountsApplied.push({
+          type: discount.discount_type,
+          condition: discount.condition_value,
+          percentage: discount.discount_percentage,
+          amount: discountAmount,
+        })
+      }
+    }
 
-    // Apply discounts (multiplicative)
-    const afterDaysDiscount = weeklyPrice * (1 - daysDiscountRate)
-    const finalPrice = afterDaysDiscount * (1 - durationDiscountRate) * duration_weeks
+    const totalRoundedMAD = Math.round(finalWeekly * duration * 100) / 100
 
     return NextResponse.json({
       success: true,
-      calculation: {
-        basePrice: basePrice.toFixed(2),
-        weeklyPrice: weeklyPrice.toFixed(2),
-        daysDiscountRate: (daysDiscountRate * 100).toFixed(1),
-        durationDiscountRate: (durationDiscountRate * 100).toFixed(1),
-        finalPrice: finalPrice.toFixed(2)
-      }
+      currency: "MAD",
+      pricePerDay,
+      grossWeekly,
+      discountsApplied,
+      finalWeekly,
+      durationWeeks: duration,
+      totalRoundedMAD,
+      breakdown: {
+        plan,
+        meals,
+        days,
+        mealPrices: (mealPrices as any[]).map((m) => ({
+          meal: m.meal_type,
+          price: parseFloat(m.base_price_mad || 0),
+        })),
+      },
     })
   } catch (error) {
     console.error("Error calculating price:", error)
     return NextResponse.json(
-      { error: "Failed to calculate price" },
+      { error: `Failed to calculate price: ${error}` },
       { status: 500 }
     )
   }
