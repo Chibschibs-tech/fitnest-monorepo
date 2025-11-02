@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { discount_type, condition_value, discount_percentage, stackable, valid_from, valid_to } = body
 
-    // Validation
     if (!discount_type || condition_value === undefined || discount_percentage === undefined) {
       return NextResponse.json(
         { error: "Missing required fields: discount_type, condition_value, discount_percentage" },
@@ -42,7 +41,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate condition_value based on type
     if (discount_type === "days_per_week" && ![5, 6, 7].includes(condition_value)) {
       return NextResponse.json(
         { error: "For days_per_week, condition_value must be 5, 6, or 7" },
@@ -57,7 +55,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Insert
     const result = await sql`
       INSERT INTO discount_rules 
         (discount_type, condition_value, discount_percentage, stackable, valid_from, valid_to, is_active, created_at, updated_at)

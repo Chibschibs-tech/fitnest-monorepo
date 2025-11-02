@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { plan_name, meal_type, base_price_mad } = body
 
-    // Validation
     if (!plan_name || !meal_type || base_price_mad === undefined) {
       return NextResponse.json(
         { error: "Missing required fields: plan_name, meal_type, base_price_mad" },
@@ -42,7 +41,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if already exists
     const existing = await sql`
       SELECT id FROM meal_type_prices
       WHERE plan_name = ${plan_name} AND meal_type = ${meal_type}
@@ -55,7 +53,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Insert
     const result = await sql`
       INSERT INTO meal_type_prices (plan_name, meal_type, base_price_mad, is_active, created_at, updated_at)
       VALUES (${plan_name}, ${meal_type}, ${base_price_mad}, true, NOW(), NOW())
