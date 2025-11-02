@@ -1,59 +1,76 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+import { sql } from "@/lib/db"
+import { NextRequest, NextResponse } from "next/server"
 
-import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
-import { z } from "zod"
-
-
-const MealPriceSchema = z.object({
-  plan_name: z.string().min(1, "Plan name is required"),
-  meal_type: z.string().min(1, "Meal type is required"),
-  base_price_mad: z.number().min(0, "Price must be positive"),
-  is_active: z.boolean().optional().default(true),
-})
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const mealPrices = await sql`
-      SELECT id, plan_name, meal_type, base_price_mad, is_active, created_at, updated_at
-      FROM meal_type_prices
+      SELECT id, plan_name, meal_type, base_price_mad, is_active, created_at, updated_at 
+      FROM meal_type_prices 
       ORDER BY plan_name, meal_type
     `
-
-    return NextResponse.json({ mealPrices })
+    
+    return NextResponse.json({
+      success: true,
+      mealPrices: mealPrices
+    })
   } catch (error) {
     console.error("Error fetching meal prices:", error)
-    return NextResponse.json({ error: "Failed to fetch meal prices" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch meal prices" },
+      { status: 500 }
+    )
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const validation = MealPriceSchema.safeParse(body)
+    const { plan_name, meal_type, base_price_mad } = body
 
-    if (!validation.success) {
-      return NextResponse.json({ error: "Invalid input", details: validation.error.errors }, { status: 400 })
+    // Validation
+    if (!plan_name || !meal_type || base_price_mad === undefined) {
+      return NextResponse.json(
+        { error: "Missing required fields: plan_name, meal_type, base_price_mad" },
+        { status: 400 }
+      )
     }
 
-    const { plan_name, meal_type, base_price_mad, is_active } = validation.data
+    if (base_price_mad <= 0) {
+      return NextResponse.json(
+        { error: "base_price_mad must be greater than 0" },
+        { status: 400 }
+      )
+    }
 
-    const result = await sql`
-      INSERT INTO meal_type_prices (plan_name, meal_type, base_price_mad, is_active)
-      VALUES (${plan_name}, ${meal_type}, ${base_price_mad}, ${is_active})
-      RETURNING id, plan_name, meal_type, base_price_mad, is_active, created_at, updated_at
+    // Check if already exists
+    const existing = await sql`
+      SELECT id FROM meal_type_prices
+      WHERE plan_name = ${plan_name} AND meal_type = ${meal_type}
     `
 
-    return NextResponse.json({ mealPrice: result[0] }, { status: 201 })
-  } catch (error: any) {
-    console.error("Error creating meal price:", error)
-
-    if (error.code === "23505") {
-      // Unique constraint violation
-      return NextResponse.json({ error: "Meal price for this plan and meal type already exists" }, { status: 409 })
+    if (existing.length > 0) {
+      return NextResponse.json(
+        { error: "Meal price already exists for this plan and meal type" },
+        { status: 409 }
+      )
     }
 
-    return NextResponse.json({ error: "Failed to create meal price" }, { status: 500 })
+    // Insert
+    const result = await sql`
+      INSERT INTO meal_type_prices (plan_name, meal_type, base_price_mad, is_active, created_at, updated_at)
+      VALUES (${plan_name}, ${meal_type}, ${base_price_mad}, true, NOW(), NOW())
+      RETURNING *
+    `
+
+    return NextResponse.json(
+      { success: true, data: result[0] },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.error("Error creating meal price:", error)
+    return NextResponse.json(
+      { error: "Failed to create meal price" },
+      { status: 500 }
+    )
   }
 }
