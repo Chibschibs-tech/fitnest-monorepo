@@ -1,36 +1,63 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { sql } from '@/lib/db'
+import { createErrorResponse } from '@/lib/error-handler'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const dynamic = "force-dynamic"
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const planId = searchParams.get('plan_id')
-  
-  let query = supabase.from('meals').select('*, meal_plans(*)')
-  
-  if (planId) {
-    query = query.eq('plan_id', planId)
+  try {
+    const { searchParams } = new URL(request.url)
+    const planId = searchParams.get('plan_id')
+    
+    let meals
+    
+    if (planId) {
+      meals = await sql`
+        SELECT m.*, mp.name as plan_name
+        FROM meals m
+        LEFT JOIN meal_plans mp ON m.plan_id = mp.id
+        WHERE m.plan_id = ${planId}
+        ORDER BY m.created_at DESC
+      `
+    } else {
+      meals = await sql`
+        SELECT m.*, mp.name as plan_name
+        FROM meals m
+        LEFT JOIN meal_plans mp ON m.plan_id = mp.id
+        ORDER BY m.created_at DESC
+      `
+    }
+    
+    return NextResponse.json(meals || [])
+  } catch (error) {
+    return createErrorResponse(error, "Failed to fetch meals", 500)
   }
-  
-  const { data, error } = await query
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
 }
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  
-  const { data, error } = await supabase
-    .from('meals')
-    .insert(body)
-    .select()
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  try {
+    const body = await request.json()
+    const { name, description, plan_id, meal_type, calories, protein, carbs, fat, image_url } = body
+    
+    const result = await sql`
+      INSERT INTO meals (name, description, plan_id, meal_type, calories, protein, carbs, fat, image_url, created_at)
+      VALUES (
+        ${name}, 
+        ${description || null}, 
+        ${plan_id || null}, 
+        ${meal_type || null}, 
+        ${calories || null}, 
+        ${protein || null}, 
+        ${carbs || null}, 
+        ${fat || null}, 
+        ${image_url || null}, 
+        NOW()
+      )
+      RETURNING *
+    `
+    
+    return NextResponse.json(result[0] || result)
+  } catch (error) {
+    return createErrorResponse(error, "Failed to create meal", 500)
+  }
 }

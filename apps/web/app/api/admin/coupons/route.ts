@@ -1,30 +1,35 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { sql } from '@/lib/db'
+import { createErrorResponse } from '@/lib/error-handler'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const { data, error } = await supabase
-    .from('coupons')
-    .select('*')
-    .order('created_at', { ascending: false })
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  try {
+    const coupons = await sql`
+      SELECT * 
+      FROM coupons 
+      ORDER BY created_at DESC
+    `
+    return NextResponse.json(coupons || [])
+  } catch (error) {
+    return createErrorResponse(error, "Failed to fetch coupons", 500)
+  }
 }
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  
-  const { data, error } = await supabase
-    .from('coupons')
-    .insert(body)
-    .select()
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  try {
+    const body = await request.json()
+    const { code, discount_percentage, valid_from, valid_to, is_active } = body
+    
+    const result = await sql`
+      INSERT INTO coupons (code, discount_percentage, valid_from, valid_to, is_active, created_at)
+      VALUES (${code}, ${discount_percentage}, ${valid_from || null}, ${valid_to || null}, ${is_active ?? true}, NOW())
+      RETURNING *
+    `
+    
+    return NextResponse.json(result[0] || result)
+  } catch (error) {
+    return createErrorResponse(error, "Failed to create coupon", 500)
+  }
 }

@@ -1,30 +1,35 @@
-import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { sql } from '@/lib/db'
+import { createErrorResponse } from '@/lib/error-handler'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+export const dynamic = "force-dynamic"
 
 export async function GET() {
-  const { data, error } = await supabase
-    .from('meal_plans')
-    .select('*')
-    .order('display_order', { ascending: true })
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  try {
+    const mealPlans = await sql`
+      SELECT * 
+      FROM meal_plans 
+      ORDER BY display_order ASC, id ASC
+    `
+    return NextResponse.json(mealPlans || [])
+  } catch (error) {
+    return createErrorResponse(error, "Failed to fetch meal plans", 500)
+  }
 }
 
 export async function POST(request: Request) {
-  const body = await request.json()
-  
-  const { data, error } = await supabase
-    .from('meal_plans')
-    .insert(body)
-    .select()
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  try {
+    const body = await request.json()
+    const { name, description, display_order, is_active } = body
+    
+    const result = await sql`
+      INSERT INTO meal_plans (name, description, display_order, is_active, created_at)
+      VALUES (${name}, ${description || null}, ${display_order || 0}, ${is_active ?? true}, NOW())
+      RETURNING *
+    `
+    
+    return NextResponse.json(result[0] || result)
+  } catch (error) {
+    return createErrorResponse(error, "Failed to create meal plan", 500)
+  }
 }
