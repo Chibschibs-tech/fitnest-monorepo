@@ -7,6 +7,14 @@ export const revalidate = 0
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if DATABASE_URL is available
+    if (!process.env.DATABASE_URL) {
+      return NextResponse.json(
+        { error: "Database connection not available" },
+        { status: 503 }
+      )
+    }
+
     const body = await request.json()
     const { plan, meals, days, duration } = body
 
