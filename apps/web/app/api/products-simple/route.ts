@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql, db, q } from "@/lib/db"
 
 // Force dynamic to prevent caching issues
 export const dynamic = "force-dynamic"
@@ -130,18 +130,11 @@ export async function GET() {
     query += ` LIMIT 100`
 
     const result = await q(query)
-    console.log(`Returning ${result.rows.length} products`)
+    console.log(`Returning ${result.length} products`)
 
-    return NextResponse.json(result.rows)
+    return NextResponse.json(result)
   } catch (error) {
-    console.error("Error in simple products API:", error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch products",
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 },
-    )
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to fetch products", 500)
   }
 }

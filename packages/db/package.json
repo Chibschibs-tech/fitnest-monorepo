@@ -3,9 +3,17 @@
   "version": "0.0.1",
   "type": "module",
   "main": "src/index.ts",
+  "scripts": {
+    "migrate": "drizzle-kit push",
+    "generate": "drizzle-kit generate",
+    "studio": "drizzle-kit studio"
+  },
   "dependencies": {
     "drizzle-orm": "^0.35.0",
     "pg": "^8.11.3",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.28.0"
   }
 }

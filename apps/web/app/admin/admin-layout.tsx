@@ -66,16 +66,6 @@ const navigation = [
     href: "/admin/meals/add",
     icon: Apple,
   },
-  {
-    name: "Email Diagnostic",
-    href: "/admin/email-diagnostic",
-    icon: Mail,
-  },
-  {
-    name: "System Diagnostic",
-    href: "/admin/system-diagnostic",
-    icon: Settings,
-  },
 ]
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -160,6 +150,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                   )
                 }
 
+                if (!item.href) return null
+                
                 const isActive = pathname === item.href
                 return (
                   <Link

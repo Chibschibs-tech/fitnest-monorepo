@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,6 +16,8 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirect") || null
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +36,18 @@ export default function LoginPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        router.push("/dashboard")
+        // Determine redirect destination based on user role and redirect parameter
+        let destination = "/dashboard"
+        
+        if (data.user?.role === "admin") {
+          // Admin users go to admin panel
+          destination = redirectTo || "/admin"
+        } else if (redirectTo) {
+          // Regular users respect redirect parameter if provided
+          destination = redirectTo
+        }
+        
+        router.push(destination)
         router.refresh()
       } else {
         setError(data.error || "Login failed")

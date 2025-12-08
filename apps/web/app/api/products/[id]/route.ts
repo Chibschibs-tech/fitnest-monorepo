@@ -2,14 +2,15 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql, db, q } from "@/lib/db"
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = params.id
 
     if (!id || isNaN(Number(id))) {
-      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 })
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.validation("Invalid product ID")
     }
 
 
@@ -30,13 +31,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     `
 
     if (product.length === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.notFound("Product not found")
     }
 
     return NextResponse.json(product[0])
   } catch (error) {
-    console.error("Error fetching product:", error)
-    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 })
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to fetch product", 500)
   }
 }
 
@@ -45,7 +47,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const id = params.id
 
     if (!id || isNaN(Number(id))) {
-      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 })
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.validation("Invalid product ID")
     }
 
     const data = await request.json()
@@ -54,7 +57,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const existingProduct = await sql`SELECT id FROM products WHERE id = ${id}`
 
     if (existingProduct.length === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.notFound("Product not found")
     }
 
     // Build update query
@@ -118,12 +122,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     // Execute update
     const updatedProduct = await q(query, queryParams)
 
-    if (updatedProduct.rows.length === 0) {
-      return NextResponse.json({ error: "Failed to update product" }, { status: 500 })
+    if (updatedProduct.length === 0) {
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.database("Failed to update product")
     }
 
     // Transform column names for frontend consistency
-    const product = updatedProduct.rows[0]
+    const product = updatedProduct[0]
     return NextResponse.json({
       id: product.id,
       name: product.name,
@@ -138,8 +143,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       isActive: product.isactive,
     })
   } catch (error) {
-    console.error("Error updating product:", error)
-    return NextResponse.json({ error: "Failed to update product" }, { status: 500 })
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to update product", 500)
   }
 }
 
@@ -148,23 +153,25 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const id = params.id
 
     if (!id || isNaN(Number(id))) {
-      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 })
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.validation("Invalid product ID")
     }
-
 
     // Check if product exists
     const existingProduct = await sql`SELECT id FROM products WHERE id = ${id}`
 
     if (existingProduct.length === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.notFound("Product not found")
     }
 
     // Soft delete by setting isactive to false
     await sql`UPDATE products SET isactive = false, updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
 
-    return NextResponse.json({ success: true, message: "Product deleted successfully" })
+    const { createSuccessResponse } = await import("@/lib/error-handler")
+    return createSuccessResponse({ message: "Product deleted successfully" })
   } catch (error) {
-    console.error("Error deleting product:", error)
-    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 })
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to delete product", 500)
   }
 }

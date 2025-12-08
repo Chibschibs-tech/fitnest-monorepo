@@ -171,12 +171,7 @@ export async function GET() {
     })
   } catch (error) {
     console.error("Dashboard API error:", error)
-    return NextResponse.json(
-      {
-        error: "Internal server error",
-        details: error.message,
-      },
-      { status: 500 },
-    )
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to fetch dashboard data", 500)
   }
 }

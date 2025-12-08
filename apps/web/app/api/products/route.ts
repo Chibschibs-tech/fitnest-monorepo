@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql, db, q } from "@/lib/db"
 
 // Force dynamic to prevent caching issues
 export const dynamic = "force-dynamic"
@@ -46,19 +46,12 @@ export async function GET(request: NextRequest) {
     // Execute query
     const result = await q(query, queryParams)
 
-    console.log(`Query returned ${result.rows.length} products`)
+    console.log(`Query returned ${result.length} products`)
 
-    return NextResponse.json(result.rows)
+    return NextResponse.json(result)
   } catch (error) {
-    console.error("Error fetching products:", error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch products",
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 },
-    )
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to fetch products", 500)
   }
 }
 
@@ -198,10 +191,8 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!data.name || !data.description || !data.price) {
-      return NextResponse.json(
-        { error: "Missing required fields: name, description, and price are required" },
-        { status: 400 },
-      )
+      const { Errors } = await import("@/lib/error-handler")
+      throw Errors.validation("Missing required fields: name, description, and price are required")
     }
 
     // Insert using the exact column names that match our new schema
@@ -238,13 +229,7 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     )
   } catch (error) {
-    console.error("Error creating product:", error)
-    return NextResponse.json(
-      {
-        error: "Failed to create product",
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status: 500 },
-    )
+    const { createErrorResponse } = await import("@/lib/error-handler")
+    return createErrorResponse(error, "Failed to create product", 500)
   }
 }

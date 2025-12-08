@@ -232,7 +232,8 @@ export function CheckoutContent() {
       console.log("=== SENDING ORDER DATA ===")
       console.log("Order data:", JSON.stringify(orderData, null, 2))
 
-      const response = await fetch("/api/orders/create", {
+      // Use unified order creation endpoint that handles both products and subscriptions
+      const response = await fetch("/api/orders/create-unified", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -257,10 +258,14 @@ export function CheckoutContent() {
       const result = await response.json()
       console.log("Order created successfully:", result)
 
-      // Clear the cart after successful order
+      // Unified endpoint returns orders and subscriptions arrays
+      // Get the first order ID or subscription ID for confirmation
+      const orderId = result.orders?.[0]?.id || result.subscriptions?.[0]?.id || result.orderId
+
+      // Clear the cart after successful order (unified endpoint already clears cart_items)
       try {
-        await fetch("/api/cart/clear", { method: "POST" })
-        console.log("Cart cleared successfully")
+        // Cart is already cleared by unified endpoint, but dispatch event to update UI
+        window.dispatchEvent(new CustomEvent("cartUpdated"))
 
         // Clear meal plan data from localStorage
         if (mealPlan) {
@@ -269,16 +274,13 @@ export function CheckoutContent() {
           localStorage.removeItem("mealPlanDelivery")
           console.log("Meal plan data cleared from localStorage")
         }
-
-        // Dispatch cart update event to update the header icon
-        window.dispatchEvent(new CustomEvent("cartUpdated"))
       } catch (clearError) {
-        console.error("Error clearing cart:", clearError)
-        // Don't fail the order if cart clearing fails
+        console.error("Error clearing local data:", clearError)
+        // Don't fail the order if clearing fails
       }
 
       // Redirect to confirmation
-      router.push(`/checkout/confirmation?orderId=${result.orderId}`)
+      router.push(`/checkout/confirmation?orderId=${orderId}`)
     } catch (error) {
       console.error("Error submitting order:", error)
       setError(error instanceof Error ? error.message : "Failed to create order")

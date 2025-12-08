@@ -25,20 +25,31 @@ export async function GET() {
 
     console.log("Existing admin users:", existingAdmins)
 
-    // Create/update the admin user with known credentials
+    // Create/update the admin user with specified credentials
     const adminEmail = "chihab@ekwip.ma"
     const adminPassword = "FITnest123!"
     const hashedPassword = simpleHash(adminPassword)
 
-    // Delete existing admin if exists and recreate
-    await sql`DELETE FROM users WHERE email = ${adminEmail}`
-
-    // Create new admin user
-    const result = await sql`
-      INSERT INTO users (name, email, password, role)
-      VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')
-      RETURNING id, name, email, role
-    `
+    // Check if user exists and update or create
+    const existingUser = await sql`SELECT id FROM users WHERE email = ${adminEmail}`
+    
+    let result
+    if (existingUser.length > 0) {
+      // Update existing user
+      result = await sql`
+        UPDATE users 
+        SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin'
+        WHERE email = ${adminEmail}
+        RETURNING id, name, email, role
+      `
+    } else {
+      // Create new admin user
+      result = await sql`
+        INSERT INTO users (name, email, password, role)
+        VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')
+        RETURNING id, name, email, role
+      `
+    }
 
     const newAdmin = result[0]
 

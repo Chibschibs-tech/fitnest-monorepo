@@ -1,5 +1,5 @@
 import { CartContent } from "./cart-content"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 import { cookies } from "next/headers"
 
 export const dynamic = "force-dynamic"
@@ -9,51 +9,62 @@ export default async function Cart() {
   const cartId = cookieStore.get("cartId")?.value
 
   if (!cartId) {
-    // If no cart ID, return empty cart
     return <CartContent cartItems={[]} summary={{ subtotal: 0, discount: 0, total: 0 }} />
   }
 
   try {
-
-    // Get cart items with product details using the cart table
+    // Fetch cart items from the new unified cart_items table
     const cartItems = await sql`
       SELECT 
-        c.id as cart_id,
-        c.product_id,
-        c.quantity,
-        p.name,
-        p.price,
-        p.saleprice,
-        p.imageurl
-      FROM cart c
-      JOIN products p ON c.product_id = p.id
-      WHERE c.id = ${cartId}
+        ci.id,
+        ci.item_type,
+        ci.quantity,
+        ci.unit_price,
+        ci.total_price,
+        ci.plan_name,
+        ci.meal_types,
+        ci.days_per_week,
+        ci.duration_weeks,
+        ci.product_id,
+        p.name as product_name,
+        p.imageurl as product_image
+      FROM cart_items ci
+      LEFT JOIN products p ON ci.product_id = p.id AND ci.item_type = 'product'
+      WHERE ci.cart_id = ${cartId}
+      ORDER BY ci.created_at DESC
     `
 
-    // Format cart items
-    const formattedCartItems = cartItems.map((item) => ({
-      id: `${item.cart_id}-${item.product_id}`,
-      productId: item.product_id,
-      quantity: item.quantity,
-      name: item.name,
-      price: Number(item.price) / 100, // Convert from cents to MAD
-      salePrice: item.saleprice ? Number(item.saleprice) / 100 : null,
-      imageUrl: item.imageurl,
-    }))
+    // Format items based on type
+    const formattedCartItems = cartItems.map((item: any) => {
+      if (item.item_type === 'product') {
+        return {
+          id: item.id,
+          item_type: 'product' as const,
+          product_id: item.product_id,
+          product_name: item.product_name,
+          product_image: item.product_image,
+          quantity: item.quantity,
+          unit_price: Number(item.unit_price),
+          total_price: Number(item.total_price),
+        }
+      } else {
+        return {
+          id: item.id,
+          item_type: 'subscription' as const,
+          plan_name: item.plan_name,
+          meal_types: item.meal_types || [],
+          days_per_week: item.days_per_week,
+          duration_weeks: item.duration_weeks,
+          quantity: item.quantity,
+          unit_price: Number(item.unit_price),
+          total_price: Number(item.total_price),
+        }
+      }
+    })
 
     // Calculate totals
-    let subtotal = 0
-    let discount = 0
-
-    for (const item of formattedCartItems) {
-      const itemPrice = item.salePrice || item.price
-      subtotal += itemPrice * item.quantity
-
-      if (item.salePrice) {
-        discount += (item.price - item.salePrice) * item.quantity
-      }
-    }
-
+    const subtotal = formattedCartItems.reduce((sum, item) => sum + item.total_price, 0)
+    const discount = 0 // Can be calculated from sale prices or discounts
     const total = subtotal
 
     return <CartContent cartItems={formattedCartItems} summary={{ subtotal, discount, total }} />

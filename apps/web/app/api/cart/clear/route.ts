@@ -18,10 +18,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "No cart found" })
     }
 
-    // Clear all items from cart
+    // Clear all items from cart_items table
     await sql`
-      DELETE FROM cart 
-      WHERE id = ${cartId}
+      DELETE FROM cart_items 
+      WHERE cart_id = ${cartId}
     `
 
     console.log(`Cart ${cartId} cleared successfully`)

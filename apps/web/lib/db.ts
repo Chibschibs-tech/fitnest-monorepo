@@ -1,32 +1,120 @@
 // lib/db.ts
+// Universal database client - supports both Neon and local PostgreSQL
 import { drizzle } from "drizzle-orm/neon-http";
 import { neon } from "@neondatabase/serverless";
+import { Pool } from "pg";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 
-// Lazy init pour éviter toute connexion pendant le build
-let _client: ReturnType<typeof neon> | null = null;
+// Lazy init
+let _client: any = null;
+let _db: any = null;
+let _isNeon: boolean = false;
+
+function isNeonUrl(url: string): boolean {
+  // Neon URLs typically contain 'neon.tech' or use HTTP protocol
+  return url.includes("neon.tech") || url.includes("neon") || url.startsWith("https://");
+}
+
+function isLocalUrl(url: string): boolean {
+  // Local URLs are standard postgresql:// connections
+  return url.startsWith("postgresql://") && (url.includes("localhost") || url.includes("127.0.0.1"));
+}
 
 function getClient() {
   if (_client) return _client;
+
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is missing");
-  _client = neon(url);
-  return _client;
+
+  // Determine which client to use
+  if (isNeonUrl(url)) {
+    // Use Neon HTTP client
+    _isNeon = true;
+    _client = neon(url);
+    _db = drizzle(_client);
+    return _client;
+  } else {
+    // Use pg Pool for local PostgreSQL or other standard connections
+    _isNeon = false;
+    const pool = new Pool({ connectionString: url });
+    _client = pool;
+    _db = drizzlePg(pool);
+    return _client;
+  }
 }
 
 /**
- * Tag sql compatible avec Drizzle (template tag) + méthodes utilitaires.
- * On forwarde .query/.array/.transaction du client Neon, sans toucher au top-level.
+ * SQL template tag compatible with both Neon and pg
+ * For Neon: uses HTTP client directly
+ * For pg: converts template tag to parameterized query and normalizes result
  */
-export const sql: any = ((...args: any[]) => (getClient() as any)(...args)) as any;
-(sql as any).query = (...args: any[]) => (getClient() as any).query(...args);
-(sql as any).array = (...args: any[]) => (getClient() as any).array?.(...args);
-(sql as any).transaction = (...args: any[]) => (getClient() as any).transaction?.(...args);
+export const sql: any = ((strings: TemplateStringsArray, ...values: any[]) => {
+  if (_isNeon === null || _isNeon === undefined) {
+    getClient(); // Initialize
+  }
+  
+  if (_isNeon) {
+    // Neon HTTP client - use as template tag
+    const client = getClient();
+    return (client as any)(strings, ...values);
+  } else {
+    // For pg, convert template tag to parameterized query
+    const pool = getClient() as Pool;
+    let queryText = strings[0];
+    const params: any[] = [];
+    
+    for (let i = 0; i < values.length; i++) {
+      params.push(values[i]);
+      queryText += `$${params.length}` + (strings[i + 1] || '');
+    }
+    
+    // Execute query and normalize result to match Neon format (array of rows)
+    return pool.query(queryText, params).then((pgResult: any) => {
+      // Normalize: return rows array directly to match Neon behavior
+      return pgResult.rows || [];
+    });
+  }
+}) as any;
 
-// Drizzle reçoit la fonction tag (aucun appel DB au top-level)
-export const db = drizzle(sql);
+// Add query method for compatibility
+(sql as any).query = async (text: string, params?: any[]) => {
+  const client = getClient();
+  
+  if (_isNeon) {
+    // Neon HTTP
+    return await (client as any).query(text, params);
+  } else {
+    // pg Pool
+    const result = await (client as Pool).query(text, params);
+    return { rows: result.rows };
+  }
+};
 
-// Helper pratique: retourne directement rows
+(sql as any).array = (...args: any[]) => {
+  if (_isNeon) {
+    return (getClient() as any).array?.(...args);
+  }
+  // pg doesn't have array method, use query instead
+  return (sql as any).query(...args);
+};
+
+(sql as any).transaction = (...args: any[]) => {
+  if (_isNeon) {
+    return (getClient() as any).transaction?.(...args);
+  }
+  // For pg, transactions need to be handled differently
+  throw new Error("Transactions not yet implemented for local PostgreSQL. Use Neon for transaction support.");
+};
+
+// Drizzle instance
+export const db = (() => {
+  if (_db) return _db;
+  getClient(); // Initialize
+  return _db;
+})();
+
+// Helper: return rows directly
 export async function q<T = any>(text: string, params?: any[]) {
-  const { rows } = await (sql as any).query(text, params ?? []);
-  return rows as T[];
+  const result = await (sql as any).query(text, params);
+  return (result.rows || result) as T[];
 }

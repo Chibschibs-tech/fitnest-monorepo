@@ -1,10 +1,13 @@
 {
   "name": "fitnest-monorepo",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev:web": "pnpm -C apps/web dev -p 3000",
-    "dev:admin": "pnpm -C apps/admin dev -p 3001",
-    "dev": "run-p dev:web dev:admin"
+    "dev:web": "pnpm -C apps/web dev -p 3002",
+    "dev": "pnpm -C apps/web dev -p 3002",
+    "docs:generate": "node scripts/generate-docs.js",
+    "docs:watch": "nodemon --watch apps/web/app/api --watch packages/db/src --exec 'npm run docs:generate'",
+    "postinstall": "npm run docs:generate"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"

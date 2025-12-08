@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Generate documentation before commit
+npm run docs:generate
+
+# Add generated docs to commit
+git add docs/
+
