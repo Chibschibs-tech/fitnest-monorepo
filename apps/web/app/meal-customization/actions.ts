@@ -3,8 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
 import { getServerSession } from "next-auth/next"
-import { db, mealPreferences } from "@/lib/db"
-import { eq } from "drizzle-orm"
+import { sql } from "@/lib/db"
 
 export type MealPreferences = {
   planType: string
@@ -39,48 +38,66 @@ export async function saveMealPreferences(preferences: MealPreferences) {
     // For authenticated users, save to database
     const userId = Number.parseInt(session.user.id as string)
 
+    // Ensure meal_preferences table exists (matches bootstrap schema)
+    await sql`
+      CREATE TABLE IF NOT EXISTS meal_preferences (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        plan_type VARCHAR(100),
+        calorie_target INTEGER,
+        meals_per_day INTEGER,
+        days_per_week INTEGER,
+        dietary_preferences TEXT,
+        allergies TEXT,
+        excluded_ingredients TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `
+
     // Stringify arrays for storage
-    const preferencesToStore = {
-      ...preferences,
-      dietaryPreferences: JSON.stringify(preferences.dietaryPreferences || []),
-      allergies: JSON.stringify(preferences.allergies || []),
-      excludedIngredients: JSON.stringify(preferences.excludedIngredients || []),
-    }
+    const dietaryPreferencesJson = JSON.stringify(preferences.dietaryPreferences || [])
+    const allergiesJson = JSON.stringify(preferences.allergies || [])
+    const excludedIngredientsJson = JSON.stringify(preferences.excludedIngredients || [])
 
     // Check if user already has preferences
-    const existingPreferences = await db
-      .select()
-      .from(mealPreferences)
-      .where(eq(mealPreferences.userId, userId))
-      .limit(1)
+    const existingPreferences = await sql`
+      SELECT id FROM meal_preferences WHERE user_id = ${userId} LIMIT 1
+    `
 
     if (existingPreferences.length > 0) {
       // Update existing preferences
-      await db
-        .update(mealPreferences)
-        .set({
-          planType: preferencesToStore.planType,
-          calorieTarget: preferencesToStore.calorieTarget,
-          mealsPerDay: preferencesToStore.mealsPerDay,
-          daysPerWeek: preferencesToStore.daysPerWeek,
-          dietaryPreferences: preferencesToStore.dietaryPreferences,
-          allergies: preferencesToStore.allergies,
-          excludedIngredients: preferencesToStore.excludedIngredients,
-          updatedAt: new Date(),
-        })
-        .where(eq(mealPreferences.userId, userId))
+      await sql`
+        UPDATE meal_preferences
+        SET 
+          plan_type = ${preferences.planType},
+          calorie_target = ${preferences.calorieTarget},
+          meals_per_day = ${preferences.mealsPerDay},
+          days_per_week = ${preferences.daysPerWeek},
+          dietary_preferences = ${dietaryPreferencesJson},
+          allergies = ${allergiesJson},
+          excluded_ingredients = ${excludedIngredientsJson},
+          updated_at = NOW()
+        WHERE user_id = ${userId}
+      `
     } else {
       // Insert new preferences
-      await db.insert(mealPreferences).values({
-        userId,
-        planType: preferencesToStore.planType,
-        calorieTarget: preferencesToStore.calorieTarget,
-        mealsPerDay: preferencesToStore.mealsPerDay,
-        daysPerWeek: preferencesToStore.daysPerWeek,
-        dietaryPreferences: preferencesToStore.dietaryPreferences,
-        allergies: preferencesToStore.allergies,
-        excludedIngredients: preferencesToStore.excludedIngredients,
-      })
+      await sql`
+        INSERT INTO meal_preferences (
+          user_id, plan_type, calorie_target, meals_per_day, days_per_week,
+          dietary_preferences, allergies, excluded_ingredients
+        )
+        VALUES (
+          ${userId},
+          ${preferences.planType},
+          ${preferences.calorieTarget},
+          ${preferences.mealsPerDay},
+          ${preferences.daysPerWeek},
+          ${dietaryPreferencesJson},
+          ${allergiesJson},
+          ${excludedIngredientsJson}
+        )
+      `
     }
 
     // Revalidate the meal plan preview page

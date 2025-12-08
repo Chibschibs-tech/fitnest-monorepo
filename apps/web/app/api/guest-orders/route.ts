@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextResponse } from "next/server"
-import { db, orders } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 export async function POST(request: Request) {
   try {
@@ -16,19 +16,27 @@ export async function POST(request: Request) {
     // Create a guest order
     // For guest orders, we'll use a special userId of -1 to indicate it's a guest
     // In a real application, you might want to create a proper guest user record
-    const guestOrder = await db
-      .insert(orders)
-      .values({
-        userId: -1, // Special ID for guest users
-        planId: 1, // Default plan ID, in a real app you'd map this from the selection
-        totalAmount: mealPlan.totalPrice,
-        deliveryAddress: guestInfo.address,
-        deliveryDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-        status: "pending",
-        // You might want to add additional columns to store guest information
-        // such as name, email, phone, etc.
-      })
-      .returning()
+    const deliveryDate = new Date(Date.now() + 24 * 60 * 60 * 1000) // Tomorrow
+    
+    const guestOrder = await sql`
+      INSERT INTO orders (
+        user_id,
+        total_amount,
+        status,
+        delivery_address,
+        delivery_date,
+        created_at
+      )
+      VALUES (
+        -1, -- Special ID for guest users
+        ${mealPlan.totalPrice},
+        'pending',
+        ${guestInfo.address || null},
+        ${deliveryDate.toISOString()},
+        NOW()
+      )
+      RETURNING *
+    `
 
     // In a real application, you would also:
     // 1. Send a confirmation email to the guest
