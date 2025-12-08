@@ -40,24 +40,52 @@ export async function GET() {
     let popularPlans = []
 
     try {
-      // Get total revenue for current month
-      const revenueResult = await sql`
+      // Get total revenue from both orders (Express Shop) and subscriptions (Meal Plans)
+      // Express Shop revenue
+      const ordersRevenueResult = await sql`
         SELECT COALESCE(SUM(COALESCE(total_amount, total)), 0) as total
         FROM orders 
         WHERE created_at >= ${thirtyDaysAgo.toISOString()} 
-        AND (status IN ('active', 'completed', 'delivered') OR status IS NULL)
+        AND (status IN ('active', 'completed', 'delivered', 'pending') OR status IS NULL)
       `
-      totalRevenue = Number(revenueResult[0]?.total) || 0
+      const ordersRevenue = Number(ordersRevenueResult[0]?.total) || 0
+
+      // Subscriptions revenue (extract from notes or calculate)
+      const subscriptionsRevenueResult = await sql`
+        SELECT 
+          s.notes,
+          pv.weekly_base_price_mad
+        FROM subscriptions s
+        LEFT JOIN plan_variants pv ON s.plan_variant_id = pv.id
+        WHERE s.created_at >= ${thirtyDaysAgo.toISOString()}
+        AND s.status = 'active'
+      `
+      
+      let subscriptionsRevenue = 0
+      for (const sub of subscriptionsRevenueResult) {
+        try {
+          const notes = sub.notes ? JSON.parse(sub.notes) : {}
+          const totalPrice = notes.total_price || sub.weekly_base_price_mad || 0
+          const durationWeeks = notes.duration_weeks || 1
+          subscriptionsRevenue += Number(totalPrice) * Number(durationWeeks)
+        } catch (e) {
+          // If notes parsing fails, use weekly_base_price_mad
+          subscriptionsRevenue += Number(sub.weekly_base_price_mad || 0)
+        }
+      }
+
+      totalRevenue = ordersRevenue + subscriptionsRevenue
     } catch (error) {
       console.log("Revenue query failed:", error)
+      totalRevenue = 0
     }
 
     try {
-      // Get active subscriptions count
+      // Get active subscriptions count from subscriptions table (NOT orders)
       const activeSubscriptionsResult = await sql`
         SELECT COUNT(*) as count 
-        FROM orders 
-        WHERE status = 'active' OR (status IS NULL AND id IS NOT NULL)
+        FROM subscriptions 
+        WHERE status = 'active'
       `
       activeSubscriptions = Number(activeSubscriptionsResult[0]?.count) || 0
     } catch (error) {
@@ -65,10 +93,10 @@ export async function GET() {
     }
 
     try {
-      // Get paused subscriptions count
+      // Get paused subscriptions count from subscriptions table (NOT orders)
       const pausedSubscriptionsResult = await sql`
         SELECT COUNT(*) as count 
-        FROM orders 
+        FROM subscriptions 
         WHERE status = 'paused'
       `
       pausedSubscriptions = Number(pausedSubscriptionsResult[0]?.count) || 0
@@ -120,56 +148,120 @@ export async function GET() {
     }
 
     try {
-      // Get popular plans data - simplified version
+      // Get popular plans from subscriptions (meal plans) - count by meal_plan
       const popularPlansResult = await sql`
         SELECT 
-          COALESCE(plan_id, meal_plan_id, 1) as plan_id,
-          COUNT(*) as order_count
-        FROM orders o
-        WHERE o.created_at >= ${thirtyDaysAgo.toISOString()}
-        GROUP BY COALESCE(plan_id, meal_plan_id, 1)
-        ORDER BY order_count DESC
+          mp.id as plan_id,
+          mp.title as plan_name,
+          COUNT(s.id) as subscription_count
+        FROM subscriptions s
+        JOIN plan_variants pv ON s.plan_variant_id = pv.id
+        JOIN meal_plans mp ON pv.meal_plan_id = mp.id
+        WHERE s.created_at >= ${thirtyDaysAgo.toISOString()}
+        GROUP BY mp.id, mp.title
+        ORDER BY subscription_count DESC
         LIMIT 4
       `
 
-      popularPlans = popularPlansResult.map((plan: any, index: number) => ({
+      popularPlans = popularPlansResult.map((plan: any) => ({
         id: plan.plan_id,
-        name: `Plan ${plan.plan_id}`,
-        count: Number(plan.order_count),
+        name: plan.plan_name || `Plan ${plan.plan_id}`,
+        count: Number(plan.subscription_count),
       }))
 
-      // Add some default popular plans if none exist
+      // If no subscriptions, show all available meal plans with 0 count
       if (popularPlans.length === 0) {
-        popularPlans = [
-          { id: 1, name: "Weight Loss Plan", count: 0 },
-          { id: 2, name: "Muscle Gain Plan", count: 0 },
-          { id: 3, name: "Keto Plan", count: 0 },
-          { id: 4, name: "Balanced Plan", count: 0 },
-        ]
+        const allPlans = await sql`
+          SELECT id, title 
+          FROM meal_plans 
+          ORDER BY id 
+          LIMIT 4
+        `
+        popularPlans = allPlans.map((plan: any) => ({
+          id: plan.id,
+          name: plan.title || `Plan ${plan.id}`,
+          count: 0,
+        }))
       }
     } catch (error) {
       console.log("Popular plans query failed:", error)
-      // Fallback data
-      popularPlans = [
-        { id: 1, name: "Weight Loss Plan", count: 0 },
-        { id: 2, name: "Muscle Gain Plan", count: 0 },
-        { id: 3, name: "Keto Plan", count: 0 },
-        { id: 4, name: "Balanced Plan", count: 0 },
-      ]
+      // Fallback: try to get meal plans directly
+      try {
+        const allPlans = await sql`
+          SELECT id, title 
+          FROM meal_plans 
+          ORDER BY id 
+          LIMIT 4
+        `
+        popularPlans = allPlans.map((plan: any) => ({
+          id: plan.id,
+          name: plan.title || `Plan ${plan.id}`,
+          count: 0,
+        }))
+      } catch (fallbackError) {
+        console.log("Fallback popular plans query failed:", fallbackError)
+        popularPlans = []
+      }
     }
 
-    // Calculate delivery stats from orders
-    pendingDeliveries = recentOrders.filter(
-      (order) => order.status === "active" || order.status === "processing" || !order.status,
-    ).length
+    try {
+      // Get pending deliveries from deliveries table
+      const pendingDeliveriesResult = await sql`
+        SELECT COUNT(*) as count 
+        FROM deliveries 
+        WHERE status IN ('pending', 'scheduled', 'preparing', 'out_for_delivery')
+      `
+      pendingDeliveries = Number(pendingDeliveriesResult[0]?.count) || 0
+    } catch (error) {
+      console.log("Pending deliveries query failed:", error)
+      // Fallback: count from recent orders
+      pendingDeliveries = recentOrders.filter(
+        (order) => order.status === "active" || order.status === "processing" || !order.status,
+      ).length
+    }
 
-    todayDeliveries = recentOrders.filter((order) => {
-      const orderDate = new Date(order.created_at)
+    try {
+      // Get today's deliveries
       const today = new Date()
-      return orderDate.toDateString() === today.toDateString()
-    }).length
+      today.setHours(0, 0, 0, 0)
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
 
-    expressShopOrders = Math.floor(Math.random() * 15) + 3 // Mock data for now
+      const todayDeliveriesResult = await sql`
+        SELECT COUNT(*) as count 
+        FROM deliveries 
+        WHERE delivery_date >= ${today.toISOString()}
+        AND delivery_date < ${tomorrow.toISOString()}
+      `
+      todayDeliveries = Number(todayDeliveriesResult[0]?.count) || 0
+    } catch (error) {
+      console.log("Today deliveries query failed:", error)
+      // Fallback: count from recent orders
+      todayDeliveries = recentOrders.filter((order) => {
+        const orderDate = new Date(order.created_at)
+        const today = new Date()
+        return orderDate.toDateString() === today.toDateString()
+      }).length
+    }
+
+    try {
+      // Get Express Shop orders count (orders that are NOT subscriptions)
+      // Express Shop orders are in the orders table but don't have a subscription relationship
+      const expressShopOrdersResult = await sql`
+        SELECT COUNT(*) as count 
+        FROM orders o
+        WHERE o.created_at >= ${thirtyDaysAgo.toISOString()}
+        AND NOT EXISTS (
+          SELECT 1 FROM subscriptions s 
+          WHERE s.user_id = o.user_id 
+          AND s.starts_at::date = o.created_at::date
+        )
+      `
+      expressShopOrders = Number(expressShopOrdersResult[0]?.count) || 0
+    } catch (error) {
+      console.log("Express Shop orders query failed:", error)
+      expressShopOrders = 0
+    }
 
     console.log(
       `Dashboard stats: Revenue: ${totalRevenue}, Active: ${activeSubscriptions}, Recent Orders: ${recentOrders.length}`,
