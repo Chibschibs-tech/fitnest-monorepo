@@ -57,3 +57,4 @@ DATABASE_URL=postgresql://fitnest:fitnest_dev_password@localhost:5433/fitnest_db
 **Status:** Waiting for DATABASE_URL configuration  
 **Next:** Check `/api/db/check-connection` for details
 
+

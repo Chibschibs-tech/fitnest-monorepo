@@ -41,3 +41,4 @@ Write-Host "`nTo switch modes, run:" -ForegroundColor Cyan
 Write-Host "  .\setup-db.ps1 -Mode local   (for local database)" -ForegroundColor White
 Write-Host "  .\setup-db.ps1 -Mode live    (for live database)" -ForegroundColor White
 
+

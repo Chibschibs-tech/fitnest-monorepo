@@ -74,3 +74,4 @@ Updated `apps/web/lib/db.ts` to support both:
 4. Test cart display on frontend
 5. Test checkout flow
 
+

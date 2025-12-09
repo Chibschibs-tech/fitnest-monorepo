@@ -1,6 +1,7 @@
 import { sql } from "@/lib/db"
 import { NextRequest, NextResponse } from "next/server"
 import { calculateSubscriptionPrice, MealPrice, DiscountRule } from "@/lib/pricing-calculator"
+import { createErrorResponse, Errors } from "@/lib/error-handler"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -9,9 +10,10 @@ export async function POST(request: NextRequest) {
   try {
     // Check if DATABASE_URL is available
     if (!process.env.DATABASE_URL) {
-      return NextResponse.json(
-        { error: "Database connection not available" },
-        { status: 503 }
+      return createErrorResponse(
+        new Error("Database connection not available"),
+        "Database connection not available",
+        503
       )
     }
 
@@ -20,23 +22,26 @@ export async function POST(request: NextRequest) {
 
     // Validation
     if (!plan || !meals || !Array.isArray(meals) || meals.length === 0) {
-      return NextResponse.json(
-        { error: "Missing or invalid fields: plan, meals (array)" },
-        { status: 400 }
+      return createErrorResponse(
+        Errors.validation("Missing or invalid fields: plan, meals (array)"),
+        "Missing or invalid fields: plan, meals (array)",
+        400
       )
     }
 
     if (!days || days < 1 || days > 7) {
-      return NextResponse.json(
-        { error: "days must be between 1 and 7" },
-        { status: 400 }
+      return createErrorResponse(
+        Errors.validation("days must be between 1 and 7"),
+        "days must be between 1 and 7",
+        400
       )
     }
 
     if (!duration || duration < 1) {
-      return NextResponse.json(
-        { error: "duration must be >= 1" },
-        { status: 400 }
+      return createErrorResponse(
+        Errors.validation("duration must be >= 1"),
+        "duration must be >= 1",
+        400
       )
     }
 
@@ -48,9 +53,10 @@ export async function POST(request: NextRequest) {
     `
 
     if (mealPrices.length !== meals.length) {
-      return NextResponse.json(
-        { error: "Some meals not found for this plan" },
-        { status: 404 }
+      return createErrorResponse(
+        Errors.notFound("Some meals not found for this plan"),
+        "Some meals not found for this plan",
+        404
       )
     }
 
@@ -75,10 +81,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: result })
   } catch (error) {
-    console.error("Error calculating price:", error)
-    return NextResponse.json(
-      { error: "Failed to calculate price" },
-      { status: 500 }
-    )
+    return createErrorResponse(error, "Failed to calculate price", 500)
   }
 }

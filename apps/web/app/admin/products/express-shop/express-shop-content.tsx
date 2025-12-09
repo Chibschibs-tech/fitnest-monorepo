@@ -4,10 +4,20 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Plus, Edit, Trash2 } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Search, Plus, Edit, Trash2, Loader2 } from "lucide-react"
 import Image from "next/image"
 
 interface ExpressProduct {
@@ -30,6 +40,26 @@ export function ExpressShopContent() {
   const [error, setError] = useState<string>("")
   const [searchTerm, setSearchTerm] = useState("")
   const [filterCategory, setFilterCategory] = useState<string>("all")
+  
+  // Modal states
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<ExpressProduct | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    sale_price: "",
+    category: "",
+    brand: "",
+    image_url: "",
+    stock_quantity: "0",
+    is_available: true,
+  })
 
   useEffect(() => {
     fetchProducts()
@@ -62,6 +92,121 @@ export function ExpressShopContent() {
 
   const categories = Array.from(new Set(products.map((product) => product.category)))
 
+  // Handle create
+  const handleCreate = () => {
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      sale_price: "",
+      category: "",
+      brand: "",
+      image_url: "",
+      stock_quantity: "0",
+      is_available: true,
+    })
+    setSelectedProduct(null)
+    setIsCreateModalOpen(true)
+  }
+
+  // Handle edit
+  const handleEdit = (product: ExpressProduct) => {
+    setSelectedProduct(product)
+    setFormData({
+      name: product.name,
+      description: product.description || "",
+      price: product.price.toString(),
+      sale_price: product.sale_price?.toString() || "",
+      category: product.category || "",
+      brand: product.brand || "",
+      image_url: product.image_url || "",
+      stock_quantity: product.stock_quantity?.toString() || "0",
+      is_available: product.is_available,
+    })
+    setIsEditModalOpen(true)
+  }
+
+  // Handle delete
+  const handleDeleteClick = (product: ExpressProduct) => {
+    setSelectedProduct(product)
+    setIsDeleteDialogOpen(true)
+  }
+
+  // Submit create/edit
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError("")
+
+    try {
+      const payload = {
+        name: formData.name,
+        description: formData.description,
+        price: Number.parseFloat(formData.price),
+        sale_price: formData.sale_price ? Number.parseFloat(formData.sale_price) : null,
+        category: formData.category,
+        brand: formData.brand || null,
+        image_url: formData.image_url || null,
+        stock_quantity: Number.parseInt(formData.stock_quantity) || 0,
+        is_available: formData.is_available,
+      }
+
+      const url = selectedProduct
+        ? `/api/admin/products/express-shop/${selectedProduct.id}`
+        : "/api/admin/products/express-shop"
+      const method = selectedProduct ? "PUT" : "POST"
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setIsCreateModalOpen(false)
+        setIsEditModalOpen(false)
+        setSelectedProduct(null)
+        fetchProducts() // Refresh list
+      } else {
+        setError(data.error || "Failed to save product")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save product")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Confirm delete
+  const handleConfirmDelete = async () => {
+    if (!selectedProduct) return
+
+    setIsSubmitting(true)
+    setError("")
+
+    try {
+      const response = await fetch(`/api/admin/products/express-shop/${selectedProduct.id}`, {
+        method: "DELETE",
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setIsDeleteDialogOpen(false)
+        setSelectedProduct(null)
+        fetchProducts() // Refresh list
+      } else {
+        setError(data.error || "Failed to delete product")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete product")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -85,7 +230,7 @@ export function ExpressShopContent() {
           <h1 className="text-2xl font-bold">Express Shop Management</h1>
           <p className="text-gray-600">Manage your express shop products</p>
         </div>
-        <Button>
+        <Button onClick={handleCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Add New Product
         </Button>
@@ -185,10 +330,20 @@ export function ExpressShopContent() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(product)}
+                        disabled={isSubmitting}
+                      >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteClick(product)}
+                        disabled={isSubmitting}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
@@ -205,6 +360,178 @@ export function ExpressShopContent() {
           )}
         </CardContent>
       </Card>
+
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {/* Create/Edit Modal */}
+      <Dialog open={isCreateModalOpen || isEditModalOpen} onOpenChange={(open) => {
+        if (!open) {
+          setIsCreateModalOpen(false)
+          setIsEditModalOpen(false)
+          setSelectedProduct(null)
+          setError("")
+        }
+      }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
+            <DialogDescription>
+              {selectedProduct ? "Update product information" : "Create a new express shop product"}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Product Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Input
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  placeholder="e.g., protein_bars, snacks"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="price">Price (MAD) *</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sale_price">Sale Price (MAD)</Label>
+                <Input
+                  id="sale_price"
+                  type="number"
+                  step="0.01"
+                  value={formData.sale_price}
+                  onChange={(e) => setFormData({ ...formData, sale_price: e.target.value })}
+                  placeholder="Optional"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="brand">Brand</Label>
+                <Input
+                  id="brand"
+                  value={formData.brand}
+                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                <Input
+                  id="stock_quantity"
+                  type="number"
+                  value={formData.stock_quantity}
+                  onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image_url">Image URL</Label>
+              <Input
+                id="image_url"
+                type="url"
+                value={formData.image_url}
+                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="is_available"
+                checked={formData.is_available}
+                onChange={(e) => setFormData({ ...formData, is_available: e.target.checked })}
+                className="rounded"
+              />
+              <Label htmlFor="is_available">Product is available</Label>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsCreateModalOpen(false)
+                  setIsEditModalOpen(false)
+                  setSelectedProduct(null)
+                }}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {selectedProduct ? "Update Product" : "Create Product"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Product</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{selectedProduct?.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false)
+                setSelectedProduct(null)
+              }}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmDelete} disabled={isSubmitting}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

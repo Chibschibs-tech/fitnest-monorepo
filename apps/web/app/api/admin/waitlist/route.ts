@@ -1,22 +1,31 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 import { getSessionUser } from "@/lib/simple-auth"
+import { createErrorResponse, Errors } from "@/lib/error-handler"
 
+// Helper to check admin auth
+async function checkAdminAuth(request: NextRequest) {
+  const sessionId = request.cookies.get("session-id")?.value
+  if (!sessionId) {
+    return { error: Errors.unauthorized(), user: null }
+  }
+
+  const user = await getSessionUser(sessionId)
+  if (!user || user.role !== "admin") {
+    return { error: Errors.forbidden(), user: null }
+  }
+
+  return { error: null, user }
+}
 
 export async function GET(request: NextRequest) {
   try {
-    // Check authentication
-    const sessionId = request.cookies.get("session-id")?.value
-    if (!sessionId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-    }
-
-    const user = await getSessionUser(sessionId)
-    if (!user || user.role !== "admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    const authCheck = await checkAdminAuth(request)
+    if (authCheck.error) {
+      return createErrorResponse(authCheck.error, authCheck.error.message, authCheck.error.statusCode)
     }
 
     // Ensure waitlist table exists
@@ -42,7 +51,6 @@ export async function GET(request: NextRequest) {
       waitlist: waitlist || [],
     })
   } catch (error) {
-    console.error("Error fetching waitlist:", error)
-    return NextResponse.json({ error: "Failed to fetch waitlist" }, { status: 500 })
+    return createErrorResponse(error, "Failed to fetch waitlist", 500)
   }
 }

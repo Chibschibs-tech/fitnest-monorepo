@@ -1,9 +1,9 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 import { NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
-
+import { sql } from "@/lib/db"
+import { createErrorResponse } from "@/lib/error-handler"
 
 export async function GET() {
   try {
@@ -45,11 +45,6 @@ export async function GET() {
       total: customers.length,
     })
   } catch (error) {
-    console.error("Error fetching customers:", error)
-    return NextResponse.json({
-      success: false,
-      error: error.message,
-      customers: [],
-    })
+    return createErrorResponse(error, "Failed to fetch customers", 500)
   }
 }

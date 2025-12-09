@@ -1,5 +1,9 @@
 import { sql } from "@/lib/db"
 import { NextResponse } from "next/server"
+import { createErrorResponse } from "@/lib/error-handler"
+
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 export async function GET() {
   try {
@@ -33,10 +37,6 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error("Error fetching pricing data:", error)
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch pricing data" },
-      { status: 500 }
-    )
+    return createErrorResponse(error, "Failed to fetch pricing data", 500)
   }
 }

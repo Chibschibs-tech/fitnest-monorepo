@@ -111,3 +111,4 @@ Checkout → Subscription created (status: "new") → Payment → Status updated
 **Ready for:** Implementation phase  
 **Blockers:** None
 
+

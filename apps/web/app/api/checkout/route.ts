@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sql } from "@/lib/db";
+import { supabase } from "@fitnest/db";
 
 export async function POST(req: Request){
   try{
@@ -8,40 +8,19 @@ export async function POST(req: Request){
     if(!b.full_name || !b.email || !b.phone){
       return NextResponse.json({ error: "Merci de renseigner nom, email et téléphone." }, { status: 400 });
     }
-    
-    // Create subscription_requests table if it doesn't exist
-    await sql`
-      CREATE TABLE IF NOT EXISTS subscription_requests (
-        id SERIAL PRIMARY KEY,
-        plan VARCHAR(100),
-        meals TEXT[],
-        days INTEGER,
-        duration INTEGER,
-        total NUMERIC(10,2),
-        full_name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        phone VARCHAR(50) NOT NULL,
-        note TEXT,
-        created_at TIMESTAMP DEFAULT NOW()
-      )
-    `;
-    
     // insert lead
-    await sql`
-      INSERT INTO subscription_requests (plan, meals, days, duration, total, full_name, email, phone, note)
-      VALUES (
-        ${b.plan || null},
-        ${b.meals || null},
-        ${b.days || null},
-        ${b.duration || null},
-        ${b.total || null},
-        ${b.full_name},
-        ${b.email},
-        ${b.phone},
-        ${b.note || null}
-      )
-    `;
-    
+    const { error } = await supabase.from("subscription_requests").insert({
+      plan: b.plan,
+      meals: b.meals,
+      days: b.days,
+      duration: b.duration,
+      total: b.total,
+      full_name: b.full_name,
+      email: b.email,
+      phone: b.phone,
+      note: b.note ?? null,
+    });
+    if(error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true });
   }catch(e:any){
     return NextResponse.json({ error: e?.message || "Erreur" }, { status: 500 });

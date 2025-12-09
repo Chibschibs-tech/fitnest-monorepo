@@ -81,3 +81,4 @@ Converted all Supabase-dependent routes to use the standard PostgreSQL client (`
 - All production routes now use `@/lib/db` (universal PostgreSQL client)
 - The build now completes successfully without Supabase dependency
 
+

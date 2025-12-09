@@ -1,24 +1,37 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 import { getSessionUser } from "@/lib/simple-auth"
+import { createErrorResponse, Errors } from "@/lib/error-handler"
 
+// Helper to check admin auth
+async function checkAdminAuth(request: NextRequest) {
+  const sessionId = request.cookies.get("session-id")?.value
+  if (!sessionId) {
+    return { error: Errors.unauthorized(), user: null }
+  }
+
+  const user = await getSessionUser(sessionId)
+  if (!user || user.role !== "admin") {
+    return { error: Errors.forbidden(), user: null }
+  }
+
+  return { error: null, user }
+}
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const sessionId = request.cookies.get("session-id")?.value
-    if (!sessionId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const authCheck = await checkAdminAuth(request)
+    if (authCheck.error) {
+      return createErrorResponse(authCheck.error, authCheck.error.message, authCheck.error.statusCode)
     }
 
-    const user = await getSessionUser(sessionId)
-    if (!user || user.role !== "admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    const customerId = Number.parseInt(params.id)
+    if (isNaN(customerId)) {
+      return createErrorResponse(Errors.validation("Invalid customer ID"), "Invalid customer ID", 400)
     }
-
-    const customerId = params.id
 
     // Get customer details
     const customer = await sql`
@@ -28,7 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     `
 
     if (customer.length === 0) {
-      return NextResponse.json({ error: "Customer not found" }, { status: 404 })
+      return createErrorResponse(Errors.notFound("Customer not found"), "Customer not found", 404)
     }
 
     // Get customer orders
@@ -59,13 +72,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       },
     })
   } catch (error) {
-    console.error("Error fetching customer details:", error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch customer details",
-      },
-      { status: 500 },
-    )
+    return createErrorResponse(error, "Failed to fetch customer details", 500)
   }
 }

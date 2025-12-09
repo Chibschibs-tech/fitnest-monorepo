@@ -1,0 +1,139 @@
+[1mdiff --git a/apps/web/components/Footer.tsx b/apps/web/components/Footer.tsx[m
+[1mindex 6f68cb4..76735e7 100644[m
+[1m--- a/apps/web/components/Footer.tsx[m
+[1m+++ b/apps/web/components/Footer.tsx[m
+[36m@@ -1,32 +1,109 @@[m
+[31m-export default function Footer(){[m
+[32m+[m[32mimport Link from "next/link"[m
+[32m+[m[32mimport Image from "next/image"[m
+[32m+[m
+[32m+[m[32mexport default function Footer() {[m
+[32m+[m[32m  const currentYear = new Date().getFullYear()[m
+[32m+[m
+   return ([m
+[31m-    <footer className="border-t bg-white">[m
+[31m-      <div className="container grid gap-6 py-8 md:grid-cols-3">[m
+[31m-        <div>[m
+[31m-          <div className="text-lg font-bold mb-2">Fitnest</div>[m
+[31m-          <p className="text-sm text-gray-600">Repas sains livrés, adaptés à vos objectifs.</p>[m
+[31m-        </div>[m
+[31m-        <div>[m
+[31m-          <div className="font-semibold">Navigation</div>[m
+[31m-          <div className="grid grid-cols-2 gap-2 text-sm mt-2">[m
+[31m-            <a href="/plans" className="text-gray-700 hover:text-fitnest-green">Meal Plans</a>[m
+[31m-            <a href="/menu" className="text-gray-700 hover:text-fitnest-green">Meals</a>[m
+[31m-            <a href="/catalogue" className="text-gray-700 hover:text-fitnest-green">How It Works</a>[m
+[31m-            <a href="/subscribe" className="text-gray-700 hover:text-fitnest-green">Subscribe</a>[m
+[32m+[m[32m    <footer className="bg-white border-t border-gray-200">[m
+[32m+[m[32m      <div className="container mx-auto px-4 py-8">[m
+[32m+[m[32m        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">[m
+[32m+[m[32m          <div>[m
+[32m+[m[32m            <div className="mb-4">[m
+[32m+[m[32m              <Image[m
+[32m+[m[32m                src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"[m
+[32m+[m[32m                alt="Fitnest.ma Logo"[m
+[32m+[m[32m                width={150}[m
+[32m+[m[32m                height={50}[m
+[32m+[m[32m                className="h-12 w-auto"[m
+[32m+[m[32m              />[m
+[32m+[m[32m            </div>[m
+[32m+[m[32m            <p className="text-sm text-gray-600">[m
+[32m+[m[32m              Healthy, delicious meals delivered to your door. Custom meal plans for your fitness goals.[m
+[32m+[m[32m            </p>[m
+           </div>[m
+[31m-        </div>[m
+[31m-        <div>[m
+[31m-          <div className="font-semibold">Légal</div>[m
+[31m-          <div className="grid gap-2 text-sm mt-2">[m
+[31m-            <a href="#" className="text-gray-700 hover:text-fitnest-green">CGU</a>[m
+[31m-            <a href="#" className="text-gray-700 hover:text-fitnest-green">Confidentialité</a>[m
+[31m-            <a href="#" className="text-gray-700 hover:text-fitnest-green">Mentions légales</a>[m
+[32m+[m
+[32m+[m[32m          <div>[m
+[32m+[m[32m            <h3 className="mb-4 text-sm font-bold uppercase text-gray-500">Products</h3>[m
+[32m+[m[32m            <ul className="space-y-2 text-sm">[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/meal-plans" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Meal Plans[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/meals" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Individual Meals[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/express-shop" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Express Shop[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m            </ul>[m
+[32m+[m[32m          </div>[m
+[32m+[m
+[32m+[m[32m          <div>[m
+[32m+[m[32m            <h3 className="mb-4 text-sm font-bold uppercase text-gray-500">Company</h3>[m
+[32m+[m[32m            <ul className="space-y-2 text-sm">[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/about" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  About Us[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/how-it-works" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  How It Works[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/blog" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Blog[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/careers" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Careers[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m            </ul>[m
+[32m+[m[32m          </div>[m
+[32m+[m
+[32m+[m[32m          <div>[m
+[32m+[m[32m            <h3 className="mb-4 text-sm font-bold uppercase text-gray-500">Support</h3>[m
+[32m+[m[32m            <ul className="space-y-2 text-sm">[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/contact" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Contact Us[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/faq" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  FAQ[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/terms" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Terms of Service[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m              <li>[m
+[32m+[m[32m                <Link href="/privacy" className="text-gray-600 hover:text-fitnest-green">[m
+[32m+[m[32m                  Privacy Policy[m
+[32m+[m[32m                </Link>[m
+[32m+[m[32m              </li>[m
+[32m+[m[32m            </ul>[m
+           </div>[m
+         </div>[m
+[31m-      </div>[m
+[31m-      <div className="border-t">[m
+[31m-        <div className="container py-3 text-xs text-gray-500">© {new Date().getFullYear()} Fitnest</div>[m
+[32m+[m
+[32m+[m[32m        <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">[m
+[32m+[m[32m          <p>&copy; {currentYear} Fitnest.ma. All rights reserved.</p>[m
+[32m+[m[32m        </div>[m
+       </div>[m
+     </footer>[m
+[31m-  );[m
+[32m+[m[32m  )[m
+ }[m
+[32m+[m
+[32m+[m[32m// Also export as named export for compatibility[m
+[32m+[m[32mexport { Footer }[m

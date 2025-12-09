@@ -83,3 +83,4 @@ dig fitnest.ma
 
 **Action:** Check Vercel dashboard to verify domain configuration
 
+
