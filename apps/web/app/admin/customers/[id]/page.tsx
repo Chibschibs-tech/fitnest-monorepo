@@ -1,4 +1,4 @@
-import { CustomerDetailContent } from "./customer-detail-content"
+import CustomerDetailContent from "./customer-detail-content"
 
 interface PageProps {
   params: {

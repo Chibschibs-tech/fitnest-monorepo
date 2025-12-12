@@ -1,13 +1,13 @@
 # API Documentation
 
-**Last Updated:** 2025-12-08T16:46:09.617Z
-**Total Routes:** 130
+**Last Updated:** 2025-12-12T20:04:32.580Z
+**Total Routes:** 135
 
 ## Overview
 
 This document is automatically generated from the codebase. It lists all API routes available in the FitNest application.
 
-## Public API Routes (130)
+## Public API Routes (135)
 
 ### /apiadmin/bootstrap
 - **Methods:** POST
@@ -94,7 +94,7 @@ This document is automatically generated from the codebase. It lists all API rou
 - **File:** `\apps\web\app\api\admin\orders\route.ts`
 
 ### /apiadmin/orders/[id]
-- **Methods:** PUT
+- **Methods:** GET, PUT
 - **File:** `\apps\web\app\api\admin\orders\[id]\route.ts`
 
 ### /apiadmin/orders/[id]/status
@@ -142,28 +142,48 @@ This document is automatically generated from the codebase. It lists all API rou
 - **File:** `\apps\web\app\api\admin\pricing\meal-types\route.ts`
 
 ### /apiadmin/products/accessories
-- **Methods:** GET
+- **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\accessories\route.ts`
 
+### /apiadmin/products/accessories/[id]
+- **Methods:** PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\accessories\[id]\route.ts`
+
 ### /apiadmin/products/express-shop
-- **Methods:** GET
+- **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\express-shop\route.ts`
+
+### /apiadmin/products/express-shop/[id]
+- **Methods:** PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\express-shop\[id]\route.ts`
 
 ### /apiadmin/products/meal-plans
 - **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\meal-plans\route.ts`
 
+### /apiadmin/products/meal-plans/[id]
+- **Methods:** GET, PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\meal-plans\[id]\route.ts`
+
 ### /apiadmin/products/meals
-- **Methods:** GET
+- **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\meals\route.ts`
+
+### /apiadmin/products/meals/[id]
+- **Methods:** PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\meals\[id]\route.ts`
 
 ### /apiadmin/products/meals/[id]/status
 - **Methods:** PATCH
 - **File:** `\apps\web\app\api\admin\products\meals\[id]\status\route.ts`
 
 ### /apiadmin/products/snacks
-- **Methods:** GET
+- **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\snacks\route.ts`
+
+### /apiadmin/products/snacks/[id]
+- **Methods:** PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\snacks\[id]\route.ts`
 
 ### /apiadmin/setup-unified-cart
 - **Methods:** POST

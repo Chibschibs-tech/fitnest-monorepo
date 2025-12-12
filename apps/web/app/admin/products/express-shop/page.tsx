@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import { getSessionUser } from "@/lib/simple-auth"
-import ExpressShopContent from "./express-shop-content"
+import { ExpressShopContent } from "./express-shop-content"
 
 export const dynamic = "force-dynamic"
 

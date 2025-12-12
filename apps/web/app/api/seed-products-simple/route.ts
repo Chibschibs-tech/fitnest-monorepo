@@ -2,15 +2,34 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextResponse } from "next/server"
-import { db, products } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 export async function GET() {
   try {
-    // Check if products already exist
-    const existingProducts = await db.select({ count: { id: products.id } }).from(products)
+    // Ensure products table exists
+    await sql`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        price DECIMAL(10, 2) NOT NULL,
+        saleprice DECIMAL(10, 2),
+        imageurl VARCHAR(255),
+        category VARCHAR(50),
+        tags VARCHAR(255),
+        nutritionalinfo JSONB,
+        stock INTEGER DEFAULT 0,
+        isactive BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `
 
-    if (existingProducts.length > 0 && existingProducts[0].count > 0) {
-      return NextResponse.json({ message: "Products already seeded", count: existingProducts[0].count })
+    // Check if products already exist
+    const existingProducts = await sql`SELECT COUNT(*) as count FROM products`
+
+    if (existingProducts.length > 0 && Number(existingProducts[0].count) > 0) {
+      return NextResponse.json({ message: "Products already seeded", count: Number(existingProducts[0].count) })
     }
 
     // Just two simple products for testing
@@ -47,8 +66,16 @@ export async function GET() {
       },
     ]
 
-    // Insert products
-    const insertedProducts = await db.insert(products).values(sampleProducts).returning()
+    // Insert products using raw SQL
+    const insertedProducts = []
+    for (const product of sampleProducts) {
+      const result = await sql`
+        INSERT INTO products (name, description, price, saleprice, imageurl, category, tags, nutritionalinfo, stock, isactive)
+        VALUES (${product.name}, ${product.description}, ${product.price}, ${product.salePrice}, ${product.imageUrl}, ${product.category}, ${product.tags}, ${product.nutritionalInfo}::jsonb, ${product.stock}, ${product.isActive})
+        RETURNING id, name, description, price, saleprice, imageurl, category, tags, nutritionalinfo, stock, isactive
+      `
+      insertedProducts.push(result[0])
+    }
 
     return NextResponse.json({
       message: "Products seeded successfully",

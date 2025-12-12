@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { cookies } from "next/headers"
 import { getSessionUser } from "@/lib/simple-auth"
-import AccessoriesContent from "./accessories-content"
+import { AccessoriesContent } from "./accessories-content"
 
 export const dynamic = "force-dynamic"
 
