@@ -82,3 +82,5 @@ Converted all Supabase-dependent routes to use the standard PostgreSQL client (`
 - The build now completes successfully without Supabase dependency
 
 
+
+

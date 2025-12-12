@@ -218,14 +218,22 @@ export function CheckoutContent() {
         billing: billingAddress,
         order: {
           cartItems:
-            cart?.items.map((item) => ({
-              productId: item.productId,
-              quantity: item.quantity,
-              price: item.salePrice || item.price,
+            cart?.items?.map((item: any) => ({
+              productId: item.product_id || item.productId,
+              quantity: item.quantity || 1,
+              price: item.unit_price || item.salePrice || item.price || 0,
+              name: item.product_name || item.name,
             })) || [],
           cartSubtotal: cart?.subtotal || 0,
           shipping: formData.deliveryOption === "express" ? 30 : 0,
-          mealPlan: mealPlan, // Include meal plan data if exists
+          mealPlan: mealPlan ? {
+            planName: mealPlan.planName,
+            planId: mealPlan.planId,
+            planPrice: mealPlan.planPrice,
+            duration: mealPlan.duration,
+            mealsPerWeek: mealPlan.mealsPerWeek,
+            mealTypes: mealPlan.customizations?.dietaryRestrictions || [],
+          } : undefined, // Include meal plan data if exists
         },
       }
 

@@ -82,6 +82,15 @@ export function middleware(request: NextRequest) {
   const sessionId = request.cookies.get("session-id")?.value
 
   if (!sessionId) {
+    // For API routes, return JSON 401 instead of redirecting
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      )
+    }
+    
+    // For page routes, redirect to login
     const loginUrl = new URL("/login", request.url)
     loginUrl.searchParams.set("callbackUrl", encodeURI(request.url))
     return NextResponse.redirect(loginUrl)

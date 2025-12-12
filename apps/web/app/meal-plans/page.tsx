@@ -13,10 +13,21 @@ export default function MealPlansPage() {
   }, [])
 
   const fetchPlans = async () => {
-    const res = await fetch('/api/admin/meal-plans')
-    const data = await res.json()
-    setPlans(data.filter((p: any) => p.is_active))
-    setLoading(false)
+    try {
+      const res = await fetch('/api/admin/meal-plans')
+      if (!res.ok) {
+        throw new Error(`Failed to fetch meal plans: ${res.status}`)
+      }
+      const data = await res.json()
+      // Handle both array response and error response
+      const plansArray = Array.isArray(data) ? data : (data.plans || data.data || [])
+      setPlans(plansArray.filter((p: any) => p.is_active !== false))
+    } catch (error) {
+      console.error('Error fetching meal plans:', error)
+      setPlans([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (loading) {

@@ -70,18 +70,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Failed to handle user account" }, { status: 500 })
     }
 
-    // Get cart items from unified cart_items table
+    // Get cart items from unified cart_items table OR from request body
     const cookieStore = cookies()
     const cartId = cookieStore.get("cartId")?.value
 
     console.log("Cart ID from cookie:", cartId)
+    console.log("Order data from body:", body.order)
 
     let cartItems = []
     let subscriptions = []
     let cartSubtotal = 0
 
-    if (cartId) {
+    // First, try to get items from request body (if provided)
+    if (body.order?.cartItems && Array.isArray(body.order.cartItems) && body.order.cartItems.length > 0) {
+      console.log("Using cart items from request body")
+      cartItems = body.order.cartItems.map((item: any) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        name: item.name || `Product ${item.productId}`,
+        price: Number(item.price || 0),
+        total: Number(item.price || 0) * Number(item.quantity || 1),
+      }))
+      cartSubtotal = body.order.cartSubtotal || cartItems.reduce((sum, item) => sum + item.total, 0)
+      console.log("Processed cart items from body:", cartItems)
+    } else if (cartId) {
+      // Fallback: fetch from database
       try {
+        console.log("Fetching cart items from database")
         // Fetch all cart items (both products and subscriptions)
         const items = await sql`
           SELECT 
@@ -133,6 +148,20 @@ export async function POST(request: Request) {
       } catch (cartError) {
         console.log("Error fetching cart items:", cartError)
       }
+    }
+
+    // Also check for meal plan in request body (legacy support)
+    if (body.order?.mealPlan && !subscriptions.length) {
+      console.log("Processing meal plan from request body")
+      const mealPlan = body.order.mealPlan
+      subscriptions.push({
+        plan_name: mealPlan.planName || mealPlan.planId || 'Unknown Plan',
+        meal_types: mealPlan.mealTypes || [],
+        days_per_week: mealPlan.mealsPerWeek || mealPlan.daysPerWeek || 7,
+        duration_weeks: mealPlan.duration ? parseInt(mealPlan.duration) : 4,
+        total_price: mealPlan.planPrice || mealPlan.price || 0,
+      })
+      cartSubtotal += mealPlan.planPrice || mealPlan.price || 0
     }
 
     // Check if we have items

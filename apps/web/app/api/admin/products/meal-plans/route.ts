@@ -2,173 +2,124 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/db"
 import { sql } from '@/lib/db'
+import { getSessionUser } from "@/lib/simple-auth"
+import { createErrorResponse } from "@/lib/error-handler"
 
+// Helper to check admin auth
+async function checkAdminAuth(request: NextRequest) {
+  const sessionId = request.cookies.get("session-id")?.value
+  if (!sessionId) {
+    return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }), user: null }
+  }
+
+  const user = await getSessionUser(sessionId)
+  if (!user || user.role !== "admin") {
+    return { error: NextResponse.json({ error: "Forbidden" }, { status: 403 }), user: null }
+  }
+
+  return { error: null, user }
+}
 
 export async function GET(request: NextRequest) {
   try {
-    console.log("Fetching meal plans...")
+    const authCheck = await checkAdminAuth(request)
+    if (authCheck.error) return authCheck.error
 
-    // First, ensure the meal_plans table exists
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS meal_plans (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT,
-        weekly_price DECIMAL(10,2) NOT NULL,
-        type TEXT NOT NULL,
-        calories_min INTEGER,
-        calories_max INTEGER,
-        active BOOLEAN DEFAULT true,
-        created_at TIMESTAMP DEFAULT NOW(),
-        updated_at TIMESTAMP DEFAULT NOW()
-      )
-    `)
-
-    // Check if we have any meal plans
-    const existingPlans = await db.execute(sql`
-      SELECT COUNT(*) as count FROM meal_plans
-    `)
-
-    const planCount = existingPlans.rows[0]?.count || 0
-
-    // If no meal plans exist, create some sample ones
-    if (planCount === 0) {
-      console.log("No meal plans found, creating sample data...")
-
-      await db.execute(sql`
-        INSERT INTO meal_plans (name, description, weekly_price, type, calories_min, calories_max, active)
-        VALUES 
-        ('Weight Loss Plan', 'Designed to help you lose weight safely and effectively with balanced, low-calorie meals.', 299.00, 'weight-loss', 1200, 1500, true),
-        ('Muscle Building Plan', 'High-protein meals to support muscle growth and recovery for active individuals.', 399.00, 'muscle-building', 2000, 2500, true),
-        ('Keto Plan', 'Low-carb, high-fat meals following ketogenic diet principles for fat burning.', 349.00, 'keto', 1500, 1800, true),
-        ('Mediterranean Plan', 'Heart-healthy meals inspired by Mediterranean cuisine with fresh ingredients.', 329.00, 'mediterranean', 1600, 2000, true),
-        ('Vegetarian Plan', 'Plant-based meals packed with nutrients and flavor for vegetarian lifestyles.', 279.00, 'vegetarian', 1400, 1800, true)
-      `)
-    }
-
-    // Fetch all meal plans
-    const mealPlansResult = await db.execute(sql`
+    // Use correct meal_plans schema from Drizzle
+    // Join with plan_variants to get pricing info
+    const mealPlansResult = await sql`
       SELECT 
-        id,
-        name,
-        description,
-        weekly_price,
-        type,
-        calories_min,
-        calories_max,
-        active,
-        created_at,
-        updated_at
-      FROM meal_plans
-      ORDER BY created_at DESC
-    `)
+        mp.id,
+        mp.slug,
+        mp.title as name,
+        mp.summary as description,
+        mp.audience as category,
+        mp.published as is_active,
+        mp.created_at,
+        COALESCE(MIN(pv.weekly_base_price_mad), 0) as price_per_week,
+        COALESCE(COUNT(DISTINCT pv.id), 0) as variant_count,
+        COALESCE(COUNT(DISTINCT s.id), 0) as subscribers_count
+      FROM meal_plans mp
+      LEFT JOIN plan_variants pv ON mp.id = pv.meal_plan_id
+      LEFT JOIN subscriptions s ON pv.id = s.plan_variant_id AND s.status = 'active'
+      GROUP BY mp.id, mp.slug, mp.title, mp.summary, mp.audience, mp.published, mp.created_at
+      ORDER BY mp.created_at DESC
+    `
 
-    // Get subscriber counts (from orders or a separate subscriptions table)
-    const mealPlansWithStats = await Promise.all(
-      mealPlansResult.rows.map(async (plan: any) => {
-        try {
-          // Try to get subscriber count from orders table
-          const subscriberResult = await db.execute(sql`
-            SELECT COUNT(*) as subscriber_count
-            FROM orders o
-            WHERE o.status = 'active' 
-            AND o.id IN (
-              SELECT DISTINCT user_id 
-              FROM orders 
-              WHERE status IN ('active', 'completed')
-            )
-          `)
-
-          const subscriberCount = subscriberResult.rows[0]?.subscriber_count || Math.floor(Math.random() * 50) + 10
-
-          return {
-            ...plan,
-            subscriber_count: subscriberCount,
-            weekly_price: Number.parseFloat(plan.weekly_price || "0"),
-            monthly_price: Number.parseFloat(plan.weekly_price || "0") * 4.33, // Convert weekly to monthly
-            status: plan.active ? "active" : "inactive",
-          }
-        } catch (error) {
-          console.log("Error getting subscriber count for plan", plan.id, error)
-          return {
-            ...plan,
-            subscriber_count: Math.floor(Math.random() * 50) + 10,
-            weekly_price: Number.parseFloat(plan.weekly_price || "0"),
-            monthly_price: Number.parseFloat(plan.weekly_price || "0") * 4.33,
-            status: plan.active ? "active" : "inactive",
-          }
-        }
-      }),
-    )
-
-    console.log("Meal plans fetched:", mealPlansWithStats.length)
+    // Format response to match frontend expectations
+    const mealPlans = mealPlansResult.map((plan: any) => ({
+      id: plan.id,
+      name: plan.name,
+      description: plan.description || '',
+      price_per_week: Number(plan.price_per_week) || 0,
+      duration_weeks: 4, // Default, can be customized per variant
+      meals_per_day: 3, // Default, can be customized per variant
+      category: plan.category || 'balanced',
+      image_url: null, // Can be added later
+      is_available: plan.is_active,
+      subscribers_count: Number(plan.subscribers_count) || 0,
+      variant_count: Number(plan.variant_count) || 0,
+      created_at: plan.created_at,
+    }))
 
     return NextResponse.json({
       success: true,
-      mealPlans: mealPlansWithStats,
-      total: mealPlansWithStats.length,
+      mealPlans: mealPlans,
+      total: mealPlans.length,
     })
   } catch (error) {
-    console.error("Error fetching meal plans:", error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to fetch meal plans",
-        details: error instanceof Error ? error.message : "Unknown error",
-        mealPlans: [],
-        total: 0,
-      },
-      { status: 500 },
-    )
+    return createErrorResponse(error, "Failed to fetch meal plans", 500)
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const authCheck = await checkAdminAuth(request)
+    if (authCheck.error) return authCheck.error
+
     const body = await request.json()
-    const { name, description, weeklyPrice, type, caloriesMin, caloriesMax } = body
+    const { name, description, category, published = false } = body
 
     // Validate required fields
-    if (!name || !weeklyPrice || !type) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Missing required fields: name, weeklyPrice, and type are required",
-        },
-        { status: 400 },
+    if (!name || !category) {
+      return createErrorResponse(
+        new Error("Missing required fields"),
+        "Missing required fields: name and category are required",
+        400
       )
     }
 
-    // Insert new meal plan
-    const result = await db.execute(sql`
-      INSERT INTO meal_plans (name, description, weekly_price, type, calories_min, calories_max, active)
-      VALUES (${name}, ${description || ""}, ${weeklyPrice}, ${type}, ${caloriesMin || null}, ${caloriesMax || null}, true)
-      RETURNING *
-    `)
+    // Generate slug from title
+    const slug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
 
-    const newMealPlan = result.rows[0]
+    // Insert new meal plan using correct schema
+    const result = await sql`
+      INSERT INTO meal_plans (slug, title, summary, audience, published)
+      VALUES (${slug}, ${name}, ${description || null}, ${category}, ${published})
+      RETURNING id, slug, title, summary, audience, published, created_at
+    `
+
+    const newMealPlan = result[0]
 
     return NextResponse.json({
       success: true,
       mealPlan: {
-        ...newMealPlan,
-        weekly_price: Number.parseFloat(newMealPlan.weekly_price),
-        monthly_price: Number.parseFloat(newMealPlan.weekly_price) * 4.33,
-        subscriber_count: 0,
-        status: "active",
+        id: newMealPlan.id,
+        name: newMealPlan.title,
+        description: newMealPlan.summary || '',
+        category: newMealPlan.audience,
+        is_available: newMealPlan.published,
+        price_per_week: 0, // Pricing is in plan_variants
+        subscribers_count: 0,
+        variant_count: 0,
+        created_at: newMealPlan.created_at,
       },
-    })
+    }, { status: 201 })
   } catch (error) {
-    console.error("Error creating meal plan:", error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Failed to create meal plan",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
-    )
+    return createErrorResponse(error, "Failed to create meal plan", 500)
   }
 }

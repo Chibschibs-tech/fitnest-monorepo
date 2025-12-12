@@ -81,7 +81,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return createErrorResponse(new Error("No fields to update"), "No fields to update", 400)
     }
 
-    updateFields.push(`updatedat = NOW()`)
+    updateFields.push(`updated_at = NOW()`)
     values.push(id) // Add ID for WHERE clause
 
     // Use template literal for dynamic query building, then execute with sql
@@ -93,7 +93,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       WHERE id = $${paramCounter}
       RETURNING 
         id, name, description, price, saleprice as sale_price, imageurl as image_url, 
-        category, stock as stock_quantity, isactive as is_available, createdat as created_at
+        category, stock as stock_quantity, isactive as is_available, created_at
     `
 
     // Import q helper for parameterized queries
@@ -130,7 +130,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     // Soft delete by setting isactive to false
-    await sql`UPDATE products SET isactive = false, updatedat = NOW() WHERE id = ${id}`
+    await sql`UPDATE products SET isactive = false, updated_at = NOW() WHERE id = ${id}`
 
     return NextResponse.json({
       success: true,

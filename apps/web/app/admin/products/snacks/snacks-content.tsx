@@ -5,8 +5,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Package, Plus, Edit, RefreshCw } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Search, Package, Plus, Edit, RefreshCw, Trash2, Loader2 } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
 
 interface Snack {
@@ -27,6 +48,24 @@ export default function SnacksContent() {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  
+  // Modal states
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [selectedSnack, setSelectedSnack] = useState<Snack | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    category: "snacks",
+    image_url: "",
+    stock_quantity: "0",
+    status: "active",
+  })
 
   useEffect(() => {
     fetchSnacks()
@@ -54,8 +93,8 @@ export default function SnacksContent() {
 
   const handleStatusUpdate = async (snackId: number, newStatus: string) => {
     try {
-      const response = await fetch(`/api/admin/products/snacks/${snackId}/status`, {
-        method: "PATCH",
+      const response = await fetch(`/api/admin/products/snacks/${snackId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       })
@@ -68,6 +107,115 @@ export default function SnacksContent() {
     } catch (error) {
       console.error("Error updating snack status:", error)
       setError("Error updating snack status")
+    }
+  }
+
+  // Handle create
+  const handleCreate = () => {
+    setFormData({
+      name: "",
+      description: "",
+      price: "",
+      category: "snacks",
+      image_url: "",
+      stock_quantity: "0",
+      status: "active",
+    })
+    setSelectedSnack(null)
+    setIsCreateModalOpen(true)
+  }
+
+  // Handle edit
+  const handleEdit = (snack: Snack) => {
+    setSelectedSnack(snack)
+    setFormData({
+      name: snack.name,
+      description: snack.description || "",
+      price: snack.price.toString(),
+      category: snack.category || "snacks",
+      image_url: snack.image_url || "",
+      stock_quantity: snack.stock_quantity?.toString() || "0",
+      status: snack.status || "active",
+    })
+    setIsEditModalOpen(true)
+  }
+
+  // Handle delete
+  const handleDeleteClick = (snack: Snack) => {
+    setSelectedSnack(snack)
+    setIsDeleteDialogOpen(true)
+  }
+
+  // Submit create/edit
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      const payload = {
+        name: formData.name,
+        description: formData.description,
+        price: Number.parseFloat(formData.price),
+        category: formData.category,
+        image_url: formData.image_url || null,
+        stock_quantity: Number.parseInt(formData.stock_quantity) || 0,
+        status: formData.status,
+      }
+
+      const url = selectedSnack
+        ? `/api/admin/products/snacks/${selectedSnack.id}`
+        : "/api/admin/products/snacks"
+      const method = selectedSnack ? "PUT" : "POST"
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setIsCreateModalOpen(false)
+        setIsEditModalOpen(false)
+        setSelectedSnack(null)
+        fetchSnacks() // Refresh list
+      } else {
+        setError(data.error || "Failed to save snack")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save snack")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  // Confirm delete
+  const handleConfirmDelete = async () => {
+    if (!selectedSnack) return
+
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      const response = await fetch(`/api/admin/products/snacks/${selectedSnack.id}`, {
+        method: "DELETE",
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setIsDeleteDialogOpen(false)
+        setSelectedSnack(null)
+        fetchSnacks() // Refresh list
+      } else {
+        setError(data.error || "Failed to delete snack")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete snack")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -145,7 +293,7 @@ export default function SnacksContent() {
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
-          <Button>
+          <Button onClick={handleCreate} disabled={isSubmitting}>
             <Plus className="h-4 w-4 mr-2" />
             Add Snack
           </Button>
@@ -276,9 +424,24 @@ export default function SnacksContent() {
                   <span className="text-xs text-gray-500">Stock: {snack.stock_quantity || 0}</span>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 bg-transparent"
+                    onClick={() => handleEdit(snack)}
+                    disabled={isSubmitting}
+                  >
                     <Edit className="h-3 w-3 mr-1" />
                     Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDeleteClick(snack)}
+                    disabled={isSubmitting}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                   <Select value={snack.status} onValueChange={(value) => handleStatusUpdate(snack.id, value)}>
                     <SelectTrigger className="w-24 h-8">
@@ -293,9 +456,154 @@ export default function SnacksContent() {
                 </div>
               </CardContent>
             </Card>
-          ))
+          )          )
         )}
       </div>
+
+      {/* Create/Edit Modal */}
+      <Dialog open={isCreateModalOpen || isEditModalOpen} onOpenChange={(open) => {
+        if (!open) {
+          setIsCreateModalOpen(false)
+          setIsEditModalOpen(false)
+          setSelectedSnack(null)
+          setError(null)
+        }
+      }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{selectedSnack ? "Edit Snack" : "Add New Snack"}</DialogTitle>
+            <DialogDescription>
+              {selectedSnack ? "Update snack information" : "Create a new snack product"}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Product Name *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="price">Price (MAD) *</Label>
+                <Input
+                  id="price"
+                  type="number"
+                  step="0.01"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category *</Label>
+                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="protein_bars">Protein Bars</SelectItem>
+                    <SelectItem value="supplements">Supplements</SelectItem>
+                    <SelectItem value="healthy_snacks">Healthy Snacks</SelectItem>
+                    <SelectItem value="beverages">Beverages</SelectItem>
+                    <SelectItem value="snacks">Snacks</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="stock_quantity">Stock Quantity</Label>
+                <Input
+                  id="stock_quantity"
+                  type="number"
+                  value={formData.stock_quantity}
+                  onChange={(e) => setFormData({ ...formData, stock_quantity: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="image_url">Image URL</Label>
+              <Input
+                id="image_url"
+                value={formData.image_url}
+                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsCreateModalOpen(false)
+                  setIsEditModalOpen(false)
+                  setSelectedSnack(null)
+                }}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  selectedSnack ? "Update" : "Create"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Snack</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedSnack?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={isSubmitting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

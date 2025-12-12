@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
           imageurl as image_url,
           isactive as is_available,
           stock as stock_quantity,
-          createdat as created_at
+          created_at
         FROM products
-        ORDER BY createdat DESC
+        ORDER BY created_at DESC
       `
     } else {
       products = await sql`
@@ -59,10 +59,10 @@ export async function GET(request: NextRequest) {
           imageurl as image_url,
           isactive as is_available,
           stock as stock_quantity,
-          createdat as created_at
+          created_at
         FROM products
         WHERE isactive = true
-        ORDER BY createdat DESC
+        ORDER BY created_at DESC
       `
     }
 
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       )
       RETURNING 
         id, name, description, price, saleprice as sale_price, imageurl as image_url, 
-        category, stock as stock_quantity, isactive as is_available, createdat as created_at
+        category, stock as stock_quantity, isactive as is_available, created_at
     `
 
     return NextResponse.json(
