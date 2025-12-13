@@ -178,8 +178,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <main className="flex-1 relative overflow-y-auto focus:outline-none">{children}</main>
+      <div className="flex flex-col flex-1 overflow-hidden bg-gray-50">
+        <main className="flex-1 relative overflow-y-auto focus:outline-none bg-gray-50">{children}</main>
       </div>
     </div>
   )

@@ -20,8 +20,10 @@ export default async function MealPlansPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <MealPlansContent />
+    <div className="h-full w-full">
+      <div className="container mx-auto p-6">
+        <MealPlansContent />
+      </div>
     </div>
   )
 }

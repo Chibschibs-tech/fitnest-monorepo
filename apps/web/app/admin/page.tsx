@@ -19,5 +19,9 @@ export default async function AdminDashboardPage() {
     redirect("/login?redirect=/admin")
   }
 
-  return <AdminDashboardContent />
+  return (
+    <div className="h-full">
+      <AdminDashboardContent />
+    </div>
+  )
 }
