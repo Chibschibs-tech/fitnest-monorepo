@@ -1,6 +1,6 @@
 # FitNest Technical Documentation
 
-**Last Updated:** 2025-12-12T20:04:32.612Z
+**Last Updated:** 2025-12-13T18:25:14.634Z
 
 ## Documentation Index
 
@@ -28,4 +28,4 @@ This documentation is automatically updated. Run `node scripts/generate-docs.js`
 
 ---
 
-*Last generated: 2025-12-12T20:04:32.613Z*
+*Last generated: 2025-12-13T18:25:14.634Z*

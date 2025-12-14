@@ -1,6 +1,6 @@
 # API Documentation
 
-**Last Updated:** 2025-12-12T20:04:32.580Z
+**Last Updated:** 2025-12-13T18:25:14.618Z
 **Total Routes:** 135
 
 ## Overview
