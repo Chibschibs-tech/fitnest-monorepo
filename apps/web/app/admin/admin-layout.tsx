@@ -16,6 +16,7 @@ import {
   ChevronDown,
   ChevronRight,
   ShoppingCart,
+  Calculator,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -35,12 +36,30 @@ const navigation = [
     icon: ShoppingCart,
     isGroup: true,
     children: [
+      { name: "MP Categories", href: "/admin/products/mp-categories", icon: Package },
       { name: "Meal Plans", href: "/admin/products/meal-plans", icon: Apple },
       { name: "Individual Meals", href: "/admin/products/meals", icon: Package },
       { name: "Snacks & Supplements", href: "/admin/products/snacks", icon: Package },
       { name: "Accessories", href: "/admin/products/accessories", icon: Package },
       { name: "Express Shop", href: "/admin/products/express-shop", icon: ShoppingCart },
     ],
+  },
+  {
+    name: "Pricing",
+    icon: Calculator,
+    isGroup: true,
+    children: [
+      {
+        name: "Pricing Management",
+        href: "/admin/pricing",
+        icon: Calculator,
+      },
+    ],
+  },
+  {
+    name: "Migration",
+    href: "/admin/migrate-mp-categories",
+    icon: Settings,
   },
   {
     name: "General Orders",

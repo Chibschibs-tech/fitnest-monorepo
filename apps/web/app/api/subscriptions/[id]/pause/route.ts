@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -23,7 +23,13 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     console.log(`Pausing subscription ${subscriptionId} for ${pauseDurationDays} days`)
 
-    // For now, just return success since we don't have the full database schema
+    // Update subscription status to paused
+    await sql`
+      UPDATE subscriptions 
+      SET status = 'paused'
+      WHERE id = ${subscriptionId}
+    `
+
     return NextResponse.json({
       success: true,
       message: `Subscription paused for ${pauseDurationDays} days. Your deliveries will resume automatically.`,

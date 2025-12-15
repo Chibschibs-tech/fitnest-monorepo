@@ -26,9 +26,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Search, Plus, Edit, Trash2, Users, Loader2 } from "lucide-react"
+import { Search, Plus, Edit, Trash2, Users, Loader2, Settings } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface MealPlan {
   id: number
@@ -38,15 +46,26 @@ interface MealPlan {
   duration_weeks: number
   meals_per_day: number
   category: string
+  mp_category_id?: number
   features: string[]
   image_url?: string
   is_available: boolean
   subscribers_count?: number
 }
 
+interface MPCategory {
+  id: number
+  name: string
+  slug: string
+  description: string
+}
+
 export function MealPlansContent() {
+  const router = useRouter()
   const [mealPlans, setMealPlans] = useState<MealPlan[]>([])
+  const [categories, setCategories] = useState<MPCategory[]>([])
   const [loading, setLoading] = useState(true)
+  const [categoriesLoading, setCategoriesLoading] = useState(true)
   const [error, setError] = useState<string>("")
   const [searchTerm, setSearchTerm] = useState("")
   
@@ -61,25 +80,82 @@ export function MealPlansContent() {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    category: "balanced",
+    mp_category_id: "",
     is_available: true,
   })
 
   useEffect(() => {
     fetchMealPlans()
+    fetchCategories()
   }, [])
+
+  const fetchCategories = async () => {
+    try {
+      setCategoriesLoading(true)
+      const response = await fetch("/api/admin/mp-categories")
+      const data = await response.json()
+      
+      if (response.ok && data.success && data.categories) {
+        setCategories(data.categories || [])
+      }
+    } catch (err) {
+      console.error("Error fetching categories:", err)
+    } finally {
+      setCategoriesLoading(false)
+    }
+  }
 
   const fetchMealPlans = async () => {
     try {
       setLoading(true)
+      setError("")
       const response = await fetch("/api/admin/products/meal-plans")
-      if (!response.ok) {
-        throw new Error("Failed to fetch meal plans")
-      }
       const data = await response.json()
-      setMealPlans(data.mealPlans || [])
+      
+      if (!response.ok) {
+        // Extract error message from various possible formats
+        let errorMessage = "Failed to fetch meal plans"
+        if (data.error) {
+          if (typeof data.error === 'string') {
+            errorMessage = data.error
+          } else if (data.error.message) {
+            errorMessage = data.error.message
+          } else {
+            errorMessage = JSON.stringify(data.error)
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        setError(errorMessage)
+        setMealPlans([])
+        return
+      }
+      
+      if (data.success && data.mealPlans) {
+        setMealPlans(data.mealPlans || [])
+        setError("")
+      } else {
+        // Extract error message from various possible formats
+        let errorMessage = "Failed to fetch meal plans"
+        if (data.error) {
+          if (typeof data.error === 'string') {
+            errorMessage = data.error
+          } else if (data.error.message) {
+            errorMessage = data.error.message
+          } else {
+            errorMessage = JSON.stringify(data.error)
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        setError(errorMessage)
+        setMealPlans([])
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch meal plans")
+      console.error("Error fetching meal plans:", err)
+      const errorMessage = err instanceof Error ? err.message : "Failed to fetch meal plans"
+      setError(errorMessage)
+      setMealPlans([])
     } finally {
       setLoading(false)
     }
@@ -97,7 +173,7 @@ export function MealPlansContent() {
     setFormData({
       name: "",
       description: "",
-      category: "balanced",
+      mp_category_id: categories.length > 0 ? categories[0].id.toString() : "",
       is_available: true,
     })
     setSelectedMealPlan(null)
@@ -110,7 +186,7 @@ export function MealPlansContent() {
     setFormData({
       name: plan.name,
       description: plan.description || "",
-      category: plan.category || "balanced",
+      mp_category_id: plan.mp_category_id?.toString() || "",
       is_available: plan.is_available,
     })
     setIsEditModalOpen(true)
@@ -132,7 +208,7 @@ export function MealPlansContent() {
       const payload = {
         name: formData.name,
         description: formData.description,
-        category: formData.category,
+        mp_category_id: Number.parseInt(formData.mp_category_id),
         published: formData.is_available,
       }
 
@@ -155,7 +231,20 @@ export function MealPlansContent() {
         setSelectedMealPlan(null)
         fetchMealPlans() // Refresh list
       } else {
-        setError(data.error || "Failed to save meal plan")
+        // Extract error message from various possible formats
+        let errorMessage = "Failed to save meal plan"
+        if (data.error) {
+          if (typeof data.error === 'string') {
+            errorMessage = data.error
+          } else if (data.error.message) {
+            errorMessage = data.error.message
+          } else {
+            errorMessage = JSON.stringify(data.error)
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        setError(errorMessage)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save meal plan")
@@ -183,7 +272,20 @@ export function MealPlansContent() {
         setSelectedMealPlan(null)
         fetchMealPlans() // Refresh list
       } else {
-        setError(data.error || "Failed to delete meal plan")
+        // Extract error message from various possible formats
+        let errorMessage = "Failed to delete meal plan"
+        if (data.error) {
+          if (typeof data.error === 'string') {
+            errorMessage = data.error
+          } else if (data.error.message) {
+            errorMessage = data.error.message
+          } else {
+            errorMessage = JSON.stringify(data.error)
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        setError(errorMessage)
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete meal plan")
@@ -249,7 +351,7 @@ export function MealPlansContent() {
                 <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead>Duration</TableHead>
+                <TableHead>Variants</TableHead>
                 <TableHead>Meals/Day</TableHead>
                 <TableHead>Price/Week</TableHead>
                 <TableHead>Subscribers</TableHead>
@@ -279,9 +381,27 @@ export function MealPlansContent() {
                   <TableCell>
                     <Badge variant="outline">{plan.category}</Badge>
                   </TableCell>
-                  <TableCell>{plan.duration_weeks} weeks</TableCell>
-                  <TableCell>{plan.meals_per_day} meals</TableCell>
-                  <TableCell>{plan.price_per_week} MAD</TableCell>
+                  <TableCell>
+                    {plan.variant_count > 0 ? (
+                      <span className="text-sm text-gray-600">{plan.variant_count} variant(s)</span>
+                    ) : (
+                      <span className="text-sm text-gray-400">No variants</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {plan.variant_count > 0 ? (
+                      <span className="text-sm text-gray-600">See variants</span>
+                    ) : (
+                      <span className="text-sm text-gray-400">-</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {plan.price_per_week > 0 ? (
+                      <span>{plan.price_per_week} MAD/week</span>
+                    ) : (
+                      <span className="text-sm text-gray-400">Set in variants</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Users className="h-4 w-4 text-gray-400" />
@@ -298,8 +418,17 @@ export function MealPlansContent() {
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => router.push(`/admin/products/meal-plans/${plan.id}`)}
+                        title="Manage Variants"
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleEdit(plan)}
                         disabled={isSubmitting}
+                        title="Edit Meal Plan"
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -308,6 +437,7 @@ export function MealPlansContent() {
                         size="sm"
                         onClick={() => handleDeleteClick(plan)}
                         disabled={isSubmitting}
+                        title="Delete Meal Plan"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -369,20 +499,35 @@ export function MealPlansContent() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Category *</Label>
-              <select
-                id="category"
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
-                required
-              >
-                <option value="keto">Keto</option>
-                <option value="lowcarb">Low Carb</option>
-                <option value="balanced">Balanced</option>
-                <option value="muscle">Muscle</option>
-                <option value="custom">Custom</option>
-              </select>
+              <Label htmlFor="mp_category_id">MP Category *</Label>
+              {categoriesLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm text-gray-500">Loading categories...</span>
+                </div>
+              ) : (
+                <Select
+                  value={formData.mp_category_id}
+                  onValueChange={(value) => setFormData({ ...formData, mp_category_id: value })}
+                  required
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id.toString()}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              {categories.length === 0 && !categoriesLoading && (
+                <p className="text-xs text-gray-500 mt-1">
+                  No categories available. <a href="/admin/products/mp-categories" className="text-blue-600 underline">Create one first</a>
+                </p>
+              )}
             </div>
             <div className="flex items-center space-x-2">
               <input

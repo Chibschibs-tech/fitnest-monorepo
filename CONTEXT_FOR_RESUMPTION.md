@@ -1,6 +1,6 @@
 # Context for Project Resumption
 
-**Last Updated:** 2025-12-08  
+**Last Updated:** 2025-01-XX  
 **Purpose:** Complete context to regain 100% mastery when resuming work  
 **Current Mastery:** 95%+
 
@@ -85,6 +85,25 @@ fitnest-monorepo/
 - ✅ API routes documentation (auto-generated)
 - ✅ Database schema documentation (auto-generated)
 
+### Phase 4: Customers Admin Panel - Phase 1 (100% Complete - 2025-12-09)
+- ✅ Create Customer - API + UI with password auto-generation
+- ✅ Edit Customer - API + UI with form validation
+- ✅ Delete Customer - API + UI with confirmation dialog
+- ✅ Status Management - API + UI (active/inactive/suspended)
+- ✅ Database schema updated (status column added to users table)
+- ✅ Full CRUD operations implemented
+- ✅ Complete documentation created
+
+### Phase 5: MP Categories & Plan Variants System (100% Complete - 2025-01-XX)
+- ✅ MP Categories system - Replaced hardcoded `audience` with manageable categories
+- ✅ Migration system - Automatic migration from `audience` to `mp_category_id`
+- ✅ Plan Variants Management - Full CRUD for variants (days/week, meals/day, pricing)
+- ✅ Meal Plan Detail Page - Complete UI for managing variants per meal plan
+- ✅ Database schema updated (`mp_categories` table, `mp_category_id` in `meal_plans`)
+- ✅ Category variables system (JSONB for custom configuration)
+- ✅ Activate/Deactivate variants functionality
+- ✅ Complete documentation created
+
 ---
 
 ## 🔑 Key Files & Locations
@@ -119,19 +138,34 @@ fitnest-monorepo/
 - `FINAL_STATUS.md` - Final status report
 - `PHASE_2_COMPLETE.md` - Phase 2 completion report
 - `TEST_REPORT.md` - Testing results
+- `CUSTOMERS_ADMIN_AUDIT_AND_PLAN.md` - Customers module audit and plan
+- `CUSTOMERS_PHASE1_IMPLEMENTATION.md` - Phase 1 implementation details
+- `MP_CATEGORIES_AND_VARIANTS_IMPLEMENTATION.md` - MP Categories & Plan Variants system
+- `MEAL_PLANS_STRUCTURE.md` - Meal plans structure explanation
+- `MEAL_PLANS_ANSWERS.md` - Answers to common questions
+- `OFFER_CREATION_PROCESS.md` - Step-by-step offer creation workflow
+- `OFFER_SYSTEM_FULL_GUIDE.md` - Unified Offer System guide for Tech + Marketing
 
 ---
 
 ## 🗄️ Database Architecture
 
 ### Core Tables (Drizzle Schema)
-1. **users** - User accounts (id, name, email, password, role, created_at)
+1. **users** - User accounts (id, name, email, password, role, status, phone, admin_notes, last_login_at, created_at)
+   - **status:** VARCHAR(20) DEFAULT 'active' - Valid values: 'active', 'inactive', 'suspended'
 2. **meals** - Meal definitions (id, name, description, meal_type, calories, etc.)
-3. **meal_plans** - Meal plan templates (Weight Loss, Stay Fit, Muscle Gain)
-4. **plan_variants** - Plan variations (meals per day, duration options)
-5. **meal_plan_meals** - Junction table (plans ↔ meals)
-6. **subscriptions** - Active subscriptions (user_id, plan_id, status, dates)
-7. **deliveries** - Delivery records (subscription_id, delivery_date, status)
+3. **meal_plans** - Meal plan templates (id, title, summary, mp_category_id, audience, published, created_at)
+   - **mp_category_id:** INTEGER REFERENCES mp_categories(id) - NEW: Links to category
+   - **audience:** VARCHAR(60) - Kept for backward compatibility (synced with category slug)
+4. **mp_categories** - Meal plan categories (id, name, slug, description, variables, created_at, updated_at)
+   - **variables:** JSONB - Custom configuration per category
+5. **plan_variants** - Plan variations (id, meal_plan_id, label, days_per_week, meals_per_day, weekly_price_mad, published)
+   - **days_per_week:** INTEGER (1-7)
+   - **meals_per_day:** INTEGER (1-5)
+   - **weekly_price_mad:** NUMERIC(10,2) - Price per week
+6. **meal_plan_meals** - Junction table (plans ↔ meals)
+7. **subscriptions** - Active subscriptions (user_id, plan_variant_id, status, starts_at, renews_at, notes)
+8. **deliveries** - Delivery records (subscription_id, delivery_date, status)
 
 ### Additional Tables (Bootstrap)
 - **products** - Express Shop items (lowercase naming: saleprice, imageurl, isactive)
@@ -267,9 +301,34 @@ npm run docs:watch
 
 ---
 
-## 🚀 Recent Changes (2025-12-07)
+## 🚀 Recent Changes
 
-### Phase 2 Completion
+### Phase 4: Customers Admin Panel - Phase 1 (2025-12-09)
+1. **Customer CRUD Operations**
+   - ✅ Create Customer API (`POST /api/admin/customers`)
+   - ✅ Edit Customer API (`PUT /api/admin/customers/[id]`)
+   - ✅ Delete Customer API (`DELETE /api/admin/customers/[id]`)
+   - ✅ Status Management API (`PUT /api/admin/customers/[id]/status`)
+
+2. **Frontend Implementation**
+   - ✅ Create Customer modal with form validation
+   - ✅ Edit Customer modal with pre-filled data
+   - ✅ Delete Customer confirmation dialog
+   - ✅ Status dropdown with color coding (active/inactive/suspended)
+   - ✅ Status badges in customer list and detail pages
+
+3. **Database Updates**
+   - ✅ Added `status` column to `users` table
+   - ✅ Default status: 'active'
+   - ✅ Valid statuses: 'active', 'inactive', 'suspended'
+   - ✅ Migration support (auto-adds column if missing)
+
+4. **Documentation**
+   - ✅ Created `CUSTOMERS_PHASE1_IMPLEMENTATION.md` with complete details
+   - ✅ Updated `CONTEXT_FOR_RESUMPTION.md` with new features
+   - ✅ Status definitions documented (inactive vs suspended)
+
+### Phase 2 Completion (2025-12-07)
 1. **Error Handling Standardization**
    - Updated `/api/products` (GET, POST)
    - Updated `/api/products/[id]` (GET, PUT, DELETE)
@@ -318,6 +377,9 @@ npm run docs:watch
 ### ✅ Completed
 - Phase 1: Critical cleanup (100%)
 - Phase 2: Code quality (100%)
+- Phase 3: Cart & Subscription System (100%)
+- Phase 4: Customers Admin Panel - Phase 1 (100%)
+- Phase 5: MP Categories & Plan Variants System (100%)
 - Documentation system (100%)
 - Testing (100%)
 
@@ -406,18 +468,35 @@ psql -h localhost -p 5433 -U fitnest -d fitnest_db
 
 ---
 
-**Last Session Date:** 2025-12-07  
-**Latest Work:** Cart rebuild & subscription creation complete  
-**Next Session:** Testing phase  
-**Status:** ✅ Implementation complete, ready for testing
+**Last Session Date:** 2025-01-XX  
+**Latest Work:** MP Categories & Plan Variants System complete  
+**Next Session:** Continue with admin panel enhancements or production deployment  
+**Status:** ✅ MP Categories & Plan Variants complete, ready for production
 
-### Latest Work (2025-12-07)
+### Latest Work (2025-01-XX)
+- ✅ MP Categories System - Replaced hardcoded `audience` with manageable categories
+- ✅ Plan Variants Management - Full CRUD for variants with activate/deactivate
+- ✅ Meal Plan Detail Page - Complete UI for managing variants
+- ✅ Migration system - Automatic migration from `audience` to `mp_category_id`
+- ✅ Database schema updated (`mp_categories` table, `mp_category_id` column)
+- ✅ Category variables system (JSONB for custom configuration)
+- ✅ Complete documentation created
+- ✅ All features tested and working
+
+### Previous Work (2025-12-09)
+- ✅ Customers Admin Panel Phase 1 complete
+- ✅ Full CRUD operations (Create, Read, Update, Delete)
+- ✅ Status management (active/inactive/suspended)
+- ✅ Database schema updated (status column)
+- ✅ Complete documentation created
+- ✅ All features tested and working
+
+### Previous Work (2025-12-07)
 - ✅ Unified cart system (products + subscriptions)
 - ✅ Subscription creation with status "new"
 - ✅ Unified order creation endpoint
 - ✅ Checkout integration complete
 - ✅ Documentation updated
-- 📋 Testing phase ready
 
 ---
 

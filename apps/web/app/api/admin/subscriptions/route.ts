@@ -45,7 +45,7 @@ export async function GET(request: Request) {
         pv.label as plan_variant_label,
         pv.days_per_week,
         pv.meals_per_day,
-        pv.weekly_base_price_mad,
+        pv.weekly_price_mad,
         mp.id as meal_plan_id,
         mp.title as plan_name,
         mp.audience
@@ -67,7 +67,7 @@ export async function GET(request: Request) {
       }
 
       // Extract billing info from notes or calculate from plan variant
-      const totalPrice = notesData.total_price || sub.weekly_base_price_mad || 0
+      const totalPrice = notesData.total_price || sub.weekly_price_mad || 0
       const durationWeeks = notesData.duration_weeks || 1
       const billingAmount = Number(totalPrice) * Number(durationWeeks)
 

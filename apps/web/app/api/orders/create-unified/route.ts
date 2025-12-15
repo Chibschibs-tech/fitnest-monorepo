@@ -2,6 +2,11 @@ import { NextResponse } from "next/server"
 import { sql } from "@/lib/db"
 import { sendOrderConfirmationEmail } from "@/lib/email-utils"
 import { cookies } from "next/headers"
+import {
+  calculateSubscriptionPrice,
+  type MealPrice,
+  type DiscountRule,
+} from "@/lib/pricing-calculator"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -174,6 +179,49 @@ export async function POST(request: Request) {
         },
         { status: 400 },
       )
+    }
+
+    // Recalculate subscription totals on the server using pricing engine
+    // and ignore any frontend-provided total_price for safety.
+    for (const sub of subscriptions) {
+      try {
+        const mealPrices: MealPrice[] = await sql`
+          SELECT meal_type, base_price_mad
+          FROM meal_type_prices
+          WHERE plan_name = ${sub.plan_name}
+            AND meal_type = ANY(${sub.meal_types}::text[])
+            AND is_active = true
+        `
+
+        if (mealPrices.length === 0) {
+          console.warn("No meal_type_prices found for plan in unified order:", sub.plan_name)
+          continue
+        }
+
+        const discountRules: DiscountRule[] = await sql`
+          SELECT discount_type, condition_value, discount_percentage, stackable
+          FROM discount_rules
+          WHERE is_active = true
+            AND (valid_from IS NULL OR valid_from <= NOW())
+            AND (valid_to IS NULL OR valid_to >= NOW())
+        `
+
+        const result = calculateSubscriptionPrice(
+          mealPrices,
+          sub.days_per_week,
+          sub.duration_weeks,
+          discountRules,
+          sub.plan_name,
+          sub.meal_types,
+        )
+
+        sub.total_price = result.totalRoundedMAD
+        ;(sub as any).pricing_breakdown = result
+
+        cartSubtotal += result.totalRoundedMAD
+      } catch (priceError) {
+        console.error("Error recalculating subscription price in unified order:", priceError)
+      }
     }
 
     // Calculate totals

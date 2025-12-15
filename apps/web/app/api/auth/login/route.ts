@@ -20,6 +20,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
     }
 
+    // Update last_login_at (Phase 2)
+    try {
+      const { sql } = await import("@/lib/db")
+      await sql`UPDATE users SET last_login_at = NOW() WHERE id = ${user.id}`
+    } catch (err) {
+      console.log("Failed to update last_login_at:", err)
+      // Non-critical, continue with login
+    }
+
     const sessionId = await createSession(user.id)
 
     if (!sessionId) {

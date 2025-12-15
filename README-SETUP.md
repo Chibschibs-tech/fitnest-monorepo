@@ -96,3 +96,6 @@ docker exec -it fitnest-postgres psql -U fitnest -d fitnest_db
 
 
 
+
+
+

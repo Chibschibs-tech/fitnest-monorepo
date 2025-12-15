@@ -21,9 +21,39 @@ export async function initTables() {
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) DEFAULT 'customer',
+        status VARCHAR(20) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `
+
+    // Add status column if it doesn't exist (for existing tables)
+    try {
+      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active'`
+    } catch (err) {
+      // Column might already exist, ignore error
+      console.log("Status column check:", err)
+    }
+
+    // Add phone column if it doesn't exist (Phase 2)
+    try {
+      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20)`
+    } catch (err) {
+      console.log("Phone column check:", err)
+    }
+
+    // Add admin_notes column if it doesn't exist (Phase 2)
+    try {
+      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS admin_notes TEXT`
+    } catch (err) {
+      console.log("Admin notes column check:", err)
+    }
+
+    // Add last_login_at column if it doesn't exist (Phase 2)
+    try {
+      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP`
+    } catch (err) {
+      console.log("Last login column check:", err)
+    }
 
     // Create sessions table if it doesn't exist
     await sql`

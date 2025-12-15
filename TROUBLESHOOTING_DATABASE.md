@@ -88,3 +88,6 @@ postgresql://fitnest:fitnest_dev_password@localhost:5433/fitnest_db
 
 
 
+
+
+

@@ -37,17 +37,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         mp.slug,
         mp.title as name,
         mp.summary as description,
-        mp.audience as category,
+        mp.mp_category_id,
+        COALESCE(mpc.name, mp.audience) as category,
+        COALESCE(mpc.id, NULL) as category_id,
         mp.published as is_active,
         mp.created_at,
-        COALESCE(MIN(pv.weekly_base_price_mad), 0) as price_per_week,
+        COALESCE(MIN(pv.weekly_price_mad), 0) as price_per_week,
         COALESCE(COUNT(DISTINCT pv.id), 0) as variant_count,
         COALESCE(COUNT(DISTINCT s.id), 0) as subscribers_count
       FROM meal_plans mp
+      LEFT JOIN mp_categories mpc ON mp.mp_category_id = mpc.id
       LEFT JOIN plan_variants pv ON mp.id = pv.meal_plan_id
       LEFT JOIN subscriptions s ON pv.id = s.plan_variant_id AND s.status = 'active'
       WHERE mp.id = ${mealPlanId}
-      GROUP BY mp.id, mp.slug, mp.title, mp.summary, mp.audience, mp.published, mp.created_at
+      GROUP BY mp.id, mp.slug, mp.title, mp.summary, mp.mp_category_id, mp.audience, mpc.name, mpc.id, mp.published, mp.created_at
     `
 
     if (result.length === 0) {
@@ -63,7 +66,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         name: plan.name,
         description: plan.description || '',
         price_per_week: Number(plan.price_per_week) || 0,
-        category: plan.category || 'balanced',
+        category: plan.category || 'Unknown',
+        mp_category_id: plan.mp_category_id || plan.category_id,
         is_available: plan.is_active,
         subscribers_count: Number(plan.subscribers_count) || 0,
         variant_count: Number(plan.variant_count) || 0,
@@ -86,12 +90,26 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const body = await request.json()
-    const { name, description, category, is_available } = body
+    const { name, description, mp_category_id, is_available } = body
 
     // Check if meal plan exists
     const existing = await sql`SELECT id FROM meal_plans WHERE id = ${mealPlanId}`
     if (existing.length === 0) {
       return createErrorResponse(Errors.notFound("Meal plan not found"), "Meal plan not found", 404)
+    }
+
+    // Validate category if provided and get its slug
+    let categorySlug: string | null = null
+    if (mp_category_id !== undefined) {
+      const categoryCheck = await sql`SELECT id, slug FROM mp_categories WHERE id = ${mp_category_id}`
+      if (categoryCheck.length === 0) {
+        return createErrorResponse(
+          Errors.validation("Invalid category"),
+          "The selected MP category does not exist",
+          400
+        )
+      }
+      categorySlug = categoryCheck[0].slug
     }
 
     // Build update query dynamically
@@ -113,9 +131,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       updateFields.push(`summary = $${paramCounter++}`)
       values.push(description)
     }
-    if (category !== undefined) {
+    if (mp_category_id !== undefined && categorySlug) {
+      updateFields.push(`mp_category_id = $${paramCounter++}`)
+      values.push(mp_category_id)
+      // Also update audience for backward compatibility
       updateFields.push(`audience = $${paramCounter++}`)
-      values.push(category)
+      values.push(categorySlug)
     }
     if (is_available !== undefined) {
       updateFields.push(`published = $${paramCounter++}`)
@@ -131,9 +152,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     // Use q() helper for parameterized queries
     const { q } = await import("@/lib/db")
     const result = await q(
-      `UPDATE meal_plans SET ${updateFields.join(', ')} WHERE id = $${paramCounter} RETURNING id, slug, title, summary, audience, published, created_at`,
+      `UPDATE meal_plans SET ${updateFields.join(', ')} WHERE id = $${paramCounter} RETURNING id, slug, title, summary, mp_category_id, published, created_at`,
       values
     )
+
+    // Get category name
+    const categoryInfo = await sql`SELECT name FROM mp_categories WHERE id = ${result[0].mp_category_id}`
+    const categoryName = categoryInfo[0]?.name || 'Unknown'
 
     return NextResponse.json({
       success: true,
@@ -141,7 +166,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         id: result[0].id,
         name: result[0].title,
         description: result[0].summary || '',
-        category: result[0].audience,
+        category: categoryName,
+        mp_category_id: result[0].mp_category_id,
         is_available: result[0].published,
         created_at: result[0].created_at,
       },

@@ -54,7 +54,7 @@ export async function GET() {
       const subscriptionsRevenueResult = await sql`
         SELECT 
           s.notes,
-          pv.weekly_base_price_mad
+          pv.weekly_price_mad
         FROM subscriptions s
         LEFT JOIN plan_variants pv ON s.plan_variant_id = pv.id
         WHERE s.created_at >= ${thirtyDaysAgo.toISOString()}
@@ -65,12 +65,12 @@ export async function GET() {
       for (const sub of subscriptionsRevenueResult) {
         try {
           const notes = sub.notes ? JSON.parse(sub.notes) : {}
-          const totalPrice = notes.total_price || sub.weekly_base_price_mad || 0
+          const totalPrice = notes.total_price || sub.weekly_price_mad || 0
           const durationWeeks = notes.duration_weeks || 1
           subscriptionsRevenue += Number(totalPrice) * Number(durationWeeks)
         } catch (e) {
-          // If notes parsing fails, use weekly_base_price_mad
-          subscriptionsRevenue += Number(sub.weekly_base_price_mad || 0)
+          // If notes parsing fails, use weekly_price_mad
+          subscriptionsRevenue += Number(sub.weekly_price_mad || 0)
         }
       }
 

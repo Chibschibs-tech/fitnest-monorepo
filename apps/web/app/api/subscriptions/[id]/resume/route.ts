@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
@@ -16,7 +16,13 @@ export async function POST(request: Request, { params }: { params: { id: string 
 
     console.log(`Resuming subscription ${subscriptionId}`, resumeDate ? `on ${resumeDate}` : "immediately")
 
-    // For now, just return success since we don't have the full database schema
+    // Update subscription status to active
+    await sql`
+      UPDATE subscriptions 
+      SET status = 'active'
+      WHERE id = ${subscriptionId}
+    `
+
     return NextResponse.json({
       success: true,
       message: resumeDate

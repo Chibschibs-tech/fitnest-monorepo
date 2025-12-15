@@ -2,7 +2,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
+import { getSessionUser } from "@/lib/simple-auth"
 
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
@@ -10,19 +11,35 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     // Check if user is authenticated and is admin
     const sessionId = request.cookies.get("session-id")?.value
     if (!sessionId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
+    }
+
+    const user = await getSessionUser(sessionId)
+    if (!user || user.role !== "admin") {
+      return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 })
     }
 
     const { status } = await request.json()
-    const subscriptionId = params.id
+    const subscriptionId = Number.parseInt(params.id)
 
-    // Update subscription status by updating the corresponding order
-    const orderStatus = status === "cancelled" ? "cancelled" : "completed"
+    if (isNaN(subscriptionId)) {
+      return NextResponse.json({ success: false, error: "Invalid subscription ID" }, { status: 400 })
+    }
 
+    // Validate status
+    const validStatuses = ['active', 'paused', 'canceled', 'expired']
+    if (!status || !validStatuses.includes(status)) {
+      return NextResponse.json({ 
+        success: false, 
+        error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` 
+      }, { status: 400 })
+    }
+
+    // Update subscription status directly in subscriptions table
     await sql`
-      UPDATE orders 
-      SET status = ${orderStatus}
-      WHERE id = ${subscriptionId} AND order_type = 'subscription'
+      UPDATE subscriptions 
+      SET status = ${status}
+      WHERE id = ${subscriptionId}
     `
 
     return NextResponse.json({

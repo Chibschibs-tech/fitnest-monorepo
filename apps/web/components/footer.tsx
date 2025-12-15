@@ -1,109 +1,32 @@
-import Link from "next/link"
-import Image from "next/image"
-
-export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
+export default function Footer(){
   return (
-    <footer className="bg-white border-t border-gray-200">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div>
-            <div className="mb-4">
-              <Image
-                src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"
-                alt="Fitnest.ma Logo"
-                width={150}
-                height={50}
-                className="h-12 w-auto"
-              />
-            </div>
-            <p className="text-sm text-gray-600">
-              Healthy, delicious meals delivered to your door. Custom meal plans for your fitness goals.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-sm font-bold uppercase text-gray-500">Products</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/meal-plans" className="text-gray-600 hover:text-fitnest-green">
-                  Meal Plans
-                </Link>
-              </li>
-              <li>
-                <Link href="/meals" className="text-gray-600 hover:text-fitnest-green">
-                  Individual Meals
-                </Link>
-              </li>
-              <li>
-                <Link href="/express-shop" className="text-gray-600 hover:text-fitnest-green">
-                  Express Shop
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-sm font-bold uppercase text-gray-500">Company</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/about" className="text-gray-600 hover:text-fitnest-green">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/how-it-works" className="text-gray-600 hover:text-fitnest-green">
-                  How It Works
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-gray-600 hover:text-fitnest-green">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/careers" className="text-gray-600 hover:text-fitnest-green">
-                  Careers
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-sm font-bold uppercase text-gray-500">Support</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/contact" className="text-gray-600 hover:text-fitnest-green">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-gray-600 hover:text-fitnest-green">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-gray-600 hover:text-fitnest-green">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-gray-600 hover:text-fitnest-green">
-                  Privacy Policy
-                </Link>
-              </li>
-            </ul>
+    <footer className="border-t bg-white">
+      <div className="container grid gap-6 py-8 md:grid-cols-3">
+        <div>
+          <div className="text-lg font-bold mb-2">Fitnest</div>
+          <p className="text-sm text-gray-600">Repas sains livrés, adaptés à vos objectifs.</p>
+        </div>
+        <div>
+          <div className="font-semibold">Navigation</div>
+          <div className="grid grid-cols-2 gap-2 text-sm mt-2">
+            <a href="/plans" className="text-gray-700 hover:text-fitnest-green">Meal Plans</a>
+            <a href="/menu" className="text-gray-700 hover:text-fitnest-green">Meals</a>
+            <a href="/catalogue" className="text-gray-700 hover:text-fitnest-green">How It Works</a>
+            <a href="/subscribe" className="text-gray-700 hover:text-fitnest-green">Subscribe</a>
           </div>
         </div>
-
-        <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
-          <p>&copy; {currentYear} Fitnest.ma. All rights reserved.</p>
+        <div>
+          <div className="font-semibold">Légal</div>
+          <div className="grid gap-2 text-sm mt-2">
+            <a href="#" className="text-gray-700 hover:text-fitnest-green">CGU</a>
+            <a href="#" className="text-gray-700 hover:text-fitnest-green">Confidentialité</a>
+            <a href="#" className="text-gray-700 hover:text-fitnest-green">Mentions légales</a>
+          </div>
         </div>
       </div>
+      <div className="border-t">
+        <div className="container py-3 text-xs text-gray-500">© {new Date().getFullYear()} Fitnest</div>
+      </div>
     </footer>
-  )
+  );
 }
-
-// Also export as named export for compatibility
-export { Footer }

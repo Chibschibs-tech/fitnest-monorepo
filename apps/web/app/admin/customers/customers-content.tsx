@@ -4,25 +4,48 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { Users, Search, Eye, Mail, Calendar } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Users, Search, Eye, Mail, Calendar, Plus, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface Customer {
   id: number
   name: string
   email: string
+  phone?: string
   role: string
+  status?: string
+  last_login_at?: string
   created_at: string
-  updated_at: string
   orderCount: number
 }
 
 export default function CustomersContent() {
+  const router = useRouter()
   const [customers, setCustomers] = useState<Customer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [newCustomerFormData, setNewCustomerFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    role: "customer",
+  })
 
   useEffect(() => {
     fetchCustomers()
@@ -31,18 +54,25 @@ export default function CustomersContent() {
   const fetchCustomers = async () => {
     try {
       setLoading(true)
+      setError("")
       const response = await fetch("/api/admin/customers")
       const data = await response.json()
 
-      if (data.success) {
-        setCustomers(data.customers)
+      if (response.ok && data.success) {
+        setCustomers(data.customers || [])
         setError("")
       } else {
-        setError(data.error || "Failed to fetch customers")
+        // Handle error response - extract message from error object
+        const errorMessage = data.error?.message || 
+                           (typeof data.error === 'string' ? data.error : null) ||
+                           data.message || 
+                           "Failed to fetch customers"
+        setError(errorMessage)
       }
     } catch (err) {
-      setError("Failed to fetch customers")
       console.error("Error:", err)
+      const errorMessage = err instanceof Error ? err.message : "Failed to fetch customers"
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -53,6 +83,61 @@ export default function CustomersContent() {
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase()),
   )
+
+  const handleCreate = () => {
+    setNewCustomerFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      role: "customer",
+    })
+    setError("")
+    setIsCreateModalOpen(true)
+  }
+
+  const handleSubmitCreate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setError("")
+
+    try {
+      const payload = {
+        name: newCustomerFormData.name,
+        email: newCustomerFormData.email,
+        phone: newCustomerFormData.phone || undefined,
+        role: newCustomerFormData.role,
+        ...(newCustomerFormData.password && { password: newCustomerFormData.password }),
+      }
+
+      const response = await fetch("/api/admin/customers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setIsCreateModalOpen(false)
+        setNewCustomerFormData({ name: "", email: "", phone: "", password: "", role: "customer" })
+        fetchCustomers() // Refresh list
+        
+        // If password was generated, show it to admin
+        if (data.generatedPassword) {
+          alert(`Customer created successfully!\n\nTemporary password: ${data.generatedPassword}\n\nPlease save this password and share it with the customer.`)
+        } else {
+          alert("Customer created successfully!")
+        }
+      } else {
+        setError(data.error || "Failed to create customer")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create customer")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -69,9 +154,15 @@ export default function CustomersContent() {
           <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
           <p className="text-gray-600">Manage customer accounts and information</p>
         </div>
-        <Button onClick={fetchCustomers} variant="outline">
-          Refresh Data
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleCreate}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Customer
+          </Button>
+          <Button onClick={fetchCustomers} variant="outline">
+            Refresh Data
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -192,6 +283,106 @@ export default function CustomersContent() {
           )}
         </CardContent>
       </Card>
+
+      {/* Create Customer Modal */}
+      <Dialog open={isCreateModalOpen} onOpenChange={(open) => {
+        if (!open) {
+          setIsCreateModalOpen(false)
+          setError("")
+        }
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Customer</DialogTitle>
+            <DialogDescription>
+              Create a new customer account. Leave password empty to generate a temporary password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmitCreate} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="newName">Full Name *</Label>
+              <Input
+                id="newName"
+                value={newCustomerFormData.name}
+                onChange={(e) => setNewCustomerFormData({ ...newCustomerFormData, name: e.target.value })}
+                required
+                placeholder="John Doe"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newEmail">Email *</Label>
+              <Input
+                id="newEmail"
+                type="email"
+                value={newCustomerFormData.email}
+                onChange={(e) => setNewCustomerFormData({ ...newCustomerFormData, email: e.target.value })}
+                required
+                placeholder="john@example.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newPhone">Phone (optional)</Label>
+              <Input
+                id="newPhone"
+                type="tel"
+                value={newCustomerFormData.phone}
+                onChange={(e) => setNewCustomerFormData({ ...newCustomerFormData, phone: e.target.value })}
+                placeholder="+212 6XX XXX XXX"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">Password (optional)</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newCustomerFormData.password}
+                onChange={(e) => setNewCustomerFormData({ ...newCustomerFormData, password: e.target.value })}
+                placeholder="Leave empty to generate temporary password"
+              />
+              <p className="text-xs text-gray-500">If left empty, a temporary password will be generated</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="newRole">Role *</Label>
+              <select
+                id="newRole"
+                value={newCustomerFormData.role}
+                onChange={(e) => setNewCustomerFormData({ ...newCustomerFormData, role: e.target.value })}
+                className="w-full px-3 py-2 border rounded-md"
+                required
+              >
+                <option value="customer">Customer</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsCreateModalOpen(false)}
+                disabled={isSubmitting}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  "Create Customer"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
