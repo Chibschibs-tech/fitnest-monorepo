@@ -6,15 +6,27 @@ export const dynamic = "force-dynamic"
 export async function GET() {
   try {
     const mealPlans = await sql`
-      SELECT id, name, description, plan_type, target_calories_min, target_calories_max, weekly_price, is_active
-      FROM meal_plans
-      WHERE is_active = true
-      ORDER BY weekly_price ASC
+      SELECT 
+        mp.id,
+        mp.title as name,
+        mp.summary as description,
+        COALESCE(mpc.name, mp.audience) as category,
+        mp.published as is_active
+      FROM meal_plans mp
+      LEFT JOIN mp_categories mpc ON mp.mp_category_id = mpc.id
+      WHERE mp.published = true
+      ORDER BY mp.created_at ASC
     `
 
     return NextResponse.json({
       success: true,
-      mealPlans,
+      mealPlans: mealPlans.map((plan: any) => ({
+        id: plan.id,
+        name: plan.name,
+        description: plan.description,
+        category: plan.category || 'balanced',
+        is_active: plan.is_active,
+      })),
     })
   } catch (error) {
     console.error("Error fetching meal plans:", error)
