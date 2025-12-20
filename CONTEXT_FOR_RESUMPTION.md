@@ -183,9 +183,18 @@ fitnest-monorepo/
 
 ### Database Connection
 - **Production:** Neon PostgreSQL (serverless)
+  - Connection via `DATABASE_URL` environment variable (set in Vercel)
+  - Uses Neon HTTP client (`@neondatabase/serverless`)
+  - Auto-detected by URL format (contains `neon.tech` or HTTPS protocol)
 - **Local:** Docker PostgreSQL (localhost:5433)
-- **Connection:** `apps/web/lib/db.ts` uses Neon HTTP client
-- **ORM:** Drizzle for schema, raw SQL for queries
+  - Connection string: `postgresql://fitnest:fitnest_dev_password@localhost:5433/fitnest_db`
+  - Uses `pg` Pool client for standard PostgreSQL connections
+  - Setup via `setup-db.ps1` script: `.\setup-db.ps1 -Mode local`
+- **Connection Logic:** `apps/web/lib/db.ts`
+  - Supports both Neon and local PostgreSQL automatically
+  - Build-time stubs prevent connection errors during build
+  - Runtime checks ensure proper database access
+- **ORM:** Drizzle for schema definition, raw SQL (`sql` template tag) for queries
 
 ---
 
