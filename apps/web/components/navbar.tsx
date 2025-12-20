@@ -1,120 +1,224 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, X } from "lucide-react"
-import { CartIcon } from "@/components/cart-icon"
-import { NavbarAuth } from "@/components/navbar-auth"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
+import { Menu, X } from "lucide-react"
+import { useState, useEffect } from "react"
+import { useLanguage } from "./language-provider"
+import { getTranslations } from "@/lib/i18n"
+import { LanguageSwitcher } from "./language-switcher"
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
+  const { locale } = useLanguage()
+  const t = getTranslations(locale)
+  const isActive = (p: string) => pathname === p
+
+  const isHomePage = pathname === "/" || pathname === "/home"
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const routes = [
-    { href: "/", label: "Home" },
-    { href: "/meal-plans", label: "Meal Plans" },
-    { href: "/meals", label: "Meals" },
-    { href: "/express-shop", label: "Express Shop" },
-    { href: "/how-it-works", label: "How It Works" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
+    { href: "/home", label: t.nav.home },
+    { href: "/plans", label: t.nav.mealPlans },
+    { href: "/menu", label: t.nav.meals },
+    { href: "/catalogue", label: t.nav.howItWorks },
+    { href: "/contact", label: t.nav.contact },
   ]
 
-  const isActive = (path: string) => {
-    return pathname === path
-  }
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const res = await fetch("/api/auth/session")
+        const data = await res.json()
+        setUser(data.user)
+      } catch (error) {
+        console.error("Failed to fetch session:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkSession()
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <div className="flex items-center">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Image
-              src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"
-              alt="Fitnest.ma Logo"
-              width={150}
-              height={50}
-              className="h-12 w-auto"
-              priority
-            />
-          </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 w-full transition-all">
+      <div className="w-full flex h-20 items-center relative px-4 py-2">
+        {/* Mobile menu button - absolute left */}
+        <button
+          className={`md:hidden absolute left-4 rounded-full border p-2 z-10 transition-all ${
+            isHomePage
+              ? "border-white/30 text-white bg-black/20 backdrop-blur-sm"
+              : "border-gray-300 bg-white shadow-sm"
+          }`}
+          onClick={() => setOpen(true)}
+          aria-label="Menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
 
-          <nav className="hidden md:flex md:items-center md:space-x-6">
-            {routes.map((route) => (
+        {/* Centered content - desktop - all items as one centered group with pill-shaped background */}
+        <div className="hidden md:flex items-center justify-center w-full">
+          <div
+            className="flex items-center px-6 py-2 rounded-full transition-all shadow-sm"
+            style={
+              isHomePage
+                ? {
+                    backgroundColor: "rgba(0, 0, 0, 0.2)",
+                    backdropFilter: "blur(8px)",
+                    WebkitBackdropFilter: "blur(8px)",
+                  }
+                : {
+                    backgroundColor: "rgba(255, 255, 255, 0.98)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                    border: "1px solid rgba(0, 0, 0, 0.08)",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+                  }
+            }
+          >
+            <div className="flex items-center" style={{ gap: "3rem" }}>
+              <Link href="/" className="flex items-center space-x-2">
+                <Image
+                  src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"
+                  alt="Fitnest.ma Logo"
+                  width={150}
+                  height={50}
+                  className="h-12 w-auto"
+                  priority
+                />
+              </Link>
+              <nav className="flex items-center space-x-6">
+                {routes.map((r) => (
+                  <Link
+                    key={r.href}
+                    href={r.href}
+                    className={`text-sm font-medium transition-colors ${
+                      isHomePage
+                        ? `hover:text-white ${isActive(r.href) ? "text-white" : "text-white/90"}`
+                        : `hover:text-fitnest-green ${isActive(r.href) ? "text-fitnest-green" : "text-gray-600"}`
+                    }`}
+                  >
+                    {r.label}
+                  </Link>
+                ))}
+              </nav>
+              <LanguageSwitcher />
+              {!loading && (
+                <Link
+                  href={user ? "/dashboard" : "/login"}
+                  className={`text-sm font-medium transition-colors ${
+                    isHomePage
+                      ? `hover:text-white ${isActive(user ? "/dashboard" : "/login") ? "text-white" : "text-white/90"}`
+                      : `hover:text-fitnest-green ${isActive(user ? "/dashboard" : "/login") ? "text-fitnest-green" : "text-gray-600"}`
+                  }`}
+                >
+                  {user ? t.nav.myAccount : t.nav.login}
+                </Link>
+              )}
               <Link
-                key={route.href}
-                href={route.href}
-                className={`text-sm font-medium transition-colors hover:text-fitnest-green ${
-                  isActive(route.href) ? "text-fitnest-green" : "text-gray-600"
+                href="/subscribe"
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  isHomePage
+                    ? "bg-white text-fitnest-green hover:bg-white/90"
+                    : "bg-fitnest-green text-white hover:bg-fitnest-green/90"
                 }`}
               >
-                {route.label}
+                {t.nav.subscribe}
               </Link>
-            ))}
-          </nav>
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-4">
-          <Link
-            href="/order"
-            className="hidden rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-opacity-90 md:block"
-          >
-            Order
-          </Link>
-          <div className="hidden md:block">
-            <NavbarAuth />
-          </div>
-          <CartIcon />
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="outline" size="icon" aria-label="Menu">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[80%] sm:w-[350px]">
-              <div className="flex flex-col space-y-6 pt-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold">Menu</span>
-                  <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
-                    <X className="h-5 w-5" />
-                  </Button>
-                </div>
-                <nav className="flex flex-col space-y-4">
-                  {routes.map((route) => (
-                    <Link
-                      key={route.href}
-                      href={route.href}
-                      className={`py-2 text-sm font-medium transition-colors hover:text-fitnest-green ${
-                        isActive(route.href) ? "text-fitnest-green" : "text-gray-600"
-                      }`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {route.label}
-                    </Link>
-                  ))}
-                  <Link
-                    href="/order"
-                    className="rounded-md bg-fitnest-green px-4 py-2 text-center text-sm font-medium text-white hover:bg-opacity-90"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Order
-                  </Link>
-                </nav>
-                <div className="border-t pt-4">
-                  <NavbarAuth />
-                </div>
+        {/* Mobile logo - centered with pill background */}
+        <Link href="/" className="md:hidden flex items-center space-x-2 px-3 py-1.5 rounded-full transition-all" style={
+          isHomePage
+            ? {
+                backgroundColor: "rgba(0, 0, 0, 0.2)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+              }
+            : {
+                backgroundColor: "rgba(255, 255, 255, 0.98)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(0, 0, 0, 0.08)",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)",
+              }
+        }>
+          <Image
+            src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"
+            alt="Fitnest.ma Logo"
+            width={150}
+            height={50}
+            className="h-10 w-auto"
+            priority
+          />
+        </Link>
+
+        {open && (
+          <div className="fixed inset-0 z-50 bg-black/20" onClick={() => setOpen(false)}>
+            <div
+              className="absolute right-0 top-0 h-full w-[80%] max-w-xs bg-white shadow-lg p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-lg font-bold">Menu</span>
+                <button
+                  className="rounded-full p-2 hover:bg-gray-100 transition-colors"
+                  onClick={() => setOpen(false)}
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+              <nav className="flex flex-col space-y-4">
+                {routes.map((r) => (
+                  <Link
+                    key={r.href}
+                    href={r.href}
+                    className={`py-2 text-sm font-medium hover:text-fitnest-green ${
+                      isActive(r.href) ? "text-fitnest-green" : "text-gray-600"
+                    }`}
+                    onClick={() => setOpen(false)}
+                  >
+                    {r.label}
+                  </Link>
+                ))}
+                {!loading && (
+                  <Link
+                    href={user ? "/dashboard" : "/login"}
+                    className={`py-2 text-sm font-medium hover:text-fitnest-green ${
+                      isActive(user ? "/dashboard" : "/login") ? "text-fitnest-green" : "text-gray-600"
+                    }`}
+                    onClick={() => setOpen(false)}
+                  >
+                    {user ? t.nav.myAccount : t.nav.login}
+                  </Link>
+                )}
+                <div className="py-2">
+                  <LanguageSwitcher />
+                </div>
+                <Link
+                  href="/subscribe"
+                  className="rounded-full bg-fitnest-green px-4 py-2 text-center text-sm font-medium text-white hover:bg-fitnest-green/90"
+                  onClick={() => setOpen(false)}
+                >
+                  {t.nav.subscribe}
+                </Link>
+              </nav>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   )
 }
-
-// Also export as named export for compatibility
-export { Navbar }
