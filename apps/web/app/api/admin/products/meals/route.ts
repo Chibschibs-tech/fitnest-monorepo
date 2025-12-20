@@ -35,10 +35,17 @@ export async function GET(request?: NextRequest) {
           slug,
           title as name,
           description,
+          meal_type,
+          category,
           kcal as calories,
           protein,
           carbs,
           fat,
+          fiber,
+          sodium,
+          sugar,
+          cholesterol,
+          saturated_fat,
           allergens,
           tags,
           image_url,
@@ -53,12 +60,17 @@ export async function GET(request?: NextRequest) {
         name: meal.name,
         description: meal.description || '',
         price: 0, // Price managed through meal_type_prices
-        category: 'meal', // Default category
+        category: meal.category || 'meal',
+        meal_type: meal.meal_type || null,
         calories: Number(meal.calories) || 0,
         protein: Number(meal.protein) || 0,
         carbs: Number(meal.carbs) || 0,
         fat: Number(meal.fat) || 0,
-        fiber: 0, // Not in schema
+        fiber: Number(meal.fiber) || 0,
+        sodium: Number(meal.sodium) || 0,
+        sugar: Number(meal.sugar) || 0,
+        cholesterol: Number(meal.cholesterol) || 0,
+        saturated_fat: Number(meal.saturated_fat) || 0,
         ingredients: null, // Not in schema
         allergens: meal.allergens || [],
         tags: meal.tags || [],
@@ -110,7 +122,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, description, calories, protein, carbs, fat, image_url, category } = body
+    const { name, description, meal_type, calories, protein, carbs, fat, fiber, sodium, sugar, cholesterol, saturated_fat, image_url, category } = body
 
     // Validate required fields
     if (!name) {
@@ -129,9 +141,9 @@ export async function POST(request: NextRequest) {
 
     // Insert new meal
     const result = await sql`
-      INSERT INTO meals (slug, title, description, kcal, protein, carbs, fat, image_url, published)
-      VALUES (${slug}, ${name}, ${description || null}, ${calories || 0}, ${protein || 0}, ${carbs || 0}, ${fat || 0}, ${image_url || null}, true)
-      RETURNING id, slug, title, description, kcal, protein, carbs, fat, image_url, published, created_at
+      INSERT INTO meals (slug, title, description, meal_type, category, kcal, protein, carbs, fat, fiber, sodium, sugar, cholesterol, saturated_fat, allergens, tags, image_url, published)
+      VALUES (${slug}, ${name}, ${description || null}, ${meal_type || null}, ${category || 'meal'}, ${calories || 0}, ${protein || 0}, ${carbs || 0}, ${fat || 0}, ${fiber || 0}, ${sodium || 0}, ${sugar || 0}, ${cholesterol || 0}, ${saturated_fat || 0}, ${allergens ? JSON.stringify(allergens) : JSON.stringify([])}, ${tags ? JSON.stringify(tags) : JSON.stringify([])}, ${image_url || null}, true)
+      RETURNING id, slug, title, description, meal_type, category, kcal, protein, carbs, fat, fiber, sodium, sugar, cholesterol, saturated_fat, allergens, tags, image_url, published, created_at
     `
 
     const newMeal = result[0]
@@ -143,11 +155,17 @@ export async function POST(request: NextRequest) {
         name: newMeal.title,
         description: newMeal.description || '',
         price: 0, // Price managed separately
-        category: category || 'meal',
+        category: newMeal.category || category || 'meal',
+        meal_type: newMeal.meal_type || null,
         calories: Number(newMeal.kcal) || 0,
         protein: Number(newMeal.protein) || 0,
         carbs: Number(newMeal.carbs) || 0,
         fat: Number(newMeal.fat) || 0,
+        fiber: Number(newMeal.fiber) || 0,
+        sodium: Number(newMeal.sodium) || 0,
+        sugar: Number(newMeal.sugar) || 0,
+        cholesterol: Number(newMeal.cholesterol) || 0,
+        saturated_fat: Number(newMeal.saturated_fat) || 0,
         image_url: newMeal.image_url,
         is_available: newMeal.published,
         status: 'active',

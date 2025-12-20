@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
           price,
           saleprice as sale_price,
           category,
+          brand,
           imageurl as image_url,
           isactive as is_available,
           stock as stock_quantity,
@@ -56,6 +57,7 @@ export async function GET(request: NextRequest) {
           price,
           saleprice as sale_price,
           category,
+          brand,
           imageurl as image_url,
           isactive as is_available,
           stock as stock_quantity,
@@ -92,33 +94,71 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert new product - using lowercase to match actual database schema
-    const newProduct = await sql`
-      INSERT INTO products (
-        name, description, price, saleprice, imageurl, 
-        category, stock, isactive
+    // Try with brand first, fallback if column doesn't exist
+    try {
+      const newProduct = await sql`
+        INSERT INTO products (
+          name, description, price, saleprice, imageurl, 
+          category, brand, stock, isactive
+        )
+        VALUES (
+          ${data.name},
+          ${data.description || null},
+          ${Number(data.price)},
+          ${data.sale_price ? Number(data.sale_price) : null},
+          ${data.image_url || null},
+          ${data.category || null},
+          ${data.brand || null},
+          ${data.stock_quantity ?? data.stock ?? 0},
+          ${data.is_available ?? data.is_active ?? true}
+        )
+        RETURNING 
+          id, name, description, price, saleprice as sale_price, imageurl as image_url, 
+          category, brand, stock as stock_quantity, isactive as is_available, created_at
+      `
+      return NextResponse.json(
+        {
+          success: true,
+          product: newProduct[0],
+        },
+        { status: 201 },
       )
-      VALUES (
-        ${data.name},
-        ${data.description || null},
-        ${Number(data.price)},
-        ${data.sale_price ? Number(data.sale_price) : null},
-        ${data.image_url || null},
-        ${data.category || null},
-        ${data.stock_quantity ?? data.stock ?? 0},
-        ${data.is_available ?? data.is_active ?? true}
-      )
-      RETURNING 
-        id, name, description, price, saleprice as sale_price, imageurl as image_url, 
-        category, stock as stock_quantity, isactive as is_available, created_at
-    `
-
-    return NextResponse.json(
-      {
-        success: true,
-        product: newProduct[0],
-      },
-      { status: 201 },
-    )
+    } catch (error: any) {
+      // If brand column doesn't exist, try without it
+      if (error.message?.includes('brand') || error.message?.includes('column')) {
+        const newProduct = await sql`
+          INSERT INTO products (
+            name, description, price, saleprice, imageurl, 
+            category, stock, isactive
+          )
+          VALUES (
+            ${data.name},
+            ${data.description || null},
+            ${Number(data.price)},
+            ${data.sale_price ? Number(data.sale_price) : null},
+            ${data.image_url || null},
+            ${data.category || null},
+            ${data.stock_quantity ?? data.stock ?? 0},
+            ${data.is_available ?? data.is_active ?? true}
+          )
+          RETURNING 
+            id, name, description, price, saleprice as sale_price, imageurl as image_url, 
+            category, stock as stock_quantity, isactive as is_available, created_at
+        `
+        const product = newProduct[0]
+        return NextResponse.json(
+          {
+            success: true,
+            product: {
+              ...product,
+              brand: data.brand || null, // Add brand to response even if not in DB
+            },
+          },
+          { status: 201 },
+        )
+      }
+      throw error
+    }
   } catch (error) {
     return createErrorResponse(error, "Failed to create product", 500)
   }

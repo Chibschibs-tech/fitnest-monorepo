@@ -28,10 +28,18 @@ export const meals = pgTable("meals", {
   slug: varchar("slug", { length: 160 }).notNull().unique(),
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description"),
+  mealType: varchar("meal_type", { length: 50 })
+    .$type<"Breakfast" | "Lunch" | "Dinner" | "Snack">(),
+  category: varchar("category", { length: 100 }).default("meal"),
   kcal: integer("kcal").notNull().default(0),
   protein: numeric("protein", { precision: 6, scale: 2 }).default("0"),
   carbs: numeric("carbs", { precision: 6, scale: 2 }).default("0"),
   fat: numeric("fat", { precision: 6, scale: 2 }).default("0"),
+  fiber: numeric("fiber", { precision: 6, scale: 2 }).default("0"),
+  sodium: numeric("sodium", { precision: 6, scale: 2 }).default("0"),
+  sugar: numeric("sugar", { precision: 6, scale: 2 }).default("0"),
+  cholesterol: numeric("cholesterol", { precision: 6, scale: 2 }).default("0"),
+  saturatedFat: numeric("saturated_fat", { precision: 6, scale: 2 }).default("0"),
   allergens: jsonb("allergens").$type<string[]>().default([]),
   tags: jsonb("tags").$type<string[]>().default([]),
   imageUrl: text("image_url"),
@@ -57,60 +65,25 @@ export const planVariants = pgTable("plan_variants", {
   id: serial("id").primaryKey(),
   mealPlanId: integer("meal_plan_id")
     .notNull()
-    .references(() => mealPlans.id),
+    .references(() => mealPlans.id, { onDelete: "cascade" }),
   label: varchar("label", { length: 120 }).notNull(),
   daysPerWeek: integer("days_per_week").notNull().default(5),
   mealsPerDay: integer("meals_per_day").notNull().default(3),
- weeklyBasePriceMAD: numeric("weekly_base_price_mad", { precision: 10, scale: 2 }).notNull(),
-
+  weeklyPriceMad: numeric("weekly_price_mad", { precision: 10, scale: 2 }).notNull(),
   published: boolean("published").default(true).notNull(),
 });
 
-/* ---------------- MEAL PLAN MEALS ---------------- */
-export const mealPlanMeals = pgTable("meal_plan_meals", {
+/* ---------------- CONTENT MANAGEMENT ---------------- */
+export const contentHero = pgTable("content_hero", {
   id: serial("id").primaryKey(),
-  planVariantId: integer("plan_variant_id")
-    .notNull()
-    .references(() => planVariants.id),
-  dayIndex: integer("day_index").notNull(),
-  slotIndex: integer("slot_index").notNull(),
-  mealId: integer("meal_id")
-    .notNull()
-    .references(() => meals.id),
-});
-
-/* ---------------- SUBSCRIPTIONS ---------------- */
-export const subscriptions = pgTable("subscriptions", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id),
-  planVariantId: integer("plan_variant_id")
-    .notNull()
-    .references(() => planVariants.id),
-  status: varchar("status", { length: 20 })
-    .$type<"active" | "paused" | "canceled" | "expired">()
-    .default("active")
-    .notNull(),
-  startsAt: timestamp("starts_at").defaultNow().notNull(),
-  renewsAt: timestamp("renews_at"),
-  notes: text("notes"),
-});
-
-/* ---------------- DELIVERIES ---------------- */
-export const deliveries = pgTable("deliveries", {
-  id: serial("id").primaryKey(),
-  subscriptionId: integer("subscription_id")
-    .notNull()
-    .references(() => subscriptions.id),
-  deliveryDate: timestamp("delivery_date").notNull(),
-  window: varchar("window", { length: 40 }),
-  addressLine1: varchar("address_line1", { length: 255 }),
-  city: varchar("city", { length: 120 }),
-  status: varchar("status", { length: 20 })
-    .$type<
-      "pending" | "preparing" | "out_for_delivery" | "delivered" | "failed"
-    >()
-    .default("pending")
-    .notNull(),
+  desktopImageUrl: text("desktop_image_url"),
+  mobileImageUrl: text("mobile_image_url"),
+  title: varchar("title", { length: 200 }),
+  description: text("description"),
+  altText: varchar("alt_text", { length: 255 }),
+  seoTitle: varchar("seo_title", { length: 200 }),
+  seoDescription: text("seo_description"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

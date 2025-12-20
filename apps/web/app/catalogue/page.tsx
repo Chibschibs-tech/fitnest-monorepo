@@ -1,4 +1,10 @@
-export const metadata = { title: "Fitnest — How it works" };
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Catalogue | Fitnest.ma",
+  description:
+    "Overview of Fitnest meal plans and how the service works. Discover how to subscribe, choose meals, and receive deliveries.",
+};
 
 function Step({n, title, desc}:{n:number;title:string;desc:string}){
   return (
@@ -20,8 +26,8 @@ export default function Catalogue(){
           Choose your plan, select your meals, we cook & deliver. Simple, fresh and tailored to your goals.
         </p>
         <div className="mt-4 flex gap-3 justify-center">
-          <a href="/subscribe" className="rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600">Get started</a>
-          <a href="/plans" className="rounded-md border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green">See plans</a>
+          <a href="/subscribe" className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90">Get started</a>
+          <a href="/plans" className="rounded-full border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green">See plans</a>
         </div>
       </section>
 
@@ -61,8 +67,8 @@ export default function Catalogue(){
           <div className="text-sm text-gray-600">Configure your subscription in a few clicks.</div>
         </div>
         <div className="flex gap-3">
-          <a href="/subscribe" className="rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600">Subscribe</a>
-          <a href="/menu" className="rounded-md border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green">View menu</a>
+          <a href="/subscribe" className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90">Subscribe</a>
+          <a href="/menu" className="rounded-full border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green">View menu</a>
         </div>
       </section>
     </div>

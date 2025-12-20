@@ -15,11 +15,13 @@ export function ClientLayout({
   const pathname = usePathname()
   const isWaitlistPage = pathname === "/waitlist"
 
+  const isHomePage = pathname === "/" || pathname === "/home"
+  
   return (
     <Providers>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col relative">
         {!isWaitlistPage && <Navbar />}
-        <main className="flex-1">{children}</main>
+        <main className={isHomePage ? "flex-1 p-0" : isWaitlistPage ? "flex-1 p-0" : "flex-1 pt-20"}>{children}</main>
         <Footer />
       </div>
     </Providers>

@@ -6,10 +6,10 @@ function getEnv(key: string, defaultValue = ""): string {
 }
 
 // Fitnest brand colors
-const FITNEST_GREEN = "#015033" // Fitnest brand green
-const FITNEST_DARK_GREEN = "#013d28" // Darker shade for buttons hover
-const FITNEST_LIGHT_GREEN = "#e6f2ed" // Light green for backgrounds
-const FITNEST_ORANGE = "#e67e22" // Orange accent color
+const FITNEST_GREEN = "#264e35" // Fitnest brand green
+const FITNEST_DARK_GREEN = "#1a3a26" // Darker shade for buttons hover
+const FITNEST_LIGHT_GREEN = "#e8f3ed" // Light green for backgrounds
+const FITNEST_ORANGE = "#e06439" // Orange accent color
 
 // Create reusable transporter object using environment variables
 const createTransporter = () => {

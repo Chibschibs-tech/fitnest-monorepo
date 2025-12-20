@@ -1,6 +1,7 @@
 import { sql, db } from "@/lib/db"
 import Image from "next/image"
 import Link from "next/link"
+import type { Metadata } from "next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -8,6 +9,12 @@ import { ShoppingCart, Plus } from "lucide-react"
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic"
+
+export const metadata: Metadata = {
+  title: "Express Shop | Fitnest.ma",
+  description:
+    "Order healthy snacks, supplements, and accessories from the Fitnest Express Shop. One-off purchases delivered with your meals.",
+}
 
 export default async function ExpressShop() {
   console.log("Rendering Express Shop page")

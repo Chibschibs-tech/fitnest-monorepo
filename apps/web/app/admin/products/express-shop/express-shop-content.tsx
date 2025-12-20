@@ -17,8 +17,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Search, Plus, Edit, Trash2, Loader2 } from "lucide-react"
+import { Search, Plus, Edit, Trash2, Loader2, Package, MoreVertical, Download } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import Image from "next/image"
+import { ImageUpload } from "@/components/image-upload"
 
 interface ExpressProduct {
   id: number
@@ -47,6 +57,8 @@ export function ExpressShopContent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<ExpressProduct | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedProducts, setSelectedProducts] = useState<number[]>([])
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -179,6 +191,112 @@ export function ExpressShopContent() {
     }
   }
 
+  // Bulk operations
+  const handleSelectProduct = (productId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedProducts([...selectedProducts, productId])
+    } else {
+      setSelectedProducts(selectedProducts.filter((id) => id !== productId))
+    }
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedProducts(filteredProducts.map((product) => product.id))
+    } else {
+      setSelectedProducts([])
+    }
+  }
+
+  const handleBulkActivate = async () => {
+    if (selectedProducts.length === 0) return
+    setIsBulkProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/admin/products/express-shop/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "activate",
+          ids: selectedProducts,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedProducts([])
+        fetchProducts()
+      } else {
+        setError(data.error || "Failed to activate products")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to activate products")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDeactivate = async () => {
+    if (selectedProducts.length === 0) return
+    setIsBulkProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/admin/products/express-shop/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "deactivate",
+          ids: selectedProducts,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedProducts([])
+        fetchProducts()
+      } else {
+        setError(data.error || "Failed to deactivate products")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to deactivate products")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedProducts.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedProducts.length} product(s)?`)) return
+
+    setIsBulkProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/admin/products/express-shop/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete",
+          ids: selectedProducts,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedProducts([])
+        fetchProducts()
+      } else {
+        setError(data.error || "Failed to delete products")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete products")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
   // Confirm delete
   const handleConfirmDelete = async () => {
     if (!selectedProduct) return
@@ -223,6 +341,14 @@ export function ExpressShopContent() {
     )
   }
 
+  const totalProducts = products.length
+  const activeProducts = products.filter((p) => p.is_available).length
+  const outOfStock = products.filter((p) => (p.stock_quantity || 0) === 0).length
+  const totalValue = products.reduce(
+    (sum, product) => sum + (Number(product.price) || 0) * (Number(product.stock_quantity) || 0),
+    0,
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -230,10 +356,93 @@ export function ExpressShopContent() {
           <h1 className="text-2xl font-bold">Express Shop Management</h1>
           <p className="text-gray-600">Manage your express shop products</p>
         </div>
-        <Button onClick={handleCreate}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Product
-        </Button>
+        <div className="flex gap-2">
+          {selectedProducts.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" disabled={isBulkProcessing}>
+                  <MoreVertical className="h-4 w-4 mr-2" />
+                  Bulk ({selectedProducts.length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Bulk Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleBulkActivate} disabled={isBulkProcessing}>
+                  Activate Selected
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleBulkDeactivate} disabled={isBulkProcessing}>
+                  Deactivate Selected
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleBulkDelete} disabled={isBulkProcessing} className="text-red-600">
+                  Delete Selected
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          <Button
+            onClick={() => window.open("/api/admin/products/express-shop/export?format=csv", "_blank")}
+            variant="outline"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button
+            onClick={() => window.open("/api/admin/products/express-shop/export?format=json", "_blank")}
+            variant="outline"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export JSON
+          </Button>
+          <Button onClick={handleCreate}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Product
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalProducts}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Products</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{activeProducts}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{outOfStock}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalValue.toFixed(2)} MAD</div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
@@ -275,6 +484,12 @@ export function ExpressShopContent() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
+                    onCheckedChange={handleSelectAll}
+                  />
+                </TableHead>
                 <TableHead>Image</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Brand</TableHead>
@@ -288,6 +503,12 @@ export function ExpressShopContent() {
             <TableBody>
               {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedProducts.includes(product.id)}
+                      onCheckedChange={(checked) => handleSelectProduct(product.id, checked as boolean)}
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="relative h-12 w-12 rounded-md overflow-hidden">
                       <Image
@@ -462,13 +683,39 @@ export function ExpressShopContent() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image_url">Image URL</Label>
+              <Label>Image</Label>
+              <ImageUpload
+                onUploadComplete={(url) => setFormData({ ...formData, image_url: url })}
+                buttonText="Upload Product Image"
+              />
+              {formData.image_url && (
+                <div className="mt-2">
+                  <p className="text-xs text-gray-500 mb-1">Current image:</p>
+                  <Image
+                    src={formData.image_url}
+                    alt="Product preview"
+                    width={100}
+                    height={100}
+                    className="rounded object-cover"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, image_url: "" })}
+                    className="mt-2"
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
               <Input
                 id="image_url"
                 type="url"
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://..."
+                placeholder="Or enter image URL manually (https://...)"
+                className="mt-2"
               />
             </div>
 

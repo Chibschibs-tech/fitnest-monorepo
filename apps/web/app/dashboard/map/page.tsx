@@ -16,7 +16,7 @@ function StatusBadge({ status }: { status: Status }) {
   const map: Record<Status, { label: string; className: string }> = {
     working: {
       label: "Working",
-      className: "bg-emerald-100 text-emerald-700 border border-emerald-200",
+      className: "bg-fitnest-green/10 text-fitnest-green border border-fitnest-green/20",
     },
     "present-not-wired": {
       label: "Present • Not wired",

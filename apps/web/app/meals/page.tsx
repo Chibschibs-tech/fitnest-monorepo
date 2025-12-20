@@ -34,8 +34,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { MealCard } from "./components/meal-card"
 import { MealDetail } from "./components/meal-detail"
 
-export const dynamic = "force-dynamic"
-
 // Types
 interface Meal {
   id: number

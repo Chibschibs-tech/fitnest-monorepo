@@ -291,15 +291,17 @@ export function ExpressShopContent({
       )}
 
       <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="mb-8">
-        <div className="flex items-center justify-between">
-          <TabsList className="overflow-x-auto">
-            {categories.map((category) => (
-              <TabsTrigger key={category || "uncategorized"} value={category || "uncategorized"} className="capitalize">
-                {category?.replace("_", " ") || "Uncategorized"}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <TabsList className="overflow-x-auto w-max sm:w-auto">
+              {categories.map((category) => (
+                <TabsTrigger key={category || "uncategorized"} value={category || "uncategorized"} className="capitalize whitespace-nowrap">
+                  {category?.replace("_", " ") || "Uncategorized"}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"

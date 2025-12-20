@@ -17,6 +17,8 @@ import {
   ChevronRight,
   ShoppingCart,
   Calculator,
+  FileText,
+  Image,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -84,6 +86,14 @@ const navigation = [
     name: "Add Meals",
     href: "/admin/meals/add",
     icon: Apple,
+  },
+  {
+    name: "Content",
+    icon: FileText,
+    isGroup: true,
+    children: [
+      { name: "Hero Section", href: "/admin/content/hero", icon: Image },
+    ],
   },
 ]
 

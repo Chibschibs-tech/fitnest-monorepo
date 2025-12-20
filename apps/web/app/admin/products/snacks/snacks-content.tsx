@@ -26,9 +26,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Search, Package, Plus, Edit, RefreshCw, Trash2, Loader2 } from "lucide-react"
+import { Search, Package, Plus, Edit, RefreshCw, Trash2, Loader2, Download, MoreVertical } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
+import { ImageUpload } from "@/components/image-upload"
 
 interface Snack {
   id: number
@@ -55,6 +65,8 @@ export default function SnacksContent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedSnack, setSelectedSnack] = useState<Snack | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedSnacks, setSelectedSnacks] = useState<number[]>([])
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -191,6 +203,112 @@ export default function SnacksContent() {
     }
   }
 
+  // Bulk operations
+  const handleSelectSnack = (snackId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedSnacks([...selectedSnacks, snackId])
+    } else {
+      setSelectedSnacks(selectedSnacks.filter((id) => id !== snackId))
+    }
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedSnacks(filteredSnacks.map((snack) => snack.id))
+    } else {
+      setSelectedSnacks([])
+    }
+  }
+
+  const handleBulkActivate = async () => {
+    if (selectedSnacks.length === 0) return
+    setIsBulkProcessing(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/admin/products/snacks/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "activate",
+          ids: selectedSnacks,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedSnacks([])
+        fetchSnacks()
+      } else {
+        setError(data.error || "Failed to activate snacks")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to activate snacks")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDeactivate = async () => {
+    if (selectedSnacks.length === 0) return
+    setIsBulkProcessing(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/admin/products/snacks/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "deactivate",
+          ids: selectedSnacks,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedSnacks([])
+        fetchSnacks()
+      } else {
+        setError(data.error || "Failed to deactivate snacks")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to deactivate snacks")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedSnacks.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedSnacks.length} snack(s)?`)) return
+
+    setIsBulkProcessing(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/admin/products/snacks/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete",
+          ids: selectedSnacks,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedSnacks([])
+        fetchSnacks()
+      } else {
+        setError(data.error || "Failed to delete snacks")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete snacks")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
   // Confirm delete
   const handleConfirmDelete = async () => {
     if (!selectedSnack) return
@@ -293,6 +411,22 @@ export default function SnacksContent() {
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
+          <Button
+            onClick={() => window.open("/api/admin/products/snacks/export?format=csv", "_blank")}
+            variant="outline"
+            size="sm"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            CSV
+          </Button>
+          <Button
+            onClick={() => window.open("/api/admin/products/snacks/export?format=json", "_blank")}
+            variant="outline"
+            size="sm"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            JSON
+          </Button>
           <Button onClick={handleCreate} disabled={isSubmitting}>
             <Plus className="h-4 w-4 mr-2" />
             Add Snack
@@ -381,6 +515,15 @@ export default function SnacksContent() {
                 <SelectItem value="beverages">Beverages</SelectItem>
               </SelectContent>
             </Select>
+            {filteredSnacks.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  checked={selectedSnacks.length === filteredSnacks.length && filteredSnacks.length > 0}
+                  onCheckedChange={handleSelectAll}
+                />
+                <Label className="text-sm">Select All</Label>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -403,7 +546,13 @@ export default function SnacksContent() {
           </div>
         ) : (
           filteredSnacks.map((snack) => (
-            <Card key={snack.id} className="overflow-hidden">
+            <Card key={snack.id} className="overflow-hidden relative">
+              <div className="absolute top-2 left-2 z-10">
+                <Checkbox
+                  checked={selectedSnacks.includes(snack.id)}
+                  onCheckedChange={(checked) => handleSelectSnack(snack.id, checked as boolean)}
+                />
+              </div>
               <div className="aspect-square relative bg-gray-100">
                 {snack.image_url ? (
                   <Image src={snack.image_url || "/placeholder.svg"} alt={snack.name} fill className="object-cover" />
@@ -535,12 +684,38 @@ export default function SnacksContent() {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="image_url">Image URL</Label>
+              <Label>Image</Label>
+              <ImageUpload
+                onUploadComplete={(url) => setFormData({ ...formData, image_url: url })}
+                buttonText="Upload Snack Image"
+              />
+              {formData.image_url && (
+                <div className="mt-2">
+                  <p className="text-xs text-gray-500 mb-1">Current image:</p>
+                  <Image
+                    src={formData.image_url}
+                    alt="Snack preview"
+                    width={100}
+                    height={100}
+                    className="rounded object-cover"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, image_url: "" })}
+                    className="mt-2"
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
               <Input
                 id="image_url"
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://..."
+                placeholder="Or enter image URL manually"
+                className="mt-2"
               />
             </div>
             {error && (

@@ -43,8 +43,21 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "fitnest-green": "#015033",
-        "fitnest-orange": "#E06237",
+        // Fitnest Brand Colors - Primary Palette
+        "fitnest-green": {
+          DEFAULT: "#264e35", // Brand Green
+          light: "#3a6b4a", // Light Green
+          salem: "#1a3a26", // Dark Green
+        },
+        "fitnest-orange": {
+          DEFAULT: "#e06439", // Brand Orange
+          salmon: "#e87d5a", // Light Orange
+          tangerine: "#f59d7a", // Lighter Orange
+        },
+        // Extended palette colors
+        "fitnest-gray": {
+          DEFAULT: "#999999", // Spanish Gray
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

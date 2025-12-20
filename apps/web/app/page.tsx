@@ -1,18 +1,9 @@
-"use client"
+import { redirect } from "next/navigation"
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+export const dynamic = "force-dynamic"
 
-export default function Home() {
-  const router = useRouter()
-
-  useEffect(() => {
-    router.push("/waitlist")
-  }, [router])
-
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-fitnest-green"></div>
-    </div>
-  )
+export default function RootHome() {
+  // Redirect to waitlist while website is under development
+  // Home page remains accessible at /home
+  redirect("/waitlist")
 }

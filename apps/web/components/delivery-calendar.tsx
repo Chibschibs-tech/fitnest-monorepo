@@ -128,7 +128,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
             borderRadius: 9999,
           },
           day_selected: {
-            backgroundColor: "#015033", // Fitnest green
+            backgroundColor: "#264e35", // Fitnest green
             color: "#ffffff",
             border: "none",
             boxShadow: "none",
@@ -149,7 +149,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
       {/* Legend */}
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
         <span className="inline-flex items-center gap-2">
-          <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: "#015033" }} />
+          <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: "#264e35" }} />
           Selected
         </span>
         <span className="inline-flex items-center gap-2">

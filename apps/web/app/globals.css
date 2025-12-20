@@ -70,27 +70,52 @@
 
 /* Fitnest Brand Colors */
 .text-fitnest-green {
-  color: #015033;
+  color: #264e35;
 }
 
 .bg-fitnest-green {
-  background-color: #015033;
+  background-color: #264e35;
 }
 
 .border-fitnest-green {
-  border-color: #015033;
+  border-color: #264e35;
 }
 
 .text-fitnest-orange {
-  color: #ff6b35;
+  color: #e06439;
 }
 
 .bg-fitnest-orange {
-  background-color: #ff6b35;
+  background-color: #e06439;
 }
 
 .border-fitnest-orange {
-  border-color: #ff6b35;
+  border-color: #e06439;
+}
+
+/* Extended Brand Colors */
+.text-fitnest-salem {
+  color: #1a3a26;
+}
+
+.bg-fitnest-salem {
+  background-color: #1a3a26;
+}
+
+.text-fitnest-salmon {
+  color: #e87d5a;
+}
+
+.bg-fitnest-salmon {
+  background-color: #e87d5a;
+}
+
+.text-fitnest-green-light {
+  color: #3a6b4a;
+}
+
+.bg-fitnest-green-light {
+  background-color: #3a6b4a;
 }
 
 /* Custom animations */
@@ -156,10 +181,10 @@
 .rdp .rdp-day[aria-selected="true"],
 .rdp .rdp-button[aria-selected="true"],
 .rdp .rdp-day_selected {
-  background-color: #015033 !important; /* Fitnest green */
+  background-color: #264e35 !important; /* Fitnest Green */
   color: #ffffff !important;
   border: none !important;
-  box-shadow: none !important; /* kill blue ring */
+  box-shadow: none !important;
   outline: none !important;
 }
 
@@ -188,7 +213,7 @@
 .rdp .rdp-day[aria-selected="true"],
 .rdp .rdp-button[aria-selected="true"],
 .rdp .rdp-day_selected {
-  background-color: #015033 !important; /* Fitnest green */
+  background-color: #264e35 !important; /* Fitnest Green */
   color: #ffffff !important;
   border: none !important;
   outline: none !important;
@@ -198,8 +223,8 @@
 /* Hover for selectable days (not disabled) */
 .rdp .rdp-day:not([disabled]):not([aria-selected="true"]):hover,
 .rdp .rdp-button:not([disabled]):not([aria-selected="true"]):hover {
-  background-color: #e8f3ee !important; /* subtle green tint */
-  color: #015033 !important;
+  background-color: #e8f3ed !important; /* subtle green tint */
+  color: #264e35 !important;
 }
 
 /* Disabled/unavailable dates */
@@ -224,4 +249,17 @@
 .rdp .rdp-button:focus-visible {
   outline: none !important;
   box-shadow: none !important;
+}
+
+/* Hero section full screen override */
+.hero-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }

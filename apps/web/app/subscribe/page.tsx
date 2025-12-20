@@ -65,7 +65,7 @@ export default function SubscribePage(){
             <input type="number" min={1} value={duration} onChange={e=>setDuration(Number(e.target.value))} className="rounded-md border px-3 py-2 w-28"/>
           </div>
           <div className="self-end">
-            <button className="rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600" onClick={calc} disabled={loading}>
+            <button className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90" onClick={calc} disabled={loading}>
               {loading?"Calcul…":"Calculate"}
             </button>
           </div>
@@ -83,8 +83,8 @@ export default function SubscribePage(){
             <div><div className="text-xs text-gray-500">Total ({duration} weeks)</div><div className="text-2xl font-extrabold">{mad(out.total)}</div></div>
           </div>
           <div className="flex gap-3">
-            <a className="rounded-md bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600" href={checkoutHref}>Continue</a>
-            <a className="rounded-md border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green" href="/plans">See plans</a>
+            <a className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90" href={checkoutHref}>Continue</a>
+            <a className="rounded-full border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green" href="/plans">See plans</a>
           </div>
         </section>
       )}

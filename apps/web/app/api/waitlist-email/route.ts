@@ -1,5 +1,5 @@
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const dynamic = "force-dynamic"
+export const revalidate = 0
 
 import { type NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
@@ -8,6 +8,11 @@ import nodemailer from "nodemailer"
 function getEnv(key: string, defaultValue = ""): string {
   return process.env[key] || defaultValue
 }
+
+// Fitnest brand colors
+const FITNEST_GREEN = "#264e35"
+const FITNEST_ORANGE = "#e06439"
+const FITNEST_LIGHT_GREEN = "#e8f3ed"
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,7 +43,7 @@ Submission Date: ${new Date().toLocaleString()}
 This is an automated message from the Fitnest.ma waitlist form.
     `
 
-    // Use the same email configuration as other emails
+    // Use Gmail configuration from environment variables
     const transporter = nodemailer.createTransport({
       host: getEnv("EMAIL_SERVER_HOST"),
       port: Number(getEnv("EMAIL_SERVER_PORT")),
@@ -55,7 +60,7 @@ This is an automated message from the Fitnest.ma waitlist form.
       debug: true,
     })
 
-    console.log("Email configuration:", {
+    console.log("Email configuration (Gmail):", {
       host: getEnv("EMAIL_SERVER_HOST"),
       port: getEnv("EMAIL_SERVER_PORT"),
       user: getEnv("EMAIL_SERVER_USER"),
@@ -65,20 +70,21 @@ This is an automated message from the Fitnest.ma waitlist form.
     // Verify transporter
     try {
       await transporter.verify()
-      console.log("Email transporter verified successfully")
+      console.log("Gmail transporter verified successfully")
     } catch (verifyError) {
-      console.error("Email transporter verification failed:", verifyError)
+      console.error("Gmail transporter verification failed:", verifyError)
     }
 
-    // Send email to noreply@fitnest.ma
+    // Send email to admin email (configured in environment)
+    const adminEmail = getEnv("ADMIN_EMAIL", "chihab.jabri@gmail.com")
     const mailOptions = {
       from: getEnv("EMAIL_FROM"),
-      to: "noreply@fitnest.ma",
+      to: adminEmail,
       subject: `New Waitlist Signup: ${firstName} ${lastName}`,
       text: emailContent,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background-color: #015033; padding: 20px; text-align: center;">
+          <div style="background-color: ${FITNEST_GREEN}; padding: 20px; text-align: center;">
             <h1 style="color: white; margin: 0;">New Waitlist Signup</h1>
           </div>
           <div style="padding: 20px; border: 1px solid #eee;">
@@ -91,17 +97,17 @@ This is an automated message from the Fitnest.ma waitlist form.
             <p><strong>Wants Notifications:</strong> ${notifications ? "Yes" : "No"}</p>
             <p><strong>Submission Date:</strong> ${new Date().toLocaleString()}</p>
           </div>
-          <div style="background-color: #e6f2ed; padding: 15px; text-align: center; font-size: 12px; color: #666;">
+          <div style="background-color: ${FITNEST_LIGHT_GREEN}; padding: 15px; text-align: center; font-size: 12px; color: #666;">
             <p>This is an automated message from the Fitnest.ma waitlist form.</p>
           </div>
         </div>
       `,
     }
 
-    console.log("Attempting to send email to noreply@fitnest.ma...")
+    console.log(`Attempting to send email to ${adminEmail} via Gmail...`)
 
     const info = await transporter.sendMail(mailOptions)
-    console.log("Email sent successfully:", info.messageId)
+    console.log("Email sent successfully via Gmail:", info.messageId)
     console.log("Email response:", info.response)
 
     // Return success

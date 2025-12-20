@@ -103,13 +103,13 @@ export function FeaturedMealPlans() {
                     <p className="text-gray-600">{plan.description}</p>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-2xl font-bold text-emerald-600">
+                    <p className="text-2xl font-bold text-fitnest-green">
                       {plan.price} MAD<span className="text-sm text-gray-500 font-normal"> / week</span>
                     </p>
                   </CardContent>
                   <CardFooter>
                     <Link href={`/meal-plans/${plan.id}`} className="w-full">
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700">View Plan</Button>
+                      <Button className="w-full bg-fitnest-green hover:bg-fitnest-green/90">View Plan</Button>
                     </Link>
                   </CardFooter>
                 </Card>
@@ -118,7 +118,7 @@ export function FeaturedMealPlans() {
 
         <div className="text-center mt-12">
           <Link href="/meal-plans">
-            <Button variant="outline" size="lg" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
+            <Button variant="outline" size="lg" className="border-fitnest-green text-fitnest-green hover:bg-fitnest-green/10">
               View All Meal Plans
             </Button>
           </Link>

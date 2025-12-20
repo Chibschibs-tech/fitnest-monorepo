@@ -26,9 +26,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Search, Plus, Edit, Trash2, Loader2 } from "lucide-react"
+import { Search, Plus, Edit, Trash2, Loader2, Package, Download, MoreVertical } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
+import { ImageUpload } from "@/components/image-upload"
 
 interface Accessory {
   id: number
@@ -55,6 +65,8 @@ export function AccessoriesContent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [selectedAccessory, setSelectedAccessory] = useState<Accessory | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedAccessories, setSelectedAccessories] = useState<number[]>([])
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -183,6 +195,112 @@ export function AccessoriesContent() {
     }
   }
 
+  // Bulk operations
+  const handleSelectAccessory = (accessoryId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedAccessories([...selectedAccessories, accessoryId])
+    } else {
+      setSelectedAccessories(selectedAccessories.filter((id) => id !== accessoryId))
+    }
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedAccessories(filteredAccessories.map((acc) => acc.id))
+    } else {
+      setSelectedAccessories([])
+    }
+  }
+
+  const handleBulkActivate = async () => {
+    if (selectedAccessories.length === 0) return
+    setIsBulkProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/admin/products/accessories/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "activate",
+          ids: selectedAccessories,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedAccessories([])
+        fetchAccessories()
+      } else {
+        setError(data.error || "Failed to activate accessories")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to activate accessories")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDeactivate = async () => {
+    if (selectedAccessories.length === 0) return
+    setIsBulkProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/admin/products/accessories/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "deactivate",
+          ids: selectedAccessories,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedAccessories([])
+        fetchAccessories()
+      } else {
+        setError(data.error || "Failed to deactivate accessories")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to deactivate accessories")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedAccessories.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedAccessories.length} accessory/accessories?`)) return
+
+    setIsBulkProcessing(true)
+    setError("")
+
+    try {
+      const response = await fetch("/api/admin/products/accessories/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete",
+          ids: selectedAccessories,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedAccessories([])
+        fetchAccessories()
+      } else {
+        setError(data.error || "Failed to delete accessories")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete accessories")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
   // Confirm delete
   const handleConfirmDelete = async () => {
     if (!selectedAccessory) return
@@ -227,6 +345,14 @@ export function AccessoriesContent() {
     )
   }
 
+  const totalAccessories = accessories.length
+  const activeAccessories = accessories.filter((a) => a.is_available).length
+  const outOfStock = accessories.filter((a) => (a.stock_quantity || 0) === 0).length
+  const totalValue = accessories.reduce(
+    (sum, accessory) => sum + (Number(accessory.price) || 0) * (Number(accessory.stock_quantity) || 0),
+    0,
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -234,10 +360,93 @@ export function AccessoriesContent() {
           <h1 className="text-2xl font-bold">Accessories Management</h1>
           <p className="text-gray-600">Manage your accessory products</p>
         </div>
-        <Button onClick={handleCreate} disabled={isSubmitting}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Accessory
-        </Button>
+        <div className="flex gap-2">
+          {selectedAccessories.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" disabled={isBulkProcessing}>
+                  <MoreVertical className="h-4 w-4 mr-2" />
+                  Bulk ({selectedAccessories.length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Bulk Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleBulkActivate} disabled={isBulkProcessing}>
+                  Activate Selected
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleBulkDeactivate} disabled={isBulkProcessing}>
+                  Deactivate Selected
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleBulkDelete} disabled={isBulkProcessing} className="text-red-600">
+                  Delete Selected
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          <Button
+            onClick={() => window.open("/api/admin/products/accessories/export?format=csv", "_blank")}
+            variant="outline"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button
+            onClick={() => window.open("/api/admin/products/accessories/export?format=json", "_blank")}
+            variant="outline"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export JSON
+          </Button>
+          <Button onClick={handleCreate} disabled={isSubmitting}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Accessory
+          </Button>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalAccessories}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Products</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{activeAccessories}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Out of Stock</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{outOfStock}</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalValue.toFixed(2)} MAD</div>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
@@ -452,12 +661,38 @@ export function AccessoriesContent() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="image_url">Image URL</Label>
+                <Label>Image</Label>
+                <ImageUpload
+                  onUploadComplete={(url) => setFormData({ ...formData, image_url: url })}
+                  buttonText="Upload Accessory Image"
+                />
+                {formData.image_url && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-1">Current image:</p>
+                    <Image
+                      src={formData.image_url}
+                      alt="Accessory preview"
+                      width={100}
+                      height={100}
+                      className="rounded object-cover"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setFormData({ ...formData, image_url: "" })}
+                      className="mt-2"
+                    >
+                      Remove Image
+                    </Button>
+                  </div>
+                )}
                 <Input
                   id="image_url"
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                  placeholder="https://..."
+                  placeholder="Or enter image URL manually"
+                  className="mt-2"
                 />
               </div>
             </div>

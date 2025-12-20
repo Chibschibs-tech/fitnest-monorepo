@@ -104,7 +104,7 @@ export default function NutritionManager() {
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-[#015033]">USDA Nutrition Data Manager</h1>
+        <h1 className="text-3xl font-bold text-fitnest-green">USDA Nutrition Data Manager</h1>
         <Button onClick={loadVerificationData} disabled={verificationLoading}>
           {verificationLoading ? "Refreshing..." : "Refresh Data"}
         </Button>
@@ -115,7 +115,7 @@ export default function NutritionManager() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-4">
-              <div className="text-2xl font-bold text-[#015033]">{summary.totalIngredients}</div>
+              <div className="text-2xl font-bold text-fitnest-green">{summary.totalIngredients}</div>
               <div className="text-sm text-gray-600">Total Ingredients</div>
             </CardContent>
           </Card>

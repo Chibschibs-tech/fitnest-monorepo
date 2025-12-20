@@ -27,7 +27,25 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Search, Eye, Edit, Trash2, Plus, RefreshCw, Loader2 } from "lucide-react"
+import { Search, Eye, Edit, Trash2, Plus, RefreshCw, Loader2, Download, X, MoreVertical } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ImageUpload } from "@/components/image-upload"
+import Image from "next/image"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface Meal {
   id: number
@@ -35,12 +53,17 @@ interface Meal {
   description: string
   price: number
   category: string
+  meal_type?: "Breakfast" | "Lunch" | "Dinner" | "Snack" | null
   image_url?: string
   calories: number
   protein: number
   carbs: number
   fat: number
-  fiber: number
+  fiber?: number
+  sodium?: number
+  sugar?: number
+  cholesterol?: number
+  saturated_fat?: number
   ingredients?: string
   allergens?: string
   is_available: boolean
@@ -53,6 +76,13 @@ export default function MealsContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
+  const [mealTypeFilter, setMealTypeFilter] = useState<string>("all")
+  const [allergens, setAllergens] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>([])
+  const [newAllergen, setNewAllergen] = useState("")
+  const [newTag, setNewTag] = useState("")
+  const [selectedMeals, setSelectedMeals] = useState<number[]>([])
+  const [isBulkProcessing, setIsBulkProcessing] = useState(false)
   
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
@@ -65,6 +95,8 @@ export default function MealsContent() {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    meal_type: "" as "Breakfast" | "Lunch" | "Dinner" | "Snack" | "",
+    category: "meal",
     calories: "",
     protein: "",
     carbs: "",
@@ -100,9 +132,12 @@ export default function MealsContent() {
   }
 
   const filteredMeals = meals.filter(
-    (meal) =>
-      meal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      meal.category.toLowerCase().includes(searchTerm.toLowerCase()),
+    (meal) => {
+      const matchesSearch = meal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        meal.category.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesType = mealTypeFilter === "all" || meal.meal_type === mealTypeFilter
+      return matchesSearch && matchesType
+    }
   )
 
   // Handle create
@@ -110,15 +145,50 @@ export default function MealsContent() {
     setFormData({
       name: "",
       description: "",
+      meal_type: "",
+      category: "meal",
       calories: "",
       protein: "",
       carbs: "",
       fat: "",
+      fiber: "",
+      sodium: "",
+      sugar: "",
+      cholesterol: "",
+      saturated_fat: "",
       image_url: "",
       is_available: true,
     })
+    setAllergens([])
+    setTags([])
+    setNewAllergen("")
+    setNewTag("")
     setSelectedMeal(null)
     setIsCreateModalOpen(true)
+  }
+
+  // Allergen management
+  const addAllergen = () => {
+    if (newAllergen.trim() && !allergens.includes(newAllergen.trim())) {
+      setAllergens([...allergens, newAllergen.trim()])
+      setNewAllergen("")
+    }
+  }
+
+  const removeAllergen = (allergen: string) => {
+    setAllergens(allergens.filter((a) => a !== allergen))
+  }
+
+  // Tag management
+  const addTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags([...tags, newTag.trim()])
+      setNewTag("")
+    }
+  }
+
+  const removeTag = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag))
   }
 
   // Handle edit
@@ -127,10 +197,17 @@ export default function MealsContent() {
     setFormData({
       name: meal.name,
       description: meal.description || "",
+      meal_type: meal.meal_type || "",
+      category: meal.category || "meal",
       calories: meal.calories.toString(),
       protein: meal.protein.toString(),
       carbs: meal.carbs.toString(),
       fat: meal.fat.toString(),
+      fiber: (meal.fiber || 0).toString(),
+      sodium: (meal.sodium || 0).toString(),
+      sugar: (meal.sugar || 0).toString(),
+      cholesterol: (meal.cholesterol || 0).toString(),
+      saturated_fat: (meal.saturated_fat || 0).toString(),
       image_url: meal.image_url || "",
       is_available: meal.is_available,
     })
@@ -143,6 +220,112 @@ export default function MealsContent() {
     setIsDeleteDialogOpen(true)
   }
 
+  // Bulk operations
+  const handleSelectMeal = (mealId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedMeals([...selectedMeals, mealId])
+    } else {
+      setSelectedMeals(selectedMeals.filter((id) => id !== mealId))
+    }
+  }
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedMeals(filteredMeals.map((meal) => meal.id))
+    } else {
+      setSelectedMeals([])
+    }
+  }
+
+  const handleBulkPublish = async () => {
+    if (selectedMeals.length === 0) return
+    setIsBulkProcessing(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/admin/products/meals/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "publish",
+          ids: selectedMeals,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedMeals([])
+        fetchMeals()
+      } else {
+        setError(data.error || "Failed to publish meals")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to publish meals")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkUnpublish = async () => {
+    if (selectedMeals.length === 0) return
+    setIsBulkProcessing(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/admin/products/meals/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "unpublish",
+          ids: selectedMeals,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedMeals([])
+        fetchMeals()
+      } else {
+        setError(data.error || "Failed to unpublish meals")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to unpublish meals")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedMeals.length === 0) return
+    if (!confirm(`Are you sure you want to delete ${selectedMeals.length} meal(s)?`)) return
+
+    setIsBulkProcessing(true)
+    setError(null)
+
+    try {
+      const response = await fetch("/api/admin/products/meals/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "delete",
+          ids: selectedMeals,
+        }),
+      })
+
+      const data = await response.json()
+      if (response.ok && data.success) {
+        setSelectedMeals([])
+        fetchMeals()
+      } else {
+        setError(data.error || "Failed to delete meals")
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete meals")
+    } finally {
+      setIsBulkProcessing(false)
+    }
+  }
+
   // Submit create/edit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -153,10 +336,19 @@ export default function MealsContent() {
       const payload = {
         name: formData.name,
         description: formData.description,
+        meal_type: formData.meal_type || null,
+        category: formData.category || "meal",
         calories: Number.parseInt(formData.calories) || 0,
         protein: Number.parseFloat(formData.protein) || 0,
         carbs: Number.parseFloat(formData.carbs) || 0,
         fat: Number.parseFloat(formData.fat) || 0,
+        fiber: Number.parseFloat(formData.fiber) || 0,
+        sodium: Number.parseFloat(formData.sodium) || 0,
+        sugar: Number.parseFloat(formData.sugar) || 0,
+        cholesterol: Number.parseFloat(formData.cholesterol) || 0,
+        saturated_fat: Number.parseFloat(formData.saturated_fat) || 0,
+        allergens: allergens,
+        tags: tags,
         image_url: formData.image_url || null,
         is_available: formData.is_available,
       }
@@ -256,19 +448,71 @@ export default function MealsContent() {
     <div className="space-y-6">
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
-            placeholder="Search meals..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+        <div className="flex gap-2 flex-1">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search meals..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={mealTypeFilter} onValueChange={setMealTypeFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="Breakfast">Breakfast</SelectItem>
+              <SelectItem value="Lunch">Lunch</SelectItem>
+              <SelectItem value="Dinner">Dinner</SelectItem>
+              <SelectItem value="Snack">Snack</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex gap-2">
+          {selectedMeals.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" disabled={isBulkProcessing}>
+                  <MoreVertical className="h-4 w-4 mr-2" />
+                  Bulk Actions ({selectedMeals.length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>Bulk Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleBulkPublish} disabled={isBulkProcessing}>
+                  Publish Selected
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleBulkUnpublish} disabled={isBulkProcessing}>
+                  Unpublish Selected
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleBulkDelete} disabled={isBulkProcessing} className="text-red-600">
+                  Delete Selected
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <Button onClick={fetchMeals} variant="outline">
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
+          </Button>
+          <Button
+            onClick={() => window.open("/api/admin/products/meals/export?format=csv", "_blank")}
+            variant="outline"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button
+            onClick={() => window.open("/api/admin/products/meals/export?format=json", "_blank")}
+            variant="outline"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Export JSON
           </Button>
           <Button onClick={handleCreate} disabled={isSubmitting}>
             <Plus className="h-4 w-4 mr-2" />
@@ -328,7 +572,14 @@ export default function MealsContent() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-12">
+                    <Checkbox
+                      checked={selectedMeals.length === filteredMeals.length && filteredMeals.length > 0}
+                      onCheckedChange={handleSelectAll}
+                    />
+                  </TableHead>
                   <TableHead>Meal</TableHead>
+                  <TableHead>Type</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Nutrition</TableHead>
@@ -339,6 +590,12 @@ export default function MealsContent() {
               <TableBody>
                 {filteredMeals.map((meal) => (
                   <TableRow key={meal.id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedMeals.includes(meal.id)}
+                        onCheckedChange={(checked) => handleSelectMeal(meal.id, checked as boolean)}
+                      />
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         {meal.image_url && (
@@ -353,6 +610,13 @@ export default function MealsContent() {
                           <div className="text-sm text-gray-500 max-w-xs truncate">{meal.description}</div>
                         </div>
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      {meal.meal_type ? (
+                        <Badge variant="secondary">{meal.meal_type}</Badge>
+                      ) : (
+                        <span className="text-gray-400 text-sm">—</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">{meal.category}</Badge>
@@ -444,6 +708,34 @@ export default function MealsContent() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="meal_type">Meal Type</Label>
+                <Select
+                  value={formData.meal_type}
+                  onValueChange={(value) => setFormData({ ...formData, meal_type: value as typeof formData.meal_type })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select meal type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Breakfast">Breakfast</SelectItem>
+                    <SelectItem value="Lunch">Lunch</SelectItem>
+                    <SelectItem value="Dinner">Dinner</SelectItem>
+                    <SelectItem value="Snack">Snack</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="category">Category</Label>
+                <Input
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  placeholder="e.g., meal, protein, vegetarian"
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="calories">Calories</Label>
                 <Input
                   id="calories"
@@ -494,15 +786,157 @@ export default function MealsContent() {
                 />
               </div>
             </div>
+            <div className="grid grid-cols-5 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="fiber">Fiber (g)</Label>
+                <Input
+                  id="fiber"
+                  type="number"
+                  step="0.1"
+                  value={formData.fiber}
+                  onChange={(e) => setFormData({ ...formData, fiber: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sodium">Sodium (mg)</Label>
+                <Input
+                  id="sodium"
+                  type="number"
+                  step="0.1"
+                  value={formData.sodium}
+                  onChange={(e) => setFormData({ ...formData, sodium: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="sugar">Sugar (g)</Label>
+                <Input
+                  id="sugar"
+                  type="number"
+                  step="0.1"
+                  value={formData.sugar}
+                  onChange={(e) => setFormData({ ...formData, sugar: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cholesterol">Cholesterol (mg)</Label>
+                <Input
+                  id="cholesterol"
+                  type="number"
+                  step="0.1"
+                  value={formData.cholesterol}
+                  onChange={(e) => setFormData({ ...formData, cholesterol: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="saturated_fat">Saturated Fat (g)</Label>
+                <Input
+                  id="saturated_fat"
+                  type="number"
+                  step="0.1"
+                  value={formData.saturated_fat}
+                  onChange={(e) => setFormData({ ...formData, saturated_fat: e.target.value })}
+                />
+              </div>
+            </div>
             <div className="space-y-2">
-              <Label htmlFor="image_url">Image URL</Label>
+              <Label>Image</Label>
+              <ImageUpload
+                onUploadComplete={(url) => setFormData({ ...formData, image_url: url })}
+                buttonText="Upload Meal Image"
+              />
+              {formData.image_url && (
+                <div className="mt-2">
+                  <p className="text-xs text-gray-500 mb-1">Current image:</p>
+                  <Image
+                    src={formData.image_url}
+                    alt="Meal preview"
+                    width={100}
+                    height={100}
+                    className="rounded object-cover"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFormData({ ...formData, image_url: "" })}
+                    className="mt-2"
+                  >
+                    Remove Image
+                  </Button>
+                </div>
+              )}
               <Input
                 id="image_url"
                 value={formData.image_url}
                 onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://..."
+                placeholder="Or enter image URL manually"
+                className="mt-2"
               />
             </div>
+            {/* Allergens Management */}
+            <div className="space-y-2">
+              <Label>Allergens</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add allergen (e.g., Nuts, Dairy)"
+                  value={newAllergen}
+                  onChange={(e) => setNewAllergen(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault()
+                      addAllergen()
+                    }
+                  }}
+                />
+                <Button type="button" onClick={addAllergen} variant="outline">
+                  Add
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {allergens.map((allergen) => (
+                  <Badge key={allergen} variant="secondary" className="flex items-center gap-1">
+                    {allergen}
+                    <X
+                      className="h-3 w-3 cursor-pointer"
+                      onClick={() => removeAllergen(allergen)}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            {/* Tags Management */}
+            <div className="space-y-2">
+              <Label>Tags</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add tag (e.g., high-protein, vegetarian)"
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault()
+                      addTag()
+                    }
+                  }}
+                />
+                <Button type="button" onClick={addTag} variant="outline">
+                  Add
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="flex items-center gap-1">
+                    {tag}
+                    <X
+                      className="h-3 w-3 cursor-pointer"
+                      onClick={() => removeTag(tag)}
+                    />
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"

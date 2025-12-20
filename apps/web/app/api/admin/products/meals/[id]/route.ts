@@ -60,6 +60,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       updateFields.push(`description = $${paramCounter++}`)
       values.push(data.description)
     }
+    if (data.meal_type !== undefined) {
+      updateFields.push(`meal_type = $${paramCounter++}`)
+      values.push(data.meal_type || null)
+    }
+    if (data.category !== undefined) {
+      updateFields.push(`category = $${paramCounter++}`)
+      values.push(data.category || 'meal')
+    }
     if (data.image_url !== undefined) {
       updateFields.push(`image_url = $${paramCounter++}`)
       values.push(data.image_url)
@@ -80,6 +88,26 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       updateFields.push(`fat = $${paramCounter++}`)
       values.push(Number(data.fat))
     }
+    if (data.fiber !== undefined) {
+      updateFields.push(`fiber = $${paramCounter++}`)
+      values.push(Number(data.fiber))
+    }
+    if (data.sodium !== undefined) {
+      updateFields.push(`sodium = $${paramCounter++}`)
+      values.push(Number(data.sodium))
+    }
+    if (data.sugar !== undefined) {
+      updateFields.push(`sugar = $${paramCounter++}`)
+      values.push(Number(data.sugar))
+    }
+    if (data.cholesterol !== undefined) {
+      updateFields.push(`cholesterol = $${paramCounter++}`)
+      values.push(Number(data.cholesterol))
+    }
+    if (data.saturated_fat !== undefined) {
+      updateFields.push(`saturated_fat = $${paramCounter++}`)
+      values.push(Number(data.saturated_fat))
+    }
     if (data.is_available !== undefined || data.published !== undefined) {
       const published = data.published !== undefined ? data.published : data.is_available
       updateFields.push(`published = $${paramCounter++}`)
@@ -95,7 +123,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     // Use q() helper for parameterized queries
     const { q } = await import("@/lib/db")
     const result = await q(
-      `UPDATE meals SET ${updateFields.join(', ')} WHERE id = $${paramCounter} RETURNING id, slug, title, description, kcal, protein, carbs, fat, image_url, published, created_at`,
+      `UPDATE meals SET ${updateFields.join(', ')} WHERE id = $${paramCounter} RETURNING id, slug, title, description, meal_type, category, kcal, protein, carbs, fat, fiber, sodium, sugar, cholesterol, saturated_fat, allergens, tags, image_url, published, created_at`,
       values
     )
 
@@ -108,11 +136,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         name: meal.title,
         description: meal.description || '',
         price: 0, // Price managed separately
-        category: 'meal', // Default
+        category: meal.category || 'meal',
+        meal_type: meal.meal_type || null,
         calories: Number(meal.kcal) || 0,
         protein: Number(meal.protein) || 0,
         carbs: Number(meal.carbs) || 0,
         fat: Number(meal.fat) || 0,
+        fiber: Number(meal.fiber) || 0,
+        sodium: Number(meal.sodium) || 0,
+        sugar: Number(meal.sugar) || 0,
+        cholesterol: Number(meal.cholesterol) || 0,
+        saturated_fat: Number(meal.saturated_fat) || 0,
         image_url: meal.image_url,
         is_available: meal.published,
         status: meal.published ? 'active' : 'inactive',

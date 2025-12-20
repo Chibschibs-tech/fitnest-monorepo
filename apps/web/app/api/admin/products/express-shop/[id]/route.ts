@@ -68,6 +68,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       updateFields.push(`category = $${paramCounter++}`)
       values.push(data.category)
     }
+    if (data.brand !== undefined) {
+      updateFields.push(`brand = $${paramCounter++}`)
+      values.push(data.brand || null)
+    }
     if (data.stock_quantity !== undefined || data.stock !== undefined) {
       updateFields.push(`stock = $${paramCounter++}`)
       values.push(data.stock_quantity ?? data.stock ?? 0)
@@ -87,27 +91,72 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     // Use template literal for dynamic query building, then execute with sql
     // Note: We need to use sql template tag, but it doesn't support dynamic field building well
     // So we'll use a different approach - build the query string and use q() helper
-    const query = `
-      UPDATE products 
-      SET ${updateFields.join(", ")} 
-      WHERE id = $${paramCounter}
-      RETURNING 
-        id, name, description, price, saleprice as sale_price, imageurl as image_url, 
-        category, stock as stock_quantity, isactive as is_available, created_at
-    `
+    // Try with brand first, fallback if column doesn't exist
+    try {
+      const query = `
+        UPDATE products 
+        SET ${updateFields.join(", ")} 
+        WHERE id = $${paramCounter}
+        RETURNING 
+          id, name, description, price, saleprice as sale_price, imageurl as image_url, 
+          category, brand, stock as stock_quantity, isactive as is_available, created_at
+      `
 
-    // Import q helper for parameterized queries
-    const { q } = await import("@/lib/db")
-    const result = await q(query, values)
+      // Import q helper for parameterized queries
+      const { q } = await import("@/lib/db")
+      const result = await q(query, values)
 
-    if (result.length === 0) {
-      return createErrorResponse(new Error("Failed to update product"), "Failed to update product", 500)
+      if (result.length === 0) {
+        return createErrorResponse(new Error("Failed to update product"), "Failed to update product", 500)
+      }
+
+      return NextResponse.json({
+        success: true,
+        product: result[0],
+      })
+    } catch (error: any) {
+      // If brand column doesn't exist, retry without it
+      if (error.message?.includes('brand') || error.message?.includes('column')) {
+        // Remove brand from updateFields if it was added
+        const fieldsWithoutBrand = updateFields.filter(f => !f.includes('brand'))
+        if (fieldsWithoutBrand.length === 0) {
+          return createErrorResponse(new Error("No fields to update"), "No fields to update", 400)
+        }
+        
+        // Remove brand value from values array
+        const brandIndex = updateFields.findIndex(f => f.includes('brand'))
+        if (brandIndex !== -1) {
+          values.splice(brandIndex, 1)
+          // Adjust paramCounter
+          paramCounter--
+        }
+        
+        const query = `
+          UPDATE products 
+          SET ${fieldsWithoutBrand.join(", ")} 
+          WHERE id = $${paramCounter}
+          RETURNING 
+            id, name, description, price, saleprice as sale_price, imageurl as image_url, 
+            category, stock as stock_quantity, isactive as is_available, created_at
+        `
+
+        const { q } = await import("@/lib/db")
+        const result = await q(query, values)
+
+        if (result.length === 0) {
+          return createErrorResponse(new Error("Failed to update product"), "Failed to update product", 500)
+        }
+
+        return NextResponse.json({
+          success: true,
+          product: {
+            ...result[0],
+            brand: data.brand || null, // Add brand to response even if not in DB
+          },
+        })
+      }
+      throw error
     }
-
-    return NextResponse.json({
-      success: true,
-      product: result[0],
-    })
   } catch (error) {
     return createErrorResponse(error, "Failed to update product", 500)
   }

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
-// Menu page - updated 2025-12-20
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"

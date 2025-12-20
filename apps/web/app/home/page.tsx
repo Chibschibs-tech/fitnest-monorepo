@@ -1,33 +1,107 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Check, UtensilsCrossed, ChefHat, Truck } from "lucide-react"
+import { useLanguage } from "@/components/language-provider"
+import { getTranslations, defaultLocale } from "@/lib/i18n"
+import { useState, useEffect } from "react"
 
 export default function Home() {
+  const { locale } = useLanguage()
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const t = getTranslations(mounted ? locale : defaultLocale)
   return (
-    <div className="flex flex-col">
-      {/* Hero Section - Full banner image with mobile optimization */}
-      <section className="relative min-h-[50vh] sm:min-h-[60vh] md:min-h-[calc(100vh-73px)] flex items-end bg-gray-100">
+    <>
+      {/* Hero Section - Full screen with navbar overlay */}
+      <section 
+        className="relative flex items-end bg-gray-100 h-screen w-full"
+        style={{
+          zIndex: 0
+        }}
+      >
         <Image
           src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/hero%20banner"
           alt="Fitnest.ma Hero Banner"
           fill
           className="object-cover object-center"
           priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+          sizes="100vw"
         />
         <div className="relative z-10 container mx-auto px-4 pb-8 sm:pb-12 md:pb-16">
           <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4">
             <Link href="/meal-plans">
               <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
-                View Meal Plans
+                {t.home.hero.viewMealPlans}
               </Button>
             </Link>
             <Link href="/how-it-works">
               <Button className="bg-white text-fitnest-green hover:bg-white/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
-                How It Works
+                {t.home.hero.howItWorks}
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* Content wrapper - starts after hero */}
+      <div className="relative z-10 bg-white">
+      {/* How It Works Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <p className="text-sm font-semibold uppercase text-fitnest-orange mb-2">{t.home.howItWorks.label}</p>
+            <h2 className="text-3xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.title}</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              {t.home.howItWorks.subtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Step 1: Choose Plan */}
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
+                  <UtensilsCrossed className="h-10 w-10 text-fitnest-orange" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.choosePlan.title}</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {t.home.howItWorks.choosePlan.description}
+              </p>
+            </div>
+
+            {/* Step 2: We Cook */}
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
+                  <ChefHat className="h-10 w-10 text-fitnest-orange" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.weCook.title}</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {t.home.howItWorks.weCook.description}
+              </p>
+            </div>
+
+            {/* Step 3: We Deliver */}
+            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+              <div className="flex justify-center mb-6">
+                <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
+                  <Truck className="h-10 w-10 text-fitnest-orange" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.weDeliver.title}</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {t.home.howItWorks.weDeliver.description}
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -35,107 +109,134 @@ export default function Home() {
       {/* Featured Meal Plans Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="mb-2 text-center text-3xl font-bold">Our Meal Plans</h2>
+          <h2 className="mb-2 text-center text-3xl font-bold text-fitnest-green">{t.home.choosePlan.title}</h2>
           <p className="mb-12 text-center text-gray-600 max-w-2xl mx-auto">
-            Choose from our selection of chef-prepared meal plans designed to meet your specific health and fitness
-            goals.
+            {t.home.choosePlan.subtitle}
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Weight Loss Plan */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/weight-loss-meal.png" alt="Weight Loss Meal Plan" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Weight Loss Plan</h3>
-                <p className="text-gray-600 mb-4">
-                  Calorie-controlled meals designed to help you lose weight while staying satisfied.
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 350 MAD/week</span>
-                  <Link href="/meal-plans/weight-loss">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
-                      View Plan
-                    </Button>
-                  </Link>
+            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
+              <div className="flex justify-center mb-6">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                  <Image src="/weight-loss-meal.png" alt="Weight Loss Meal Plan" fill className="object-cover" />
                 </div>
               </div>
+              <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
+              <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.weightLoss.description}</p>
+              <div className="text-center mb-6">
+                <span className="text-4xl font-bold text-fitnest-green">350 MAD</span>
+                <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+              </div>
+              <Link href="/meal-plans/weight-loss" className="mb-6">
+                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200">
+                  {t.home.choosePlan.weightLoss.select}
+                </Button>
+              </Link>
+              <ul className="space-y-3 flex-1">
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.calorieControlled}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.lowGlycemic}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.highFiber}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.appTracking}</span>
+                </li>
+              </ul>
             </div>
 
-            {/* Stay Fit Plan */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/vibrant-nutrition-plate.png" alt="Stay Fit Meal Plan" fill className="object-cover" />
+            {/* Stay Fit Plan - Popular */}
+            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative border-2 border-fitnest-orange">
+              <div className="absolute top-4 right-4">
+                <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  POPULAR
+                </span>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Stay Fit Plan</h3>
-                <p className="text-gray-600 mb-4">
-                  Balanced nutrition to maintain your weight and support an active lifestyle.
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 320 MAD/week</span>
-                  <Link href="/meal-plans/balanced-nutrition">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
-                      View Plan
-                    </Button>
-                  </Link>
+              <div className="flex justify-center mb-6">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                  <Image src="/vibrant-nutrition-plate.png" alt="Stay Fit Meal Plan" fill className="object-cover" />
                 </div>
               </div>
+              <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
+              <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.stayFit.description}</p>
+              <div className="text-center mb-6">
+                <span className="text-4xl font-bold text-fitnest-green">320 MAD</span>
+                <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+              </div>
+              <Link href="/meal-plans/balanced-nutrition" className="mb-6">
+                <Button className="w-full rounded-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90">
+                  {t.home.choosePlan.stayFit.select}
+                </Button>
+              </Link>
+              <ul className="space-y-3 flex-1">
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.perfectMacro}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.largeVariety}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.nutrientRich}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.weeklyRotation}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.premiumSupport}</span>
+                </li>
+              </ul>
             </div>
 
             {/* Muscle Gain Plan */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/muscle-gain-meal.png" alt="Muscle Gain Meal Plan" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Muscle Gain Plan</h3>
-                <p className="text-gray-600 mb-4">
-                  Protein-rich meals to support muscle growth and recovery after workouts.
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 400 MAD/week</span>
-                  <Link href="/meal-plans/muscle-gain">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
-                      View Plan
-                    </Button>
-                  </Link>
+            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
+              <div className="flex justify-center mb-6">
+                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                  <Image src="/muscle-gain-meal.png" alt="Muscle Gain Meal Plan" fill className="object-cover" />
                 </div>
               </div>
-            </div>
-
-            {/* Keto Plan */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/keto-meal.png" alt="Keto Meal Plan" fill className="object-cover" />
+              <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
+              <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.muscleGain.description}</p>
+              <div className="text-center mb-6">
+                <span className="text-4xl font-bold text-fitnest-green">400 MAD</span>
+                <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Keto Plan</h3>
-                <p className="text-gray-600 mb-4">
-                  Low-carb, high-fat meals designed to help you achieve and maintain ketosis.
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 380 MAD/week</span>
-                  <Link href="/meal-plans/keto">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
-                      View Plan
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+              <Link href="/meal-plans/muscle-gain" className="mb-6">
+                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200">
+                  {t.home.choosePlan.muscleGain.select}
+                </Button>
+              </Link>
+              <ul className="space-y-3 flex-1">
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.highProtein}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.postWorkout}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.cleanCarbs}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.performance}</span>
+                </li>
+              </ul>
             </div>
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link href="/meal-plans">
-              <Button
-                variant="outline"
-                className="border-fitnest-green text-fitnest-green hover:bg-fitnest-green hover:text-white"
-              >
-                View All Meal Plans
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
@@ -435,10 +536,10 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   High-protein bars perfect for post-workout recovery or a quick energy boost.
                 </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 25 MAD</span>
-                  <Link href="/express-shop?category=protein_bars">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 25 MAD</span>
+                  <Link href="/express-shop?category=protein_bars" className="w-full sm:w-auto">
+                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
                       Shop Now
                     </Button>
                   </Link>
@@ -456,10 +557,10 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Crunchy granola with premium ingredients, perfect for breakfast or snacking.
                 </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 32 MAD</span>
-                  <Link href="/express-shop?category=granola">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 32 MAD</span>
+                  <Link href="/express-shop?category=granola" className="w-full sm:w-auto">
+                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
                       Shop Now
                     </Button>
                   </Link>
@@ -477,10 +578,10 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Natural energy balls made with dates, nuts, and superfoods for sustained energy.
                 </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 40 MAD</span>
-                  <Link href="/express-shop?category=energy_balls">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 40 MAD</span>
+                  <Link href="/express-shop?category=energy_balls" className="w-full sm:w-auto">
+                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
                       Shop Now
                     </Button>
                   </Link>
@@ -498,10 +599,10 @@ export default function Home() {
                 <p className="text-gray-600 mb-4">
                   Quick and nutritious breakfast options including protein pancakes and overnight oats.
                 </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-fitnest-green font-bold">From 50 MAD</span>
-                  <Link href="/express-shop?category=breakfast">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 50 MAD</span>
+                  <Link href="/express-shop?category=breakfast" className="w-full sm:w-auto">
+                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
                       Shop Now
                     </Button>
                   </Link>
@@ -531,6 +632,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   )
 }

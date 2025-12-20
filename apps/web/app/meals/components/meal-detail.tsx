@@ -99,7 +99,7 @@ export function MealDetail({ meal, open, onOpenChange, onAddToMeals }: MealDetai
                     <ul className="space-y-1 text-sm">
                       {meal.planVariations.muscleGain.ingredients.map((ingredient, index) => (
                         <li key={index} className="flex items-start">
-                          <span className="w-2 h-2 bg-[#015033] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                          <span className="w-2 h-2 bg-fitnest-green rounded-full mt-2 mr-2 flex-shrink-0"></span>
                           {ingredient}
                         </li>
                       ))}
@@ -131,7 +131,7 @@ export function MealDetail({ meal, open, onOpenChange, onAddToMeals }: MealDetai
                     <ul className="space-y-1 text-sm">
                       {meal.planVariations.weightLoss.ingredients.map((ingredient, index) => (
                         <li key={index} className="flex items-start">
-                          <span className="w-2 h-2 bg-[#015033] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                          <span className="w-2 h-2 bg-fitnest-green rounded-full mt-2 mr-2 flex-shrink-0"></span>
                           {ingredient}
                         </li>
                       ))}
@@ -163,7 +163,7 @@ export function MealDetail({ meal, open, onOpenChange, onAddToMeals }: MealDetai
                     <ul className="space-y-1 text-sm">
                       {meal.planVariations.stayFit.ingredients.map((ingredient, index) => (
                         <li key={index} className="flex items-start">
-                          <span className="w-2 h-2 bg-[#015033] rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                          <span className="w-2 h-2 bg-fitnest-green rounded-full mt-2 mr-2 flex-shrink-0"></span>
                           {ingredient}
                         </li>
                       ))}
@@ -223,7 +223,7 @@ export function MealDetail({ meal, open, onOpenChange, onAddToMeals }: MealDetai
           </div>
         </div>
         <SheetFooter>
-          <Button className="w-full bg-[#015033] hover:bg-[#013d28]" onClick={onAddToMeals}>
+          <Button className="w-full bg-fitnest-green hover:bg-fitnest-green/90" onClick={onAddToMeals}>
             Add to My Meals
           </Button>
         </SheetFooter>

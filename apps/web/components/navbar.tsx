@@ -212,7 +212,7 @@ export default function Navbar() {
                   className="rounded-full bg-fitnest-green px-4 py-2 text-center text-sm font-medium text-white hover:bg-fitnest-green/90"
                   onClick={() => setOpen(false)}
                 >
-                  {t.nav.subscribe}
+                  Subscribe
                 </Link>
               </nav>
             </div>
