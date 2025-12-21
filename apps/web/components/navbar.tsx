@@ -15,6 +15,7 @@ export default function Navbar() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const { locale } = useLanguage()
   const t = getTranslations(locale)
   const isActive = (p: string) => pathname === p
@@ -24,6 +25,25 @@ export default function Navbar() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Handle scroll for navbar background change on home page
+  useEffect(() => {
+    if (!isHomePage) {
+      setScrolled(true)
+      return
+    }
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY
+      // Change navbar when scrolled past hero section (approximately 100vh)
+      setScrolled(scrollPosition > window.innerHeight * 0.8)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Check initial position
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHomePage])
 
   const routes = [
     { href: "/home", label: t.nav.home },
@@ -55,7 +75,7 @@ export default function Navbar() {
         {/* Mobile menu button - absolute left */}
         <button
           className={`md:hidden absolute left-4 rounded-full border p-2 z-10 transition-all ${
-            isHomePage
+            isHomePage && !scrolled
               ? "border-white/30 text-white bg-black/20 backdrop-blur-sm"
               : "border-gray-300 bg-white shadow-sm"
           }`}
@@ -70,7 +90,7 @@ export default function Navbar() {
           <div
             className="flex items-center px-6 py-2 rounded-full transition-all shadow-sm"
             style={
-              isHomePage
+              isHomePage && !scrolled
                 ? {
                     backgroundColor: "rgba(0, 0, 0, 0.2)",
                     backdropFilter: "blur(8px)",
@@ -102,7 +122,7 @@ export default function Navbar() {
                     key={r.href}
                     href={r.href}
                     className={`text-sm font-medium transition-colors ${
-                      isHomePage
+                      isHomePage && !scrolled
                         ? `hover:text-white ${isActive(r.href) ? "text-white" : "text-white/90"}`
                         : `hover:text-fitnest-green ${isActive(r.href) ? "text-fitnest-green" : "text-gray-600"}`
                     }`}
@@ -116,7 +136,7 @@ export default function Navbar() {
                 <Link
                   href={user ? "/dashboard" : "/login"}
                   className={`text-sm font-medium transition-colors ${
-                    isHomePage
+                    isHomePage && !scrolled
                       ? `hover:text-white ${isActive(user ? "/dashboard" : "/login") ? "text-white" : "text-white/90"}`
                       : `hover:text-fitnest-green ${isActive(user ? "/dashboard" : "/login") ? "text-fitnest-green" : "text-gray-600"}`
                   }`}
@@ -127,7 +147,7 @@ export default function Navbar() {
               <Link
                 href="/subscribe"
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  isHomePage
+                  isHomePage && !scrolled
                     ? "bg-white text-fitnest-green hover:bg-white/90"
                     : "bg-fitnest-green text-white hover:bg-fitnest-green/90"
                 }`}
@@ -140,7 +160,7 @@ export default function Navbar() {
 
         {/* Mobile logo - centered with pill background */}
         <Link href="/" className="md:hidden flex items-center space-x-2 px-3 py-1.5 rounded-full transition-all" style={
-          isHomePage
+          isHomePage && !scrolled
             ? {
                 backgroundColor: "rgba(0, 0, 0, 0.2)",
                 backdropFilter: "blur(8px)",

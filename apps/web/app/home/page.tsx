@@ -3,20 +3,51 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, Check, UtensilsCrossed, ChefHat, Truck } from "lucide-react"
+import { ChevronRight, Check, UtensilsCrossed, ChefHat, Truck, Heart, CheckCircle2, TrendingUp } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { getTranslations, defaultLocale } from "@/lib/i18n"
 import { useState, useEffect } from "react"
 
+interface Product {
+  id: number
+  name: string
+  description: string
+  price: number
+  salePrice?: number
+  imageUrl?: string
+  category: string
+}
+
 export default function Home() {
   const { locale } = useLanguage()
   const [mounted, setMounted] = useState(false)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loadingProducts, setLoadingProducts] = useState(true)
   
   useEffect(() => {
     setMounted(true)
   }, [])
 
   const t = getTranslations(mounted ? locale : defaultLocale)
+
+  // Fetch Express Shop products
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setLoadingProducts(true)
+        const response = await fetch('/api/products?limit=4')
+        if (response.ok) {
+          const data = await response.json()
+          setProducts(data.slice(0, 4)) // Show only first 4 products
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      } finally {
+        setLoadingProducts(false)
+      }
+    }
+    fetchProducts()
+  }, [])
   return (
     <>
       {/* Hero Section - Full screen with navbar overlay */}
@@ -125,11 +156,14 @@ export default function Home() {
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
               <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.weightLoss.description}</p>
               <div className="text-center mb-6">
-                <span className="text-4xl font-bold text-fitnest-green">350 MAD</span>
-                <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-xs font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
+                  <span className="text-3xl font-bold text-fitnest-green">{locale === "fr" ? "420 Dhs" : "420 MAD"}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                </div>
               </div>
               <Link href="/meal-plans/weight-loss" className="mb-6">
-                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200">
+                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.weightLoss.select}
                 </Button>
               </Link>
@@ -157,7 +191,7 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative border-2 border-fitnest-orange">
               <div className="absolute top-4 right-4">
                 <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  POPULAR
+                  {locale === "fr" ? "POPULAIRE" : "POPULAR"}
                 </span>
               </div>
               <div className="flex justify-center mb-6">
@@ -168,11 +202,14 @@ export default function Home() {
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
               <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.stayFit.description}</p>
               <div className="text-center mb-6">
-                <span className="text-4xl font-bold text-fitnest-green">320 MAD</span>
-                <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-lg font-medium text-gray-600">{locale === "fr" ? "à partir de" : "from"}</span>
+                  <span className="text-4xl font-bold text-fitnest-green">{locale === "fr" ? "450 dhs" : "450 MAD"}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                </div>
               </div>
               <Link href="/meal-plans/balanced-nutrition" className="mb-6">
-                <Button className="w-full rounded-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90">
+                <Button className="w-full rounded-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.stayFit.select}
                 </Button>
               </Link>
@@ -210,11 +247,13 @@ export default function Home() {
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
               <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.muscleGain.description}</p>
               <div className="text-center mb-6">
-                <span className="text-4xl font-bold text-fitnest-green">400 MAD</span>
-                <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                <div className="flex items-baseline justify-center gap-1">
+                  <span className="text-3xl font-bold text-fitnest-green">{locale === "fr" ? "500 dhs" : "500 MAD"}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                </div>
               </div>
               <Link href="/meal-plans/muscle-gain" className="mb-6">
-                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200">
+                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.muscleGain.select}
                 </Button>
               </Link>
@@ -244,72 +283,33 @@ export default function Home() {
       {/* Features Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">Why Choose Fitnest</h2>
+          <h2 className="mb-12 text-center text-3xl font-bold">{t.home.whyChooseFitnest.title}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:grid-cols-3">
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-fitnest-green/10 text-fitnest-green">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
+                <Heart className="h-10 w-10 text-fitnest-green" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">Health First</h3>
+              <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.healthFirst.title}</h3>
               <p className="text-gray-600">
-                Every meal is designed to fuel your body and promote long-term well-being.
+                {t.home.whyChooseFitnest.healthFirst.description}
               </p>
             </div>
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-fitnest-orange/10 text-fitnest-orange">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-orange/10 text-fitnest-orange">
+                <CheckCircle2 className="h-10 w-10 text-fitnest-orange" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">Simplicity & Convenience</h3>
+              <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.simplicity.title}</h3>
               <p className="text-gray-600">
-                We remove barriers to healthy habits with personalized meals delivered to your door.
+                {t.home.whyChooseFitnest.simplicity.description}
               </p>
             </div>
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-fitnest-green/10 text-fitnest-green">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
+                <TrendingUp className="h-10 w-10 text-fitnest-green" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">Lifestyle Transformation</h3>
+              <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.transformation.title}</h3>
               <p className="text-gray-600">
-                We support your entire wellness journey through balanced nutrition, education, and guidance.
+                {t.home.whyChooseFitnest.transformation.description}
               </p>
             </div>
           </div>
@@ -319,9 +319,9 @@ export default function Home() {
       {/* Blog Section - Improved mobile horizontal scrolling */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="mb-2 text-center text-3xl font-bold">Latest from Our Blog</h2>
+          <h2 className="mb-2 text-center text-3xl font-bold">{t.home.blog.title}</h2>
           <p className="mb-8 text-center text-gray-600 max-w-2xl mx-auto">
-            Expert advice on nutrition, fitness, and healthy living to help you achieve your wellness goals.
+            {t.home.blog.subtitle}
           </p>
 
           {/* Mobile Horizontal Scrolling Blog Posts */}
@@ -341,18 +341,18 @@ export default function Home() {
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-semibold px-2 py-1 bg-fitnest-green/10 text-fitnest-green rounded-full">
-                        Meal Prep
+                        {t.home.blog.mealPrep}
                       </span>
-                      <span className="text-xs text-gray-500">5 min</span>
+                      <span className="text-xs text-gray-500">5 {t.home.blog.min}</span>
                     </div>
                     <h3 className="text-lg font-bold mb-2 line-clamp-2">
-                      10 Healthy Meal Prep Tips for Busy Professionals
+                      {t.home.blog.post1.title}
                     </h3>
                     <Link
                       href="/blog/healthy-meal-prep"
                       className="text-fitnest-orange font-medium text-sm flex items-center"
                     >
-                      Read More <ChevronRight className="h-4 w-4 ml-1" />
+                      {t.home.blog.readMore} <ChevronRight className="h-4 w-4 ml-1" />
                     </Link>
                   </div>
                 </div>
@@ -370,16 +370,16 @@ export default function Home() {
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-semibold px-2 py-1 bg-fitnest-orange/10 text-fitnest-orange rounded-full">
-                        Nutrition
+                        {t.home.blog.nutrition}
                       </span>
-                      <span className="text-xs text-gray-500">7 min</span>
+                      <span className="text-xs text-gray-500">7 {t.home.blog.min}</span>
                     </div>
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2">5 Common Nutrition Myths Debunked</h3>
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2">{t.home.blog.post2.title}</h3>
                     <Link
                       href="/blog/nutrition-myths"
                       className="text-fitnest-orange font-medium text-sm flex items-center"
                     >
-                      Read More <ChevronRight className="h-4 w-4 ml-1" />
+                      {t.home.blog.readMore} <ChevronRight className="h-4 w-4 ml-1" />
                     </Link>
                   </div>
                 </div>
@@ -397,16 +397,16 @@ export default function Home() {
                   <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-semibold px-2 py-1 bg-fitnest-green/10 text-fitnest-green rounded-full">
-                        Fitness
+                        {t.home.blog.fitness}
                       </span>
-                      <span className="text-xs text-gray-500">8 min</span>
+                      <span className="text-xs text-gray-500">8 {t.home.blog.min}</span>
                     </div>
-                    <h3 className="text-lg font-bold mb-2 line-clamp-2">Breaking Through a Weight Loss Plateau</h3>
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2">{t.home.blog.post3.title}</h3>
                     <Link
                       href="/blog/weight-loss-plateau"
                       className="text-fitnest-orange font-medium text-sm flex items-center"
                     >
-                      Read More <ChevronRight className="h-4 w-4 ml-1" />
+                      {t.home.blog.readMore} <ChevronRight className="h-4 w-4 ml-1" />
                     </Link>
                   </div>
                 </div>
@@ -424,20 +424,20 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold px-2 py-1 bg-fitnest-green/10 text-fitnest-green rounded-full">
-                    Meal Prep
+                    {t.home.blog.mealPrep}
                   </span>
-                  <span className="text-xs text-gray-500">5 min read</span>
+                  <span className="text-xs text-gray-500">5 {t.home.blog.minRead}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2">10 Healthy Meal Prep Tips for Busy Professionals</h3>
+                <h3 className="text-xl font-bold mb-2">{t.home.blog.post1.title}</h3>
                 <p className="text-gray-600 mb-4 line-clamp-2">
-                  Learn how to efficiently prepare nutritious meals for the entire week, even with a busy schedule.
+                  {t.home.blog.post1.description}
                 </p>
                 <Link href="/blog/healthy-meal-prep">
                   <Button
                     variant="outline"
                     className="w-full border-fitnest-orange text-fitnest-orange hover:bg-fitnest-orange hover:text-white"
                   >
-                    Read More
+                    {t.home.blog.readMore}
                   </Button>
                 </Link>
               </div>
@@ -456,20 +456,20 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold px-2 py-1 bg-fitnest-orange/10 text-fitnest-orange rounded-full">
-                    Nutrition
+                    {t.home.blog.nutrition}
                   </span>
-                  <span className="text-xs text-gray-500">7 min read</span>
+                  <span className="text-xs text-gray-500">7 {t.home.blog.minRead}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2">5 Common Nutrition Myths Debunked</h3>
+                <h3 className="text-xl font-bold mb-2">{t.home.blog.post2.title}</h3>
                 <p className="text-gray-600 mb-4 line-clamp-2">
-                  Separating fact from fiction: nutrition experts weigh in on popular diet claims and misconceptions.
+                  {t.home.blog.post2.description}
                 </p>
                 <Link href="/blog/nutrition-myths">
                   <Button
                     variant="outline"
                     className="w-full border-fitnest-orange text-fitnest-orange hover:bg-fitnest-orange hover:text-white"
                   >
-                    Read More
+                    {t.home.blog.readMore}
                   </Button>
                 </Link>
               </div>
@@ -488,20 +488,20 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-semibold px-2 py-1 bg-fitnest-green/10 text-fitnest-green rounded-full">
-                    Fitness
+                    {t.home.blog.fitness}
                   </span>
-                  <span className="text-xs text-gray-500">8 min read</span>
+                  <span className="text-xs text-gray-500">8 {t.home.blog.minRead}</span>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Breaking Through a Weight Loss Plateau</h3>
+                <h3 className="text-xl font-bold mb-2">{t.home.blog.post3.title}</h3>
                 <p className="text-gray-600 mb-4 line-clamp-2">
-                  Effective strategies to overcome stalled progress and continue your weight loss journey.
+                  {t.home.blog.post3.description}
                 </p>
                 <Link href="/blog/weight-loss-plateau">
                   <Button
                     variant="outline"
                     className="w-full border-fitnest-orange text-fitnest-orange hover:bg-fitnest-orange hover:text-white"
                   >
-                    Read More
+                    {t.home.blog.readMore}
                   </Button>
                 </Link>
               </div>
@@ -510,7 +510,7 @@ export default function Home() {
 
           <div className="mt-10 text-center">
             <Link href="/blog">
-              <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">View All Articles</Button>
+              <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">{t.home.blog.viewAllArticles}</Button>
             </Link>
           </div>
         </div>
@@ -519,101 +519,81 @@ export default function Home() {
       {/* Express Shop Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="mb-2 text-center text-3xl font-bold">Express Shop</h2>
+          <h2 className="mb-2 text-center text-3xl font-bold">{t.home.expressShop.title}</h2>
           <p className="mb-12 text-center text-gray-600 max-w-2xl mx-auto">
-            Discover our selection of healthy snacks and supplements to complement your meal plans and keep you
-            energized throughout the day.
+            {t.home.expressShop.subtitle}
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Protein Bar */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/protein-bar.png" alt="Protein Power Bar" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Protein Power Bars</h3>
-                <p className="text-gray-600 mb-4">
-                  High-protein bars perfect for post-workout recovery or a quick energy boost.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 25 MAD</span>
-                  <Link href="/express-shop?category=protein_bars" className="w-full sm:w-auto">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
-                      Shop Now
-                    </Button>
-                  </Link>
+          {loadingProducts ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white rounded-lg overflow-hidden shadow-lg animate-pulse">
+                  <div className="relative h-48 bg-gray-200" />
+                  <div className="p-6 space-y-3">
+                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                    <div className="h-3 bg-gray-200 rounded w-full" />
+                    <div className="h-3 bg-gray-200 rounded w-2/3" />
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-
-            {/* Granola */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/honey-almond-granola.png" alt="Honey Almond Granola" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Premium Granola</h3>
-                <p className="text-gray-600 mb-4">
-                  Crunchy granola with premium ingredients, perfect for breakfast or snacking.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 32 MAD</span>
-                  <Link href="/express-shop?category=granola" className="w-full sm:w-auto">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
-                      Shop Now
-                    </Button>
-                  </Link>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
+                  <div className="relative h-48">
+                    {product.imageUrl ? (
+                      <Image 
+                        src={product.imageUrl} 
+                        alt={product.name} 
+                        fill 
+                        className="object-cover" 
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-400 text-sm">{locale === "fr" ? "Pas d'image" : "No image"}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold mb-2">{product.name}</h3>
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {product.description}
+                    </p>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                      <span className="text-fitnest-green font-bold text-sm sm:text-base">
+                        {product.salePrice ? (
+                          <>
+                            {product.salePrice} MAD
+                            <span className="text-gray-500 text-xs line-through ml-2">{product.price} MAD</span>
+                          </>
+                        ) : (
+                          <>
+                            {locale === "fr" && <span>{t.home.expressShop.from} </span>}
+                            {product.price} MAD
+                          </>
+                        )}
+                      </span>
+                      <Link href={`/express-shop/${product.id}`} className="w-full sm:w-auto">
+                        <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
+                          {t.home.expressShop.shopNow}
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-
-            {/* Energy Balls */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/placeholder.svg?height=192&width=256" alt="Energy Balls" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Energy Balls</h3>
-                <p className="text-gray-600 mb-4">
-                  Natural energy balls made with dates, nuts, and superfoods for sustained energy.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 40 MAD</span>
-                  <Link href="/express-shop?category=energy_balls" className="w-full sm:w-auto">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
-                      Shop Now
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-600">{locale === "fr" ? "Aucun produit disponible" : "No products available"}</p>
             </div>
-
-            {/* Breakfast Mixes */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
-              <div className="relative h-48">
-                <Image src="/healthy-protein-pancake-mix.png" alt="Breakfast Mixes" fill className="object-cover" />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-2">Breakfast Mixes</h3>
-                <p className="text-gray-600 mb-4">
-                  Quick and nutritious breakfast options including protein pancakes and overnight oats.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                  <span className="text-fitnest-green font-bold text-sm sm:text-base">From 50 MAD</span>
-                  <Link href="/express-shop?category=breakfast" className="w-full sm:w-auto">
-                    <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
-                      Shop Now
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
 
           <div className="mt-10 text-center">
             <Link href="/express-shop">
-              <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">Visit Express Shop</Button>
+              <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">{t.home.expressShop.visitExpressShop}</Button>
             </Link>
           </div>
         </div>
@@ -622,13 +602,12 @@ export default function Home() {
       {/* CTA Section */}
       <section className="bg-fitnest-green py-20 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-6 text-3xl font-bold">Ready to Transform Your Lifestyle?</h2>
+          <h2 className="mb-6 text-3xl font-bold">{t.home.cta.title}</h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg">
-            Join us in our mission to make healthy eating simple, enjoyable, and part of everyday life. Take the first
-            step toward a healthier you today.
+            {t.home.cta.description}
           </p>
           <Link href="/order">
-            <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">Get Started Today</Button>
+            <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">{t.home.cta.button}</Button>
           </Link>
         </div>
       </section>
