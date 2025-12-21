@@ -2,7 +2,7 @@
 
 import type React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -19,8 +19,10 @@ import {
   Calculator,
   FileText,
   Image,
+  LogOut,
 } from "lucide-react"
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 
 const navigation = [
   {
@@ -100,7 +102,27 @@ const navigation = [
 
 function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const router = useRouter()
   const [expandedGroups, setExpandedGroups] = useState<string[]>(["General Orders", "Products"])
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    try {
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      })
+
+      if (response.ok) {
+        router.push("/login")
+        router.refresh()
+      }
+    } catch (error) {
+      console.error("Logout failed:", error)
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
 
   const toggleGroup = (groupName: string) => {
     setExpandedGroups((prev) =>
@@ -115,7 +137,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <div className="hidden md:flex md:w-64 md:flex-col">
         <div className="flex flex-col flex-grow pt-5 overflow-y-auto bg-white border-r">
-          <div className="flex items-center flex-shrink-0 px-4">
+          <div className="flex items-center justify-between flex-shrink-0 px-4">
             <h1 className="text-xl font-bold text-gray-900">Admin Panel</h1>
           </div>
           <div className="mt-5 flex-grow flex flex-col">
@@ -203,6 +225,18 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
                 )
               })}
             </nav>
+          </div>
+          {/* Logout Button */}
+          <div className="flex-shrink-0 p-4 border-t">
+            <Button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              variant="outline"
+              className="w-full justify-start text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+            >
+              <LogOut className="mr-3 h-4 w-4" />
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </Button>
           </div>
         </div>
       </div>

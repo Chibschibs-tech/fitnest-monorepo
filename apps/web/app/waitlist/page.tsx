@@ -101,28 +101,62 @@ export default function WaitlistPage() {
     return null
   }
 
+  const scrollToForm = () => {
+    const formElement = document.getElementById('waitlist-form')
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fitnest-green via-fitnest-green/90 to-fitnest-green/80" style={{ marginTop: 0 }}>
+      {/* Hero Section - Mobile First */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-fitnest-green via-fitnest-green/90 to-fitnest-green/80 min-h-screen flex items-center" style={{ marginTop: 0 }}>
         <div className="absolute inset-0 bg-black/10" />
-        <div className="relative container mx-auto px-4 pt-24 pb-16 lg:pt-32 lg:pb-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="text-white space-y-6">
-              <div className="space-y-4">
-                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 rounded-full px-4 py-1">
+        <div className="relative container mx-auto px-4 py-16 lg:py-24 w-full">
+          {/* Mobile Layout: Image on top, then title, paragraph, CTA */}
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
+            {/* Image - First on mobile, second on desktop */}
+            <div className="relative order-1 lg:order-2 w-full">
+              <div className="relative z-10">
+                <Image
+                  src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/fitnest-waitlist-hero-placeholder.jpg"
+                  alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
+                  width={600}
+                  height={400}
+                  className="rounded-2xl sm:rounded-3xl shadow-2xl object-cover w-full h-auto max-h-[50vh] lg:max-h-none"
+                  priority
+                />
+              </div>
+              <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-48 h-48 sm:w-72 sm:h-72 bg-fitnest-orange/20 rounded-full blur-3xl" />
+              <div className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-64 h-64 sm:w-96 sm:h-96 bg-fitnest-green/20 rounded-full blur-3xl" />
+            </div>
+
+            {/* Content - Second on mobile, first on desktop */}
+            <div className="text-white space-y-4 lg:space-y-6 order-2 lg:order-1">
+              <div className="space-y-3 lg:space-y-4">
+                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 rounded-full px-3 py-1 text-xs lg:text-sm">
                   {t.waitlist.hero.badge}
                 </Badge>
-                <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-6xl font-bold leading-tight">
                   {t.waitlist.hero.title}
                   <span className="text-fitnest-orange"> {t.waitlist.hero.titleHighlight}</span>
                 </h1>
-                <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed">
+                <p className="text-sm sm:text-base lg:text-xl text-white/90 leading-relaxed">
                   {t.waitlist.hero.description}
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm">
+              {/* CTA Button - Visible on first screen */}
+              <Button
+                onClick={scrollToForm}
+                className="w-full sm:w-auto bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full px-6 py-4 sm:px-8 sm:py-6 text-sm sm:text-base lg:text-lg font-semibold shadow-lg hover:shadow-xl"
+              >
+                {t.waitlist.form.submit}
+              </Button>
+
+              {/* Additional info - Hidden on mobile first screen, visible on desktop */}
+              <div className="hidden lg:flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm">
                 <div className="flex items-center gap-2">
                   <ChefHat className="h-4 w-4 sm:h-5 sm:w-5 text-fitnest-orange" />
                   <span>{t.waitlist.hero.chefPrepared}</span>
@@ -137,159 +171,151 @@ export default function WaitlistPage() {
                 </div>
               </div>
 
-              {/* Waitlist Reason */}
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-3 sm:p-4">
+              {/* Waitlist Reason - Hidden on mobile first screen, visible on desktop */}
+              <div className="hidden lg:block bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-3 sm:p-4">
                 <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
                   {t.waitlist.waitlistReason.description}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              {/* Waitlist Form */}
-              <Card className="bg-white/10 backdrop-blur-md border-white/20 shadow-lg">
-                <CardContent className="p-4 sm:p-6">
-                  {success ? (
-                    <div className="text-center space-y-4">
-                      <CheckCircle2 className="h-12 w-12 text-fitnest-orange mx-auto" />
-                      <h3 className="text-xl font-bold text-white">{t.waitlist.form.success}</h3>
-                      <p className="text-white/90">{t.waitlist.form.redirecting}</p>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      {error && (
-                        <Alert variant="destructive" className="bg-red-50 border-red-200">
-                          <AlertDescription className="text-red-800">{error}</AlertDescription>
-                        </Alert>
-                      )}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <Label htmlFor="firstName" className="text-white/90 text-sm">
-                            {t.waitlist.form.firstName}
-                          </Label>
-                          <Input
-                            id="firstName"
-                            value={formData.firstName}
-                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                            placeholder={locale === "fr" ? "Prénom" : "First name"}
-                            className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="lastName" className="text-white/90 text-sm">
-                            {t.waitlist.form.lastName}
-                          </Label>
-                          <Input
-                            id="lastName"
-                            value={formData.lastName}
-                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                            placeholder={locale === "fr" ? "Nom" : "Last name"}
-                            className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
-                            required
-                          />
-                        </div>
-                      </div>
+      {/* Waitlist Form Section - Below hero, requires scroll */}
+      <section id="waitlist-form" className="relative bg-gradient-to-br from-fitnest-green via-fitnest-green/90 to-fitnest-green/80 py-8 lg:py-16">
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="relative container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-white/10 backdrop-blur-md border-white/20 shadow-lg">
+              <CardContent className="p-4 sm:p-6">
+                {success ? (
+                  <div className="text-center space-y-4">
+                    <CheckCircle2 className="h-12 w-12 text-fitnest-orange mx-auto" />
+                    <h3 className="text-xl font-bold text-white">{t.waitlist.form.success}</h3>
+                    <p className="text-white/90">{t.waitlist.form.redirecting}</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {error && (
+                      <Alert variant="destructive" className="bg-red-50 border-red-200">
+                        <AlertDescription className="text-red-800">{error}</AlertDescription>
+                      </Alert>
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-white/90 text-sm">
-                          {t.waitlist.form.email}
+                        <Label htmlFor="firstName" className="text-white/90 text-sm">
+                          {t.waitlist.form.firstName}
                         </Label>
                         <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="your.email@example.com"
+                          id="firstName"
+                          value={formData.firstName}
+                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                          placeholder={locale === "fr" ? "Prénom" : "First name"}
                           className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
                           required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-white/90 text-sm">
-                          {t.waitlist.form.phone}
+                        <Label htmlFor="lastName" className="text-white/90 text-sm">
+                          {t.waitlist.form.lastName}
                         </Label>
                         <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder={t.waitlist.form.phonePlaceholder}
+                          id="lastName"
+                          value={formData.lastName}
+                          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                          placeholder={locale === "fr" ? "Nom" : "Last name"}
                           className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
+                          required
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="mealPlan" className="text-white/90 text-sm">
-                          {t.waitlist.form.mealPlan}
-                        </Label>
-                        <Select value={formData.mealPlan} onValueChange={(value) => setFormData({ ...formData, mealPlan: value })}>
-                          <SelectTrigger className="bg-white/20 border-white/30 text-white rounded-full">
-                            <SelectValue placeholder={t.waitlist.form.selectPlan} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="low-carb">{t.waitlist.mealPlans.lowCarb.title}</SelectItem>
-                            <SelectItem value="balanced">{t.waitlist.mealPlans.balanced.title}</SelectItem>
-                            <SelectItem value="protein-power">{t.waitlist.mealPlans.proteinPower.title}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="city" className="text-white/90 text-sm">
-                          {t.waitlist.form.city}
-                        </Label>
-                        <Input
-                          id="city"
-                          value={formData.city}
-                          onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                          placeholder={t.waitlist.form.cityPlaceholder}
-                          className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
-                        />
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="notifications"
-                          checked={formData.notifications}
-                          onCheckedChange={(checked) => setFormData({ ...formData, notifications: checked === true })}
-                          className="border-white/30 data-[state=checked]:bg-fitnest-orange data-[state=checked]:border-fitnest-orange"
-                        />
-                        <Label htmlFor="notifications" className="text-white/90 text-sm cursor-pointer">
-                          {t.waitlist.form.notifications}
-                        </Label>
-                      </div>
-                      <Button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full py-4 sm:py-6 text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl"
-                      >
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                            {t.waitlist.form.submitting}
-                          </>
-                        ) : (
-                          t.waitlist.form.submit
-                        )}
-                      </Button>
-                      <p className="text-xs text-white/80 text-center">
-                        {t.waitlist.form.privacy}
-                      </p>
-                    </form>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="relative order-1 lg:order-2 mb-8 lg:mb-0">
-              <div className="relative z-10">
-                <Image
-                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&h=800&fit=crop&q=80"
-                  alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
-                  width={600}
-                  height={400}
-                  className="rounded-2xl sm:rounded-3xl shadow-2xl object-cover w-full h-auto"
-                  priority
-                />
-              </div>
-              <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-48 h-48 sm:w-72 sm:h-72 bg-fitnest-orange/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-64 h-64 sm:w-96 sm:h-96 bg-fitnest-green/20 rounded-full blur-3xl" />
-            </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-white/90 text-sm">
+                        {t.waitlist.form.email}
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="your.email@example.com"
+                        className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-white/90 text-sm">
+                        {t.waitlist.form.phone}
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        placeholder={t.waitlist.form.phonePlaceholder}
+                        className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="mealPlan" className="text-white/90 text-sm">
+                        {t.waitlist.form.mealPlan}
+                      </Label>
+                      <Select value={formData.mealPlan} onValueChange={(value) => setFormData({ ...formData, mealPlan: value })}>
+                        <SelectTrigger className="bg-white/20 border-white/30 text-white rounded-full">
+                          <SelectValue placeholder={t.waitlist.form.selectPlan} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low-carb">{t.waitlist.mealPlans.lowCarb.title}</SelectItem>
+                          <SelectItem value="balanced">{t.waitlist.mealPlans.balanced.title}</SelectItem>
+                          <SelectItem value="protein-power">{t.waitlist.mealPlans.proteinPower.title}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="city" className="text-white/90 text-sm">
+                        {t.waitlist.form.city}
+                      </Label>
+                      <Input
+                        id="city"
+                        value={formData.city}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                        placeholder={t.waitlist.form.cityPlaceholder}
+                        className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 rounded-full"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="notifications"
+                        checked={formData.notifications}
+                        onCheckedChange={(checked) => setFormData({ ...formData, notifications: checked === true })}
+                        className="border-white/30 data-[state=checked]:bg-fitnest-orange data-[state=checked]:border-fitnest-orange"
+                      />
+                      <Label htmlFor="notifications" className="text-white/90 text-sm cursor-pointer">
+                        {t.waitlist.form.notifications}
+                      </Label>
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full py-4 sm:py-6 text-base sm:text-lg font-semibold shadow-lg hover:shadow-xl"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          {t.waitlist.form.submitting}
+                        </>
+                      ) : (
+                        t.waitlist.form.submit
+                      )}
+                    </Button>
+                    <p className="text-xs text-white/80 text-center">
+                      {t.waitlist.form.privacy}
+                    </p>
+                  </form>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

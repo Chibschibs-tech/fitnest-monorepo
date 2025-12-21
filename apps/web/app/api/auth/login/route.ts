@@ -3,10 +3,52 @@ export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
 import { authenticateUser, createSession, initTables } from "@/lib/simple-auth"
+import { sql } from "@/lib/db"
+import crypto from "crypto"
+
+// Simple hash function using built-in crypto only
+function simpleHash(password: string): string {
+  return crypto
+    .createHash("sha256")
+    .update(password + "fitnest-salt-2024")
+    .digest("hex")
+}
+
+// Ensure admin user exists with correct credentials
+async function ensureAdminUser() {
+  try {
+    const adminEmail = "chihab@ekwip.ma"
+    const adminPassword = "FITnest123!"
+    const hashedPassword = simpleHash(adminPassword)
+
+    // Check if user exists
+    const existingUser = await sql`SELECT id FROM users WHERE email = ${adminEmail}`
+    
+    if (existingUser.length > 0) {
+      // Update existing user to ensure correct password and role
+      await sql`
+        UPDATE users 
+        SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin'
+        WHERE email = ${adminEmail}
+      `
+    } else {
+      // Create new admin user
+      await sql`
+        INSERT INTO users (name, email, password, role)
+        VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')
+      `
+    }
+  } catch (error) {
+    console.error("Error ensuring admin user:", error)
+    // Non-critical, continue with login
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     await initTables()
+    // Ensure admin user exists with correct credentials
+    await ensureAdminUser()
 
     const { email, password } = await request.json()
 
