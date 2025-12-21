@@ -93,6 +93,7 @@ const navigation = [
     isGroup: true,
     children: [
       { name: "Hero Section", href: "/admin/content/hero", icon: Image },
+      { name: "Waitlist Hero Image", href: "/admin/waitlist-hero-image", icon: Image },
     ],
   },
 ]

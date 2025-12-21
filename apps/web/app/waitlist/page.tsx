@@ -279,8 +279,8 @@ export default function WaitlistPage() {
             <div className="relative order-1 lg:order-2 mb-8 lg:mb-0">
               <div className="relative z-10">
                 <Image
-                  src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/hero%20banner"
-                  alt="Healthy meal delivery service in Morocco"
+                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1200&h=800&fit=crop&q=80"
+                  alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
                   width={600}
                   height={400}
                   className="rounded-2xl sm:rounded-3xl shadow-2xl object-cover w-full h-auto"
