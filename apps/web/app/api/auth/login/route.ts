@@ -21,26 +21,36 @@ async function ensureAdminUser() {
     const adminPassword = "FITnest123!"
     const hashedPassword = simpleHash(adminPassword)
 
+    console.log("Ensuring admin user exists:", adminEmail)
+
     // Check if user exists
     const existingUser = await sql`SELECT id FROM users WHERE email = ${adminEmail}`
     
     if (existingUser.length > 0) {
       // Update existing user to ensure correct password and role
-      await sql`
+      const updateResult = await sql`
         UPDATE users 
         SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin'
         WHERE email = ${adminEmail}
+        RETURNING id, email, role
       `
+      console.log("Admin user updated:", updateResult[0])
     } else {
       // Create new admin user
-      await sql`
+      const insertResult = await sql`
         INSERT INTO users (name, email, password, role)
         VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')
+        RETURNING id, email, role
       `
+      console.log("Admin user created:", insertResult[0])
     }
   } catch (error) {
     console.error("Error ensuring admin user:", error)
-    // Non-critical, continue with login
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    })
+    // Don't throw - we'll try to continue with login
   }
 }
 
@@ -56,9 +66,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 })
     }
 
+    console.log("Login attempt for:", email)
+
     const user = await authenticateUser(email, password)
 
     if (!user) {
+      console.log("Authentication failed for:", email)
+      // If it's the admin email, try to ensure admin user exists again and retry
+      if (email === "chihab@ekwip.ma") {
+        console.log("Retrying admin user creation for:", email)
+        await ensureAdminUser()
+        const retryUser = await authenticateUser(email, password)
+        if (retryUser) {
+          console.log("Admin user authenticated after retry")
+          const sessionId = await createSession(retryUser.id)
+          if (!sessionId) {
+            return NextResponse.json({ error: "Failed to create session" }, { status: 500 })
+          }
+          const response = NextResponse.json({
+            success: true,
+            user: {
+              id: retryUser.id,
+              name: retryUser.name,
+              email: retryUser.email,
+              role: retryUser.role,
+            },
+          })
+          response.cookies.set("session-id", sessionId, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+          })
+          return response
+        }
+      }
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
     }
 
