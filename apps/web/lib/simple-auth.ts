@@ -75,8 +75,11 @@ export async function initTables() {
 
 export async function createUser(name: string, email: string, password: string) {
   try {
-    // Check if user already exists
-    const existingUser = await sql`SELECT id FROM users WHERE email = ${email}`
+    // Normalize email to lowercase
+    const normalizedEmail = email.toLowerCase().trim()
+    
+    // Check if user already exists using case-insensitive comparison
+    const existingUser = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
     if (existingUser.length > 0) {
       return null
     }
@@ -84,10 +87,10 @@ export async function createUser(name: string, email: string, password: string) 
     // Hash password with crypto
     const hashedPassword = simpleHash(password)
 
-    // Create user
+    // Create user with normalized email
     const result = await sql`
       INSERT INTO users (name, email, password)
-      VALUES (${name}, ${email}, ${hashedPassword})
+      VALUES (${name}, ${normalizedEmail}, ${hashedPassword})
       RETURNING id, name, email, role
     `
 
@@ -100,23 +103,26 @@ export async function createUser(name: string, email: string, password: string) 
 
 export async function authenticateUser(email: string, password: string) {
   try {
-    // Get user
-    const users = await sql`SELECT * FROM users WHERE email = ${email}`
+    // Normalize email to lowercase for case-insensitive comparison
+    const normalizedEmail = email.toLowerCase().trim()
+    
+    // Get user using case-insensitive comparison
+    const users = await sql`SELECT * FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
     const user = users[0]
 
     if (!user) {
-      console.log("User not found:", email)
+      console.log("User not found:", normalizedEmail)
       return null
     }
 
     // Verify password
     const hashedPassword = simpleHash(password)
     if (hashedPassword !== user.password) {
-      console.log("Password mismatch for user:", email)
+      console.log("Password mismatch for user:", normalizedEmail)
       return null
     }
 
-    console.log("User authenticated successfully:", email)
+    console.log("User authenticated successfully:", normalizedEmail)
     // Return user without password
     return {
       id: user.id,

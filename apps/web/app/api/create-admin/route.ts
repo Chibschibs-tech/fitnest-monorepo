@@ -20,30 +20,31 @@ export async function GET() {
     const existingAdmins = await sql`
       SELECT id, name, email, role, created_at 
       FROM users 
-      WHERE role = 'admin' OR email LIKE '%admin%' OR email = 'chihab@ekwip.ma'
+      WHERE role = 'admin' OR email LIKE '%admin%' OR LOWER(email) = LOWER('chihab@ekwip.ma')
     `
 
     console.log("Existing admin users:", existingAdmins)
 
     // Create/update the admin user with specified credentials
-    const adminEmail = "chihab@ekwip.ma"
+    // Normalize email to lowercase for consistency
+    const adminEmail = "chihab@ekwip.ma".toLowerCase()
     const adminPassword = "FITnest123!"
     const hashedPassword = simpleHash(adminPassword)
 
-    // Check if user exists and update or create
-    const existingUser = await sql`SELECT id FROM users WHERE email = ${adminEmail}`
+    // Check if user exists using case-insensitive comparison
+    const existingUser = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${adminEmail})`
     
     let result
     if (existingUser.length > 0) {
-      // Update existing user
+      // Update existing user (normalize email to lowercase)
       result = await sql`
         UPDATE users 
-        SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin'
-        WHERE email = ${adminEmail}
+        SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin', email = ${adminEmail}
+        WHERE LOWER(email) = LOWER(${adminEmail})
         RETURNING id, name, email, role
       `
     } else {
-      // Create new admin user
+      // Create new admin user with lowercase email
       result = await sql`
         INSERT INTO users (name, email, password, role)
         VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')

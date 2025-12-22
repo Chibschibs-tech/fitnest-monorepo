@@ -17,26 +17,27 @@ function simpleHash(password: string): string {
 // Ensure admin user exists with correct credentials
 async function ensureAdminUser() {
   try {
-    const adminEmail = "chihab@ekwip.ma"
+    // Normalize email to lowercase
+    const adminEmail = "chihab@ekwip.ma".toLowerCase()
     const adminPassword = "FITnest123!"
     const hashedPassword = simpleHash(adminPassword)
 
     console.log("Ensuring admin user exists:", adminEmail)
 
-    // Check if user exists
-    const existingUser = await sql`SELECT id FROM users WHERE email = ${adminEmail}`
+    // Check if user exists using case-insensitive comparison
+    const existingUser = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${adminEmail})`
     
     if (existingUser.length > 0) {
-      // Update existing user to ensure correct password and role
+      // Update existing user to ensure correct password and role (normalize email to lowercase)
       const updateResult = await sql`
         UPDATE users 
-        SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin'
-        WHERE email = ${adminEmail}
+        SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin', email = ${adminEmail}
+        WHERE LOWER(email) = LOWER(${adminEmail})
         RETURNING id, email, role
       `
       console.log("Admin user updated:", updateResult[0])
     } else {
-      // Create new admin user
+      // Create new admin user with lowercase email
       const insertResult = await sql`
         INSERT INTO users (name, email, password, role)
         VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')
@@ -66,17 +67,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 })
     }
 
-    console.log("Login attempt for:", email)
+    // Normalize email to lowercase for consistent comparison
+    const normalizedEmail = email.toLowerCase().trim()
 
-    const user = await authenticateUser(email, password)
+    console.log("Login attempt for:", normalizedEmail)
+
+    const user = await authenticateUser(normalizedEmail, password)
 
     if (!user) {
-      console.log("Authentication failed for:", email)
-      // If it's the admin email, try to ensure admin user exists again and retry
-      if (email === "chihab@ekwip.ma") {
-        console.log("Retrying admin user creation for:", email)
+      console.log("Authentication failed for:", normalizedEmail)
+      // If it's the admin email (case-insensitive), try to ensure admin user exists again and retry
+      if (normalizedEmail === "chihab@ekwip.ma") {
+        console.log("Retrying admin user creation for:", normalizedEmail)
         await ensureAdminUser()
-        const retryUser = await authenticateUser(email, password)
+        const retryUser = await authenticateUser(normalizedEmail, password)
         if (retryUser) {
           console.log("Admin user authenticated after retry")
           const sessionId = await createSession(retryUser.id)
