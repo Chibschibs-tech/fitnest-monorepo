@@ -106,23 +106,53 @@ export async function authenticateUser(email: string, password: string) {
     // Normalize email to lowercase for case-insensitive comparison
     const normalizedEmail = email.toLowerCase().trim()
     
-    // Get user using case-insensitive comparison
-    const users = await sql`SELECT * FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
+    console.log("[AUTH] Authenticating user:", normalizedEmail)
+    console.log("[AUTH] Environment:", process.env.NODE_ENV)
+    console.log("[AUTH] Has DATABASE_URL:", !!process.env.DATABASE_URL)
+    
+    // Get user - try direct match first, then case-insensitive
+    let users = await sql`SELECT * FROM users WHERE email = ${normalizedEmail}`
+    
+    // If not found, try case-insensitive search
+    if (users.length === 0) {
+      console.log("[AUTH] Direct match failed, trying case-insensitive")
+      users = await sql`SELECT * FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
+    }
+    
     const user = users[0]
 
     if (!user) {
-      console.log("User not found:", normalizedEmail)
+      console.log("[AUTH] User not found:", normalizedEmail)
+      // Debug: Check what users exist
+      try {
+        const allUsers = await sql`SELECT id, email, role FROM users LIMIT 5`
+        console.log("[AUTH] Sample users in DB:", allUsers)
+      } catch (err) {
+        console.error("[AUTH] Error checking users:", err)
+      }
       return null
     }
+
+    console.log("[AUTH] User found:", { id: user.id, email: user.email, role: user.role })
+    console.log("[AUTH] Stored password hash length:", user.password?.length)
+    console.log("[AUTH] Stored password hash prefix:", user.password?.substring(0, 20))
 
     // Verify password
     const hashedPassword = simpleHash(password)
+    console.log("[AUTH] Computed password hash length:", hashedPassword.length)
+    console.log("[AUTH] Computed password hash prefix:", hashedPassword.substring(0, 20))
+    
     if (hashedPassword !== user.password) {
-      console.log("Password mismatch for user:", normalizedEmail)
+      console.log("[AUTH] Password mismatch for user:", normalizedEmail)
+      console.log("[AUTH] Hash comparison:", {
+        stored: user.password,
+        computed: hashedPassword,
+        match: hashedPassword === user.password
+      })
       return null
     }
 
-    console.log("User authenticated successfully:", normalizedEmail)
+    console.log("[AUTH] User authenticated successfully:", normalizedEmail)
     // Return user without password
     return {
       id: user.id,
@@ -131,7 +161,11 @@ export async function authenticateUser(email: string, password: string) {
       role: user.role,
     }
   } catch (error) {
-    console.error("Error authenticating user:", error)
+    console.error("[AUTH] Error authenticating user:", error)
+    console.error("[AUTH] Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    })
     return null
   }
 }

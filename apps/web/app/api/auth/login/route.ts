@@ -22,32 +22,43 @@ async function ensureAdminUser() {
     const adminPassword = "FITnest123!"
     const hashedPassword = simpleHash(adminPassword)
 
-    console.log("Ensuring admin user exists:", adminEmail)
+    console.log("[ENSURE_ADMIN] Ensuring admin user exists:", adminEmail)
+    console.log("[ENSURE_ADMIN] Password hash:", hashedPassword.substring(0, 20) + "...")
 
-    // Check if user exists using case-insensitive comparison
-    const existingUser = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${adminEmail})`
+    // Check if user exists - try direct match first
+    let existingUser = await sql`SELECT id, email, password FROM users WHERE email = ${adminEmail}`
+    
+    // If not found, try case-insensitive
+    if (existingUser.length === 0) {
+      console.log("[ENSURE_ADMIN] Direct match failed, trying case-insensitive")
+      existingUser = await sql`SELECT id, email, password FROM users WHERE LOWER(email) = LOWER(${adminEmail})`
+    }
     
     if (existingUser.length > 0) {
+      console.log("[ENSURE_ADMIN] Admin user exists:", existingUser[0])
+      console.log("[ENSURE_ADMIN] Current password hash:", existingUser[0].password?.substring(0, 20) + "...")
+      
       // Update existing user to ensure correct password and role (normalize email to lowercase)
       const updateResult = await sql`
         UPDATE users 
         SET name = 'Chihab Admin', password = ${hashedPassword}, role = 'admin', email = ${adminEmail}
-        WHERE LOWER(email) = LOWER(${adminEmail})
+        WHERE id = ${existingUser[0].id}
         RETURNING id, email, role
       `
-      console.log("Admin user updated:", updateResult[0])
+      console.log("[ENSURE_ADMIN] Admin user updated:", updateResult[0])
     } else {
+      console.log("[ENSURE_ADMIN] Admin user not found, creating new one")
       // Create new admin user with lowercase email
       const insertResult = await sql`
         INSERT INTO users (name, email, password, role)
         VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin')
         RETURNING id, email, role
       `
-      console.log("Admin user created:", insertResult[0])
+      console.log("[ENSURE_ADMIN] Admin user created:", insertResult[0])
     }
   } catch (error) {
-    console.error("Error ensuring admin user:", error)
-    console.error("Error details:", {
+    console.error("[ENSURE_ADMIN] Error ensuring admin user:", error)
+    console.error("[ENSURE_ADMIN] Error details:", {
       message: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
     })
@@ -70,7 +81,9 @@ export async function POST(request: NextRequest) {
     // Normalize email to lowercase for consistent comparison
     const normalizedEmail = email.toLowerCase().trim()
 
-    console.log("Login attempt for:", normalizedEmail)
+    console.log("[LOGIN] Login attempt for:", normalizedEmail)
+    console.log("[LOGIN] Environment:", process.env.NODE_ENV)
+    console.log("[LOGIN] Has DATABASE_URL:", !!process.env.DATABASE_URL)
 
     const user = await authenticateUser(normalizedEmail, password)
 
