@@ -154,12 +154,13 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
-              <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.weightLoss.description}</p>
+              <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.weightLoss.subtitle}</p>
+              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.weightLoss.description}</p>
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-xs font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-3xl font-bold text-fitnest-green">{locale === "fr" ? "420 Dhs" : "420 MAD"}</span>
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "420 Dhs" : "420 MAD"}</span>
+                  <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
               <Link href="/meal-plans/weight-loss" className="mb-6">
@@ -170,7 +171,11 @@ export default function Home() {
               <ul className="space-y-3 flex-1">
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.calorieControlled}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.reducedCarbs}</span>
+                </li>
+                <li className="flex items-start">
+                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.highProtein}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
@@ -178,11 +183,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.highFiber}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.appTracking}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.weightControl}</span>
                 </li>
               </ul>
             </div>
@@ -200,12 +201,13 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
-              <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.stayFit.description}</p>
+              <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.stayFit.subtitle}</p>
+              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.stayFit.description}</p>
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-lg font-medium text-gray-600">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-4xl font-bold text-fitnest-green">{locale === "fr" ? "450 dhs" : "450 MAD"}</span>
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "450 dhs" : "450 MAD"}</span>
+                  <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
               <Link href="/meal-plans/balanced-nutrition" className="mb-6">
@@ -216,23 +218,19 @@ export default function Home() {
               <ul className="space-y-3 flex-1">
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.perfectMacro}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.wellBalanced}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.largeVariety}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.nutrientDense}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.nutrientRich}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.realLife}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.weeklyRotation}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.premiumSupport}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.sustainable}</span>
                 </li>
               </ul>
             </div>
@@ -245,11 +243,13 @@ export default function Home() {
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
-              <p className="text-gray-600 mb-6 text-center text-sm">{t.home.choosePlan.muscleGain.description}</p>
+              <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.muscleGain.subtitle}</p>
+              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.muscleGain.description}</p>
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-3xl font-bold text-fitnest-green">{locale === "fr" ? "500 dhs" : "500 MAD"}</span>
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.week}</span>
+                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "500 dhs" : "500 MAD"}</span>
+                  <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
               <Link href="/meal-plans/muscle-gain" className="mb-6">
@@ -264,7 +264,7 @@ export default function Home() {
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.postWorkout}</span>
+                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.trainingRecovery}</span>
                 </li>
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
