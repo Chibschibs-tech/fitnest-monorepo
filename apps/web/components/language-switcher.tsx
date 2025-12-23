@@ -55,7 +55,7 @@ export function LanguageSwitcher() {
         variant="ghost"
         size="sm"
         className={`flex items-center gap-2 rounded-full ${
-          isTransparentNavbar ? "text-fitnest-orange hover:text-fitnest-orange/80" : ""
+          isTransparentNavbar ? "text-white hover:text-white/80" : "text-fitnest-orange hover:text-fitnest-orange/80"
         }`}
         disabled
       >
@@ -72,7 +72,7 @@ export function LanguageSwitcher() {
           variant="ghost"
           size="sm"
           className={`flex items-center gap-2 rounded-full ${
-            isTransparentNavbar ? "text-fitnest-orange hover:text-fitnest-orange/80" : ""
+            isTransparentNavbar ? "text-white hover:text-white/80" : "text-fitnest-orange hover:text-fitnest-orange/80"
           }`}
         >
           <Globe className="h-4 w-4" />
