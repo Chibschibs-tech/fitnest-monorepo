@@ -35,6 +35,7 @@ const publicRoutes = [
   "/api/waitlist",
   "/api/waitlist-email",
   "/api/waitlist-simple",
+  "/api/waitlist/check",
   "/api/admin/waitlist",
   "/api/admin/waitlist/export",
   "/api/test-blob",
