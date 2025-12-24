@@ -9,6 +9,12 @@ export const dynamic = "force-dynamic"
  */
 export async function GET() {
   try {
+    // Check if token exists
+    const hasToken = !!process.env.BLOB_READ_WRITE_TOKEN
+    const tokenPrefix = process.env.BLOB_READ_WRITE_TOKEN 
+      ? process.env.BLOB_READ_WRITE_TOKEN.substring(0, 10) + "..." 
+      : "NOT SET"
+    
     // List blobs to verify connection
     const { blobs } = await list({
       limit: 10,
@@ -24,11 +30,19 @@ export async function GET() {
         size: blob.size,
         uploadedAt: blob.uploadedAt,
       })),
+      environmentVariables: {
+        BLOB_READ_WRITE_TOKEN: {
+          exists: hasToken,
+          prefix: tokenPrefix,
+          length: process.env.BLOB_READ_WRITE_TOKEN?.length || 0,
+        },
+        NODE_ENV: process.env.NODE_ENV,
+      },
       storageInfo: {
         provider: "Vercel Blob",
         status: "Connected",
         environment: process.env.NODE_ENV,
-        hasToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+        hasToken: hasToken,
       },
     })
   } catch (error) {
