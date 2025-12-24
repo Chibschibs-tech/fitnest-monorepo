@@ -441,7 +441,7 @@ export const translations = {
     },
     waitlist: {
       hero: {
-        badge: '🎉 New recipes every week',
+        badge: 'New recipes every week',
         title: 'Your Healthy Meals,',
         titleHighlight: 'Delivered Fresh',
         description: 'Join the Fitnest community and transform your health with chef-prepared, nutritionally balanced meals delivered right to your door in Morocco.',
