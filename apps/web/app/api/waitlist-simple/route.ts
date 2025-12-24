@@ -3,7 +3,7 @@ export const revalidate = 0;
 
 import { NextResponse } from "next/server"
 import { sql, db } from "@/lib/db"
-
+import { sendWaitlistConfirmationEmail, sendWaitlistAdminNotification } from "@/lib/email-utils"
 
 export async function POST(request: Request) {
   try {
@@ -46,12 +46,45 @@ export async function POST(request: Request) {
       RETURNING id, position
     `
 
+    const waitlistEntry = result[0]
     console.log("Waitlist submission saved to database:", {
-      id: result[0]?.id,
-      position: result[0]?.position,
+      id: waitlistEntry?.id,
+      position: waitlistEntry?.position,
       email,
       timestamp: new Date().toISOString(),
     })
+
+    // Send confirmation email to client (don't block on failure)
+    try {
+      await sendWaitlistConfirmationEmail({
+        email,
+        name: `${firstName} ${lastName}`,
+        position: waitlistEntry?.position || 0,
+        estimatedWait: 5, // 5 days as requested
+      })
+      console.log("Confirmation email sent to client:", email)
+    } catch (emailError) {
+      console.error("Failed to send confirmation email to client:", emailError)
+      // Don't fail the request if email fails
+    }
+
+    // Send admin notification email (don't block on failure)
+    try {
+      await sendWaitlistAdminNotification({
+        id: waitlistEntry?.id,
+        firstName,
+        lastName,
+        email,
+        phone,
+        mealPlanPreference: mealPlan,
+        city,
+        notifications,
+      })
+      console.log("Admin notification email sent")
+    } catch (adminEmailError) {
+      console.error("Failed to send admin notification email:", adminEmailError)
+      // Don't fail the request if email fails
+    }
 
     // Always return success
     return NextResponse.json({
@@ -59,8 +92,8 @@ export async function POST(request: Request) {
       message: "Thank you for your interest! Your request has been registered. We will contact you by email very soon.",
       debug: {
         saved: true,
-        id: result[0]?.id,
-        position: result[0]?.position,
+        id: waitlistEntry?.id,
+        position: waitlistEntry?.position,
       },
     })
   } catch (error) {

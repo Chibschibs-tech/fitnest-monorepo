@@ -207,14 +207,14 @@ export async function sendWaitlistConfirmationEmail(data: {
             <div style="background-color: ${FITNEST_LIGHT_GREEN}; padding: 20px; margin: 25px 0; border-radius: 8px; border-left: 4px solid ${FITNEST_GREEN};">
               <h3 style="margin-top: 0; color: ${FITNEST_GREEN}; font-size: 18px;">Your Waitlist Details</h3>
               <p style="margin: 8px 0; font-size: 16px;"><strong>Position:</strong> #${position}</p>
-              <p style="margin: 8px 0; font-size: 16px;"><strong>Maximum Wait Time:</strong> 7 days</p>
+              <p style="margin: 8px 0; font-size: 16px;"><strong>Average Wait Time:</strong> 5 days</p>
               <p style="margin: 8px 0; font-size: 16px;"><strong>Date Added:</strong> ${new Date().toLocaleDateString()}</p>
-              <p style="margin: 12px 0 0 0; font-size: 16px; font-style: italic;">We'll call you before your spot is ready to confirm your subscription details. The wait time is typically less than a week.</p>
+              <p style="margin: 12px 0 0 0; font-size: 16px; font-style: italic;">We'll call you before your spot is ready to confirm your subscription details. The wait time is typically around 5 days.</p>
             </div>
             
             <h3 style="color: ${FITNEST_ORANGE}; font-size: 18px;">While You Wait, Here's What You'll Get:</h3>
             <ul style="font-size: 16px; line-height: 1.6; color: #444; padding-left: 20px;">
-              <li><strong>10% discount</strong> on your first subscription</li>
+              <li><strong>20% discount</strong> on your first subscription</li>
               <li><strong>Delicious complimentary snacks</strong> with your first order</li>
             </ul>
             
@@ -254,13 +254,13 @@ Thank you for joining the Fitnest waitlist! We're experiencing high demand and a
 
 YOUR WAITLIST DETAILS
 Position: #${position}
-Maximum Wait Time: 7 days
+Average Wait Time: 5 days
 Date Added: ${new Date().toLocaleDateString()}
 
-We'll call you before your spot is ready to confirm your subscription details. The wait time is typically less than a week.
+We'll call you before your spot is ready to confirm your subscription details. The wait time is typically around 5 days.
 
 WHILE YOU WAIT, HERE'S WHAT YOU'LL GET:
-- 10% discount on your first subscription
+- 20% discount on your first subscription
 - Delicious complimentary snacks with your first order
 
 We'll notify you as soon as a spot opens up. In the meantime, feel free to explore our website to learn more about our meal plans and nutrition philosophy.
