@@ -1,17 +1,24 @@
 import { put } from "@vercel/blob"
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "../auth/[...nextauth]/route"
+import { cookies } from "next/headers"
+import { getSessionUser } from "@/lib/simple-auth"
 
 // New way to set config for route handlers in Next.js App Router
 export const maxDuration = 60 // 60 seconds timeout
 export const dynamic = "force-dynamic"
 
 export async function POST(request: Request): Promise<NextResponse> {
-  // Check authentication
-  const session = await getServerSession(authOptions)
-  if (!session) {
+  // Check authentication using current auth system
+  const cookieStore = cookies()
+  const sessionId = cookieStore.get("session-id")?.value
+
+  if (!sessionId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const user = await getSessionUser(sessionId)
+  if (!user || user.role !== "admin") {
+    return NextResponse.json({ error: "Unauthorized - Admin access required" }, { status: 401 })
   }
 
   try {
