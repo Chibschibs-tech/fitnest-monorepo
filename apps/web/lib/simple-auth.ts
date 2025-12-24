@@ -172,37 +172,56 @@ export async function authenticateUser(email: string, password: string) {
 
 export async function createSession(userId: number) {
   try {
-    console.log("Creating session for user ID:", userId)
+    console.log("[SESSION] Creating session for user ID:", userId)
 
     // Ensure sessions table exists
-    await sql`
-      CREATE TABLE IF NOT EXISTS sessions (
-        id VARCHAR(255) PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
-        expires_at TIMESTAMP NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `
+    try {
+      await sql`
+        CREATE TABLE IF NOT EXISTS sessions (
+          id VARCHAR(255) PRIMARY KEY,
+          user_id INTEGER REFERENCES users(id),
+          expires_at TIMESTAMP NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `
+      console.log("[SESSION] Sessions table ensured")
+    } catch (tableError) {
+      console.error("[SESSION] Error ensuring sessions table:", tableError)
+      // Continue anyway - table might already exist
+    }
 
     const sessionId = uuidv4()
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + 7) // 7 days from now
 
-    console.log("Session details:", { sessionId, userId, expiresAt })
+    console.log("[SESSION] Session details:", { 
+      sessionId: sessionId.substring(0, 10) + "...", 
+      userId, 
+      expiresAt: expiresAt.toISOString() 
+    })
 
     const result = await sql`
       INSERT INTO sessions (id, user_id, expires_at)
       VALUES (${sessionId}, ${userId}, ${expiresAt})
-      RETURNING id
+      RETURNING id, user_id, expires_at
     `
 
-    console.log("Session created successfully:", result)
-    return sessionId
+    if (result && result.length > 0) {
+      console.log("[SESSION] Session created successfully:", {
+        id: result[0].id?.substring(0, 10) + "...",
+        userId: result[0].user_id,
+        expiresAt: result[0].expires_at,
+      })
+      return sessionId
+    } else {
+      console.error("[SESSION] Session insert returned no rows")
+      return null
+    }
   } catch (error) {
-    console.error("Error creating session:", error)
-    console.error("Error details:", {
-      message: error.message,
-      stack: error.stack,
+    console.error("[SESSION] Error creating session:", error)
+    console.error("[SESSION] Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
       userId,
     })
     return null
@@ -211,6 +230,8 @@ export async function createSession(userId: number) {
 
 export async function getSessionUser(sessionId: string) {
   try {
+    console.log("[SESSION] Getting session user for session:", sessionId.substring(0, 10) + "...")
+    
     const sessions = await sql`
       SELECT s.*, u.id as user_id, u.name, u.email, u.role
       FROM sessions s
@@ -219,11 +240,22 @@ export async function getSessionUser(sessionId: string) {
       AND s.expires_at > NOW()
     `
 
+    console.log("[SESSION] Found sessions:", sessions.length)
+
     const session = sessions[0]
     if (!session) {
+      console.log("[SESSION] No valid session found")
+      // Check if session exists but expired
+      const expiredSession = await sql`
+        SELECT s.* FROM sessions s WHERE s.id = ${sessionId}
+      `
+      if (expiredSession.length > 0) {
+        console.log("[SESSION] Session exists but expired:", expiredSession[0].expires_at)
+      }
       return null
     }
 
+    console.log("[SESSION] Session valid, user:", { id: session.user_id, email: session.email, role: session.role })
     return {
       id: session.user_id,
       name: session.name,
@@ -231,7 +263,11 @@ export async function getSessionUser(sessionId: string) {
       role: session.role,
     }
   } catch (error) {
-    console.error("Error getting session user:", error)
+    console.error("[SESSION] Error getting session user:", error)
+    console.error("[SESSION] Error details:", {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    })
     return null
   }
 }

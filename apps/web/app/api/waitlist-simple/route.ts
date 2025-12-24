@@ -55,22 +55,30 @@ export async function POST(request: Request) {
     })
 
     // Send confirmation email to client (don't block on failure)
+    let clientEmailResult = null
     try {
-      await sendWaitlistConfirmationEmail({
+      clientEmailResult = await sendWaitlistConfirmationEmail({
         email,
         name: `${firstName} ${lastName}`,
         position: waitlistEntry?.position || 0,
         estimatedWait: 5, // 5 days as requested
       })
-      console.log("Confirmation email sent to client:", email)
+      if (clientEmailResult.success) {
+        console.log("✅ Confirmation email sent to client:", email, "Message ID:", clientEmailResult.messageId)
+      } else {
+        console.error("❌ Failed to send confirmation email to client:", email, "Error:", clientEmailResult.error, "Details:", JSON.stringify(clientEmailResult.details || {}, null, 2))
+      } else {
+        console.error("❌ Failed to send confirmation email to client:", email, "Error:", clientEmailResult.error)
+      }
     } catch (emailError) {
-      console.error("Failed to send confirmation email to client:", emailError)
+      console.error("❌ Exception sending confirmation email to client:", email, "Error:", emailError)
       // Don't fail the request if email fails
     }
 
     // Send admin notification email (don't block on failure)
+    let adminEmailResult = null
     try {
-      await sendWaitlistAdminNotification({
+      adminEmailResult = await sendWaitlistAdminNotification({
         id: waitlistEntry?.id,
         firstName,
         lastName,
@@ -80,9 +88,13 @@ export async function POST(request: Request) {
         city,
         notifications,
       })
-      console.log("Admin notification email sent")
+      if (adminEmailResult.success) {
+        console.log("✅ Admin notification email sent. Message ID:", adminEmailResult.messageId, "Recipients:", adminEmailResult.recipients || "N/A")
+      } else {
+        console.error("❌ Failed to send admin notification email. Error:", adminEmailResult.error, "Details:", JSON.stringify(adminEmailResult.details || {}, null, 2))
+      }
     } catch (adminEmailError) {
-      console.error("Failed to send admin notification email:", adminEmailError)
+      console.error("❌ Exception sending admin notification email. Error:", adminEmailError)
       // Don't fail the request if email fails
     }
 
@@ -94,6 +106,10 @@ export async function POST(request: Request) {
         saved: true,
         id: waitlistEntry?.id,
         position: waitlistEntry?.position,
+        clientEmailSent: clientEmailResult?.success || false,
+        adminEmailSent: adminEmailResult?.success || false,
+        clientEmailError: clientEmailResult?.error || null,
+        adminEmailError: adminEmailResult?.error || null,
       },
     })
   } catch (error) {

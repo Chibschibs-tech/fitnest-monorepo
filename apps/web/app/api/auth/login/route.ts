@@ -109,12 +109,26 @@ export async function POST(request: NextRequest) {
               role: retryUser.role,
             },
           })
-          response.cookies.set("session-id", sessionId, {
+          // Set cookie with proper settings for production
+          const isProduction = process.env.NODE_ENV === "production"
+          const cookieOptions: any = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            secure: isProduction,
+            sameSite: "lax" as const,
             maxAge: 60 * 60 * 24 * 7, // 7 days
+            path: "/",
+          }
+
+          if (isProduction && process.env.COOKIE_DOMAIN) {
+            cookieOptions.domain = process.env.COOKIE_DOMAIN
+          }
+
+          console.log("[LOGIN] Setting session cookie (retry):", {
+            sessionId: sessionId.substring(0, 10) + "...",
+            secure: cookieOptions.secure,
           })
+
+          response.cookies.set("session-id", sessionId, cookieOptions)
           return response
         }
       }
@@ -130,11 +144,15 @@ export async function POST(request: NextRequest) {
       // Non-critical, continue with login
     }
 
+    console.log("[LOGIN] Creating session for user ID:", user.id)
     const sessionId = await createSession(user.id)
 
     if (!sessionId) {
+      console.error("[LOGIN] Failed to create session for user:", user.id)
       return NextResponse.json({ error: "Failed to create session" }, { status: 500 })
     }
+
+    console.log("[LOGIN] Session created successfully:", sessionId.substring(0, 10) + "...")
 
     const response = NextResponse.json({
       success: true,
@@ -144,15 +162,39 @@ export async function POST(request: NextRequest) {
         email: user.email,
         role: user.role,
       },
+      debug: {
+        sessionCreated: true,
+        sessionId: sessionId.substring(0, 10) + "...",
+      },
     })
 
-    response.cookies.set("session-id", sessionId, {
+    // Set cookie with proper settings for production
+    const isProduction = process.env.NODE_ENV === "production"
+    const cookieOptions: any = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: isProduction, // HTTPS required in production
+      sameSite: "lax" as const,
       maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    }
+
+    // In production, don't set domain to allow subdomain cookies
+    // Only set domain if explicitly needed
+    if (isProduction && process.env.COOKIE_DOMAIN) {
+      cookieOptions.domain = process.env.COOKIE_DOMAIN
+    }
+
+    console.log("[LOGIN] Setting session cookie:", {
+      sessionId: sessionId.substring(0, 10) + "...",
+      secure: cookieOptions.secure,
+      sameSite: cookieOptions.sameSite,
+      path: cookieOptions.path,
+      domain: cookieOptions.domain || "not set",
     })
 
+    response.cookies.set("session-id", sessionId, cookieOptions)
+
+    console.log("[LOGIN] Login successful, returning response")
     return response
   } catch (error) {
     console.error("Login error:", error)

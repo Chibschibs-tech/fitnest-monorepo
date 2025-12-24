@@ -77,6 +77,7 @@ This is an automated message from the Fitnest.ma waitlist form.
 
     // Send email to admin email (configured in environment)
     const adminEmail = getEnv("ADMIN_EMAIL", "chihab.jabri@gmail.com")
+    console.log("Sending admin notification to:", adminEmail)
     const mailOptions = {
       from: getEnv("EMAIL_FROM"),
       to: adminEmail,

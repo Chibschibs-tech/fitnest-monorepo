@@ -1,58 +1,72 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/components/language-provider"
+import { getTranslations, defaultLocale } from "@/lib/i18n"
+import { useState, useEffect } from "react"
 
 export default function BlogPage() {
-  // Sample blog posts data
+  const { locale } = useLanguage()
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const t = getTranslations(mounted ? locale : defaultLocale)
+
+  // Blog posts data with translations
   const blogPosts = [
     {
       id: 1,
-      slug: "healthy-meal-prep",
-      title: "10 Healthy Meal Prep Tips for Busy Professionals",
-      excerpt: "Learn how to efficiently prepare nutritious meals for the entire week, even with a busy schedule.",
-      category: "Meal Prep",
-      readTime: "5 min read",
-      date: "May 2, 2023",
+      slug: "healthy-meal-delivery-morocco",
+      title: t.blog.post1.title,
+      excerpt: t.blog.post1.description,
+      category: t.blog.post1.category,
+      readTime: t.blog.post1.readTime,
+      date: locale === "fr" ? "2 mai 2024" : "May 2, 2024",
       image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 2,
       slug: "nutrition-myths",
-      title: "5 Common Nutrition Myths Debunked",
-      excerpt: "Separating fact from fiction: nutrition experts weigh in on popular diet claims and misconceptions.",
-      category: "Nutrition",
-      readTime: "7 min read",
-      date: "April 18, 2023",
+      title: t.blog.post2.title,
+      excerpt: t.blog.post2.description,
+      category: t.blog.post2.category,
+      readTime: t.blog.post2.readTime,
+      date: locale === "fr" ? "18 avril 2024" : "April 18, 2024",
       image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 3,
       slug: "weight-loss-plateau",
-      title: "Breaking Through a Weight Loss Plateau",
-      excerpt: "Effective strategies to overcome stalled progress and continue your weight loss journey.",
-      category: "Fitness",
-      readTime: "8 min read",
-      date: "April 5, 2023",
+      title: t.blog.post3.title,
+      excerpt: t.blog.post3.description,
+      category: t.blog.post3.category,
+      readTime: t.blog.post3.readTime,
+      date: locale === "fr" ? "5 avril 2024" : "April 5, 2024",
       image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 4,
       slug: "protein-importance",
-      title: "Why Protein is Essential for Muscle Building",
-      excerpt: "Understanding the role of protein in muscle development and recovery, and how to optimize your intake.",
-      category: "Nutrition",
-      readTime: "6 min read",
-      date: "March 22, 2023",
+      title: t.blog.post4.title,
+      excerpt: t.blog.post4.description,
+      category: t.blog.post4.category,
+      readTime: t.blog.post4.readTime,
+      date: locale === "fr" ? "22 mars 2024" : "March 22, 2024",
       image: "/placeholder.svg?height=400&width=600",
     },
     {
       id: 5,
       slug: "mindful-eating",
-      title: "The Art of Mindful Eating: Improving Your Relationship with Food",
-      excerpt: "How practicing mindfulness during meals can transform your eating habits and overall well-being.",
-      category: "Wellness",
-      readTime: "9 min read",
-      date: "March 10, 2023",
+      title: t.blog.post5.title,
+      excerpt: t.blog.post5.description,
+      category: t.blog.post5.category,
+      readTime: t.blog.post5.readTime,
+      date: locale === "fr" ? "10 mars 2024" : "March 10, 2024",
       image: "/placeholder.svg?height=400&width=600",
     },
   ]
@@ -60,9 +74,9 @@ export default function BlogPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Fitnest.ma Blog</h1>
+        <h1 className="text-4xl font-bold mb-4 text-fitnest-green">Fitnest.ma Blog</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Expert advice on nutrition, fitness, and healthy living to help you achieve your wellness goals.
+          {t.blog.subtitle}
         </p>
       </div>
 
@@ -90,7 +104,7 @@ export default function BlogPage() {
             <div className="mt-auto">
               <Link href={`/blog/${blogPosts[0].slug}`}>
                 <Button className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full md:w-auto">
-                  Read Article
+                  {t.blog.readArticle}
                 </Button>
               </Link>
             </div>
@@ -103,7 +117,7 @@ export default function BlogPage() {
         {blogPosts.slice(1).map((post) => (
           <div
             key={post.id}
-            className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg"
+            className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg hover:scale-105"
           >
             <div className="relative h-48">
               <Image
@@ -130,7 +144,7 @@ export default function BlogPage() {
                     variant="outline"
                     className="border-fitnest-green text-fitnest-green hover:bg-fitnest-green hover:text-white"
                   >
-                    Read More
+                    {t.blog.readMore}
                   </Button>
                 </Link>
               </div>

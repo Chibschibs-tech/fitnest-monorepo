@@ -62,11 +62,22 @@ const createTransporter = () => {
 // Verify transporter before sending
 const verifyTransporter = async (transporter: nodemailer.Transporter) => {
   try {
+    console.log("🔍 Verifying transporter connection...")
     await transporter.verify()
-    console.log("Transporter verification successful")
+    console.log("✅ Transporter verification successful")
     return true
   } catch (error) {
-    console.error("Transporter verification failed:", error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const errorDetails = {
+      message: errorMessage,
+      code: (error as any)?.code,
+      command: (error as any)?.command,
+      response: (error as any)?.response,
+      responseCode: (error as any)?.responseCode,
+      errno: (error as any)?.errno,
+      syscall: (error as any)?.syscall,
+    }
+    console.error("❌ Transporter verification failed:", JSON.stringify(errorDetails, null, 2))
     throw error
   }
 }
@@ -181,11 +192,25 @@ export async function sendWaitlistConfirmationEmail(data: {
 }) {
   try {
     const { email, name, position, estimatedWait } = data
-    console.log(`Attempting to send waitlist confirmation email to ${email}`)
+    console.log(`📧 Attempting to send waitlist confirmation email to ${email}`)
+
+    // Check email config first
+    const config = checkEmailConfig()
+    if (!config.configured) {
+      console.error("❌ Email configuration incomplete:", config.missing)
+      return {
+        success: false,
+        error: "Email configuration incomplete",
+        details: config,
+      }
+    }
 
     // Create and verify transporter
+    console.log("🔧 Creating email transporter...")
     const transporter = createTransporter()
+    console.log("✅ Transporter created, verifying connection...")
     await verifyTransporter(transporter)
+    console.log("✅ Transporter verified successfully")
 
     const firstName = name.split(" ")[0]
 
@@ -285,15 +310,25 @@ TikTok: @fitnest.ma
 
     while (retries < maxRetries) {
       try {
+        console.log(`📤 Sending email (attempt ${retries + 1}/${maxRetries})...`)
         const info = await transporter.sendMail(mailOptions)
-        console.log(`Waitlist confirmation email sent to ${email}: ${info.messageId}`)
-        return { success: true, messageId: info.messageId }
+        console.log(`✅ Waitlist confirmation email sent to ${email}: ${info.messageId}`)
+        console.log(`📧 Email response: ${info.response}`)
+        return { success: true, messageId: info.messageId, response: info.response }
       } catch (error) {
         retries++
+        const errorDetails = {
+          message: error instanceof Error ? error.message : String(error),
+          code: (error as any)?.code,
+          command: (error as any)?.command,
+          response: (error as any)?.response,
+          responseCode: (error as any)?.responseCode,
+        }
+        console.error(`❌ Email send error (attempt ${retries}/${maxRetries}):`, errorDetails)
         if (retries >= maxRetries) {
           throw error
         }
-        console.log(`Retrying email send (${retries}/${maxRetries}) after error:`, error)
+        console.log(`⏳ Retrying email send in ${1000 * retries}ms...`)
         // Wait before retry with exponential backoff
         await new Promise((resolve) => setTimeout(resolve, 1000 * retries))
       }
@@ -617,17 +652,34 @@ export async function sendWaitlistAdminNotification(submissionData: any) {
   try {
     const { firstName, lastName, email, phone, mealPlanPreference, city, notifications, id } = submissionData
 
-    console.log(`Attempting to send admin notification for waitlist entry ${id}`)
+    console.log(`📧 Attempting to send admin notification for waitlist entry ${id}`)
+
+    // Check email config first
+    const config = checkEmailConfig()
+    if (!config.configured) {
+      console.error("❌ Email configuration incomplete:", config.missing)
+      return {
+        success: false,
+        error: "Email configuration incomplete",
+        details: config,
+      }
+    }
 
     // Create and verify transporter using the same config as other emails
+    console.log("🔧 Creating email transporter for admin notification...")
     const transporter = createTransporter()
+    console.log("✅ Transporter created, verifying connection...")
     await verifyTransporter(transporter)
+    console.log("✅ Transporter verified successfully")
 
-    const adminEmail = "chihab.jabri@gmail.com"
+    // Send to both admin email and noreply@fitnest.ma
+    const adminEmail = getEnv("ADMIN_EMAIL", "chihab@ekwip.ma")
+    const recipients = [adminEmail, "noreply@fitnest.ma"].filter(Boolean)
+    console.log(`📬 Sending admin notification to: ${recipients.join(", ")}`)
 
     const mailOptions = {
       from: getEnv("EMAIL_FROM"),
-      to: adminEmail,
+      to: recipients,
       subject: `🔔 New Waitlist Entry - ${firstName} ${lastName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -684,15 +736,25 @@ This customer has been added to the waitlist and should be contacted soon.
 
     while (retries < maxRetries) {
       try {
+        console.log(`📤 Sending admin email (attempt ${retries + 1}/${maxRetries})...`)
         const info = await transporter.sendMail(mailOptions)
-        console.log(`Admin notification sent successfully to ${adminEmail}: ${info.messageId}`)
-        return { success: true, messageId: info.messageId }
+        console.log(`✅ Admin notification sent successfully to ${recipients.join(", ")}. Message ID: ${info.messageId}`)
+        console.log(`📧 Email response: ${info.response}`)
+        return { success: true, messageId: info.messageId, response: info.response, recipients }
       } catch (error) {
         retries++
+        const errorDetails = {
+          message: error instanceof Error ? error.message : String(error),
+          code: (error as any)?.code,
+          command: (error as any)?.command,
+          response: (error as any)?.response,
+          responseCode: (error as any)?.responseCode,
+        }
+        console.error(`❌ Admin email send error (attempt ${retries}/${maxRetries}):`, errorDetails)
         if (retries >= maxRetries) {
           throw error
         }
-        console.log(`Retrying admin email send (${retries}/${maxRetries}) after error:`, error)
+        console.log(`⏳ Retrying admin email send in ${1000 * retries}ms...`)
         // Wait before retry with exponential backoff
         await new Promise((resolve) => setTimeout(resolve, 1000 * retries))
       }
@@ -710,7 +772,7 @@ This customer has been added to the waitlist and should be contacted soon.
 }
 
 // Helper function to check if emails can be sent
-export async function checkEmailConfig() {
+export function checkEmailConfig() {
   try {
     // Validate environment variables
     const host = getEnv("EMAIL_SERVER_HOST")
