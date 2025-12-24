@@ -1,93 +1,38 @@
-import { sql, db } from "@/lib/db"
-import crypto from "crypto"
-import { v4 as uuidv4 } from "uuid"
+/**
+ * Compatibility layer - re-exports from new auth.ts
+ * This allows existing code to continue working without changes
+ */
 
+export {
+  hashPassword as simpleHash,
+  initAuthTables as initTables,
+  ensureAdminUser,
+  authenticateUser,
+  createSession,
+  getSessionUser,
+  deleteSession,
+} from "./auth"
 
-// Simple hash function using built-in crypto only
-function simpleHash(password: string): string {
-  return crypto
-    .createHash("sha256")
-    .update(password + "fitnest-salt-2024")
-    .digest("hex")
-}
+// Legacy function names for backward compatibility
+import { hashPassword, createUser as createUserNew } from "./auth"
+import { sql } from "./db"
 
-export async function initTables() {
-  try {
-    // Create users table if it doesn't exist
-    await sql`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        role VARCHAR(50) DEFAULT 'customer',
-        status VARCHAR(20) DEFAULT 'active',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `
-
-    // Add status column if it doesn't exist (for existing tables)
-    try {
-      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active'`
-    } catch (err) {
-      // Column might already exist, ignore error
-      console.log("Status column check:", err)
-    }
-
-    // Add phone column if it doesn't exist (Phase 2)
-    try {
-      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20)`
-    } catch (err) {
-      console.log("Phone column check:", err)
-    }
-
-    // Add admin_notes column if it doesn't exist (Phase 2)
-    try {
-      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS admin_notes TEXT`
-    } catch (err) {
-      console.log("Admin notes column check:", err)
-    }
-
-    // Add last_login_at column if it doesn't exist (Phase 2)
-    try {
-      await sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login_at TIMESTAMP`
-    } catch (err) {
-      console.log("Last login column check:", err)
-    }
-
-    // Create sessions table if it doesn't exist
-    await sql`
-      CREATE TABLE IF NOT EXISTS sessions (
-        id VARCHAR(255) PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
-        expires_at TIMESTAMP NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `
-
-    console.log("Tables initialized successfully")
-    return true
-  } catch (error) {
-    console.error("Error initializing tables:", error)
-    return false
-  }
+export function simpleHash(password: string): string {
+  return hashPassword(password)
 }
 
 export async function createUser(name: string, email: string, password: string) {
   try {
-    // Normalize email to lowercase
     const normalizedEmail = email.toLowerCase().trim()
-    
-    // Check if user already exists using case-insensitive comparison
+    const hashedPassword = hashPassword(password)
+
+    // Check if user already exists
     const existingUser = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
     if (existingUser.length > 0) {
       return null
     }
 
-    // Hash password with crypto
-    const hashedPassword = simpleHash(password)
-
-    // Create user with normalized email
+    // Create user
     const result = await sql`
       INSERT INTO users (name, email, password)
       VALUES (${name}, ${normalizedEmail}, ${hashedPassword})
@@ -98,209 +43,5 @@ export async function createUser(name: string, email: string, password: string) 
   } catch (error) {
     console.error("Error creating user:", error)
     return null
-  }
-}
-
-export async function authenticateUser(email: string, password: string) {
-  try {
-    // Normalize email to lowercase for case-insensitive comparison
-    const normalizedEmail = email.toLowerCase().trim()
-    
-    console.log("[AUTH] Authenticating user:", normalizedEmail)
-    console.log("[AUTH] Environment:", process.env.NODE_ENV)
-    console.log("[AUTH] Has DATABASE_URL:", !!process.env.DATABASE_URL)
-    
-    // Get user - try direct match first, then case-insensitive
-    let users = await sql`SELECT * FROM users WHERE email = ${normalizedEmail}`
-    
-    // If not found, try case-insensitive search
-    if (users.length === 0) {
-      console.log("[AUTH] Direct match failed, trying case-insensitive")
-      users = await sql`SELECT * FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
-    }
-    
-    const user = users[0]
-
-    if (!user) {
-      console.log("[AUTH] User not found:", normalizedEmail)
-      // Debug: Check what users exist
-      try {
-        const allUsers = await sql`SELECT id, email, role FROM users LIMIT 5`
-        console.log("[AUTH] Sample users in DB:", allUsers)
-      } catch (err) {
-        console.error("[AUTH] Error checking users:", err)
-      }
-      return null
-    }
-
-    console.log("[AUTH] User found:", { id: user.id, email: user.email, role: user.role })
-    console.log("[AUTH] Stored password hash length:", user.password?.length)
-    console.log("[AUTH] Stored password hash prefix:", user.password?.substring(0, 20))
-
-    // Verify password
-    const hashedPassword = simpleHash(password)
-    console.log("[AUTH] Computed password hash length:", hashedPassword.length)
-    console.log("[AUTH] Computed password hash prefix:", hashedPassword.substring(0, 20))
-    
-    if (hashedPassword !== user.password) {
-      console.log("[AUTH] Password mismatch for user:", normalizedEmail)
-      console.log("[AUTH] Hash comparison:", {
-        stored: user.password,
-        computed: hashedPassword,
-        match: hashedPassword === user.password
-      })
-      return null
-    }
-
-    console.log("[AUTH] User authenticated successfully:", normalizedEmail)
-    // Return user without password
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    }
-  } catch (error) {
-    console.error("[AUTH] Error authenticating user:", error)
-    console.error("[AUTH] Error details:", {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    })
-    return null
-  }
-}
-
-export async function createSession(userId: number) {
-  try {
-    console.log("[SESSION] Creating session for user ID:", userId)
-
-    // Ensure sessions table exists
-    try {
-      await sql`
-        CREATE TABLE IF NOT EXISTS sessions (
-          id VARCHAR(255) PRIMARY KEY,
-          user_id INTEGER REFERENCES users(id),
-          expires_at TIMESTAMP NOT NULL,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `
-      console.log("[SESSION] Sessions table ensured")
-    } catch (tableError) {
-      console.error("[SESSION] Error ensuring sessions table:", tableError)
-      // Continue anyway - table might already exist
-    }
-
-    const sessionId = uuidv4()
-    const expiresAt = new Date()
-    expiresAt.setDate(expiresAt.getDate() + 7) // 7 days from now
-
-    console.log("[SESSION] Session details:", { 
-      sessionId: sessionId.substring(0, 10) + "...", 
-      userId, 
-      expiresAt: expiresAt.toISOString() 
-    })
-
-    const result = await sql`
-      INSERT INTO sessions (id, user_id, expires_at)
-      VALUES (${sessionId}, ${userId}, ${expiresAt})
-      RETURNING id, user_id, expires_at
-    `
-
-    if (result && result.length > 0) {
-      console.log("[SESSION] Session created successfully:", {
-        id: result[0].id?.substring(0, 10) + "...",
-        userId: result[0].user_id,
-        expiresAt: result[0].expires_at,
-      })
-      return sessionId
-    } else {
-      console.error("[SESSION] Session insert returned no rows")
-      return null
-    }
-  } catch (error) {
-    console.error("[SESSION] Error creating session:", error)
-    console.error("[SESSION] Error details:", {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-      userId,
-    })
-    return null
-  }
-}
-
-export async function getSessionUser(sessionId: string) {
-  try {
-    console.log("[SESSION] Getting session user for session:", sessionId.substring(0, 10) + "...")
-    
-    const sessions = await sql`
-      SELECT s.*, u.id as user_id, u.name, u.email, u.role
-      FROM sessions s
-      JOIN users u ON s.user_id = u.id
-      WHERE s.id = ${sessionId}
-      AND s.expires_at > NOW()
-    `
-
-    console.log("[SESSION] Found sessions:", sessions.length)
-
-    const session = sessions[0]
-    if (!session) {
-      console.log("[SESSION] No valid session found")
-      // Check if session exists but expired
-      const expiredSession = await sql`
-        SELECT s.* FROM sessions s WHERE s.id = ${sessionId}
-      `
-      if (expiredSession.length > 0) {
-        console.log("[SESSION] Session exists but expired:", expiredSession[0].expires_at)
-      }
-      return null
-    }
-
-    console.log("[SESSION] Session valid, user:", { id: session.user_id, email: session.email, role: session.role })
-    return {
-      id: session.user_id,
-      name: session.name,
-      email: session.email,
-      role: session.role,
-    }
-  } catch (error) {
-    console.error("[SESSION] Error getting session user:", error)
-    console.error("[SESSION] Error details:", {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-    })
-    return null
-  }
-}
-
-export async function deleteSession(sessionId: string) {
-  try {
-    await sql`DELETE FROM sessions WHERE id = ${sessionId}`
-    return true
-  } catch (error) {
-    console.error("Error deleting session:", error)
-    return false
-  }
-}
-
-// Create admin user if it doesn't exist
-export async function ensureAdminUser() {
-  try {
-    const adminEmail = "admin@fitnest.ma"
-    const existingAdmin = await sql`SELECT id FROM users WHERE email = ${adminEmail}`
-
-    if (existingAdmin.length === 0) {
-      const hashedPassword = simpleHash("admin123")
-
-      await sql`
-        INSERT INTO users (name, email, password, role)
-        VALUES ('Admin', ${adminEmail}, ${hashedPassword}, 'admin')
-      `
-      console.log("Admin user created")
-    }
-
-    return true
-  } catch (error) {
-    console.error("Error ensuring admin user:", error)
-    return false
   }
 }

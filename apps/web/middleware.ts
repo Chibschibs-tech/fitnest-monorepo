@@ -1,16 +1,66 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getSessionUser } from "@/lib/auth"
 
-// Define public routes that don't require authentication
+// Public routes that don't require authentication
 const publicRoutes = [
+  // Root and home
   "/",
+  "/home",
+  
+  // Auth pages
   "/login",
   "/register",
+  "/forgot-password",
+  
+  // Public content pages
+  "/about",
+  "/blog",
+  "/blog/[slug]",
+  "/careers",
+  "/contact",
+  "/faq",
+  "/privacy",
+  "/terms",
+  "/how-it-works",
+  
+  // Public product pages
+  "/plans",
+  "/meal-plans",
+  "/meal-plans/[id]",
+  "/meal-plans/preview",
+  "/menu",
+  "/meals",
+  "/meals/[id]",
+  "/catalogue",
+  "/express-shop",
+  "/express-shop/[id]",
+  
+  // Waitlist
+  "/waitlist",
+  "/waitlist/success",
+  
+  // Checkout (guest checkout)
+  "/checkout",
+  "/checkout/guest",
+  "/checkout/guest-details",
+  "/checkout/guest-confirmation",
+  
+  // Shopping
+  "/cart",
+  "/shopping-cart",
+  "/order",
+  
+  // Subscribe
+  "/subscribe",
+  "/subscribe/thanks",
+  
+  // API routes (public)
   "/api/auth/login",
   "/api/auth/register",
   "/api/auth/session",
+  "/api/auth/logout",
   "/api/auth-status",
-  "/api/health",
   "/api/create-admin",
   "/api/auth/debug-login",
   "/api/products",
@@ -29,10 +79,6 @@ const publicRoutes = [
   "/api/guest-orders",
   "/api/meal-plans",
   "/api/meals",
-  "/api/upload",
-  "/api/auth/[...nextauth]",
-  "/api/auth/error",
-  "/api/auth/signout",
   "/api/waitlist",
   "/api/waitlist-email",
   "/api/waitlist-simple",
@@ -43,68 +89,118 @@ const publicRoutes = [
   "/api/test-email",
   "/api/email-diagnostic",
   "/api/deployment-check",
-  "/about",
-  "/blog",
-  "/blog/[slug]",
-  "/careers",
-  "/contact",
-  "/express-shop",
-  "/express-shop/[id]",
-  "/faq",
-  "/how-it-works",
-  "/meal-plans",
-  "/meal-plans/[id]",
-  "/meal-plans/preview",
-  "/meals",
-  "/meals/[id]",
-  "/privacy",
-  "/terms",
-  "/checkout/guest",
-  "/checkout/guest-details",
-  "/checkout/guest-confirmation",
-  "/waitlist",
-  "/home",
-  "/order",
+  "/api/health",
+  "/api/health-check",
+  "/api/db-diagnostic",
 ]
 
-export function middleware(request: NextRequest) {
+// Check if route is public
+function isPublicRoute(pathname: string): boolean {
+  // Check exact matches first
+  if (publicRoutes.includes(pathname)) {
+    return true
+  }
+
+  // Check dynamic routes
+  for (const route of publicRoutes) {
+    if (route.includes("[id]") || route.includes("[slug]")) {
+      const routePrefix = route.substring(0, route.lastIndexOf("/"))
+      if (pathname === routePrefix || pathname.startsWith(`${routePrefix}/`)) {
+        return true
+      }
+    } else if (pathname.startsWith(`${route}/`)) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Check if the path is a public route or starts with a public route prefix
-  const isPublicRoute = publicRoutes.some((route) => {
-    if (route.endsWith("/[id]") || route.endsWith("/[slug]")) {
-      // For dynamic routes, check if the pathname starts with the route prefix
-      const routePrefix = route.substring(0, route.lastIndexOf("/"))
-      return pathname === routePrefix || pathname.startsWith(`${routePrefix}/`)
-    }
-    return pathname === route || pathname.startsWith(`${route}/`)
-  })
-
-  if (isPublicRoute) {
+  // Skip middleware for static files and Next.js internals
+  if (
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/favicon.ico") ||
+    pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/)
+  ) {
     return NextResponse.next()
   }
 
-  // For protected routes, check authentication
+  // Handle API routes
+  if (pathname.startsWith("/api/")) {
+    // Check if API route is public
+    if (isPublicRoute(pathname)) {
+      return NextResponse.next()
+    }
+
+    // For protected API routes, validate session
+    const sessionId = request.cookies.get("session-id")?.value
+    const user = await getSessionUser(sessionId)
+
+    if (!user) {
+      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      response.cookies.delete("session-id")
+      return response
+    }
+
+    // Check admin API routes
+    if (pathname.startsWith("/api/admin")) {
+      if (user.role !== "admin") {
+        return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 })
+      }
+    }
+
+    return NextResponse.next()
+  }
+
+  // Handle page routes
+  // Check if route is public
+  if (isPublicRoute(pathname)) {
+    return NextResponse.next()
+  }
+
+  // For protected page routes, validate session
   const sessionId = request.cookies.get("session-id")?.value
 
   if (!sessionId) {
-    // For API routes, return JSON 401 instead of redirecting
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      )
-    }
-    
-    // For page routes, redirect to login
+    // No session cookie - redirect to login
     const loginUrl = new URL("/login", request.url)
-    loginUrl.searchParams.set("callbackUrl", encodeURI(request.url))
+    loginUrl.searchParams.set("callbackUrl", encodeURIComponent(request.url))
     return NextResponse.redirect(loginUrl)
   }
 
+  // Validate session
+  const user = await getSessionUser(sessionId)
+
+  if (!user) {
+    // Invalid or expired session - clear cookie and redirect
+    const response = NextResponse.redirect(new URL("/login", request.url))
+    response.cookies.delete("session-id")
+    return response
+  }
+
+  // Check admin routes
+  if (pathname.startsWith("/admin")) {
+    if (user.role !== "admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url))
+    }
+  }
+
+  // Session is valid - allow request
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|ttf|eot)$).*)",
+  ],
 }
