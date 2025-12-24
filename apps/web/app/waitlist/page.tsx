@@ -122,23 +122,23 @@ export default function WaitlistPage() {
             priority
             quality={90}
           />
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/40" />
+          {/* Overlay - only on right side (dark green section) for better contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/20" />
         </div>
         
-        <div className="relative z-10 container mx-auto px-4 py-16 lg:py-24 w-full">
-          {/* Content - Centered */}
-          <div className="max-w-4xl mx-auto">
-            <div className="text-white space-y-4 lg:space-y-6">
+        <div className="relative z-10 container mx-auto px-4 py-16 lg:py-24 w-full h-full">
+          {/* Content - Positioned on the white section (left side) */}
+          <div className="max-w-2xl lg:max-w-xl xl:max-w-2xl" style={{ marginLeft: 0, marginRight: 'auto' }}>
+            <div className="space-y-4 lg:space-y-6">
               <div className="space-y-3 lg:space-y-4">
-                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 rounded-full px-3 py-1 text-xs lg:text-sm">
+                <Badge className="bg-fitnest-green/10 text-fitnest-green border-fitnest-green/20 hover:bg-fitnest-green/20 rounded-full px-3 py-1 text-xs lg:text-sm">
                   Nouvelles recettes chaque semaine
                 </Badge>
-                <h1 className="text-2xl sm:text-3xl lg:text-6xl font-bold leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold leading-tight text-gray-900">
                   {t.waitlist.hero.title}
                   <span className="text-fitnest-orange"> {t.waitlist.hero.titleHighlight}</span>
                 </h1>
-                <p className="text-sm sm:text-base lg:text-xl text-white/90 leading-relaxed">
+                <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-700 leading-relaxed">
                   {t.waitlist.hero.description}
                 </p>
               </div>
@@ -153,23 +153,23 @@ export default function WaitlistPage() {
 
               {/* Additional info - Hidden on mobile first screen, visible on desktop */}
               <div className="hidden lg:flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-gray-700">
                   <ChefHat className="h-4 w-4 sm:h-5 sm:w-5 text-fitnest-orange" />
                   <span>{t.waitlist.hero.chefPrepared}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-gray-700">
                   <Leaf className="h-4 w-4 sm:h-5 sm:w-5 text-fitnest-orange" />
                   <span>{t.waitlist.hero.freshIngredients}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-gray-700">
                   <Truck className="h-4 w-4 sm:h-5 sm:w-5 text-fitnest-orange" />
                   <span>{t.waitlist.hero.freeDelivery}</span>
                 </div>
               </div>
 
               {/* Waitlist Reason - Hidden on mobile first screen, visible on desktop */}
-              <div className="hidden lg:block bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-3 sm:p-4">
-                <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
+              <div className="hidden lg:block bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg p-3 sm:p-4 shadow-sm">
+                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
                   {t.waitlist.waitlistReason.description}
                 </p>
               </div>
