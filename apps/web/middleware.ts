@@ -1,6 +1,21 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getSessionUser } from "@/lib/auth"
+
+// Lazy import to avoid database initialization during module load
+async function getSessionUser(sessionId: string | null | undefined) {
+  if (!sessionId) {
+    return null
+  }
+
+  try {
+    // Dynamic import to avoid issues during middleware initialization
+    const { getSessionUser: getUser } = await import("@/lib/auth")
+    return await getUser(sessionId)
+  } catch (error) {
+    console.error("[MIDDLEWARE] Error importing or calling getSessionUser:", error)
+    return null
+  }
+}
 
 // Public routes that don't require authentication
 const publicRoutes = [
@@ -129,13 +144,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
+    // Check if route is public FIRST - before any database calls
+    if (isPublicRoute(pathname)) {
+      return NextResponse.next()
+    }
+
     // Handle API routes
     if (pathname.startsWith("/api/")) {
-      // Check if API route is public
-      if (isPublicRoute(pathname)) {
-        return NextResponse.next()
-      }
-
       // For protected API routes, validate session
       const sessionId = request.cookies.get("session-id")?.value
       
@@ -164,13 +179,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next()
     }
 
-    // Handle page routes
-    // Check if route is public
-    if (isPublicRoute(pathname)) {
-      return NextResponse.next()
-    }
-
-    // For protected page routes, validate session
+    // Handle page routes (protected)
     const sessionId = request.cookies.get("session-id")?.value
 
     if (!sessionId) {
