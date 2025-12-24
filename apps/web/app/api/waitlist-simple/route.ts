@@ -67,8 +67,6 @@ export async function POST(request: Request) {
         console.log("✅ Confirmation email sent to client:", email, "Message ID:", clientEmailResult.messageId)
       } else {
         console.error("❌ Failed to send confirmation email to client:", email, "Error:", clientEmailResult.error, "Details:", JSON.stringify(clientEmailResult.details || {}, null, 2))
-      } else {
-        console.error("❌ Failed to send confirmation email to client:", email, "Error:", clientEmailResult.error)
       }
     } catch (emailError) {
       console.error("❌ Exception sending confirmation email to client:", email, "Error:", emailError)
