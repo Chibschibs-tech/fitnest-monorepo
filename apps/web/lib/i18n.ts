@@ -174,7 +174,7 @@ export const translations = {
       socialProof: {
         waitlistCount: '46 personnes sur la waitlist',
         rating: 'Note attendue 4,9/5',
-        launch: 'Lancement officiel 21/12/25',
+        launch: '15 nouveaux abonnés chaque semaine',
       },
       howItWorks: {
         title: 'Comment fonctionne Fitnest',
@@ -471,7 +471,7 @@ export const translations = {
       socialProof: {
         waitlistCount: '46 people in the waitlist',
         rating: '4.9/5 Rating Expected',
-        launch: 'Official launch 21/12/25',
+        launch: '15 new subscribers every week',
       },
       howItWorks: {
         title: 'How Fitnest Works',
