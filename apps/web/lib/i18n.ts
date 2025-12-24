@@ -144,7 +144,7 @@ export const translations = {
     },
     waitlist: {
       hero: {
-        badge: '🎉 Nouvelles recettes chaque semaine',
+        badge: 'Nouvelles recettes chaque semaine',
         title: 'Vos repas sains,',
         titleHighlight: 'livrés frais',
         description: 'Rejoignez la communauté Fitnest et transformez votre santé avec des repas préparés par des chefs, équilibrés sur le plan nutritionnel, livrés directement à votre porte au Maroc.',

@@ -111,32 +111,28 @@ export default function WaitlistPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Mobile First */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-fitnest-green via-fitnest-green/90 to-fitnest-green/80 min-h-screen flex items-center" style={{ marginTop: 0 }}>
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="relative container mx-auto px-4 py-16 lg:py-24 w-full">
-          {/* Mobile Layout: Image on top, then title, paragraph, CTA */}
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-12 items-center">
-            {/* Image - First on mobile, second on desktop */}
-            <div className="relative order-1 lg:order-2 w-full">
-              <div className="relative z-10">
-                <Image
-                  src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/fitnest-waitlist-hero-placeholder.jpg"
-                  alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
-                  width={600}
-                  height={400}
-                  className="rounded-2xl sm:rounded-3xl shadow-2xl object-cover w-full h-auto max-h-[50vh] lg:max-h-none"
-                  priority
-                />
-              </div>
-              <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-48 h-48 sm:w-72 sm:h-72 bg-fitnest-orange/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-4 -left-4 sm:-bottom-8 sm:-left-8 w-64 h-64 sm:w-96 sm:h-96 bg-fitnest-green/20 rounded-full blur-3xl" />
-            </div>
-
-            {/* Content - Second on mobile, first on desktop */}
-            <div className="text-white space-y-4 lg:space-y-6 order-2 lg:order-1">
+      <section className="relative overflow-hidden min-h-screen flex items-center" style={{ marginTop: 0 }}>
+        {/* Background Image - Full Screen */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
+            alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
+            fill
+            className="object-cover"
+            priority
+            quality={90}
+          />
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+        
+        <div className="relative z-10 container mx-auto px-4 py-16 lg:py-24 w-full">
+          {/* Content - Centered */}
+          <div className="max-w-4xl mx-auto">
+            <div className="text-white space-y-4 lg:space-y-6">
               <div className="space-y-3 lg:space-y-4">
                 <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 rounded-full px-3 py-1 text-xs lg:text-sm">
-                  {t.waitlist.hero.badge}
+                  Nouvelles recettes chaque semaine
                 </Badge>
                 <h1 className="text-2xl sm:text-3xl lg:text-6xl font-bold leading-tight">
                   {t.waitlist.hero.title}
