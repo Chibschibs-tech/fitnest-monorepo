@@ -3,23 +3,13 @@
  * This allows existing code to continue working without changes
  */
 
-export {
-  hashPassword as simpleHash,
-  initAuthTables as initTables,
-  ensureAdminUser,
-  authenticateUser,
-  createSession,
-  getSessionUser,
-  deleteSession,
-} from "./auth"
-
-// Legacy function names for backward compatibility
-import { hashPassword, createUser as createUserNew } from "./auth"
+import { hashPassword, initAuthTables, ensureAdminUser, authenticateUser, createSession, getSessionUser, deleteSession, createUser as createUserNew } from "./auth"
 import { sql } from "./db"
 
-export function simpleHash(password: string): string {
-  return hashPassword(password)
-}
+// Re-export functions with legacy names
+export const simpleHash = hashPassword
+export const initTables = initAuthTables
+export { ensureAdminUser, authenticateUser, createSession, getSessionUser, deleteSession }
 
 export async function createUser(name: string, email: string, password: string) {
   try {
