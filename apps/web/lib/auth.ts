@@ -185,6 +185,12 @@ export async function getSessionUser(sessionId: string | null | undefined) {
   }
 
   try {
+    // Check if database is available
+    if (!process.env.DATABASE_URL) {
+      console.warn("[AUTH] DATABASE_URL not set, cannot validate session")
+      return null
+    }
+
     const sessions = await sql`
       SELECT 
         s.id as session_id,
@@ -213,6 +219,7 @@ export async function getSessionUser(sessionId: string | null | undefined) {
       role: session.role,
     }
   } catch (error) {
+    // Log error but don't throw - return null to indicate no valid session
     console.error("[AUTH] Error getting session user:", error)
     return null
   }

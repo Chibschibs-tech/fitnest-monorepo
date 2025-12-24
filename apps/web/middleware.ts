@@ -117,79 +117,108 @@ function isPublicRoute(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  try {
+    const { pathname } = request.nextUrl
 
-  // Skip middleware for static files and Next.js internals
-  if (
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/favicon.ico") ||
-    pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/)
-  ) {
-    return NextResponse.next()
-  }
+    // Skip middleware for static files and Next.js internals
+    if (
+      pathname.startsWith("/_next/") ||
+      pathname.startsWith("/favicon.ico") ||
+      pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/)
+    ) {
+      return NextResponse.next()
+    }
 
-  // Handle API routes
-  if (pathname.startsWith("/api/")) {
-    // Check if API route is public
+    // Handle API routes
+    if (pathname.startsWith("/api/")) {
+      // Check if API route is public
+      if (isPublicRoute(pathname)) {
+        return NextResponse.next()
+      }
+
+      // For protected API routes, validate session
+      const sessionId = request.cookies.get("session-id")?.value
+      
+      let user = null
+      try {
+        user = await getSessionUser(sessionId)
+      } catch (error) {
+        // Database error - treat as no session
+        console.error("[MIDDLEWARE] Database error in session validation:", error)
+        user = null
+      }
+
+      if (!user) {
+        const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        response.cookies.delete("session-id")
+        return response
+      }
+
+      // Check admin API routes
+      if (pathname.startsWith("/api/admin")) {
+        if (user.role !== "admin") {
+          return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 })
+        }
+      }
+
+      return NextResponse.next()
+    }
+
+    // Handle page routes
+    // Check if route is public
     if (isPublicRoute(pathname)) {
       return NextResponse.next()
     }
 
-    // For protected API routes, validate session
+    // For protected page routes, validate session
     const sessionId = request.cookies.get("session-id")?.value
-    const user = await getSessionUser(sessionId)
+
+    if (!sessionId) {
+      // No session cookie - redirect to login
+      const loginUrl = new URL("/login", request.url)
+      loginUrl.searchParams.set("callbackUrl", encodeURIComponent(request.url))
+      return NextResponse.redirect(loginUrl)
+    }
+
+    // Validate session
+    let user = null
+    try {
+      user = await getSessionUser(sessionId)
+    } catch (error) {
+      // Database error - treat as no session
+      console.error("[MIDDLEWARE] Database error in session validation:", error)
+      user = null
+    }
 
     if (!user) {
-      const response = NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      // Invalid or expired session - clear cookie and redirect
+      const response = NextResponse.redirect(new URL("/login", request.url))
       response.cookies.delete("session-id")
       return response
     }
 
-    // Check admin API routes
-    if (pathname.startsWith("/api/admin")) {
+    // Check admin routes
+    if (pathname.startsWith("/admin")) {
       if (user.role !== "admin") {
-        return NextResponse.json({ error: "Forbidden - Admin access required" }, { status: 403 })
+        return NextResponse.redirect(new URL("/dashboard", request.url))
       }
     }
 
+    // Session is valid - allow request
     return NextResponse.next()
-  }
-
-  // Handle page routes
-  // Check if route is public
-  if (isPublicRoute(pathname)) {
-    return NextResponse.next()
-  }
-
-  // For protected page routes, validate session
-  const sessionId = request.cookies.get("session-id")?.value
-
-  if (!sessionId) {
-    // No session cookie - redirect to login
-    const loginUrl = new URL("/login", request.url)
-    loginUrl.searchParams.set("callbackUrl", encodeURIComponent(request.url))
-    return NextResponse.redirect(loginUrl)
-  }
-
-  // Validate session
-  const user = await getSessionUser(sessionId)
-
-  if (!user) {
-    // Invalid or expired session - clear cookie and redirect
-    const response = NextResponse.redirect(new URL("/login", request.url))
-    response.cookies.delete("session-id")
-    return response
-  }
-
-  // Check admin routes
-  if (pathname.startsWith("/admin")) {
-    if (user.role !== "admin") {
-      return NextResponse.redirect(new URL("/dashboard", request.url))
+  } catch (error) {
+    // Catch any unexpected errors in middleware
+    console.error("[MIDDLEWARE] Unexpected error:", error)
+    // For API routes, return error response
+    if (request.nextUrl.pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "Internal server error" },
+        { status: 500 }
+      )
     }
+    // For page routes, allow through (let Next.js handle it)
+    return NextResponse.next()
   }
-
-  // Session is valid - allow request
-  return NextResponse.next()
 }
 
 export const config = {
