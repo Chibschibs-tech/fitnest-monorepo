@@ -1,6 +1,6 @@
 # Database Schema Documentation
 
-**Last Updated:** 2025-12-13T17:47:07.165Z
+**Last Updated:** 2025-12-24T16:30:59.765Z
 
 ## Schema Source
 
@@ -20,14 +20,8 @@ The database schema is defined in `packages/db/src/schema.ts` using Drizzle ORM.
 ### plan_variants
 - **Variable:** `planVariants`
 
-### meal_plan_meals
-- **Variable:** `mealPlanMeals`
-
-### subscriptions
-- **Variable:** `subscriptions`
-
-### deliveries
-- **Variable:** `deliveries`
+### content_hero
+- **Variable:** `contentHero`
 
 
 ## Notes

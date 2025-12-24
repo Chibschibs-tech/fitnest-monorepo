@@ -1,17 +1,21 @@
 # API Documentation
 
-**Last Updated:** 2025-12-13T17:47:07.151Z
-**Total Routes:** 135
+**Last Updated:** 2025-12-24T16:30:59.757Z
+**Total Routes:** 162
 
 ## Overview
 
 This document is automatically generated from the codebase. It lists all API routes available in the FitNest application.
 
-## Public API Routes (135)
+## Public API Routes (161)
 
 ### /apiadmin/bootstrap
 - **Methods:** POST
 - **File:** `\apps\web\app\api\admin\bootstrap\route.ts`
+
+### /apiadmin/content/hero
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\admin\content\hero\route.ts`
 
 ### /apiadmin/coupons
 - **Methods:** GET, POST
@@ -22,12 +26,28 @@ This document is automatically generated from the codebase. It lists all API rou
 - **File:** `\apps\web\app\api\admin\create-sample-data\route.ts`
 
 ### /apiadmin/customers
-- **Methods:** GET
+- **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\customers\route.ts`
 
 ### /apiadmin/customers/[id]
-- **Methods:** GET
+- **Methods:** GET, PUT, DELETE
 - **File:** `\apps\web\app\api\admin\customers\[id]\route.ts`
+
+### /apiadmin/customers/[id]/notes
+- **Methods:** PUT
+- **File:** `\apps\web\app\api\admin\customers\[id]\notes\route.ts`
+
+### /apiadmin/customers/[id]/status
+- **Methods:** PUT
+- **File:** `\apps\web\app\api\admin\customers\[id]\status\route.ts`
+
+### /apiadmin/customers/[id]/subscriptions
+- **Methods:** GET
+- **File:** `\apps\web\app\api\admin\customers\[id]\subscriptions\route.ts`
+
+### /apiadmin/customers/[id]/subscriptions/create
+- **Methods:** POST
+- **File:** `\apps\web\app\api\admin\customers\[id]\subscriptions\create\route.ts`
 
 ### /apiadmin/dashboard
 - **Methods:** GET
@@ -69,6 +89,10 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\meal-plans\route.ts`
 
+### /apiadmin/meal-plans/[id]/variants
+- **Methods:** GET
+- **File:** `\apps\web\app\api\admin\meal-plans\[id]\variants\route.ts`
+
 ### /apiadmin/meal-plans/id
 - **Methods:** PUT, DELETE
 - **File:** `\apps\web\app\api\admin\meal-plans\id\route.ts`
@@ -88,6 +112,18 @@ This document is automatically generated from the codebase. It lists all API rou
 ### /apiadmin/meals/id
 - **Methods:** PUT, DELETE
 - **File:** `\apps\web\app\api\admin\meals\id\route.ts`
+
+### /apiadmin/migrate-to-mp-categories
+- **Methods:** POST
+- **File:** `\apps\web\app\api\admin\migrate-to-mp-categories\route.ts`
+
+### /apiadmin/mp-categories
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\admin\mp-categories\route.ts`
+
+### /apiadmin/mp-categories/[id]
+- **Methods:** GET, PUT, DELETE
+- **File:** `\apps\web\app\api\admin\mp-categories\[id]\route.ts`
 
 ### /apiadmin/orders
 - **Methods:** GET
@@ -149,6 +185,14 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** PUT, DELETE
 - **File:** `\apps\web\app\api\admin\products\accessories\[id]\route.ts`
 
+### /apiadmin/products/accessories/bulk
+- **Methods:** POST
+- **File:** `\apps\web\app\api\admin\products\accessories\bulk\route.ts`
+
+### /apiadmin/products/accessories/export
+- **Methods:** GET
+- **File:** `\apps\web\app\api\admin\products\accessories\export\route.ts`
+
 ### /apiadmin/products/express-shop
 - **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\express-shop\route.ts`
@@ -157,6 +201,14 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** PUT, DELETE
 - **File:** `\apps\web\app\api\admin\products\express-shop\[id]\route.ts`
 
+### /apiadmin/products/express-shop/bulk
+- **Methods:** POST
+- **File:** `\apps\web\app\api\admin\products\express-shop\bulk\route.ts`
+
+### /apiadmin/products/express-shop/export
+- **Methods:** GET
+- **File:** `\apps\web\app\api\admin\products\express-shop\export\route.ts`
+
 ### /apiadmin/products/meal-plans
 - **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\meal-plans\route.ts`
@@ -164,6 +216,22 @@ This document is automatically generated from the codebase. It lists all API rou
 ### /apiadmin/products/meal-plans/[id]
 - **Methods:** GET, PUT, DELETE
 - **File:** `\apps\web\app\api\admin\products\meal-plans\[id]\route.ts`
+
+### /apiadmin/products/meal-plans/[id]/meals
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\admin\products\meal-plans\[id]\meals\route.ts`
+
+### /apiadmin/products/meal-plans/[id]/meals/[assignmentId]
+- **Methods:** PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\meal-plans\[id]\meals\[assignmentId]\route.ts`
+
+### /apiadmin/products/meal-plans/[id]/variants
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\admin\products\meal-plans\[id]\variants\route.ts`
+
+### /apiadmin/products/meal-plans/[id]/variants/[variantId]
+- **Methods:** PUT, DELETE
+- **File:** `\apps\web\app\api\admin\products\meal-plans\[id]\variants\[variantId]\route.ts`
 
 ### /apiadmin/products/meals
 - **Methods:** GET, POST
@@ -177,6 +245,14 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** PATCH
 - **File:** `\apps\web\app\api\admin\products\meals\[id]\status\route.ts`
 
+### /apiadmin/products/meals/bulk
+- **Methods:** POST
+- **File:** `\apps\web\app\api\admin\products\meals\bulk\route.ts`
+
+### /apiadmin/products/meals/export
+- **Methods:** GET
+- **File:** `\apps\web\app\api\admin\products\meals\export\route.ts`
+
 ### /apiadmin/products/snacks
 - **Methods:** GET, POST
 - **File:** `\apps\web\app\api\admin\products\snacks\route.ts`
@@ -184,6 +260,14 @@ This document is automatically generated from the codebase. It lists all API rou
 ### /apiadmin/products/snacks/[id]
 - **Methods:** PUT, DELETE
 - **File:** `\apps\web\app\api\admin\products\snacks\[id]\route.ts`
+
+### /apiadmin/products/snacks/bulk
+- **Methods:** POST
+- **File:** `\apps\web\app\api\admin\products\snacks\bulk\route.ts`
+
+### /apiadmin/products/snacks/export
+- **Methods:** GET
+- **File:** `\apps\web\app\api\admin\products\snacks\export\route.ts`
 
 ### /apiadmin/setup-unified-cart
 - **Methods:** POST
@@ -345,6 +429,10 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** GET
 - **File:** `\apps\web\app\api\direct-seed-products\route.ts`
 
+### /apiemail-diagnostic
+- **Methods:** GET
+- **File:** `\apps\web\app\api\email-diagnostic\route.ts`
+
 ### /apiensure-cart-table
 - **Methods:** GET
 - **File:** `\apps\web\app\api\ensure-cart-table\route.ts`
@@ -505,9 +593,17 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** POST
 - **File:** `\apps\web\app\api\subscriptions\create\route.ts`
 
+### /apitest-blob
+- **Methods:** GET
+- **File:** `\apps\web\app\api\test-blob\route.ts`
+
 ### /apitest-cart-system
 - **Methods:** GET
 - **File:** `\apps\web\app\api\test-cart-system\route.ts`
+
+### /apitest-email
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\test-email\route.ts`
 
 ### /apiupdate-ingredient
 - **Methods:** POST
@@ -545,19 +641,30 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** POST
 - **File:** `\apps\web\app\api\waitlist-email\route.ts`
 
+### /apiwaitlist-hero-image
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\waitlist-hero-image\route.ts`
+
 ### /apiwaitlist-simple
 - **Methods:** POST
 - **File:** `\apps\web\app\api\waitlist-simple\route.ts`
+
+### /apiwaitlist/check
+- **Methods:** GET
+- **File:** `\apps\web\app\api\waitlist\check\route.ts`
 
 
 ## Admin API Routes (0)
 
 
 
-## Debug/Test Routes (0)
+## Debug/Test Routes (1)
 
 ⚠️ **These routes should be removed or protected in production**
 
+### /apiauth/debug-login
+- **Methods:** GET, POST
+- **File:** `\apps\web\app\api\auth\debug-login\route.ts`
 
 
 ---
