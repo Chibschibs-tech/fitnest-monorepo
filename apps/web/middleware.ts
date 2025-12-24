@@ -42,6 +42,7 @@ const publicRoutes = [
   "/api/test-blob",
   "/api/test-email",
   "/api/email-diagnostic",
+  "/api/deployment-check",
   "/about",
   "/blog",
   "/blog/[slug]",
