@@ -58,7 +58,7 @@ export default function Home() {
         }}
       >
         <Image
-          src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/hero%20banner"
+          src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
           alt="Fitnest.ma Hero Banner"
           fill
           className="object-cover object-center"
