@@ -15,10 +15,27 @@ export async function GET() {
       ? process.env.BLOB_READ_WRITE_TOKEN.substring(0, 10) + "..." 
       : "NOT SET"
     
-    // List blobs to verify connection
+    // List blobs to verify connection - get more to find Images folder
     const { blobs } = await list({
-      limit: 10,
+      limit: 100,
+      prefix: 'Images/',
     })
+
+    // Also try to get all images
+    let allBlobs = []
+    try {
+      const allBlobsResult = await list({ limit: 200 })
+      allBlobs = allBlobsResult.blobs.filter(b => 
+        b.pathname.toLowerCase().includes('hero') || 
+        b.pathname.toLowerCase().includes('image')
+      ).map((blob) => ({
+        url: blob.url,
+        pathname: blob.pathname,
+        size: blob.size,
+      }))
+    } catch (err) {
+      console.log("Error listing all blobs:", err)
+    }
 
     return NextResponse.json({
       success: true,
@@ -30,6 +47,7 @@ export async function GET() {
         size: blob.size,
         uploadedAt: blob.uploadedAt,
       })),
+      heroImages: allBlobs,
       environmentVariables: {
         BLOB_READ_WRITE_TOKEN: {
           exists: hasToken,
