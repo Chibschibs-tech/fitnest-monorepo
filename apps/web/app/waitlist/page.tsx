@@ -115,7 +115,7 @@ export default function WaitlistPage() {
         {/* Background Image - Full Screen */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest"
+            src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20waitlist"
             alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
             fill
             className="object-cover"
