@@ -10,6 +10,23 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'kjfqnhte2vxtsffe.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'obtmksfewry4ishp.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
+    ],
   },
 }
 
