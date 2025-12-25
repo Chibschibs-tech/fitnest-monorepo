@@ -57,12 +57,20 @@ export default function Home() {
           zIndex: 0
         }}
       >
-        <img
-          src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
-          alt="Fitnest.ma Hero Banner"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-          style={{ zIndex: 0 }}
-        />
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
+            alt="Fitnest.ma Hero Banner"
+            className="w-full h-full object-cover object-center"
+            style={{ zIndex: 0 }}
+            onError={(e) => {
+              // Fallback if image doesn't load
+              console.error("Hero image failed to load:", e)
+              const target = e.target as HTMLImageElement
+              target.style.display = 'none'
+            }}
+          />
+        </div>
         <div className="relative z-10 container mx-auto px-4 pb-8 sm:pb-12 md:pb-16">
           <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4">
             <Link href="/meal-plans">
