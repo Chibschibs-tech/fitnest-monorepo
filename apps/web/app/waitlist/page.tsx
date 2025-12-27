@@ -114,11 +114,21 @@ export default function WaitlistPage() {
       <section className="relative overflow-hidden min-h-screen flex items-center" style={{ marginTop: 0 }}>
         {/* Background Image - Full Screen */}
         <div className="absolute inset-0 z-0">
+          {/* Mobile Hero Image */}
+          <Image
+            src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/hero-waitlist-mobile.jpeg"
+            alt="Healthy meal plan delivery service - Fresh, nutritious meal plans prepared with care"
+            fill
+            className="object-cover md:hidden"
+            priority
+            quality={90}
+          />
+          {/* Desktop Hero Image */}
           <Image
             src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20waitlist"
-            alt="Healthy meal delivery service in Morocco - Fresh, nutritious meals prepared with care"
+            alt="Healthy meal plan delivery service - Fresh, nutritious meal plans prepared with care"
             fill
-            className="object-cover"
+            className="object-cover hidden md:block"
             priority
             quality={90}
           />
@@ -126,19 +136,19 @@ export default function WaitlistPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black/20" />
         </div>
         
-        <div className="relative z-10 container mx-auto px-4 py-16 lg:py-24 w-full h-full">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16 lg:py-24 w-full h-full">
           {/* Content - Positioned on the white section (left side) */}
           <div className="max-w-2xl lg:max-w-xl xl:max-w-2xl" style={{ marginLeft: 0, marginRight: 'auto' }}>
-            <div className="space-y-4 lg:space-y-6">
-              <div className="space-y-3 lg:space-y-4">
-                <Badge className="bg-fitnest-green/10 text-fitnest-green border-fitnest-green/20 hover:bg-fitnest-green/20 rounded-full px-3 py-1 text-xs lg:text-sm">
+            <div className="space-y-3 sm:space-y-4 lg:space-y-6">
+              <div className="space-y-2 sm:space-y-3 lg:space-y-4">
+                <Badge className="bg-fitnest-green/10 text-fitnest-green border-fitnest-green/20 hover:bg-fitnest-green/20 rounded-full px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs lg:text-sm">
                   Nouvelles recettes chaque semaine
                 </Badge>
-                <h1 className="text-2xl sm:text-3xl lg:text-5xl xl:text-6xl font-bold leading-tight text-gray-900">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-tight text-gray-900">
                   {t.waitlist.hero.title}
                   <span className="text-fitnest-orange"> {t.waitlist.hero.titleHighlight}</span>
                 </h1>
-                <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-700 leading-relaxed">
+                <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-gray-700 leading-relaxed">
                   {t.waitlist.hero.description}
                 </p>
               </div>
@@ -146,7 +156,7 @@ export default function WaitlistPage() {
               {/* CTA Button - Visible on first screen */}
               <Button
                 onClick={scrollToForm}
-                className="w-full sm:w-auto bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full px-6 py-4 sm:px-8 sm:py-6 text-sm sm:text-base lg:text-lg font-semibold shadow-lg hover:shadow-xl"
+                className="w-full sm:w-auto bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full px-5 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6 text-xs sm:text-sm md:text-base lg:text-lg font-semibold shadow-lg hover:shadow-xl"
               >
                 {t.waitlist.form.submit}
               </Button>
@@ -179,12 +189,12 @@ export default function WaitlistPage() {
       </section>
 
       {/* Waitlist Form Section - Below hero, requires scroll */}
-      <section id="waitlist-form" className="relative bg-gradient-to-br from-fitnest-green via-fitnest-green/90 to-fitnest-green/80 py-8 lg:py-16">
+      <section id="waitlist-form" className="relative bg-gradient-to-br from-fitnest-green via-fitnest-green/90 to-fitnest-green/80 py-6 sm:py-8 md:py-12 lg:py-16">
         <div className="absolute inset-0 bg-black/10" />
-        <div className="relative container mx-auto px-4">
+        <div className="relative container mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mx-auto">
             <Card className="bg-white/10 backdrop-blur-md border-white/20 shadow-lg">
-              <CardContent className="p-4 sm:p-6">
+              <CardContent className="p-4 sm:p-5 md:p-6">
                 {success ? (
                   <div className="text-center space-y-4">
                     <CheckCircle2 className="h-12 w-12 text-fitnest-orange mx-auto" />
@@ -198,9 +208,9 @@ export default function WaitlistPage() {
                         <AlertDescription className="text-red-800">{error}</AlertDescription>
                       </Alert>
                     )}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-white/90 text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                      <div className="space-y-1.5 sm:space-y-2">
+                        <Label htmlFor="firstName" className="text-white/90 text-xs sm:text-sm">
                           {t.waitlist.form.firstName}
                         </Label>
                         <Input
@@ -317,9 +327,9 @@ export default function WaitlistPage() {
       </section>
 
       {/* Social Proof */}
-      <section className="py-8 sm:py-12 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-8 text-center">
+      <section className="py-6 sm:py-8 md:py-10 lg:py-12 bg-white border-b">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-center">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 sm:h-6 sm:w-6 text-fitnest-green" />
               <span className="text-base sm:text-lg font-semibold text-gray-900">{t.waitlist.socialProof.waitlistCount}</span>
@@ -337,16 +347,16 @@ export default function WaitlistPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t.waitlist.howItWorks.title}</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">{t.waitlist.howItWorks.title}</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2">
               {t.waitlist.howItWorks.subtitle}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <Card className="text-center p-6 sm:p-8 hover:shadow-lg transition-shadow border-0 shadow-md">
               <CardContent className="space-y-3 sm:space-y-4">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-fitnest-green/10 rounded-full flex items-center justify-center mx-auto">
@@ -387,16 +397,16 @@ export default function WaitlistPage() {
       </section>
 
       {/* Meal Plans Preview */}
-      <section className="py-12 sm:py-16 lg:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t.waitlist.mealPlans.title}</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">{t.waitlist.mealPlans.title}</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2">
               {t.waitlist.mealPlans.subtitle}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <Card className="overflow-hidden hover:shadow-xl transition-shadow border-0 shadow-md">
               <div className="relative h-40 sm:h-48 bg-gradient-to-br from-fitnest-green/20 to-fitnest-green/10">
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -486,14 +496,14 @@ export default function WaitlistPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t.waitlist.testimonials.title}</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600">{t.waitlist.testimonials.subtitle}</p>
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">{t.waitlist.testimonials.title}</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 px-2">{t.waitlist.testimonials.subtitle}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <Card className="p-6 border-0 shadow-md">
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-1">
@@ -564,16 +574,16 @@ export default function WaitlistPage() {
       </section>
 
       {/* Features */}
-      <section className="py-12 sm:py-16 lg:py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t.waitlist.features.title}</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">{t.waitlist.features.title}</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2">
               {t.waitlist.features.subtitle}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             <div className="text-center space-y-3 sm:space-y-4">
               <div className="w-14 h-14 sm:w-16 sm:h-16 bg-fitnest-green/10 rounded-full flex items-center justify-center mx-auto">
                 <Heart className="h-7 w-7 sm:h-8 sm:w-8 text-fitnest-green" />
@@ -608,14 +618,14 @@ export default function WaitlistPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t.waitlist.faq.title}</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600">{t.waitlist.faq.subtitle}</p>
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">{t.waitlist.faq.title}</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 px-2">{t.waitlist.faq.subtitle}</p>
           </div>
 
-          <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6">
+          <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4 md:space-y-6">
             <Card className="border-0 shadow-md">
               <CardContent className="p-4 sm:p-6">
                 <h3 className="text-base sm:text-lg font-semibold mb-2">{t.waitlist.faq.q1.question}</h3>
@@ -665,11 +675,11 @@ export default function WaitlistPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-fitnest-green to-fitnest-green/90">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-2xl mx-auto space-y-6 sm:space-y-8 text-white">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold">{t.waitlist.cta.title}</h2>
-            <p className="text-base sm:text-lg lg:text-xl text-white/90">
+      <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-r from-fitnest-green to-fitnest-green/90">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 text-white">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold">{t.waitlist.cta.title}</h2>
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 px-2">
               {t.waitlist.cta.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">

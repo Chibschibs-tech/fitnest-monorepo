@@ -57,11 +57,21 @@ export default function Home() {
           zIndex: 0
         }}
       >
+        {/* Mobile Hero Image */}
+        <Image
+          src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Fintest-Hompegae-mobile.jpg"
+          alt="Fitnest.ma Hero Banner - Mobile"
+          fill
+          className="object-cover object-center md:hidden"
+          priority
+          sizes="100vw"
+        />
+        {/* Desktop Hero Image */}
         <Image
           src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
-          alt="Fitnest.ma Hero Banner"
+          alt="Fitnest.ma Hero Banner - Desktop"
           fill
-          className="object-cover object-center"
+          className="object-cover object-center hidden md:block"
           priority
           sizes="100vw"
         />

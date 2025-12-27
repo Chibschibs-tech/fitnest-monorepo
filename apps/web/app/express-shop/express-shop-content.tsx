@@ -125,7 +125,7 @@ export function ExpressShopContent({
   }, [clientSideFetch, retryCount])
 
   // Extract unique categories from products
-  const categories = ["all", ...new Set(products.map((product) => product.category).filter(Boolean))]
+  const categories = ["all", ...Array.from(new Set(products.map((product) => product.category).filter(Boolean)))]
 
   const filteredProducts =
     activeCategory === "all" ? products : products.filter((product) => product.category === activeCategory)

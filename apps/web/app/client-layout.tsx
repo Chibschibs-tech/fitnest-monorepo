@@ -22,7 +22,7 @@ export function ClientLayout({
       <div className="flex min-h-screen flex-col relative">
         {!isWaitlistPage && <Navbar />}
         <main className={isHomePage ? "flex-1 p-0" : isWaitlistPage ? "flex-1 p-0" : "flex-1 pt-20"}>{children}</main>
-        <Footer />
+        {!isWaitlistPage && <Footer />}
       </div>
     </Providers>
   )

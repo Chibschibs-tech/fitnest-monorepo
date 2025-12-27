@@ -107,6 +107,7 @@ const publicRoutes = [
   "/api/health",
   "/api/health-check",
   "/api/db-diagnostic",
+  "/api/db-audit",
 ]
 
 // Check if route is public

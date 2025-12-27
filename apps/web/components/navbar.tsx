@@ -108,7 +108,7 @@ export default function Navbar() {
             <div className="flex items-center" style={{ gap: "3rem" }}>
               <Link href="/" className="flex items-center space-x-2">
                 <Image
-                  src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"
+                  src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert.png"
                   alt="Fitnest.ma Logo"
                   width={150}
                   height={50}
@@ -175,7 +175,7 @@ export default function Navbar() {
               }
         }>
           <Image
-            src="https://obtmksfewry4ishp.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert-v412yUnhxctld0VkvDHD8wXh8H2GMQ.png"
+            src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert.png"
             alt="Fitnest.ma Logo"
             width={150}
             height={50}

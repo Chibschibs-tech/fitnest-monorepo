@@ -167,9 +167,9 @@ export const translations = {
     waitlist: {
       hero: {
         badge: 'Nouvelles recettes chaque semaine',
-        title: 'Vos repas sains,',
+        title: 'Vos plans repas sains,',
         titleHighlight: 'livrés frais',
-        description: 'Rejoignez la communauté Fitnest et transformez votre santé avec des repas préparés par des chefs, équilibrés sur le plan nutritionnel, livrés directement à votre porte au Maroc.',
+        description: 'Rejoignez la communauté Fitnest et transformez votre santé avec des plans repas préparés par des chefs, équilibrés sur le plan nutritionnel, livrés directement à votre porte.',
         chefPrepared: 'Préparé par des chefs',
         freshIngredients: 'Ingrédients frais',
         freeDelivery: 'Livraison gratuite',
@@ -207,11 +207,11 @@ export const translations = {
         },
         step2: {
           title: 'Nous préparons et cuisinons',
-          description: 'Nos chefs préparent vos repas avec des ingrédients frais et locaux et un équilibre nutritionnel précis',
+          description: 'Nos chefs préparent vos plans repas avec des ingrédients frais et locaux et un équilibre nutritionnel précis',
         },
         step3: {
           title: 'Livré frais',
-          description: 'Recevez vos repas livrés frais à votre porte, prêts à réchauffer et à déguster',
+          description: 'Recevez vos plans repas livrés frais à votre porte, prêts à réchauffer et à déguster',
         },
       },
       mealPlans: {
@@ -219,7 +219,7 @@ export const translations = {
         subtitle: 'Des plans de repas conçus scientifiquement pour vous aider à atteindre vos objectifs de santé',
         lowCarb: {
           title: 'Low Carb',
-          description: 'Repas équilibrés avec une teneur réduite en glucides',
+          description: 'Plans repas équilibrés avec une teneur réduite en glucides',
           calories: 'Calories:',
           caloriesValue: '1,200-1,500/jour',
           protein: 'Protéines:',
@@ -251,29 +251,29 @@ export const translations = {
       },
       testimonials: {
         title: 'Ce que disent nos testeurs bêta',
-        subtitle: 'Vrais retours d\'utilisateurs qui ont testé nos repas',
+        subtitle: 'Vrais retours d\'utilisateurs qui ont testé nos plans repas',
         testimonial1: {
-          text: 'J\'ai testé les repas pendant la phase bêta et ils étaient absolument délicieux ! Les saveurs sont riches et authentiques. J\'ai complètement arrêté de perdre du temps à essayer de comprendre ma routine alimentaire.',
+          text: 'J\'ai testé les plans repas pendant la phase bêta et ils étaient absolument délicieux ! Les saveurs sont riches et authentiques. J\'ai complètement arrêté de perdre du temps à essayer de comprendre ma routine alimentaire.',
           author: 'Aicha M.',
           location: 'Casablanca',
         },
         testimonial2: {
-          text: 'L\'expérience était si satisfaisante ! Chaque repas que j\'ai testé était parfaitement préparé et nutritif. Je ne passe plus des heures à planifier les repas et à faire les courses. Fitnest a transformé ma routine quotidienne.',
+          text: 'L\'expérience était si satisfaisante ! Chaque plan repas que j\'ai testé était parfaitement préparé et nutritif. Je ne passe plus des heures à planifier les plans repas et à faire les courses. Fitnest a transformé ma routine quotidienne.',
           author: 'Youssef K.',
           location: 'Rabat',
         },
         testimonial3: {
-          text: 'J\'ai fait partie du programme de test bêta et les repas ont dépassé mes attentes. Délicieux, frais et parfaitement portionnés. J\'ai arrêté de perdre du temps sur la préparation des repas et je peux me concentrer sur ce qui compte le plus.',
+          text: 'J\'ai fait partie du programme de test bêta et les plans repas ont dépassé mes attentes. Délicieux, frais et parfaitement portionnés. J\'ai arrêté de perdre du temps sur la préparation des plans repas et je peux me concentrer sur ce qui compte le plus.',
           author: 'Fatima Z.',
           location: 'Marrakech',
         },
       },
       features: {
         title: 'Pourquoi choisir Fitnest ?',
-        subtitle: 'Nous nous engageons à offrir la meilleure expérience de repas au Maroc',
+        subtitle: 'Nous nous engageons à offrir la meilleure expérience de plans repas',
         madeWithLove: {
           title: 'Fait avec amour',
-          description: 'Chaque repas est préparé avec soin par nos chefs passionnés en utilisant des techniques de cuisine marocaine traditionnelles',
+          description: 'Chaque plan repas est préparé avec soin par nos chefs passionnés en utilisant des techniques de cuisine marocaine traditionnelles',
         },
         foodSafety: {
           title: 'Sécurité alimentaire d\'abord',
@@ -285,7 +285,7 @@ export const translations = {
         },
         nutritionistApproved: {
           title: 'Approuvé par des nutritionnistes',
-          description: 'Tous les repas sont conçus par des nutritionnistes certifiés pour assurer un équilibre optimal des macro et micronutriments',
+          description: 'Tous les plans repas sont conçus par des nutritionnistes certifiés pour assurer un équilibre optimal des macro et micronutriments',
         },
       },
       faq: {
@@ -300,21 +300,21 @@ export const translations = {
           answer: 'À partir de 145 dhs par jour, vous pouvez commencer votre parcours avec Fitnest. Les membres de la waitlist bénéficient de 20% de réduction sur leur premier mois lors du lancement.',
         },
         q3: {
-          question: 'Puis-je personnaliser mes repas ?',
-          answer: 'Oui ! Vous pouvez spécifier des restrictions alimentaires, des allergies et des préférences alimentaires. Nos chefs personnaliseront vos repas en conséquence.',
+          question: 'Puis-je personnaliser mes plans repas ?',
+          answer: 'Oui ! Vous pouvez spécifier des restrictions alimentaires, des allergies et des préférences alimentaires. Nos chefs personnaliseront vos plans repas en conséquence.',
         },
         q4: {
           question: 'À quelle fréquence livrez-vous ?',
-          answer: 'Nous livrons des repas frais 2 à 3 fois par semaine pour garantir une fraîcheur maximale. Vous pouvez choisir vos jours et heures de livraison préférés.',
+          answer: 'Nous livrons des plans repas frais 2 à 3 fois par semaine pour garantir une fraîcheur maximale. Vous pouvez choisir vos jours et heures de livraison préférés.',
         },
         q5: {
-          question: 'Que se passe-t-il si je n\'aime pas un repas ?',
-          answer: 'Nous offrons une garantie de satisfaction à 100%. Si vous n\'êtes pas satisfait d\'un repas, nous le remplacerons ou vous rembourserons intégralement.',
+          question: 'Que se passe-t-il si je n\'aime pas un plan repas ?',
+          answer: 'Nous offrons une garantie de satisfaction à 100%. Si vous n\'êtes pas satisfait d\'un plan repas, nous le remplacerons ou vous rembourserons intégralement.',
         },
       },
       cta: {
         title: 'Prêt à transformer votre santé ?',
-        description: 'Rejoignez 46 personnes qui sont déjà sur la waitlist pour l\'avenir de l\'alimentation saine au Maroc.',
+        description: 'Rejoignez 46 personnes qui sont déjà sur la waitlist pour l\'avenir de l\'alimentation saine.',
         joinNow: 'Rejoindre la waitlist maintenant',
         learnMore: 'En savoir plus',
         privacy: 'Pas de spam, jamais. Désabonnez-vous à tout moment. Accès anticipé garanti pour les membres de la waitlist.',
@@ -322,6 +322,130 @@ export const translations = {
       waitlistReason: {
         title: 'Pourquoi une waitlist ?',
         description: 'Pour garantir la qualité de nos processus et rester cohérents, nous limitons actuellement les nouvelles inscriptions et ajoutons de nouveaux membres chaque semaine en raison de la surcharge que nous recevons. C\'est pourquoi nous avons mis en place une waitlist.',
+      },
+    },
+    footer: {
+      description: 'Plans repas sains livrés, adaptés à vos objectifs.',
+      navigation: 'Navigation',
+      company: 'Entreprise',
+      legal: 'Légal',
+      contact: 'Contact',
+      followUs: 'Suivez-nous',
+      mealPlans: 'Plans Repas',
+      howItWorks: 'Comment ça marche',
+      blog: 'Blog',
+      about: 'À propos',
+      contactUs: 'Contactez-nous',
+      waitlist: 'Waitlist',
+      terms: 'CGU',
+      privacy: 'Confidentialité',
+      legalMentions: 'Mentions légales',
+      copyright: 'Tous droits réservés',
+      rights: '© {year} Fitnest. Tous droits réservés.',
+    },
+    legal: {
+      terms: {
+        title: 'Conditions Générales d\'Utilisation',
+        lastUpdated: 'Dernière mise à jour',
+        introduction: {
+          title: '1. Introduction',
+          content: 'Bienvenue sur Fitnest. Ces Conditions Générales d\'Utilisation régissent votre utilisation de notre site web, application mobile et services. En accédant ou en utilisant Fitnest, vous acceptez d\'être lié par ces Conditions. Si vous n\'êtes pas d\'accord avec une partie de ces conditions, vous ne pouvez pas accéder à nos services.',
+        },
+        definitions: {
+          title: '2. Définitions',
+          service: 'Le "Service" fait référence au service de préparation et de livraison de repas fourni par Fitnest.',
+          user: 'L\'"Utilisateur" fait référence à la personne qui accède ou utilise le Service, qu\'il s\'agisse d\'un utilisateur enregistré ou d\'un invité.',
+          subscription: 'L\'"Abonnement" fait référence au service de plan de repas récurrent proposé par Fitnest.',
+        },
+        account: {
+          title: '3. Inscription au compte',
+          content1: 'Pour utiliser certaines fonctionnalités de notre Service, vous pouvez être amené à créer un compte. Vous acceptez de fournir des informations exactes, actuelles et complètes lors du processus d\'inscription et de mettre à jour ces informations pour les garder exactes, actuelles et complètes.',
+          content2: 'Vous êtes responsable de la protection du mot de passe que vous utilisez pour accéder au Service et de toutes les activités ou actions effectuées sous votre mot de passe. Nous vous encourageons à utiliser un mot de passe fort (en utilisant une combinaison de lettres majuscules et minuscules, de chiffres et de symboles) avec votre compte.',
+        },
+        subscriptions: {
+          title: '4. Abonnements et commandes',
+          intro: 'En vous abonnant à nos plans de repas, vous acceptez les conditions suivantes :',
+          item1: 'Les frais d\'abonnement seront facturés automatiquement selon le plan que vous sélectionnez (hebdomadaire, bihebdomadaire ou mensuel).',
+          item2: 'Vous pouvez modifier ou annuler votre abonnement à tout moment via les paramètres de votre compte ou en contactant notre service client au moins 48 heures avant votre prochaine livraison prévue.',
+          item3: 'Les modifications de votre abonnement, y compris l\'adresse de livraison, les préférences de repas ou le calendrier de livraison, doivent être effectuées au moins 48 heures avant votre livraison prévue.',
+          item4: 'Nous nous réservons le droit d\'ajuster les prix de nos abonnements avec un préavis raisonnable aux abonnés.',
+        },
+        delivery: {
+          title: '5. Livraison',
+          intro: 'Fitnest livrera les repas à l\'adresse fournie par l\'Utilisateur lors du processus de commande. En utilisant notre Service, vous acceptez ce qui suit :',
+          item1: 'Vous fournirez des informations de livraison exactes, y compris l\'adresse et les coordonnées.',
+          item2: 'Vous ou une personne autorisée par vous serez disponible pour recevoir la livraison pendant la fenêtre de livraison spécifiée.',
+          item3: 'Si personne n\'est disponible pour recevoir la livraison, nous laisserons le colis à la porte s\'il est sûr de le faire, ou suivrons vos instructions de livraison si fournies.',
+          item4: 'Fitnest n\'est pas responsable du vol, des dommages ou de la détérioration après que la livraison ait été effectuée.',
+          item5: 'Les délais de livraison sont des estimations et peuvent varier en fonction de la circulation, des conditions météorologiques ou d\'autres circonstances imprévues.',
+        },
+        contact: {
+          title: '11. Contactez-nous',
+          intro: 'Si vous avez des questions concernant ces Conditions, veuillez nous contacter à :',
+          email: 'Email: contact@fitnest.ma',
+          phone: 'Téléphone: +212 522 123 456',
+          address: 'Adresse: 123 Nutrition St, Casablanca, Maroc',
+        },
+      },
+      privacy: {
+        title: 'Politique de Confidentialité',
+        lastUpdated: 'Dernière mise à jour',
+        introduction: {
+          title: '1. Introduction',
+          content1: 'Chez Fitnest, nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles. Cette Politique de Confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous visitez notre site web, utilisez notre application mobile ou utilisez nos services de livraison de repas.',
+          content2: 'Veuillez lire attentivement cette Politique de Confidentialité. Si vous n\'êtes pas d\'accord avec les termes de cette Politique de Confidentialité, veuillez ne pas accéder à nos services.',
+        },
+        information: {
+          title: '2. Informations que nous collectons',
+          intro: 'Nous collectons plusieurs types d\'informations auprès des utilisateurs de nos services, notamment :',
+          personal: {
+            title: '2.1 Informations personnelles',
+            content: 'Les informations personnelles sont des données qui peuvent être utilisées pour vous identifier directement ou indirectement. Nous pouvons collecter les informations personnelles suivantes :',
+            items: [
+              'Informations de contact (telles que nom, adresse e-mail, numéro de téléphone et adresse de livraison)',
+              'Identifiants de compte (tels que nom d\'utilisateur et mot de passe)',
+              'Informations de paiement (telles que détails de carte de crédit, adresse de facturation)',
+              'Préférences et restrictions alimentaires',
+              'Objectifs de santé et de forme physique',
+              'Historique des commandes et préférences',
+            ],
+          },
+        },
+        contact: {
+          title: '11. Contactez-nous',
+          intro: 'Si vous avez des questions concernant cette Politique de Confidentialité, veuillez nous contacter à :',
+          email: 'Email: contact@fitnest.ma',
+          phone: 'Téléphone: +212 522 123 456',
+          address: 'Adresse: 123 Nutrition St, Casablanca, Maroc',
+        },
+      },
+      legalMentions: {
+        title: 'Mentions Légales',
+        company: {
+          title: 'Informations sur l\'entreprise',
+          name: 'Raison sociale: Fitnest',
+          address: 'Adresse: 123 Nutrition St, Casablanca, Maroc',
+          phone: 'Téléphone: +212 522 123 456',
+          email: 'Email: contact@fitnest.ma',
+        },
+        publication: {
+          title: 'Directeur de publication',
+          name: 'Nom: Chihab Jabri',
+          role: 'Rôle: Directeur de publication',
+        },
+        hosting: {
+          title: 'Hébergement',
+          provider: 'Fournisseur: Vercel Inc.',
+          address: 'Adresse: 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis',
+        },
+        intellectual: {
+          title: 'Propriété intellectuelle',
+          content: 'L\'ensemble de ce site relève de la législation marocaine et internationale sur le droit d\'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les représentations iconographiques et photographiques.',
+        },
+        liability: {
+          title: 'Limitation de responsabilité',
+          content: 'Fitnest ne pourra être tenu responsable des dommages directs et indirects causés au matériel de l\'utilisateur, lors de l\'accès au site, et résultant soit de l\'utilisation d\'un matériel ne répondant pas aux spécifications, soit de l\'apparition d\'un bug ou d\'une incompatibilité.',
+        },
       },
     },
   },
@@ -486,9 +610,9 @@ export const translations = {
     waitlist: {
       hero: {
         badge: 'New recipes every week',
-        title: 'Your Healthy Meals,',
+        title: 'Your Healthy Meal Plans,',
         titleHighlight: 'Delivered Fresh',
-        description: 'Join the Fitnest community and transform your health with chef-prepared, nutritionally balanced meals delivered right to your door in Morocco.',
+        description: 'Join the Fitnest community and transform your health with chef-prepared, nutritionally balanced meal plans delivered right to your door.',
         chefPrepared: 'Chef-Prepared',
         freshIngredients: 'Fresh Ingredients',
         freeDelivery: 'Free Delivery',
@@ -526,11 +650,11 @@ export const translations = {
         },
         step2: {
           title: 'We Prepare & Cook',
-          description: 'Our chefs prepare your meals with fresh, local ingredients and precise nutritional balance',
+          description: 'Our chefs prepare your meal plans with fresh, local ingredients and precise nutritional balance',
         },
         step3: {
           title: 'Delivered Fresh',
-          description: 'Receive your meals delivered fresh to your door, ready to heat and enjoy',
+          description: 'Receive your meal plans delivered fresh to your door, ready to heat and enjoy',
         },
       },
       mealPlans: {
@@ -538,7 +662,7 @@ export const translations = {
         subtitle: 'Scientifically designed meal plans to help you achieve your health goals',
         lowCarb: {
           title: 'Low Carb',
-          description: 'Balanced meals with reduced carbohydrate content',
+          description: 'Balanced meal plans with reduced carbohydrate content',
           calories: 'Calories:',
           caloriesValue: '1,200-1,500/day',
           protein: 'Protein:',
@@ -570,29 +694,29 @@ export const translations = {
       },
       testimonials: {
         title: 'What Our Beta Testers Say',
-        subtitle: 'Real feedback from users who tested our meals',
+        subtitle: 'Real feedback from users who tested our meal plans',
         testimonial1: {
-          text: 'I tested the meals during the beta phase and they were absolutely delicious! The flavors are rich and authentic. I\'ve completely stopped wasting time trying to figure out my food routine.',
+          text: 'I tested the meal plans during the beta phase and they were absolutely delicious! The flavors are rich and authentic. I\'ve completely stopped wasting time trying to figure out my food routine.',
           author: 'Aicha M.',
           location: 'Casablanca',
         },
         testimonial2: {
-          text: 'The experience was so satisfying! Every meal I tested was perfectly prepared and nutritious. I no longer spend hours meal planning and grocery shopping. Fitnest has transformed my daily routine.',
+          text: 'The experience was so satisfying! Every meal plan I tested was perfectly prepared and nutritious. I no longer spend hours meal planning and grocery shopping. Fitnest has transformed my daily routine.',
           author: 'Youssef K.',
           location: 'Rabat',
         },
         testimonial3: {
-          text: 'I was part of the beta testing program and the meals exceeded my expectations. Delicious, fresh, and perfectly portioned. I\'ve stopped wasting time on meal prep and can focus on what matters most.',
+          text: 'I was part of the beta testing program and the meal plans exceeded my expectations. Delicious, fresh, and perfectly portioned. I\'ve stopped wasting time on meal prep and can focus on what matters most.',
           author: 'Fatima Z.',
           location: 'Marrakech',
         },
       },
       features: {
         title: 'Why Choose Fitnest?',
-        subtitle: 'We\'re committed to delivering the best meal experience in Morocco',
+        subtitle: 'We\'re committed to delivering the best meal plan experience',
         madeWithLove: {
           title: 'Made with Love',
-          description: 'Every meal is prepared with care by our passionate chefs using traditional Moroccan cooking techniques',
+          description: 'Every meal plan is prepared with care by our passionate chefs using traditional Moroccan cooking techniques',
         },
         foodSafety: {
           title: 'Food Safety First',
@@ -604,7 +728,7 @@ export const translations = {
         },
         nutritionistApproved: {
           title: 'Nutritionist Approved',
-          description: 'All meals are designed by certified nutritionists to ensure optimal macro and micronutrient balance',
+          description: 'All meal plans are designed by certified nutritionists to ensure optimal macro and micronutrient balance',
         },
       },
       faq: {
@@ -633,7 +757,7 @@ export const translations = {
       },
       cta: {
         title: 'Ready to Transform Your Health?',
-        description: 'Join 46 people who are already on the waitlist for the future of healthy eating in Morocco.',
+        description: 'Join 46 people who are already on the waitlist for the future of healthy eating.',
         joinNow: 'Join the Waitlist Now',
         learnMore: 'Learn More',
         privacy: 'No spam, ever. Unsubscribe at any time. Early access guaranteed for waitlist members.',
@@ -641,6 +765,130 @@ export const translations = {
       waitlistReason: {
         title: 'Why a Waitlist?',
         description: 'To guarantee the quality of our processes and stay consistent, we are currently limiting new subscriptions and adding new members every week due to the overload we are receiving. This is why we have set up a waitlist.',
+      },
+    },
+    footer: {
+      description: 'Healthy meal plans delivered, tailored to your goals.',
+      navigation: 'Navigation',
+      company: 'Company',
+      legal: 'Legal',
+      contact: 'Contact',
+      followUs: 'Follow Us',
+      mealPlans: 'Meal Plans',
+      howItWorks: 'How It Works',
+      blog: 'Blog',
+      about: 'About',
+      contactUs: 'Contact Us',
+      waitlist: 'Waitlist',
+      terms: 'Terms',
+      privacy: 'Privacy',
+      legalMentions: 'Legal Mentions',
+      copyright: 'All rights reserved',
+      rights: '© {year} Fitnest. All rights reserved.',
+    },
+    legal: {
+      terms: {
+        title: 'Terms and Conditions',
+        lastUpdated: 'Last updated',
+        introduction: {
+          title: '1. Introduction',
+          content: 'Welcome to Fitnest. These Terms and Conditions govern your use of our website, mobile application, and services. By accessing or using Fitnest, you agree to be bound by these Terms. If you disagree with any part of these terms, you may not access our services.',
+        },
+        definitions: {
+          title: '2. Definitions',
+          service: '"Service" refers to the meal preparation and delivery service provided by Fitnest.',
+          user: '"User" refers to the individual who accesses or uses the Service, whether as a registered user or guest.',
+          subscription: '"Subscription" refers to the recurring meal plan service offered by Fitnest.',
+        },
+        account: {
+          title: '3. Account Registration',
+          content1: 'To use certain features of our Service, you may be required to register for an account. You agree to provide accurate, current, and complete information during the registration process and to update such information to keep it accurate, current, and complete.',
+          content2: 'You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password. We encourage you to use a strong password (using a combination of upper and lower case letters, numbers, and symbols) with your account.',
+        },
+        subscriptions: {
+          title: '4. Subscriptions and Orders',
+          intro: 'By subscribing to our meal plans, you agree to the following terms:',
+          item1: 'Subscription fees will be charged automatically according to the plan you select (weekly, bi-weekly, or monthly).',
+          item2: 'You may modify or cancel your subscription at any time through your account settings or by contacting our customer service at least 48 hours before your next scheduled delivery.',
+          item3: 'Changes to your subscription, including delivery address, meal preferences, or delivery schedule, must be made at least 48 hours before your scheduled delivery.',
+          item4: 'We reserve the right to adjust pricing for our subscriptions with reasonable notice to subscribers.',
+        },
+        delivery: {
+          title: '5. Delivery',
+          intro: 'Fitnest will deliver meals to the address provided by the User during the ordering process. By using our Service, you agree to the following:',
+          item1: 'You will provide accurate delivery information, including address and contact details.',
+          item2: 'You or someone authorized by you will be available to receive the delivery during the specified delivery window.',
+          item3: 'If no one is available to receive the delivery, we will leave the package at the door if it\'s safe to do so, or follow your delivery instructions if provided.',
+          item4: 'Fitnest is not responsible for theft, damage, or spoilage after delivery has been completed.',
+          item5: 'Delivery times are estimates and may vary based on traffic, weather conditions, or other unforeseen circumstances.',
+        },
+        contact: {
+          title: '11. Contact Us',
+          intro: 'If you have any questions about these Terms, please contact us at:',
+          email: 'Email: contact@fitnest.ma',
+          phone: 'Phone: +212 522 123 456',
+          address: 'Address: 123 Nutrition St, Casablanca, Morocco',
+        },
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        lastUpdated: 'Last updated',
+        introduction: {
+          title: '1. Introduction',
+          content1: 'At Fitnest, we respect your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, use our mobile application, or use our meal delivery services.',
+          content2: 'Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access our services.',
+        },
+        information: {
+          title: '2. Information We Collect',
+          intro: 'We collect several types of information from and about users of our services, including:',
+          personal: {
+            title: '2.1 Personal Information',
+            content: 'Personal information is data that can be used to identify you directly or indirectly. We may collect the following personal information:',
+            items: [
+              'Contact information (such as name, email address, phone number, and delivery address)',
+              'Account credentials (such as username and password)',
+              'Payment information (such as credit card details, billing address)',
+              'Dietary preferences and restrictions',
+              'Health and fitness goals',
+              'Order history and preferences',
+            ],
+          },
+        },
+        contact: {
+          title: '11. Contact Us',
+          intro: 'If you have any questions about this Privacy Policy, please contact us at:',
+          email: 'Email: contact@fitnest.ma',
+          phone: 'Phone: +212 522 123 456',
+          address: 'Address: 123 Nutrition St, Casablanca, Morocco',
+        },
+      },
+      legalMentions: {
+        title: 'Legal Mentions',
+        company: {
+          title: 'Company Information',
+          name: 'Company Name: Fitnest',
+          address: 'Address: 123 Nutrition St, Casablanca, Morocco',
+          phone: 'Phone: +212 522 123 456',
+          email: 'Email: contact@fitnest.ma',
+        },
+        publication: {
+          title: 'Publication Director',
+          name: 'Name: Chihab Jabri',
+          role: 'Role: Publication Director',
+        },
+        hosting: {
+          title: 'Hosting',
+          provider: 'Provider: Vercel Inc.',
+          address: 'Address: 340 S Lemon Ave #4133, Walnut, CA 91789, United States',
+        },
+        intellectual: {
+          title: 'Intellectual Property',
+          content: 'This entire site is subject to Moroccan and international legislation on copyright and intellectual property. All reproduction rights are reserved, including for downloadable documents and iconographic and photographic representations.',
+        },
+        liability: {
+          title: 'Limitation of Liability',
+          content: 'Fitnest cannot be held liable for direct and indirect damage caused to the user\'s equipment, when accessing the site, and resulting either from the use of equipment that does not meet the specifications, or from the appearance of a bug or incompatibility.',
+        },
       },
     },
   },
