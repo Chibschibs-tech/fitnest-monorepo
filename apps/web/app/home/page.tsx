@@ -77,7 +77,7 @@ export default function Home() {
         />
         <div className="relative z-10 container mx-auto px-4 pb-8 sm:pb-12 md:pb-16">
           <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4">
-            <Link href="/meal-plans">
+            <Link href="/plans">
               <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
                 {t.home.hero.viewMealPlans}
               </Button>
@@ -173,7 +173,7 @@ export default function Home() {
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
-              <Link href="/meal-plans/weight-loss" className="mb-6">
+              <Link href="/order?plan=weight-loss" className="mb-6">
                 <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.weightLoss.select}
                 </Button>
@@ -220,7 +220,7 @@ export default function Home() {
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
-              <Link href="/meal-plans/balanced-nutrition" className="mb-6">
+              <Link href="/order?plan=stay-fit" className="mb-6">
                 <Button className="w-full rounded-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.stayFit.select}
                 </Button>
@@ -262,7 +262,7 @@ export default function Home() {
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
-              <Link href="/meal-plans/muscle-gain" className="mb-6">
+              <Link href="/order?plan=muscle-gain" className="mb-6">
                 <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.muscleGain.select}
                 </Button>

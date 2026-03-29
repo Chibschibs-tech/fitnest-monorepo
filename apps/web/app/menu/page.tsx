@@ -328,7 +328,7 @@ export default function MenuPage() {
               ? "Rejoignez-nous dans notre mission de rendre une alimentation saine simple, agréable et partie intégrante de la vie quotidienne. Faites le premier pas vers un vous plus sain dès aujourd'hui."
               : "Join us in our mission to make healthy eating simple, enjoyable, and part of everyday life. Take the first step toward a healthier you today."}
           </p>
-          <Link href="/subscribe">
+          <Link href="/order">
             <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full px-8 py-6 text-lg">
               {locale === "fr" ? "S'abonner maintenant" : "Subscribe Now"}
             </Button>

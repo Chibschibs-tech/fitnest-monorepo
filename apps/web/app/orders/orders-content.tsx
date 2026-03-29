@@ -189,7 +189,7 @@ export function OrdersContent() {
         <div className="text-center py-12">
           <h3 className="text-lg font-medium mb-2">You don't have any orders yet</h3>
           <p className="text-gray-500 mb-6">Start by exploring our meal plans and placing your first order</p>
-          <Link href="/meal-plans">
+          <Link href="/plans">
             <Button>Browse Meal Plans</Button>
           </Link>
         </div>

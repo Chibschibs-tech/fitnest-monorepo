@@ -169,7 +169,7 @@ export function DashboardContent({ user }: DashboardContentProps) {
                   </Button>
                 </Link>
               ) : (
-                <Link href="/meal-plans">
+                <Link href="/plans">
                   <Button variant="outline" size="sm">
                     Browse Meal Plans
                   </Button>
@@ -288,7 +288,7 @@ export function DashboardContent({ user }: DashboardContentProps) {
             ) : (
               <div className="text-center py-8">
                 <p className="text-gray-600 mb-4">No orders yet</p>
-                <Link href="/meal-plans">
+                <Link href="/plans">
                   <Button variant="outline" size="sm">
                     Browse Meal Plans
                   </Button>
@@ -304,7 +304,7 @@ export function DashboardContent({ user }: DashboardContentProps) {
             <CardDescription>Manage your account and orders</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Link href="/meal-plans" className="w-full">
+            <Link href="/plans" className="w-full">
               <Button className="w-full bg-transparent" variant="outline">
                 <Package className="mr-2 h-4 w-4" />
                 Browse Meal Plans
