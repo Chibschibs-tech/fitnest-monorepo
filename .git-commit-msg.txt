@@ -1,10 +1,25 @@
-Phase 7: Dashboard polish — French translations and cleanup
+Fix: Home page fetches plans from DB, menu links fixed, order page in French
 
-- Translate customer dashboard layout to French: navigation labels,
-  sidebar headers, "Back to Home" button
-- Translate dashboard overview: welcome message, stats cards,
-  recent orders, quick actions — all in French
-- Change date locale from en-US to fr-FR across dashboard
-- Remove console.log from dashboard content
-- Fix order display labels: Abonnement/Commande instead of
-  Subscription/Order
+Home page:
+- Replace 3 hardcoded plan cards with dynamic fetch from /api/meal-plans
+- Show all 4 plans (Weight Loss, Stay Fit, Muscle Gain, Keto) from DB
+- Add loading skeletons while fetching
+- Each card shows DB image, French subtitle, starting price, features
+
+Menu page:
+- Fix meal_plan_meals links (54 links now in DB)
+- Rename DB slugs: balanced-nutrition -> stay-fit
+- Plan titles updated: LOW CARB -> Weight Loss, BALANCED -> Stay Fit,
+  PROTEIN POWER -> Muscle Gain
+
+Order page (/order):
+- Translate ALL user-facing text to French
+- mealPlans descriptions, mealTypes, snackOptions, allergies, durationOptions
+- All validation error messages in French
+- Step headers, labels, buttons, tooltips, pricing summary
+- Keep meal plan titles in English (brand names)
+
+Database changes:
+- Renamed slug balanced-nutrition -> stay-fit
+- Updated plan titles to brand names
+- Updated meal_type_prices plan_name references
