@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "pnpm --filter my-v0-project build",
     "dev:web": "pnpm -C apps/web dev -p 3002",
     "dev": "pnpm -C apps/web dev -p 3002",
     "docs:generate": "node scripts/generate-docs.js",
