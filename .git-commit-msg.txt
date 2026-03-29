@@ -1,9 +1,9 @@
-Phase 5: Admin consolidation and payment management
+Phase 6: API cleanup, remove NextAuth, clean console.log
 
-- Fix broken admin dashboard link: /admin/meals/add -> /admin/products/meal-plans
-- Add payment status column to admin orders table
-- Add payment status dropdown for admin to update payment status
-- Add payment method display (COD/Virement) in orders list
-- Fix HTTP method: PATCH -> PUT for status update API call
-- Update admin orders API to return payment_method and payment_status
-- Remove unused db import from admin orders API
+- Remove NextAuth imports from 7 files, replace with custom auth:
+  lib/diagnostic-utils.ts, lib/db-utils.ts, app/order/order-content.tsx,
+  app/express-shop/*.tsx, app/express-shop/[id]/*.tsx
+- All client auth now uses useAuth hook (which calls /api/auth/session)
+- All server auth uses getSessionUser from @/lib/simple-auth
+- Remove 30+ console.log from create-unified and admin orders APIs
+- Upgrade failure logs to console.error/warn as appropriate

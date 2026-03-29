@@ -12,8 +12,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    console.log("Fetching all orders...")
-
     let orders = []
 
     try {
@@ -44,10 +42,8 @@ export async function GET(request: NextRequest) {
         ORDER BY o.created_at DESC
         LIMIT 100
       `
-
-      console.log(`Found ${orders.length} orders`)
     } catch (error) {
-      console.log("Complex query failed, trying simple orders query:", error)
+      console.warn("Complex query failed, trying simple orders query:", error)
 
       try {
         // Fallback: simple orders query
@@ -75,10 +71,8 @@ export async function GET(request: NextRequest) {
           ORDER BY created_at DESC
           LIMIT 100
         `
-
-        console.log(`Fallback: Found ${orders.length} orders`)
       } catch (fallbackError) {
-        console.log("Fallback query also failed:", fallbackError)
+        console.error("Fallback query also failed:", fallbackError)
         orders = []
       }
     }
