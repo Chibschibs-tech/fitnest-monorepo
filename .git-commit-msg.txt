@@ -1,10 +1,9 @@
-Phase 2: Fix order flow, pricing bugs, add Keto plan
+Phase 3: Payment method selection and payment status tracking
 
-- Fix checkout mealTypes bug: was sending allergies as meal types,
-  now correctly passes customizations.mealTypes from order process
-- Fix duration parsing: stored as "X weeks" instead of "X days",
-  and added explicit durationWeeks field for create-unified API
-- Fix MealPlanData interface in checkout to match order-process shape
-- Add Keto plan to database with 4 variants and pricing entries
-- Remove debug console.log statements from checkout-content
-- Pass delivery schedule and allergy data through to API
+- Add payment method UI in checkout: COD and Bank Transfer options
+- Add payment_method + payment_status columns to orders and subscriptions
+- Update create-unified API to store payment method/status in DB columns
+- Update admin order status API to support paymentStatus updates
+- Rewrite confirmation page with French content, payment-specific messaging
+- Pass orderId and payment method to confirmation via URL params
+- Update schema.ts with new payment columns

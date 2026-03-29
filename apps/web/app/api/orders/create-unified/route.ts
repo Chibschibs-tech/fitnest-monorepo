@@ -243,11 +243,16 @@ export async function POST(request: Request) {
     // Create orders for Express Shop products
     if (cartItems.length > 0) {
       try {
+        const paymentMethod = body.payment?.method || 'cod'
         const orderResult = await sql`
           INSERT INTO orders (
             user_id, 
             total,
             status,
+            payment_method,
+            payment_status,
+            delivery_address,
+            delivery_date,
             created_at,
             updated_at
           ) 
@@ -255,10 +260,14 @@ export async function POST(request: Request) {
             ${userId}, 
             ${Math.round(totalAmount * 100)},
             'pending',
+            ${paymentMethod},
+            'pending',
+            ${deliveryAddress},
+            ${deliveryDate.toISOString()},
             ${now.toISOString()},
             ${now.toISOString()}
           )
-          RETURNING id, user_id, total, status
+          RETURNING id, user_id, total, status, payment_method, payment_status
         `
 
         const orderId = orderResult[0].id
@@ -328,6 +337,7 @@ export async function POST(request: Request) {
         renewsAt.setDate(renewsAt.getDate() + (sub.duration_weeks * 7))
 
         // Create subscription with status "active" (track "new" in notes)
+        const subPaymentMethod = body.payment?.method || 'cod'
         const subscription = await sql`
           INSERT INTO subscriptions (
             user_id,
@@ -335,6 +345,8 @@ export async function POST(request: Request) {
             status,
             starts_at,
             renews_at,
+            payment_method,
+            payment_status,
             notes
           )
           VALUES (
@@ -343,20 +355,20 @@ export async function POST(request: Request) {
             'active',
             ${startsAt.toISOString()},
             ${renewsAt.toISOString()},
+            ${subPaymentMethod},
+            'pending',
             ${JSON.stringify({
-              subscription_status: 'new',
-              payment_status: 'pending',
               plan_name: sub.plan_name,
               meal_types: sub.meal_types,
               days_per_week: sub.days_per_week,
               duration_weeks: sub.duration_weeks,
               total_price: sub.total_price,
               shipping_address: deliveryAddress,
-              payment_method: body.order.payment_method || 'pending',
-              created_at: new Date().toISOString(),
+              allergies: (sub as any).allergies || [],
+              delivery_schedule: (sub as any).delivery_schedule || null,
             })}
           )
-          RETURNING id, user_id, plan_variant_id, status
+          RETURNING id, user_id, plan_variant_id, status, payment_method, payment_status
         `
 
         const subscriptionId = subscription[0].id
