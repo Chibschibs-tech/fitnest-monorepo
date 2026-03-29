@@ -1,10 +1,9 @@
-Phase 4: SEO and French-first content overhaul
+Phase 5: Admin consolidation and payment management
 
-- Set lang=fr in root layout (Phase 1), French metadata + OG tags
-- Add French SEO metadata layouts for client pages: blog, contact,
-  login, register, privacy, terms, legal
-- Update server-side metadata to French: about, careers, faq,
-  how-it-works, express-shop, menu
-- Translate home page alt texts, badges, prices to French
-- Overhaul i18n.ts: natural French translations, Casablanca address,
-  consistent pricing (MAD), meal plan names kept in English
+- Fix broken admin dashboard link: /admin/meals/add -> /admin/products/meal-plans
+- Add payment status column to admin orders table
+- Add payment status dropdown for admin to update payment status
+- Add payment method display (COD/Virement) in orders list
+- Fix HTTP method: PATCH -> PUT for status update API call
+- Update admin orders API to return payment_method and payment_status
+- Remove unused db import from admin orders API

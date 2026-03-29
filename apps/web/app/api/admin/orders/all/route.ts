@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 
 export async function GET(request: NextRequest) {
@@ -33,6 +33,8 @@ export async function GET(request: NextRequest) {
             0
           ) as total_amount,
           COALESCE(o.status, 'pending') as status,
+          COALESCE(o.payment_method, 'cod') as payment_method,
+          COALESCE(o.payment_status, 'pending') as payment_status,
           o.created_at,
           COALESCE(o.delivery_frequency, 'weekly') as delivery_frequency,
           COALESCE(o.duration_weeks, 1) as duration_weeks
@@ -64,6 +66,8 @@ export async function GET(request: NextRequest) {
               0
             ) as total_amount,
             COALESCE(status, 'pending') as status,
+            COALESCE(payment_method, 'cod') as payment_method,
+            COALESCE(payment_status, 'pending') as payment_status,
             created_at,
             'weekly' as delivery_frequency,
             1 as duration_weeks

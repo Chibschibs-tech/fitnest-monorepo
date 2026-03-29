@@ -15,6 +15,8 @@ interface Order {
   plan_name: string
   total_amount: number
   status: string
+  payment_method: string
+  payment_status: string
   created_at: string
   delivery_frequency: string
   duration_weeks: number
@@ -54,7 +56,7 @@ export default function OrdersContent() {
   const handleStatusUpdate = async (orderId: number, newStatus: string) => {
     try {
       const response = await fetch(`/api/admin/orders/${orderId}/status`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       })
@@ -101,6 +103,34 @@ export default function OrdersContent() {
         return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>
       default:
         return <Badge variant="secondary">{status}</Badge>
+    }
+  }
+
+  const getPaymentBadge = (method: string, status: string) => {
+    const methodLabel = method === "bank_transfer" ? "Virement" : method === "cod" ? "À la livraison" : method || "—"
+    const statusColor = status === "paid" ? "bg-green-100 text-green-800" : status === "pending" ? "bg-amber-100 text-amber-800" : "bg-gray-100 text-gray-800"
+    return (
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-muted-foreground">{methodLabel}</span>
+        <Badge className={statusColor}>{status || "pending"}</Badge>
+      </div>
+    )
+  }
+
+  const handlePaymentStatusUpdate = async (orderId: number, newPaymentStatus: string) => {
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentStatus: newPaymentStatus }),
+      })
+      if (response.ok) {
+        fetchOrders()
+      } else {
+        setError("Failed to update payment status")
+      }
+    } catch {
+      setError("Error updating payment status")
     }
   }
 
@@ -259,6 +289,7 @@ export default function OrdersContent() {
                     <th className="text-left py-3 px-4 font-medium">Plan</th>
                     <th className="text-left py-3 px-4 font-medium">Total</th>
                     <th className="text-left py-3 px-4 font-medium">Status</th>
+                    <th className="text-left py-3 px-4 font-medium">Paiement</th>
                     <th className="text-left py-3 px-4 font-medium">Date</th>
                     <th className="text-left py-3 px-4 font-medium">Actions</th>
                   </tr>
@@ -284,21 +315,35 @@ export default function OrdersContent() {
                         <div className="font-medium">{formatCurrency(order.total_amount)}</div>
                       </td>
                       <td className="py-3 px-4">{getStatusBadge(order.status)}</td>
+                      <td className="py-3 px-4">{getPaymentBadge(order.payment_method, order.payment_status)}</td>
                       <td className="py-3 px-4">
                         <div className="text-sm">{formatDate(order.created_at)}</div>
                       </td>
                       <td className="py-3 px-4">
-                        <Select value={order.status} onValueChange={(value) => handleStatusUpdate(order.id, value)}>
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="active">Active</SelectItem>
-                            <SelectItem value="completed">Completed</SelectItem>
-                            <SelectItem value="cancelled">Cancelled</SelectItem>
-                            <SelectItem value="pending">Pending</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <div className="flex flex-col gap-2">
+                          <Select value={order.status} onValueChange={(value) => handleStatusUpdate(order.id, value)}>
+                            <SelectTrigger className="w-32">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="active">Active</SelectItem>
+                              <SelectItem value="completed">Completed</SelectItem>
+                              <SelectItem value="cancelled">Cancelled</SelectItem>
+                              <SelectItem value="pending">Pending</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Select value={order.payment_status || "pending"} onValueChange={(value) => handlePaymentStatusUpdate(order.id, value)}>
+                            <SelectTrigger className="w-32">
+                              <SelectValue placeholder="Paiement" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">En attente</SelectItem>
+                              <SelectItem value="paid">Payé</SelectItem>
+                              <SelectItem value="failed">Échoué</SelectItem>
+                              <SelectItem value="refunded">Remboursé</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </td>
                     </tr>
                   ))}
