@@ -1,15 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { initAuthTables, ensureAdminUser, authenticateUser, createSession } from "@/lib/auth"
+import { authenticateUser, createSession } from "@/lib/auth"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 export async function POST(request: NextRequest) {
   try {
-    // Initialize tables and ensure admin exists
-    await initAuthTables()
-    await ensureAdminUser()
-
     const body = await request.json()
     const { email, password } = body
 

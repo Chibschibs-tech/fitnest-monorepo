@@ -5,7 +5,7 @@ import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Package, Calendar, CreditCard, Settings, Bell, Menu, X, Home, ShoppingBag } from "lucide-react"
+import { Package, Settings, Menu, X, Home, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
@@ -20,11 +20,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const navigation = [
     { name: "Overview", href: "/dashboard", icon: Home },
-    { name: "My Meal Plans", href: "/dashboard/meal-plans", icon: Package },
+    { name: "My Meal Plans", href: "/dashboard/my-meal-plans", icon: Package },
     { name: "Order History", href: "/dashboard/orders", icon: ShoppingBag },
-    { name: "Delivery Schedule", href: "/dashboard/schedule", icon: Calendar },
-    { name: "Payment Methods", href: "/dashboard/payment", icon: CreditCard },
-    { name: "Notifications", href: "/dashboard/notifications", icon: Bell },
     { name: "Account Settings", href: "/dashboard/settings", icon: Settings },
   ]
 

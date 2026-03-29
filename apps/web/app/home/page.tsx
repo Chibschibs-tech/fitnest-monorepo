@@ -160,7 +160,7 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="/weight-loss-meal.png" alt="Weight Loss Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
@@ -207,7 +207,7 @@ export default function Home() {
               </div>
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="/vibrant-nutrition-plate.png" alt="Stay Fit Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Stay Fit Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
@@ -249,7 +249,7 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="/muscle-gain-meal.png" alt="Muscle Gain Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
@@ -342,7 +342,7 @@ export default function Home() {
                 <div className="flex-shrink-0 w-[280px] bg-white rounded-lg overflow-hidden shadow-md">
                   <div className="relative h-40">
                     <Image
-                      src="/placeholder.svg?height=160&width=280"
+                      src="https://images.unsplash.com/photo-1547592180-85f173990554?w=280&h=160&fit=crop"
                       alt="Meal Prep Tips"
                       fill
                       className="object-cover"
@@ -371,7 +371,7 @@ export default function Home() {
                 <div className="flex-shrink-0 w-[280px] bg-white rounded-lg overflow-hidden shadow-md">
                   <div className="relative h-40">
                     <Image
-                      src="/placeholder.svg?height=160&width=280"
+                      src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=280&h=160&fit=crop"
                       alt="Nutrition Myths"
                       fill
                       className="object-cover"
@@ -398,7 +398,7 @@ export default function Home() {
                 <div className="flex-shrink-0 w-[280px] bg-white rounded-lg overflow-hidden shadow-md">
                   <div className="relative h-40">
                     <Image
-                      src="/placeholder.svg?height=160&width=280"
+                      src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=280&h=160&fit=crop"
                       alt="Weight Loss Plateau"
                       fill
                       className="object-cover"
@@ -429,7 +429,7 @@ export default function Home() {
             {/* Blog Post 1 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg">
               <div className="relative h-48">
-                <Image src="/placeholder.svg?height=192&width=384" alt="Meal Prep Tips" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1547592180-85f173990554?w=384&h=192&fit=crop" alt="Meal Prep Tips" fill className="object-cover" />
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
@@ -457,7 +457,7 @@ export default function Home() {
             <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg">
               <div className="relative h-48">
                 <Image
-                  src="/placeholder.svg?height=192&width=384"
+                  src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=384&h=192&fit=crop"
                   alt="Nutrition Myths"
                   fill
                   className="object-cover"
@@ -489,7 +489,7 @@ export default function Home() {
             <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg">
               <div className="relative h-48">
                 <Image
-                  src="/placeholder.svg?height=192&width=384"
+                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=384&h=192&fit=crop"
                   alt="Weight Loss Plateau"
                   fill
                   className="object-cover"

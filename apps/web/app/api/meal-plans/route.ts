@@ -8,8 +8,10 @@ export async function GET() {
     const mealPlans = await sql`
       SELECT 
         mp.id,
+        mp.slug,
         mp.title as name,
         mp.summary as description,
+        mp.image_url,
         COALESCE(mpc.name, mp.audience) as category,
         mp.published as is_active
       FROM meal_plans mp
@@ -22,8 +24,10 @@ export async function GET() {
       success: true,
       mealPlans: mealPlans.map((plan: any) => ({
         id: plan.id,
+        slug: plan.slug,
         name: plan.name,
         description: plan.description,
+        image_url: plan.image_url,
         category: plan.category || 'balanced',
         is_active: plan.is_active,
       })),

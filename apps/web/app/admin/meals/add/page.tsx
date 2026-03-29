@@ -1,15 +1,18 @@
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { cookies } from "next/headers"
+import { getSessionUser } from "@/lib/simple-auth"
 import { redirect } from "next/navigation"
 import { AddMealForm } from "./add-meal-form"
 
 export const dynamic = "force-dynamic"
 
 export default async function AddMealPage() {
-  const session = await getServerSession(authOptions)
-
-  // Check if user is admin
-  if (!session || session.user.role !== "admin") {
+  const cookieStore = cookies()
+  const sessionId = cookieStore.get("session-id")?.value
+  if (!sessionId) {
+    redirect("/login")
+  }
+  const user = await getSessionUser(sessionId)
+  if (!user || user.role !== "admin") {
     redirect("/login")
   }
 

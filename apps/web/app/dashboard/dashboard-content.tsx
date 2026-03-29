@@ -322,10 +322,12 @@ export function DashboardContent({ user }: DashboardContentProps) {
                 Order History
               </Button>
             </Link>
-            <Button className="w-full bg-transparent" variant="outline">
-              <Settings className="mr-2 h-4 w-4" />
-              Account Settings
-            </Button>
+            <Link href="/dashboard/settings" className="w-full">
+              <Button className="w-full bg-transparent" variant="outline">
+                <Settings className="mr-2 h-4 w-4" />
+                Account Settings
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
