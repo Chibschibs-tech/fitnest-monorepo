@@ -32,17 +32,16 @@ interface MealPlanData {
   planName: string
   planPrice: number
   duration: string
-  mealsPerWeek: number
-  customizations?: {
-    dietaryRestrictions?: string[]
-    allergies?: string[]
-    preferences?: string[]
-  }
+  subscriptionWeeks: number
+  mealTypes: string[]
+  snacks: string
   deliverySchedule?: {
     frequency: string
-    preferredDay: string
+    selectedDays: string[]
     startDate: string
   }
+  allergies?: string[]
+  priceBreakdown?: any
 }
 
 export function CheckoutContent() {
@@ -89,15 +88,6 @@ export function CheckoutContent() {
         "checkoutData",
       ]
 
-      console.log("=== CHECKING LOCALSTORAGE FOR MEAL PLAN DATA ===")
-
-      for (const key of possibleKeys) {
-        const data = localStorage.getItem(key)
-        if (data) {
-          console.log(`Found data in localStorage[${key}]:`, data)
-        }
-      }
-
       // Load meal plan data from localStorage
       const savedMealPlan = localStorage.getItem("selectedMealPlan")
       const savedCustomizations = localStorage.getItem("mealPlanCustomizations")
@@ -109,22 +99,21 @@ export function CheckoutContent() {
         const deliverySchedule = savedDeliverySchedule ? JSON.parse(savedDeliverySchedule) : undefined
 
         const mealPlanData: MealPlanData = {
-          planId: planData.id || planData.planId,
-          planName: planData.name || planData.planName,
-          planPrice: planData.price || planData.planPrice || 0,
+          planId: planData.planId || planData.id,
+          planName: planData.planName || planData.name,
+          planPrice: planData.planPrice || planData.price || 0,
           duration: planData.duration || "4 weeks",
-          mealsPerWeek: planData.mealsPerWeek || 7,
-          customizations,
-          deliverySchedule,
+          subscriptionWeeks: planData.subscriptionWeeks || 4,
+          mealTypes: planData.customizations?.mealTypes || [],
+          snacks: planData.customizations?.snacks || "no-snacks",
+          deliverySchedule: planData.deliverySchedule || deliverySchedule,
+          allergies: planData.customizations?.dietaryRestrictions || [],
+          priceBreakdown: planData.priceBreakdown,
         }
 
         setMealPlan(mealPlanData)
-        console.log("Loaded meal plan data:", mealPlanData)
-      } else {
-        console.log("No meal plan data found in localStorage")
       }
     } catch (error) {
-      console.error("Error loading meal plan data:", error)
       // Don't set error state, just continue without meal plan
     }
   }
@@ -230,10 +219,13 @@ export function CheckoutContent() {
             planName: mealPlan.planName,
             planId: mealPlan.planId,
             planPrice: mealPlan.planPrice,
-            duration: mealPlan.duration,
-            mealsPerWeek: mealPlan.mealsPerWeek,
-            mealTypes: mealPlan.customizations?.dietaryRestrictions || [],
-          } : undefined, // Include meal plan data if exists
+            durationWeeks: mealPlan.subscriptionWeeks,
+            daysPerWeek: mealPlan.deliverySchedule?.selectedDays?.length || 5,
+            mealTypes: mealPlan.mealTypes,
+            allergies: mealPlan.allergies,
+            deliverySchedule: mealPlan.deliverySchedule,
+            priceBreakdown: mealPlan.priceBreakdown,
+          } : undefined,
         },
       }
 

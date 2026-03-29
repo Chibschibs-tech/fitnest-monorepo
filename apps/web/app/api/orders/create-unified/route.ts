@@ -155,16 +155,16 @@ export async function POST(request: Request) {
       }
     }
 
-    // Also check for meal plan in request body (legacy support)
     if (body.order?.mealPlan && !subscriptions.length) {
-      console.log("Processing meal plan from request body")
       const mealPlan = body.order.mealPlan
       subscriptions.push({
         plan_name: mealPlan.planName || mealPlan.planId || 'Unknown Plan',
         meal_types: mealPlan.mealTypes || [],
-        days_per_week: mealPlan.mealsPerWeek || mealPlan.daysPerWeek || 7,
-        duration_weeks: mealPlan.duration ? parseInt(mealPlan.duration) : 4,
+        days_per_week: mealPlan.daysPerWeek || mealPlan.mealsPerWeek || 5,
+        duration_weeks: mealPlan.durationWeeks || (mealPlan.duration ? parseInt(mealPlan.duration) : 4),
         total_price: mealPlan.planPrice || mealPlan.price || 0,
+        allergies: mealPlan.allergies || [],
+        delivery_schedule: mealPlan.deliverySchedule || null,
       })
       cartSubtotal += mealPlan.planPrice || mealPlan.price || 0
     }

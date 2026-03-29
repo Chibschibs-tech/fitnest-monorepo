@@ -1,0 +1,10 @@
+Phase 2: Fix order flow, pricing bugs, add Keto plan
+
+- Fix checkout mealTypes bug: was sending allergies as meal types,
+  now correctly passes customizations.mealTypes from order process
+- Fix duration parsing: stored as "X weeks" instead of "X days",
+  and added explicit durationWeeks field for create-unified API
+- Fix MealPlanData interface in checkout to match order-process shape
+- Add Keto plan to database with 4 variants and pricing entries
+- Remove debug console.log statements from checkout-content
+- Pass delivery schedule and allergy data through to API

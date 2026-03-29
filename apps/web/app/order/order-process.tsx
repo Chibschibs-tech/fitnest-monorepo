@@ -339,12 +339,13 @@ export function OrderProcess() {
         setStep(step + 1)
         window.scrollTo(0, 0)
       } else {
+        const subscriptionWeeks = durationOptions.find((opt) => opt.value === duration)?.weeks || 1
         const mealPlanData = {
           planId: selectedPlanId,
           planName: selectedPlan?.title,
           planPrice: priceBreakdown?.finalTotal || 0,
-          duration: `${selectedDays.length} days`,
-          subscriptionWeeks: durationOptions.find((opt) => opt.value === duration)?.weeks || 1,
+          duration: `${subscriptionWeeks} weeks`,
+          subscriptionWeeks,
           customizations: {
             dietaryRestrictions: selectedAllergies
               .map((id) => allergies.find((a) => a.id === id)?.label)
