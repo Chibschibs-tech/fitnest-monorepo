@@ -3,7 +3,7 @@
 import type React from "react"
 import "./globals.css"
 import Navbar from "@/components/navbar"
-import Footer from "@/components/Footer"
+import Footer from "@/components/footer"
 import { Providers } from "@/components/providers"
 import { usePathname } from "next/navigation"
 

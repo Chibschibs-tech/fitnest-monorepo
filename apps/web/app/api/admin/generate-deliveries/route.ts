@@ -2,12 +2,24 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { NextResponse } from "next/server"
+import { cookies } from "next/headers"
+import { getSessionUser } from "@/lib/simple-auth"
 import { sql, db } from "@/lib/db"
 import { DeliveryService } from "@/lib/delivery-service"
 
 
 export async function POST() {
   try {
+    const cookieStore = cookies()
+    const sessionId = cookieStore.get("session-id")?.value
+    if (!sessionId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+    const user = await getSessionUser(sessionId)
+    if (!user || user.role !== "admin") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     // Get all orders that don't have deliveries yet
     const ordersWithoutDeliveries = await sql`
       SELECT o.id, o.created_at
@@ -45,6 +57,16 @@ export async function POST() {
 
 export async function GET() {
   try {
+    const cookieStore = cookies()
+    const sessionId = cookieStore.get("session-id")?.value
+    if (!sessionId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+    const user = await getSessionUser(sessionId)
+    if (!user || user.role !== "admin") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     // Get statistics about deliveries
     const stats = await sql`
       SELECT 

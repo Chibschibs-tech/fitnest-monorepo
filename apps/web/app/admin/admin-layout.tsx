@@ -10,7 +10,6 @@ import {
   ShoppingBag,
   Package,
   Truck,
-  Settings,
   Mail,
   Apple,
   ChevronDown,
@@ -20,6 +19,7 @@ import {
   FileText,
   Image,
   LogOut,
+  Ticket,
 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -61,11 +61,6 @@ const navigation = [
     ],
   },
   {
-    name: "Migration",
-    href: "/admin/migrate-mp-categories",
-    icon: Settings,
-  },
-  {
     name: "General Orders",
     icon: ShoppingBag,
     isGroup: true,
@@ -80,14 +75,14 @@ const navigation = [
     icon: Truck,
   },
   {
-    name: "Nutrition Manager",
-    href: "/admin/nutrition-manager",
-    icon: Apple,
+    name: "Waitlist",
+    href: "/admin/waitlist",
+    icon: Mail,
   },
   {
-    name: "Add Meals",
-    href: "/admin/meals/add",
-    icon: Apple,
+    name: "Coupons",
+    href: "/admin/coupons",
+    icon: Ticket,
   },
   {
     name: "Content",

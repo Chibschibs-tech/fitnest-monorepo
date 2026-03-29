@@ -277,22 +277,22 @@ export function AdminDashboardContent() {
                   Waitlist
                 </Button>
               </Link>
-              <Link href="/admin/system-diagnostic">
+              <Link href="/admin/coupons">
                 <Button variant="outline" size="sm" className="w-full bg-transparent">
                   <Settings className="h-4 w-4 mr-2" />
-                  System
+                  Coupons
                 </Button>
               </Link>
-              <Link href="/admin/nutrition-manager">
+              <Link href="/admin/customers">
+                <Button variant="outline" size="sm" className="w-full bg-transparent">
+                  <UserCheck className="h-4 w-4 mr-2" />
+                  Customers
+                </Button>
+              </Link>
+              <Link href="/admin/pricing">
                 <Button variant="outline" size="sm" className="w-full bg-transparent">
                   <BarChart3 className="h-4 w-4 mr-2" />
-                  Nutrition
-                </Button>
-              </Link>
-              <Link href="/admin/email-diagnostic">
-                <Button variant="outline" size="sm" className="w-full bg-transparent">
-                  <Mail className="h-4 w-4 mr-2" />
-                  Email
+                  Pricing
                 </Button>
               </Link>
             </div>
@@ -319,9 +319,11 @@ export function AdminDashboardContent() {
                   <p className="font-medium">{plan.name}</p>
                   <p className="text-sm text-gray-600">{plan.count} orders</p>
                 </div>
-                <Button variant="outline" size="sm">
-                  View
-                </Button>
+                <Link href="/admin/products/meal-plans">
+                  <Button variant="outline" size="sm">
+                    View
+                  </Button>
+                </Link>
               </div>
             )) || (
               <div className="col-span-full text-center py-8">

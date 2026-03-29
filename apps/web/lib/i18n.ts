@@ -384,7 +384,7 @@ export const translations = {
           intro: 'Si vous avez des questions concernant ces Conditions, veuillez nous contacter à :',
           email: 'Email: contact@fitnest.ma',
           phone: 'Téléphone: +212 522 123 456',
-          address: 'Adresse: 123 Nutrition St, Casablanca, Maroc',
+          address: 'Adresse: Casablanca, Maroc',
         },
       },
       privacy: {
@@ -416,7 +416,7 @@ export const translations = {
           intro: 'Si vous avez des questions concernant cette Politique de Confidentialité, veuillez nous contacter à :',
           email: 'Email: contact@fitnest.ma',
           phone: 'Téléphone: +212 522 123 456',
-          address: 'Adresse: 123 Nutrition St, Casablanca, Maroc',
+          address: 'Adresse: Casablanca, Maroc',
         },
       },
       legalMentions: {
@@ -424,7 +424,7 @@ export const translations = {
         company: {
           title: 'Informations sur l\'entreprise',
           name: 'Raison sociale: Fitnest',
-          address: 'Adresse: 123 Nutrition St, Casablanca, Maroc',
+          address: 'Adresse: Casablanca, Maroc',
           phone: 'Téléphone: +212 522 123 456',
           email: 'Email: contact@fitnest.ma',
         },
@@ -827,7 +827,7 @@ export const translations = {
           intro: 'If you have any questions about these Terms, please contact us at:',
           email: 'Email: contact@fitnest.ma',
           phone: 'Phone: +212 522 123 456',
-          address: 'Address: 123 Nutrition St, Casablanca, Morocco',
+          address: 'Address: Casablanca, Morocco',
         },
       },
       privacy: {
@@ -859,7 +859,7 @@ export const translations = {
           intro: 'If you have any questions about this Privacy Policy, please contact us at:',
           email: 'Email: contact@fitnest.ma',
           phone: 'Phone: +212 522 123 456',
-          address: 'Address: 123 Nutrition St, Casablanca, Morocco',
+          address: 'Address: Casablanca, Morocco',
         },
       },
       legalMentions: {
@@ -867,7 +867,7 @@ export const translations = {
         company: {
           title: 'Company Information',
           name: 'Company Name: Fitnest',
-          address: 'Address: 123 Nutrition St, Casablanca, Morocco',
+          address: 'Address: Casablanca, Morocco',
           phone: 'Phone: +212 522 123 456',
           email: 'Email: contact@fitnest.ma',
         },
