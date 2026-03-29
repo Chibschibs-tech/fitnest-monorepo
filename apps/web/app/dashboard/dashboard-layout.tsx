@@ -19,10 +19,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
 
   const navigation = [
-    { name: "Overview", href: "/dashboard", icon: Home },
-    { name: "My Meal Plans", href: "/dashboard/my-meal-plans", icon: Package },
-    { name: "Order History", href: "/dashboard/orders", icon: ShoppingBag },
-    { name: "Account Settings", href: "/dashboard/settings", icon: Settings },
+    { name: "Aperçu", href: "/dashboard", icon: Home },
+    { name: "Mes plans repas", href: "/dashboard/my-meal-plans", icon: Package },
+    { name: "Historique commandes", href: "/dashboard/orders", icon: ShoppingBag },
+    { name: "Paramètres", href: "/dashboard/settings", icon: Settings },
   ]
 
   return (
@@ -31,7 +31,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="border-b lg:hidden">
         <div className="flex h-16 items-center justify-between px-4">
           <Link href="/dashboard" className="text-xl font-bold text-green-600">
-            Fitnest Dashboard
+            Mon espace
           </Link>
           <Sheet open={isMobileNavOpen} onOpenChange={setIsMobileNavOpen}>
             <SheetTrigger asChild>
@@ -44,7 +44,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b px-4 py-6">
                   <Link href="/dashboard" className="text-xl font-bold text-green-600">
-                    Fitnest Dashboard
+                    Mon espace
                   </Link>
                   <Button variant="ghost" size="icon" onClick={() => setIsMobileNavOpen(false)}>
                     <X className="h-6 w-6" />
@@ -72,7 +72,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="border-t px-4 py-4">
                   <Link href="/">
                     <Button variant="outline" className="w-full">
-                      Back to Home
+                      Retour à l&apos;accueil
                     </Button>
                   </Link>
                 </div>
@@ -111,7 +111,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="border-t px-4 py-4">
               <Link href="/">
                 <Button variant="outline" className="w-full">
-                  Back to Home
+                  Retour à l&apos;accueil
                 </Button>
               </Link>
             </div>

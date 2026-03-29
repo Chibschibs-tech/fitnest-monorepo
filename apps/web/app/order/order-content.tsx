@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Check } from "lucide-react"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/hooks/use-auth"
 
 export function OrderContent() {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { status } = useAuth()
   const [mealType, setMealType] = useState<string>("weight_loss")
   const [mealsPerDay, setMealsPerDay] = useState<string[]>(["lunch", "dinner"])
   const [daysPerWeek, setDaysPerWeek] = useState<string[]>(["mon", "tue", "wed", "thu", "fri"])

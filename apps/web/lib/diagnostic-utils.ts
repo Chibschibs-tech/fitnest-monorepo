@@ -1,6 +1,6 @@
-import { sql, db } from "@/lib/db"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { sql } from "@/lib/db"
+import { cookies } from "next/headers"
+import { getSessionUser } from "@/lib/simple-auth"
 
 /**
  * Diagnostic utility functions for troubleshooting Fitnest.ma application
@@ -91,16 +91,17 @@ export async function checkCartTable() {
 // Test authentication
 export async function checkAuthentication() {
   try {
-    const session = await getServerSession(authOptions)
+    const sessionId = cookies().get("session-id")?.value
+    const user = await getSessionUser(sessionId)
 
     return {
       success: true,
-      isAuthenticated: !!session?.user,
-      user: session?.user
+      isAuthenticated: !!user,
+      user: user
         ? {
-            id: session.user.id,
-            name: session.user.name,
-            email: session.user.email,
+            id: user.id,
+            name: user.name,
+            email: user.email,
           }
         : null,
     }

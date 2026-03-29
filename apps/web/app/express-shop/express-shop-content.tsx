@@ -10,7 +10,7 @@ import { Loader2, ShoppingCart, Plus, Filter, AlertCircle, Bug, RefreshCcw } fro
 import Image from "next/image"
 import Link from "next/link"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/hooks/use-auth"
 
 interface Product {
   id: number | string
@@ -41,7 +41,7 @@ export function ExpressShopContent({
     initialDebugInfo,
   })
 
-  const { data: session, status } = useSession()
+  const { status } = useAuth()
   const [products, setProducts] = useState<Product[]>(initialProducts)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(initialError)

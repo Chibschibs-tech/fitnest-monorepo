@@ -145,7 +145,7 @@ export default function Navbar() {
                 </Link>
               )}
               <Link
-                href="/subscribe"
+                href="/order"
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   isHomePage && !scrolled
                     ? "bg-white text-fitnest-green hover:bg-white/90"
@@ -228,11 +228,11 @@ export default function Navbar() {
                   <LanguageSwitcher />
                 </div>
                 <Link
-                  href="/subscribe"
+                  href="/order"
                   className="rounded-full bg-fitnest-green px-4 py-2 text-center text-sm font-medium text-white hover:bg-fitnest-green/90"
                   onClick={() => setOpen(false)}
                 >
-                  Subscribe
+                  {t.nav.subscribe}
                 </Link>
               </nav>
             </div>

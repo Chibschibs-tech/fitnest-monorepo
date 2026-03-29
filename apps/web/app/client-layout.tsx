@@ -13,16 +13,14 @@ export function ClientLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const isWaitlistPage = pathname === "/waitlist"
-
   const isHomePage = pathname === "/" || pathname === "/home"
-  
+
   return (
     <Providers>
       <div className="flex min-h-screen flex-col relative">
-        {!isWaitlistPage && <Navbar />}
-        <main className={isHomePage ? "flex-1 p-0" : isWaitlistPage ? "flex-1 p-0" : "flex-1 pt-20"}>{children}</main>
-        {!isWaitlistPage && <Footer />}
+        <Navbar />
+        <main className={isHomePage ? "flex-1 p-0" : "flex-1 pt-20"}>{children}</main>
+        <Footer />
       </div>
     </Providers>
   )

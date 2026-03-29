@@ -18,17 +18,112 @@ interface Product {
   category: string
 }
 
+interface MealPlan {
+  id: number
+  slug: string
+  name: string
+  description: string
+  image_url: string
+  category: string
+  is_active: boolean
+}
+
+const PLAN_CONFIG: Record<string, {
+  displayName: string
+  subtitle: string
+  linkParam: string
+  startingPrice: number
+  isPopular: boolean
+  features: string[]
+}> = {
+  "weight-loss": {
+    displayName: "Weight Loss",
+    subtitle: "Objectif perte de poids",
+    linkParam: "weight-loss",
+    startingPrice: 420,
+    isPopular: false,
+    features: [
+      "Glucides réduits pour favoriser la perte de gras",
+      "Riche en protéines pour préserver la masse musculaire",
+      "Index glycémique bas pour stabiliser l'énergie",
+      "Portions contrôlées et équilibrées",
+    ],
+  },
+  "stay-fit": {
+    displayName: "Stay Fit",
+    subtitle: "Rester en forme au quotidien",
+    linkParam: "stay-fit",
+    startingPrice: 450,
+    isPopular: true,
+    features: [
+      "Repas bien équilibrés en macronutriments",
+      "Riche en vitamines et minéraux essentiels",
+      "Compatible avec un mode de vie actif",
+      "Alimentation durable et variée",
+    ],
+  },
+  "muscle-gain": {
+    displayName: "Muscle Gain",
+    subtitle: "Prise de masse maîtrisée",
+    linkParam: "muscle-gain",
+    startingPrice: 500,
+    isPopular: false,
+    features: [
+      "Haute teneur en protéines de qualité",
+      "Optimisé pour la récupération musculaire",
+      "Glucides complexes pour l'énergie",
+      "Soutient la performance sportive",
+    ],
+  },
+  "keto": {
+    displayName: "Keto",
+    subtitle: "Régime cétogène",
+    linkParam: "keto",
+    startingPrice: 480,
+    isPopular: false,
+    features: [
+      "Très faible en glucides, riche en lipides sains",
+      "Favorise la cétose et la combustion des graisses",
+      "Ingrédients naturels sans sucres ajoutés",
+      "Énergie stable tout au long de la journée",
+    ],
+  },
+}
+
 export default function Home() {
   const { locale } = useLanguage()
   const [mounted, setMounted] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [loadingProducts, setLoadingProducts] = useState(true)
+  const [mealPlans, setMealPlans] = useState<MealPlan[]>([])
+  const [loadingPlans, setLoadingPlans] = useState(true)
   
   useEffect(() => {
     setMounted(true)
   }, [])
 
   const t = getTranslations(mounted ? locale : defaultLocale)
+
+  useEffect(() => {
+    async function fetchMealPlans() {
+      try {
+        setLoadingPlans(true)
+        const response = await fetch('/api/meal-plans')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.success && data.mealPlans) {
+            const activePlans = data.mealPlans.filter((p: MealPlan) => p.is_active && PLAN_CONFIG[p.slug])
+            setMealPlans(activePlans)
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des plans :", error)
+      } finally {
+        setLoadingPlans(false)
+      }
+    }
+    fetchMealPlans()
+  }, [])
 
   // Fetch Express Shop products
   useEffect(() => {
@@ -41,7 +136,7 @@ export default function Home() {
           setProducts(data.slice(0, 4)) // Show only first 4 products
         }
       } catch (error) {
-        console.error('Error fetching products:', error)
+        console.error("Erreur lors du chargement des produits :", error)
       } finally {
         setLoadingProducts(false)
       }
@@ -60,7 +155,7 @@ export default function Home() {
         {/* Mobile Hero Image */}
         <Image
           src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Fintest-Hompegae-mobile.jpg"
-          alt="Fitnest.ma Hero Banner - Mobile"
+          alt="Bannière d'accueil Fitnest.ma — mobile"
           fill
           className="object-cover object-center md:hidden"
           priority
@@ -69,7 +164,7 @@ export default function Home() {
         {/* Desktop Hero Image */}
         <Image
           src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
-          alt="Fitnest.ma Hero Banner - Desktop"
+          alt="Bannière d'accueil Fitnest.ma — bureau"
           fill
           className="object-cover object-center hidden md:block"
           priority
@@ -77,7 +172,7 @@ export default function Home() {
         />
         <div className="relative z-10 container mx-auto px-4 pb-8 sm:pb-12 md:pb-16">
           <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4">
-            <Link href="/meal-plans">
+            <Link href="/plans">
               <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
                 {t.home.hero.viewMealPlans}
               </Button>
@@ -155,138 +250,97 @@ export default function Home() {
             {t.home.choosePlan.subtitle}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Weight Loss Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
-              <div className="flex justify-center mb-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
+          {loadingPlans ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white rounded-lg shadow-lg p-8 animate-pulse">
+                  <div className="flex justify-center mb-6">
+                    <div className="w-32 h-32 rounded-full bg-gray-200" />
+                  </div>
+                  <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-2" />
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mx-auto mb-1" />
+                  <div className="h-3 bg-gray-200 rounded w-1/2 mx-auto mb-6" />
+                  <div className="h-5 bg-gray-200 rounded w-1/2 mx-auto mb-6" />
+                  <div className="h-10 bg-gray-200 rounded-full mb-6" />
+                  <div className="space-y-3">
+                    <div className="h-3 bg-gray-200 rounded w-full" />
+                    <div className="h-3 bg-gray-200 rounded w-5/6" />
+                    <div className="h-3 bg-gray-200 rounded w-4/5" />
+                    <div className="h-3 bg-gray-200 rounded w-3/4" />
+                  </div>
                 </div>
-              </div>
-              <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
-              <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.weightLoss.subtitle}</p>
-              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.weightLoss.description}</p>
-              <div className="text-center mb-6">
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "420 Dhs" : "420 MAD"}</span>
-                  <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
-                </div>
-              </div>
-              <Link href="/meal-plans/weight-loss" className="mb-6">
-                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
-                  {t.home.choosePlan.weightLoss.select}
-                </Button>
-              </Link>
-              <ul className="space-y-3 flex-1">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.reducedCarbs}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.highProtein}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.lowGlycemic}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.weightControl}</span>
-                </li>
-              </ul>
+              ))}
             </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              {mealPlans.map((plan) => {
+                const config = PLAN_CONFIG[plan.slug]
+                if (!config) return null
+                const isPopular = config.isPopular
 
-            {/* Stay Fit Plan - Popular */}
-            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative border-2 border-fitnest-orange">
-              <div className="absolute top-4 right-4">
-                <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  {locale === "fr" ? "POPULAIRE" : "POPULAR"}
-                </span>
-              </div>
-              <div className="flex justify-center mb-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Stay Fit Meal Plan" fill className="object-cover" />
-                </div>
-              </div>
-              <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
-              <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.stayFit.subtitle}</p>
-              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.stayFit.description}</p>
-              <div className="text-center mb-6">
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "450 dhs" : "450 MAD"}</span>
-                  <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
-                </div>
-              </div>
-              <Link href="/meal-plans/balanced-nutrition" className="mb-6">
-                <Button className="w-full rounded-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90 shadow-md hover:shadow-lg">
-                  {t.home.choosePlan.stayFit.select}
-                </Button>
-              </Link>
-              <ul className="space-y-3 flex-1">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.wellBalanced}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.nutrientDense}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.realLife}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.sustainable}</span>
-                </li>
-              </ul>
+                return (
+                  <div
+                    key={plan.id}
+                    className={`bg-white rounded-lg shadow-lg p-8 flex flex-col relative ${isPopular ? "border-2 border-fitnest-orange" : ""}`}
+                  >
+                    {isPopular && (
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
+                          POPULAIRE
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex justify-center mb-6">
+                      <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                        <Image
+                          src={plan.image_url}
+                          alt={config.displayName}
+                          fill
+                          className="object-cover"
+                          sizes="128px"
+                        />
+                      </div>
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">
+                      {config.displayName}
+                    </h3>
+                    <p className="text-gray-600 mb-1 text-center text-sm font-medium">
+                      {config.subtitle}
+                    </p>
+                    <p className="text-gray-600 mb-6 text-center text-xs">
+                      {plan.description}
+                    </p>
+                    <div className="text-center mb-6">
+                      <div className="flex items-baseline justify-center gap-1">
+                        <span className="text-[10px] font-normal text-gray-500">à partir de</span>
+                        <span className="text-xl font-bold text-fitnest-green">{config.startingPrice} Dhs</span>
+                        <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
+                      </div>
+                    </div>
+                    <Link href={`/order?plan=${config.linkParam}`} className="mb-6">
+                      <Button
+                        className={`w-full rounded-full shadow-md hover:shadow-lg ${
+                          isPopular
+                            ? "bg-fitnest-orange text-white hover:bg-fitnest-orange/90"
+                            : "bg-gray-100 text-fitnest-green hover:bg-gray-200"
+                        }`}
+                      >
+                        {t.home.choosePlan.weightLoss.select}
+                      </Button>
+                    </Link>
+                    <ul className="space-y-3 flex-1">
+                      {config.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start">
+                          <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-600 text-sm">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              })}
             </div>
-
-            {/* Muscle Gain Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
-              <div className="flex justify-center mb-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
-                </div>
-              </div>
-              <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
-              <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.muscleGain.subtitle}</p>
-              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.muscleGain.description}</p>
-              <div className="text-center mb-6">
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "500 dhs" : "500 MAD"}</span>
-                  <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
-                </div>
-              </div>
-              <Link href="/meal-plans/muscle-gain" className="mb-6">
-                <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
-                  {t.home.choosePlan.muscleGain.select}
-                </Button>
-              </Link>
-              <ul className="space-y-3 flex-1">
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.highProtein}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.trainingRecovery}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.cleanCarbs}</span>
-                </li>
-                <li className="flex items-start">
-                  <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.performance}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -343,7 +397,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1547592180-85f173990554?w=280&h=160&fit=crop"
-                      alt="Meal Prep Tips"
+                      alt="Conseils de préparation des repas"
                       fill
                       className="object-cover"
                     />
@@ -372,7 +426,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=280&h=160&fit=crop"
-                      alt="Nutrition Myths"
+                      alt="Mythes sur la nutrition"
                       fill
                       className="object-cover"
                     />
@@ -399,7 +453,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=280&h=160&fit=crop"
-                      alt="Weight Loss Plateau"
+                      alt="Plateau de perte de poids"
                       fill
                       className="object-cover"
                     />
@@ -429,7 +483,7 @@ export default function Home() {
             {/* Blog Post 1 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg">
               <div className="relative h-48">
-                <Image src="https://images.unsplash.com/photo-1547592180-85f173990554?w=384&h=192&fit=crop" alt="Meal Prep Tips" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1547592180-85f173990554?w=384&h=192&fit=crop" alt="Conseils de préparation des repas" fill className="object-cover" />
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
@@ -458,7 +512,7 @@ export default function Home() {
               <div className="relative h-48">
                 <Image
                   src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=384&h=192&fit=crop"
-                  alt="Nutrition Myths"
+                  alt="Mythes sur la nutrition"
                   fill
                   className="object-cover"
                 />
@@ -490,7 +544,7 @@ export default function Home() {
               <div className="relative h-48">
                 <Image
                   src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=384&h=192&fit=crop"
-                  alt="Weight Loss Plateau"
+                  alt="Plateau de perte de poids"
                   fill
                   className="object-cover"
                 />
@@ -562,7 +616,7 @@ export default function Home() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">{locale === "fr" ? "Pas d'image" : "No image"}</span>
+                        <span className="text-gray-400 text-sm">Pas d&apos;image</span>
                       </div>
                     )}
                   </div>
@@ -575,13 +629,13 @@ export default function Home() {
                       <span className="text-fitnest-green font-bold text-sm sm:text-base">
                         {product.salePrice ? (
                           <>
-                            {product.salePrice} MAD
-                            <span className="text-gray-500 text-xs line-through ml-2">{product.price} MAD</span>
+                            {product.salePrice} Dhs
+                            <span className="text-gray-500 text-xs line-through ml-2">{product.price} Dhs</span>
                           </>
                         ) : (
                           <>
-                            {locale === "fr" && <span>{t.home.expressShop.from} </span>}
-                            {product.price} MAD
+                            <span>{t.home.expressShop.from} </span>
+                            {product.price} Dhs
                           </>
                         )}
                       </span>
@@ -597,7 +651,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-600">{locale === "fr" ? "Aucun produit disponible" : "No products available"}</p>
+              <p className="text-gray-600">Aucun produit disponible</p>
             </div>
           )}
 

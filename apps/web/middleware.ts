@@ -5,16 +5,16 @@ const publicRoutes = [
   "/", "/home",
   "/login", "/register", "/forgot-password",
   "/about", "/blog", "/careers", "/contact", "/faq", "/privacy", "/terms", "/how-it-works", "/legal",
-  "/plans", "/meal-plans", "/menu", "/meals", "/catalogue", "/express-shop",
-  "/waitlist", "/waitlist/success",
+  "/plans", "/menu", "/meals", "/express-shop",
   "/checkout", "/checkout/guest", "/checkout/guest-details", "/checkout/guest-confirmation",
-  "/cart", "/shopping-cart", "/order",
-  "/subscribe", "/subscribe/thanks",
+  "/checkout/confirmation",
+  "/cart", "/order",
 ]
 
 const publicApiPrefixes = [
   "/api/auth/", "/api/products", "/api/cart", "/api/meal-plans",
   "/api/meals", "/api/waitlist", "/api/health", "/api/guest-orders",
+  "/api/calculate-price", "/api/orders/create-unified",
 ]
 
 function isPublicRoute(pathname: string): boolean {
@@ -54,8 +54,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // Session cookie exists — let route handlers validate it against the DB.
-  // Admin role checks also happen server-side in the admin layout/routes.
   return NextResponse.next()
 }
 

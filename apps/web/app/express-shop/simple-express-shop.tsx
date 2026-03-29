@@ -7,7 +7,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2, ShoppingCart, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/hooks/use-auth"
 
 interface Product {
   id: number
@@ -20,7 +20,7 @@ interface Product {
 }
 
 export function SimpleExpressShop() {
-  const { data: session, status } = useSession()
+  const { status } = useAuth()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

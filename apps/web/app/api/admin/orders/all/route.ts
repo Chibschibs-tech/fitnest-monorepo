@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 
 export async function GET(request: NextRequest) {
@@ -11,8 +11,6 @@ export async function GET(request: NextRequest) {
     if (!sessionId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-
-    console.log("Fetching all orders...")
 
     let orders = []
 
@@ -33,6 +31,8 @@ export async function GET(request: NextRequest) {
             0
           ) as total_amount,
           COALESCE(o.status, 'pending') as status,
+          COALESCE(o.payment_method, 'cod') as payment_method,
+          COALESCE(o.payment_status, 'pending') as payment_status,
           o.created_at,
           COALESCE(o.delivery_frequency, 'weekly') as delivery_frequency,
           COALESCE(o.duration_weeks, 1) as duration_weeks
@@ -42,10 +42,8 @@ export async function GET(request: NextRequest) {
         ORDER BY o.created_at DESC
         LIMIT 100
       `
-
-      console.log(`Found ${orders.length} orders`)
     } catch (error) {
-      console.log("Complex query failed, trying simple orders query:", error)
+      console.warn("Complex query failed, trying simple orders query:", error)
 
       try {
         // Fallback: simple orders query
@@ -64,6 +62,8 @@ export async function GET(request: NextRequest) {
               0
             ) as total_amount,
             COALESCE(status, 'pending') as status,
+            COALESCE(payment_method, 'cod') as payment_method,
+            COALESCE(payment_status, 'pending') as payment_status,
             created_at,
             'weekly' as delivery_frequency,
             1 as duration_weeks
@@ -71,10 +71,8 @@ export async function GET(request: NextRequest) {
           ORDER BY created_at DESC
           LIMIT 100
         `
-
-        console.log(`Fallback: Found ${orders.length} orders`)
       } catch (fallbackError) {
-        console.log("Fallback query also failed:", fallbackError)
+        console.error("Fallback query also failed:", fallbackError)
         orders = []
       }
     }

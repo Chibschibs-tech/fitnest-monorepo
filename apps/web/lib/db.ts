@@ -5,10 +5,7 @@ import { Pool } from "pg";
 let _pool: Pool | null = null;
 
 function isBuildTime(): boolean {
-  return (
-    process.env.NEXT_PHASE === "phase-production-build" ||
-    (process.env.VERCEL === "1" && !process.env.DATABASE_URL)
-  );
+  return process.env.NEXT_PHASE === "phase-production-build";
 }
 
 function getPool(): Pool | null {

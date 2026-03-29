@@ -297,8 +297,8 @@ export function AdminDashboardContent() {
               </Link>
             </div>
             <div className="pt-2 border-t">
-              <Link href="/admin/meals/add">
-                <Button className="w-full bg-green-600 hover:bg-green-700">Add New Meal Plan</Button>
+              <Link href="/admin/products/meal-plans">
+                <Button className="w-full bg-green-600 hover:bg-green-700">Manage Meal Plans</Button>
               </Link>
             </div>
           </CardContent>

@@ -26,40 +26,42 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const authCheck = await checkAdminAuth(request)
     if (authCheck.error) return authCheck.error
 
-    const { status } = await request.json()
+    const body = await request.json()
+    const { status, paymentStatus } = body
     const orderId = Number.parseInt(params.id)
 
     if (isNaN(orderId)) {
       return createErrorResponse(new Error("Invalid order ID"), "Invalid order ID", 400)
     }
 
-    if (!status || typeof status !== 'string') {
-      return createErrorResponse(new Error("Status is required"), "Status is required", 400)
+    if (!status && !paymentStatus) {
+      return createErrorResponse(new Error("Provide status or paymentStatus"), "Provide status or paymentStatus", 400)
     }
 
-    // Check if order exists
     const existingOrder = await sql`SELECT id FROM orders WHERE id = ${orderId}`
     if (existingOrder.length === 0) {
       return createErrorResponse(new Error("Order not found"), "Order not found", 404)
     }
 
-    // Update order status
-    const result = await sql`
-      UPDATE orders 
-      SET status = ${status}, updated_at = NOW()
-      WHERE id = ${orderId}
-      RETURNING id, status
-    `
-
-    if (result.length === 0) {
-      return createErrorResponse(new Error("Failed to update order status"), "Failed to update order status", 500)
+    if (status && paymentStatus) {
+      const result = await sql`
+        UPDATE orders SET status = ${status}, payment_status = ${paymentStatus}, updated_at = NOW()
+        WHERE id = ${orderId} RETURNING id, status, payment_method, payment_status
+      `
+      return NextResponse.json({ success: true, order: result[0] })
+    } else if (paymentStatus) {
+      const result = await sql`
+        UPDATE orders SET payment_status = ${paymentStatus}, updated_at = NOW()
+        WHERE id = ${orderId} RETURNING id, status, payment_method, payment_status
+      `
+      return NextResponse.json({ success: true, order: result[0] })
+    } else {
+      const result = await sql`
+        UPDATE orders SET status = ${status}, updated_at = NOW()
+        WHERE id = ${orderId} RETURNING id, status, payment_method, payment_status
+      `
+      return NextResponse.json({ success: true, order: result[0] })
     }
-
-    return NextResponse.json({
-      success: true,
-      message: "Order status updated successfully",
-      order: result[0],
-    })
   } catch (error) {
     return createErrorResponse(error, "Failed to update order status", 500)
   }

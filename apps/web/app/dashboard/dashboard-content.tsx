@@ -70,16 +70,15 @@ export function DashboardContent({ user }: DashboardContentProps) {
 
       if (response.ok) {
         const raw = await response.json()
-        console.log("Dashboard data received:", raw)
         const data: DashboardPayload = raw?.data ?? raw
         setDashboardData(data)
       } else {
         const errorData = await response.json()
-        setError(errorData.error || "Failed to fetch dashboard data")
+        setError(errorData.error || "Impossible de charger le tableau de bord")
       }
     } catch (error) {
       console.error("Failed to fetch dashboard data:", error)
-      setError("Network error occurred")
+      setError("Erreur réseau")
     } finally {
       setLoading(false)
     }
@@ -89,8 +88,8 @@ export function DashboardContent({ user }: DashboardContentProps) {
     return (
       <div className="container mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Welcome back, {user.name}!</h1>
-          <p className="text-gray-600">Loading your fitness journey overview...</p>
+          <h1 className="text-3xl font-bold">Bienvenue, {user.name} !</h1>
+          <p className="text-gray-600">Chargement de votre espace...</p>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
@@ -113,10 +112,10 @@ export function DashboardContent({ user }: DashboardContentProps) {
     return (
       <div className="container mx-auto p-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Welcome back, {user.name}!</h1>
-          <p className="text-red-600">Error loading dashboard: {error}</p>
+          <h1 className="text-3xl font-bold">Bienvenue, {user.name} !</h1>
+          <p className="text-red-600">Erreur de chargement : {error}</p>
         </div>
-        <Button onClick={fetchDashboardData}>Retry</Button>
+        <Button onClick={fetchDashboardData}>Réessayer</Button>
       </div>
     )
   }
@@ -130,48 +129,50 @@ export function DashboardContent({ user }: DashboardContentProps) {
     ...(dashboardData?.orderHistory?.map((order) => ({
       ...order,
       type: "meal_plan",
-      displayId: `Subscription #${order.id}`,
-      displayName: order.plan_name || "Meal Plan Subscription",
+      displayId: `Abonnement #${order.id}`,
+      displayName: order.plan_name || "Abonnement repas",
     })) ?? []),
     ...(dashboardData?.expressShopOrders?.map((order) => ({
       ...order,
       type: "express_shop",
-      displayId: `Order #${order.id}`,
-      displayName: "Express Shop Order",
+      displayId: `Commande #${order.id}`,
+      displayName: "Commande Boutique Express",
     })) ?? []),
   ].sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())
 
   return (
     <div className="container mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Welcome back, {user.name}!</h1>
-        <p className="text-gray-600">Here's your fitness journey overview</p>
+        <h1 className="text-3xl font-bold">Bienvenue, {user.name} !</h1>
+        <p className="text-gray-600">Voici un aperçu de votre programme</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Subscriptions</CardTitle>
+            <CardTitle className="text-sm font-medium">Abonnements actifs</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeSubscriptionsCount}</div>
             <p className="text-xs text-muted-foreground">
               {activeSubscriptionsCount === 0
-                ? "No active meal plan subscriptions"
-                : `You have ${activeSubscriptionsCount} active subscription${activeSubscriptionsCount > 1 ? "s" : ""}`}
+                ? "Aucun abonnement repas actif"
+                : activeSubscriptionsCount === 1
+                  ? "Vous avez 1 abonnement actif"
+                  : `Vous avez ${activeSubscriptionsCount} abonnements actifs`}
             </p>
             <div className="mt-3">
               {activeSubscriptionsCount > 0 ? (
                 <Link href="/dashboard/my-meal-plans">
                   <Button variant="outline" size="sm">
-                    Manage My Subscriptions
+                    Gérer mes abonnements
                   </Button>
                 </Link>
               ) : (
-                <Link href="/meal-plans">
+                <Link href="/plans">
                   <Button variant="outline" size="sm">
-                    Browse Meal Plans
+                    Voir les formules
                   </Button>
                 </Link>
               )}
@@ -181,42 +182,42 @@ export function DashboardContent({ user }: DashboardContentProps) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Next Delivery</CardTitle>
+            <CardTitle className="text-sm font-medium">Prochaine livraison</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {dashboardData?.upcomingDeliveries?.length
-                ? new Date(dashboardData.upcomingDeliveries[0].delivery_date).toLocaleDateString("en-US", {
+                ? new Date(dashboardData.upcomingDeliveries[0].delivery_date).toLocaleDateString("fr-FR", {
                     month: "short",
                     day: "numeric",
                   })
-                : "None"}
+                : "Aucune"}
             </div>
             <p className="text-xs text-muted-foreground">
               {dashboardData?.upcomingDeliveries?.length
-                ? "Your next scheduled delivery"
-                : "No upcoming deliveries scheduled"}
+                ? "Votre prochaine livraison programmée"
+                : "Aucune livraison programmée"}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Express Shop Orders</CardTitle>
+            <CardTitle className="text-sm font-medium">Commandes Boutique Express</CardTitle>
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalExpressShopOrders}</div>
             <p className="text-xs text-muted-foreground">
               {totalExpressShopSpent > 0
-                ? `${totalExpressShopSpent.toFixed(2)} MAD total spent`
-                : "No express shop orders yet"}
+                ? `${totalExpressShopSpent.toFixed(2)} MAD total dépensé`
+                : "Pas encore de commandes"}
             </p>
             <div className="mt-3">
               <Link href="/express-shop">
                 <Button variant="outline" size="sm">
-                  Browse Express Shop
+                  Boutique Express
                 </Button>
               </Link>
             </div>
@@ -227,8 +228,8 @@ export function DashboardContent({ user }: DashboardContentProps) {
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
-            <CardDescription>Your latest meal plan subscriptions and express shop orders</CardDescription>
+            <CardTitle>Commandes récentes</CardTitle>
+            <CardDescription>Vos dernières commandes et abonnements</CardDescription>
           </CardHeader>
           <CardContent>
             {allOrders.length ? (
@@ -239,12 +240,12 @@ export function DashboardContent({ user }: DashboardContentProps) {
                       <div className="flex items-center gap-2">
                         <p className="font-medium">{order.displayId}</p>
                         <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
-                          {order.type === "meal_plan" ? "Subscription" : "Express Shop"}
+                          {order.type === "meal_plan" ? "Abonnement" : "Boutique Express"}
                         </span>
                       </div>
                       <p className="text-sm text-gray-600">{order.displayName}</p>
                       <p className="text-sm text-gray-500">
-                        {order.created_at ? new Date(order.created_at).toLocaleDateString() : "Unknown"}
+                        {order.created_at ? new Date(order.created_at).toLocaleDateString("fr-FR") : "Date inconnue"}
                       </p>
                     </div>
                     <div className="text-right flex items-center gap-3">
@@ -279,7 +280,7 @@ export function DashboardContent({ user }: DashboardContentProps) {
                   <div className="pt-4 border-t">
                     <Link href="/dashboard/orders">
                       <Button variant="outline" size="sm" className="w-full bg-transparent">
-                        View All Orders
+                        Voir toutes les commandes
                       </Button>
                     </Link>
                   </div>
@@ -287,10 +288,10 @@ export function DashboardContent({ user }: DashboardContentProps) {
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-600 mb-4">No orders yet</p>
-                <Link href="/meal-plans">
+                <p className="text-gray-600 mb-4">Aucune commande</p>
+                <Link href="/plans">
                   <Button variant="outline" size="sm">
-                    Browse Meal Plans
+                    Voir les formules
                   </Button>
                 </Link>
               </div>
@@ -300,32 +301,32 @@ export function DashboardContent({ user }: DashboardContentProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Manage your account and orders</CardDescription>
+            <CardTitle>Actions rapides</CardTitle>
+            <CardDescription>Gérez votre compte et vos commandes</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Link href="/meal-plans" className="w-full">
+            <Link href="/plans" className="w-full">
               <Button className="w-full bg-transparent" variant="outline">
                 <Package className="mr-2 h-4 w-4" />
-                Browse Meal Plans
+                Voir les formules
               </Button>
             </Link>
             <Link href="/express-shop" className="w-full">
               <Button className="w-full bg-transparent" variant="outline">
                 <ShoppingCart className="mr-2 h-4 w-4" />
-                Express Shop
+                Boutique Express
               </Button>
             </Link>
             <Link href="/dashboard/orders" className="w-full">
               <Button className="w-full bg-transparent" variant="outline">
                 <User className="mr-2 h-4 w-4" />
-                Order History
+                Historique commandes
               </Button>
             </Link>
             <Link href="/dashboard/settings" className="w-full">
               <Button className="w-full bg-transparent" variant="outline">
                 <Settings className="mr-2 h-4 w-4" />
-                Account Settings
+                Paramètres du compte
               </Button>
             </Link>
           </CardContent>

@@ -1,6 +1,5 @@
 import { sql, db } from "@/lib/db"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { getSessionUser } from "@/lib/simple-auth"
 import { cookies } from "next/headers"
 import { v4 as uuidv4 } from "uuid"
 
@@ -53,22 +52,21 @@ export function getCartId() {
 
 // Get authenticated user ID
 export async function getAuthenticatedUserId() {
-  const session = await getServerSession(authOptions)
+  const cookieStore = cookies()
+  const sessionId = cookieStore.get("session-id")?.value
+  const user = await getSessionUser(sessionId)
 
-  if (!session?.user?.id) {
-    // For guest users, use cart ID from cookie
-    const cookieStore = cookies()
+  if (!user?.id) {
     let cartId = cookieStore.get("cartId")?.value
 
     if (!cartId) {
       cartId = uuidv4()
-      // Note: We can't set cookies here since this is a server function
     }
 
     return cartId
   }
 
-  return session.user.id
+  return String(user.id)
 }
 
 // Ensure products table exists

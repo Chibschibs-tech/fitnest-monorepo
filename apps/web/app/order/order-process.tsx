@@ -21,58 +21,58 @@ const mealPlans = {
   "weight-loss": {
     title: "Weight Loss",
     description:
-      "Calorie-controlled meals (1200-1500 calories per day) designed to help you lose weight while staying satisfied.",
+      "Repas contrôlés en calories (1200-1500 kcal/jour) pour perdre du poids tout en restant rassasié.",
     basePrice: 350,
     image: "/vibrant-weight-loss-meal.png",
   },
   "stay-fit": {
     title: "Stay Fit",
     description:
-      "Well-rounded meals (1600-1900 calories per day) with optimal proportions of proteins, carbs, and healthy fats.",
+      "Repas équilibrés (1600-1900 kcal/jour) avec une répartition optimale des macronutriments.",
     basePrice: 320,
     image: "/vibrant-nutrition-plate.png",
   },
   "muscle-gain": {
     title: "Muscle Gain",
     description:
-      "Protein-rich meals (2200-2500 calories per day) to support muscle growth and recovery after workouts.",
+      "Repas riches en protéines (2200-2500 kcal/jour) pour la croissance musculaire et la récupération.",
     basePrice: 400,
     image: "/hearty-muscle-meal.png",
   },
   keto: {
     title: "Keto",
     description:
-      "Low-carb, high-fat meals (1700-1900 calories per day) designed to help you achieve and maintain ketosis.",
+      "Repas faibles en glucides et riches en lipides sains (1700-1900 kcal/jour) pour la cétose.",
     basePrice: 380,
     image: "/colorful-keto-plate.png",
   },
 }
 
 const mealTypes = [
-  { id: "breakfast", label: "Breakfast", description: "Start your day right" },
-  { id: "lunch", label: "Lunch", description: "Midday energy boost" },
-  { id: "dinner", label: "Dinner", description: "Evening nourishment" },
+  { id: "breakfast", label: "Petit-déjeuner", description: "Commencez la journée du bon pied" },
+  { id: "lunch", label: "Déjeuner", description: "Énergie pour l'après-midi" },
+  { id: "dinner", label: "Dîner", description: "Repas du soir équilibré" },
 ]
 
 const snackOptions = [
-  { id: "0-snacks", label: "No Snacks", description: "No additional snacks", value: 0 },
-  { id: "1-snack", label: "1 Snack / Day", description: "One healthy snack per day", value: 1 },
-  { id: "2-snacks", label: "2 Snacks / Day", description: "Two healthy snacks per day", value: 2 },
+  { id: "0-snacks", label: "Sans collation", description: "Aucune collation supplémentaire", value: 0 },
+  { id: "1-snack", label: "1 collation / jour", description: "Une collation saine par jour", value: 1 },
+  { id: "2-snacks", label: "2 collations / jour", description: "Deux collations saines par jour", value: 2 },
 ]
 
 const allergies = [
-  { id: "dairy", label: "Dairy", description: "Milk, cheese, yogurt" },
-  { id: "gluten", label: "Gluten", description: "Wheat, barley, rye" },
-  { id: "nuts", label: "Nuts", description: "Peanuts, tree nuts" },
-  { id: "shellfish", label: "Shellfish", description: "Shrimp, crab, lobster" },
-  { id: "eggs", label: "Eggs", description: "Chicken eggs" },
-  { id: "soy", label: "Soy", description: "Soybeans and products" },
+  { id: "dairy", label: "Produits laitiers", description: "Lait, fromage, yaourt" },
+  { id: "gluten", label: "Gluten", description: "Blé, orge, seigle" },
+  { id: "nuts", label: "Fruits à coque", description: "Arachides, noix" },
+  { id: "shellfish", label: "Fruits de mer", description: "Crevettes, crabe, homard" },
+  { id: "eggs", label: "Œufs", description: "Œufs de poule" },
+  { id: "soy", label: "Soja", description: "Soja et dérivés" },
 ]
 
 const durationOptions = [
-  { value: 1, label: "1 Week", weeks: 1 },
-  { value: 2, label: "2 Weeks", weeks: 2 },
-  { value: 4, label: "1 Month", weeks: 4 },
+  { value: 1, label: "1 semaine", weeks: 1 },
+  { value: 2, label: "2 semaines", weeks: 2 },
+  { value: 4, label: "1 mois", weeks: 4 },
 ]
 
 // Sample meals for menu building
@@ -134,41 +134,41 @@ function validateDeliveryDays(selectedDays: Date[], duration: number): string[] 
   if (duration === 1) {
     // 1 week: at least 3 days
     if (totalDays < 3) {
-      errors.push("Please select at least 3 delivery days for a 1-week subscription")
+      errors.push("Veuillez sélectionner au moins 3 jours de livraison pour un abonnement d'1 semaine")
     }
   } else if (duration === 2) {
     // 2 weeks: at least 6 days total with at least 2 days in the second week
     if (totalDays < 6) {
-      errors.push("Please select at least 6 delivery days for a 2-week subscription")
+      errors.push("Veuillez sélectionner au moins 6 jours de livraison pour un abonnement de 2 semaines")
     } else {
       const weekGroups = groupDatesByWeek(selectedDays)
       const weeks = Object.keys(weekGroups).sort()
 
       if (weeks.length < 2) {
-        errors.push("Please select delivery days across both weeks")
+        errors.push("Veuillez sélectionner des jours de livraison sur les deux semaines")
       } else {
         const secondWeekDays = weekGroups[weeks[1]]?.length || 0
         if (secondWeekDays < 2) {
-          errors.push("Please select at least 2 delivery days in the second week")
+          errors.push("Veuillez sélectionner au moins 2 jours de livraison la deuxième semaine")
         }
       }
     }
   } else if (duration === 4) {
     // 1 month: at least 10 days total with at least 2 days in the second, third, and fourth weeks
     if (totalDays < 10) {
-      errors.push("Please select at least 10 delivery days for a 1-month subscription")
+      errors.push("Veuillez sélectionner au moins 10 jours de livraison pour un abonnement d'1 mois")
     } else {
       const weekGroups = groupDatesByWeek(selectedDays)
       const weeks = Object.keys(weekGroups).sort()
 
       if (weeks.length < 4) {
-        errors.push("Please select delivery days across all 4 weeks")
+        errors.push("Veuillez sélectionner des jours de livraison sur les 4 semaines")
       } else {
         // Check weeks 2, 3, and 4 have at least 2 days each
         for (let i = 1; i < 4; i++) {
           const weekDays = weekGroups[weeks[i]]?.length || 0
           if (weekDays < 2) {
-            errors.push(`Please select at least 2 delivery days in week ${i + 1}`)
+            errors.push(`Veuillez sélectionner au moins 2 jours de livraison la semaine ${i + 1}`)
             break
           }
         }
@@ -184,7 +184,7 @@ export function OrderProcess() {
   const searchParams = useSearchParams()
   const planIdFromUrl = searchParams.get("plan")
 
-  const mappedPlanId = planIdFromUrl === "balanced-nutrition" ? "stay-fit" : planIdFromUrl
+  const mappedPlanId = planIdFromUrl
 
   const [selectedPlanId, setSelectedPlanId] = useState<string>(mappedPlanId || "")
   const selectedPlan = selectedPlanId ? mealPlans[selectedPlanId as keyof typeof mealPlans] : null
@@ -241,7 +241,7 @@ export function OrderProcess() {
         setPriceBreakdown(breakdown)
         setPricingError("")
       } catch (error) {
-        setPricingError(error instanceof Error ? error.message : "Pricing calculation error")
+        setPricingError(error instanceof Error ? error.message : "Erreur de calcul du prix")
         setPriceBreakdown(null)
       }
     }
@@ -318,8 +318,8 @@ export function OrderProcess() {
   const validateStep = () => {
     const newErrors: typeof errors = {}
     if (step === 1) {
-      if (!selectedPlanId) newErrors.mealPlan = "Please select a meal plan"
-      if (selectedMealTypes.length < 2) newErrors.mealTypes = "Please select at least 2 meal types"
+      if (!selectedPlanId) newErrors.mealPlan = "Veuillez sélectionner une formule"
+      if (selectedMealTypes.length < 2) newErrors.mealTypes = "Veuillez sélectionner au moins 2 types de repas"
 
       // Use ONLY the new validation logic - remove any old per-week limits
       const dayValidationErrors = validateDeliveryDays(selectedDays, duration)
@@ -327,7 +327,7 @@ export function OrderProcess() {
         newErrors.days = dayValidationErrors[0] // Show first error
       }
     } else if (step === 2) {
-      if (!isMenuComplete()) newErrors.menu = "Please select all meals for your plan"
+      if (!isMenuComplete()) newErrors.menu = "Veuillez sélectionner tous les repas de votre formule"
     }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -339,12 +339,13 @@ export function OrderProcess() {
         setStep(step + 1)
         window.scrollTo(0, 0)
       } else {
+        const subscriptionWeeks = durationOptions.find((opt) => opt.value === duration)?.weeks || 1
         const mealPlanData = {
           planId: selectedPlanId,
           planName: selectedPlan?.title,
           planPrice: priceBreakdown?.finalTotal || 0,
-          duration: `${selectedDays.length} days`,
-          subscriptionWeeks: durationOptions.find((opt) => opt.value === duration)?.weeks || 1,
+          duration: `${subscriptionWeeks} semaine${subscriptionWeeks > 1 ? "s" : ""}`,
+          subscriptionWeeks,
           customizations: {
             dietaryRestrictions: selectedAllergies
               .map((id) => allergies.find((a) => a.id === id)?.label)
@@ -385,10 +386,10 @@ export function OrderProcess() {
       <div className="mb-8">
         <Button variant="ghost" onClick={handleBack} className="mb-4">
           <ChevronLeft className="mr-2 h-4 w-4" />
-          {step === 1 ? "Back to Meal Plans" : "Back"}
+          {step === 1 ? "Retour aux formules" : "Retour"}
         </Button>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl md:text-3xl font-bold">Customize Your Perfect Meal Plan</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">Personnalisez votre formule repas idéale</h1>
           <div className="hidden md:flex items-center space-x-2 text-sm">
             <div
               className={cn(
@@ -416,13 +417,13 @@ export function OrderProcess() {
           {step === 1 && (
             <Card>
               <CardHeader>
-                <CardTitle>Choose Your Plan Options</CardTitle>
-                <CardDescription>Customize your meal plan to fit your needs</CardDescription>
+                <CardTitle>Choisissez vos options</CardTitle>
+                <CardDescription>Personnalisez votre formule selon vos besoins</CardDescription>
               </CardHeader>
               <CardContent className="space-y-8">
                 {/* Meal Plan Selection */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">Choose your meal plan</Label>
+                  <Label className="text-base font-medium mb-3 block">Choisissez votre formule</Label>
                   <RadioGroup
                     value={selectedPlanId}
                     onValueChange={setSelectedPlanId}
@@ -456,8 +457,8 @@ export function OrderProcess() {
 
                 {/* Meal Types Selection */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">How many meals per day?</Label>
-                  <p className="text-sm text-gray-500 mb-4">Select a minimum of 2 meals, including lunch or dinner.</p>
+                  <Label className="text-base font-medium mb-3 block">Combien de repas par jour ?</Label>
+                  <p className="text-sm text-gray-500 mb-4">Sélectionnez au moins 2 repas, incluant le déjeuner ou le dîner.</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {mealTypes.map((mealType) => (
                       <div key={mealType.id} className="relative">
@@ -499,7 +500,7 @@ export function OrderProcess() {
 
                 {/* Snacks Selection */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">How many snacks per day?</Label>
+                  <Label className="text-base font-medium mb-3 block">Combien de collations par jour ?</Label>
                   <RadioGroup
                     value={selectedSnacks}
                     onValueChange={setSelectedSnacks}
@@ -524,7 +525,7 @@ export function OrderProcess() {
 
                 {/* Duration Selection */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">Subscription Duration</Label>
+                  <Label className="text-base font-medium mb-3 block">Durée de l'abonnement</Label>
                   <RadioGroup
                     value={String(duration)}
                     onValueChange={(value) => setDuration(Number(value))}
@@ -550,34 +551,34 @@ export function OrderProcess() {
 
                 {/* Promo Code */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">Promo Code (Optional)</Label>
+                  <Label className="text-base font-medium mb-3 block">Code promo (Optionnel)</Label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      placeholder="Enter promo code"
+                      placeholder="Entrez votre code promo"
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fitnest-green focus:border-transparent"
                     />
                     <Button type="button" variant="outline" onClick={() => setPromoCode("")} disabled={!promoCode}>
-                      Clear
+                      Effacer
                     </Button>
                   </div>
                   {promoCode && priceBreakdown?.discounts.seasonalDiscount > 0 && (
                     <p className="text-green-600 text-sm mt-2">
-                      ✓ Promo code applied! Save {formatPrice(priceBreakdown.discounts.seasonalDiscount)}
+                      ✓ Code promo appliqué ! Économisez {formatPrice(priceBreakdown.discounts.seasonalDiscount)}
                     </p>
                   )}
                 </div>
 
                 {/* Calendar Day Selection */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">Select your delivery days</Label>
+                  <Label className="text-base font-medium mb-3 block">Sélectionnez vos jours de livraison</Label>
                   <p className="text-sm text-gray-500 mb-4">
-                    Click on the dates you'd like to receive your meals.
-                    {duration === 1 && " Select at least 3 days."}
-                    {duration === 2 && " Select at least 6 days with minimum 2 days in the second week."}
-                    {duration === 4 && " Select at least 10 days with minimum 2 days in weeks 2, 3, and 4."}
+                    Cliquez sur les dates auxquelles vous souhaitez recevoir vos repas.
+                    {duration === 1 && " Sélectionnez au moins 3 jours."}
+                    {duration === 2 && " Sélectionnez au moins 6 jours avec minimum 2 jours la deuxième semaine."}
+                    {duration === 4 && " Sélectionnez au moins 10 jours avec minimum 2 jours les semaines 2, 3 et 4."}
                   </p>
                   <DeliveryCalendar
                     allowedWeeks={allowedWeeks}
@@ -590,10 +591,10 @@ export function OrderProcess() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Button variant="outline" onClick={handleBack}>
-                  Back
+                  Retour
                 </Button>
                 <Button onClick={handleNext} disabled={!meetsMinimumRequirements()}>
-                  Continue to Menu Building
+                  Continuer vers la composition du menu
                 </Button>
               </CardFooter>
             </Card>
@@ -602,14 +603,14 @@ export function OrderProcess() {
           {step === 2 && (
             <Card>
               <CardHeader>
-                <CardTitle>Build Your Menu</CardTitle>
-                <CardDescription>Select your meals for each day of your plan</CardDescription>
+                <CardTitle>Composez votre menu</CardTitle>
+                <CardDescription>Sélectionnez vos repas pour chaque jour de votre formule</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {errors.menu && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
+                    <AlertTitle>Erreur</AlertTitle>
                     <AlertDescription>{errors.menu}</AlertDescription>
                   </Alert>
                 )}
@@ -624,10 +625,10 @@ export function OrderProcess() {
                             (mealType) => menuSelections[day.toISOString()]?.[mealType],
                           ) ? (
                             <span className="text-sm text-green-600 mr-2 flex items-center">
-                              <Check className="h-4 w-4 mr-1" /> Complete
+                              <Check className="h-4 w-4 mr-1" /> Complet
                             </span>
                           ) : (
-                            <span className="text-sm text-amber-600 mr-2">Incomplete</span>
+                            <span className="text-sm text-amber-600 mr-2">Incomplet</span>
                           )}
                         </div>
                       </AccordionTrigger>
@@ -636,7 +637,7 @@ export function OrderProcess() {
                           {/* Render meal selectors for each meal type */}
                           {selectedMealTypes.map((mealType) => (
                             <div key={`${day.toISOString()}-${mealType}`} className="border rounded-lg p-4">
-                              <h4 className="font-medium text-base mb-4 capitalize">{mealType}</h4>
+                              <h4 className="font-medium text-base mb-4">{mealTypes.find(mt => mt.id === mealType)?.label || mealType}</h4>
                               {menuSelections[day.toISOString()]?.[mealType] ? (
                                 <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
                                   <div className="flex items-center">
@@ -666,7 +667,7 @@ export function OrderProcess() {
                                     size="sm"
                                     onClick={() => handleMealSelection(day, mealType, null)}
                                   >
-                                    Change
+                                    Changer
                                   </Button>
                                 </div>
                               ) : (
@@ -705,7 +706,7 @@ export function OrderProcess() {
                             return (
                               <div key={`${day.toISOString()}-${snackKey}`} className="border rounded-lg p-4">
                                 <h4 className="font-medium text-base mb-4 capitalize">
-                                  {i > 0 ? "Second Snack" : "Snack"}
+                                  {i > 0 ? "Deuxième collation" : "Collation"}
                                 </h4>
                                 {menuSelections[day.toISOString()]?.[snackKey] ? (
                                   <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
@@ -736,7 +737,7 @@ export function OrderProcess() {
                                       size="sm"
                                       onClick={() => handleMealSelection(day, snackKey, null)}
                                     >
-                                      Change
+                                      Changer
                                     </Button>
                                   </div>
                                 ) : (
@@ -776,14 +777,14 @@ export function OrderProcess() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Button variant="outline" onClick={handleBack}>
-                  Back
+                  Retour
                 </Button>
                 <Button
                   onClick={handleNext}
                   className="bg-fitnest-orange hover:bg-fitnest-orange/90"
                   disabled={!isMenuComplete()}
                 >
-                  Proceed to Checkout
+                  Passer au paiement
                 </Button>
               </CardFooter>
             </Card>
@@ -795,7 +796,7 @@ export function OrderProcess() {
           <div className="sticky top-20">
             <Card>
               <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
+                <CardTitle>Résumé de la commande</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {selectedPlan && (
@@ -811,12 +812,12 @@ export function OrderProcess() {
                     <div>
                       <h3 className="font-semibold">{selectedPlan.title}</h3>
                       <p className="text-sm text-gray-500">
-                        {selectedMealTypes.length} meals,{" "}
+                        {selectedMealTypes.length} repas,{" "}
                         {selectedSnacks !== "0-snacks"
                           ? selectedSnacks === "1-snack"
-                            ? "1 snack"
-                            : "2 snacks"
-                          : "no snacks"}
+                            ? "1 collation"
+                            : "2 collations"
+                          : "sans collation"}
                       </p>
                     </div>
                   </div>
@@ -826,34 +827,34 @@ export function OrderProcess() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Meal Plan:</span>
-                    <span>{selectedPlan?.title || "Not selected"}</span>
+                    <span>Formule :</span>
+                    <span>{selectedPlan?.title || "Non sélectionnée"}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Meals Per Day:</span>
-                    <span>{selectedMealTypes.length} meals</span>
+                    <span>Repas par jour :</span>
+                    <span>{selectedMealTypes.length} repas</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Snacks Per Day:</span>
+                    <span>Collations par jour :</span>
                     <span>
                       {selectedSnacks === "0-snacks"
-                        ? "No snacks"
+                        ? "Sans collation"
                         : selectedSnacks === "1-snack"
-                          ? "1 snack"
-                          : "2 snacks"}
+                          ? "1 collation"
+                          : "2 collations"}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Total Delivery Days:</span>
-                    <span>{selectedDays.length} days</span>
+                    <span>Jours de livraison :</span>
+                    <span>{selectedDays.length} jours</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Duration:</span>
+                    <span>Durée :</span>
                     <span>{durationOptions.find((opt) => opt.value === duration)?.label}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Start Date:</span>
-                    <span>{startDate ? format(startDate, "MMM d, yyyy") : "Not selected"}</span>
+                    <span>Date de début :</span>
+                    <span>{startDate ? format(startDate, "d MMM yyyy") : "Non sélectionnée"}</span>
                   </div>
                 </div>
 
@@ -863,14 +864,14 @@ export function OrderProcess() {
                 {priceBreakdown && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>Cost Per Day:</span>
+                      <span>Coût par jour :</span>
                       <span>{formatPrice(priceBreakdown.pricePerDay)}</span>
                     </div>
 
                     {/* Only show weekly cost for 1-week subscriptions */}
                     {duration === 1 && (
                       <div className="flex justify-between text-sm">
-                        <span>Weekly Cost:</span>
+                        <span>Coût hebdomadaire :</span>
                         <span>{formatPrice(priceBreakdown.pricePerWeek)}</span>
                       </div>
                     )}
@@ -878,7 +879,7 @@ export function OrderProcess() {
                     {priceBreakdown.discounts.totalDiscount > 0 && (
                       <>
                         <div className="flex justify-between text-sm">
-                          <span>Subtotal:</span>
+                          <span>Sous-total :</span>
                           <span>
                             {formatPrice(
                               priceBreakdown.subscriptionTotals.subscriptionSubtotal +
@@ -889,7 +890,7 @@ export function OrderProcess() {
 
                         {priceBreakdown.discounts.appliedWeeklyDiscount > 0 && (
                           <div className="flex justify-between text-sm text-green-600">
-                            <span>Volume Discount ({priceBreakdown.discounts.appliedWeeklyDiscount}%):</span>
+                            <span>Réduction volume ({priceBreakdown.discounts.appliedWeeklyDiscount}%) :</span>
                             <span>
                               -
                               {formatPrice(
@@ -903,34 +904,34 @@ export function OrderProcess() {
 
                         {priceBreakdown.discounts.durationDiscount > 0 && (
                           <div className="flex justify-between text-sm text-green-600">
-                            <span>Duration Discount:</span>
+                            <span>Réduction durée :</span>
                             <span>-{formatPrice(priceBreakdown.discounts.durationDiscount)}</span>
                           </div>
                         )}
 
                         {priceBreakdown.discounts.seasonalDiscount > 0 && (
                           <div className="flex justify-between text-sm text-green-600">
-                            <span>Promo Discount:</span>
+                            <span>Réduction promo :</span>
                             <span>-{formatPrice(priceBreakdown.discounts.seasonalDiscount)}</span>
                           </div>
                         )}
 
                         <div className="flex justify-between text-sm font-medium text-green-600">
-                          <span>Total Savings:</span>
+                          <span>Économies totales :</span>
                           <span>-{formatPrice(priceBreakdown.discounts.totalDiscount)}</span>
                         </div>
                       </>
                     )}
 
                     <div className="flex justify-between font-semibold text-lg pt-2 border-t">
-                      <span>Final Total:</span>
+                      <span>Total final :</span>
                       <span>{formatPrice(priceBreakdown.finalTotal)}</span>
                     </div>
 
                     <div className="text-xs text-gray-500 space-y-1">
-                      <div>Total Items: {priceBreakdown.totalItems}</div>
+                      <div>Total articles : {priceBreakdown.totalItems}</div>
                       <div>
-                        Duration: {priceBreakdown.totalWeeks} week{priceBreakdown.totalWeeks > 1 ? "s" : ""}
+                        Durée : {priceBreakdown.totalWeeks} semaine{priceBreakdown.totalWeeks > 1 ? "s" : ""}
                       </div>
                     </div>
                   </div>
@@ -947,8 +948,8 @@ export function OrderProcess() {
                   <div className="flex">
                     <Info className="h-5 w-5 text-fitnest-orange mr-2" />
                     <div className="text-sm text-gray-600">
-                      <p className="font-medium">Flexible Subscription</p>
-                      <p>You can pause, modify, or cancel your subscription anytime.</p>
+                      <p className="font-medium">Abonnement flexible</p>
+                      <p>Vous pouvez suspendre, modifier ou annuler votre abonnement à tout moment.</p>
                     </div>
                   </div>
                 </div>
@@ -960,11 +961,11 @@ export function OrderProcess() {
                     className="w-full bg-fitnest-orange hover:bg-fitnest-orange/90"
                     disabled={!isMenuComplete()}
                   >
-                    Proceed to Checkout
+                    Passer au paiement
                   </Button>
                 ) : (
                   <Button className="w-full" onClick={handleNext} disabled={!meetsMinimumRequirements()}>
-                    Continue to Menu Building
+                    Continuer vers la composition du menu
                   </Button>
                 )}
               </CardFooter>

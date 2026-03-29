@@ -245,7 +245,7 @@ export function CartContent({ cartItems, summary }: CartContentProps) {
               Browse Express Shop
             </Link>
             <Link
-              href="/meal-plans"
+              href="/plans"
               className="rounded-md border border-fitnest-green px-4 py-2 text-sm font-medium text-fitnest-green hover:bg-fitnest-green/10"
             >
               View Meal Plans
@@ -307,7 +307,7 @@ export function CartContent({ cartItems, summary }: CartContentProps) {
                 </Link>
                 <span className="text-gray-300">|</span>
                 <Link
-                  href="/meal-plans"
+                  href="/plans"
                   className="flex-1 text-center text-sm text-gray-600 hover:text-fitnest-green"
                 >
                   View Plans

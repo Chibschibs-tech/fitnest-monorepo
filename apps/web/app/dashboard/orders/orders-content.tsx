@@ -269,7 +269,7 @@ export function OrdersContent() {
                   : "You haven't placed any orders yet. Browse our meal plans or express shop to get started."}
               </p>
               <div className="flex space-x-4">
-                <Link href="/meal-plans">
+                <Link href="/plans">
                   <Button variant="outline">Browse Meal Plans</Button>
                 </Link>
                 <Link href="/express-shop">

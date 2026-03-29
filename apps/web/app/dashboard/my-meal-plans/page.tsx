@@ -146,7 +146,7 @@ export default function MyMealPlansPage() {
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Try again
               </Button>
-              <Link href="/meal-plans">
+              <Link href="/plans">
                 <Button variant="outline">Browse Meal Plans</Button>
               </Link>
               {error.includes("log in") && (
@@ -178,7 +178,7 @@ export default function MyMealPlansPage() {
             <p className="text-gray-600 mb-4">
               Start your fitness journey by choosing a meal plan that fits your goals.
             </p>
-            <Link href="/meal-plans">
+            <Link href="/plans">
               <Button className="bg-green-600 hover:bg-green-700">Browse Meal Plans</Button>
             </Link>
           </CardContent>

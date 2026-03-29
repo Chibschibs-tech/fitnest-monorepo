@@ -74,7 +74,7 @@ export default function Footer() {
               <ul className="space-y-2.5 sm:space-y-3">
                 <li>
                   <Link
-                    href="/meal-plans"
+                    href="/plans"
                     className="text-sm sm:text-base text-gray-600 hover:text-fitnest-green transition-colors inline-block"
                   >
                     {t.footer.mealPlans}
@@ -98,7 +98,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/subscribe"
+                    href="/order"
                     className="text-sm sm:text-base text-gray-600 hover:text-fitnest-green transition-colors inline-block"
                   >
                     {locale === 'fr' ? 'S\'abonner' : 'Subscribe'}

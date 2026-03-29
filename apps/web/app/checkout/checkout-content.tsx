@@ -32,17 +32,16 @@ interface MealPlanData {
   planName: string
   planPrice: number
   duration: string
-  mealsPerWeek: number
-  customizations?: {
-    dietaryRestrictions?: string[]
-    allergies?: string[]
-    preferences?: string[]
-  }
+  subscriptionWeeks: number
+  mealTypes: string[]
+  snacks: string
   deliverySchedule?: {
     frequency: string
-    preferredDay: string
+    selectedDays: string[]
     startDate: string
   }
+  allergies?: string[]
+  priceBreakdown?: any
 }
 
 export function CheckoutContent() {
@@ -64,7 +63,7 @@ export function CheckoutContent() {
     postalCode: "",
     notes: "",
     deliveryOption: "standard",
-    // Billing address fields
+    paymentMethod: "cod" as "cod" | "bank_transfer",
     billingFirstName: "",
     billingLastName: "",
     billingAddress: "",
@@ -89,15 +88,6 @@ export function CheckoutContent() {
         "checkoutData",
       ]
 
-      console.log("=== CHECKING LOCALSTORAGE FOR MEAL PLAN DATA ===")
-
-      for (const key of possibleKeys) {
-        const data = localStorage.getItem(key)
-        if (data) {
-          console.log(`Found data in localStorage[${key}]:`, data)
-        }
-      }
-
       // Load meal plan data from localStorage
       const savedMealPlan = localStorage.getItem("selectedMealPlan")
       const savedCustomizations = localStorage.getItem("mealPlanCustomizations")
@@ -109,22 +99,21 @@ export function CheckoutContent() {
         const deliverySchedule = savedDeliverySchedule ? JSON.parse(savedDeliverySchedule) : undefined
 
         const mealPlanData: MealPlanData = {
-          planId: planData.id || planData.planId,
-          planName: planData.name || planData.planName,
-          planPrice: planData.price || planData.planPrice || 0,
+          planId: planData.planId || planData.id,
+          planName: planData.planName || planData.name,
+          planPrice: planData.planPrice || planData.price || 0,
           duration: planData.duration || "4 weeks",
-          mealsPerWeek: planData.mealsPerWeek || 7,
-          customizations,
-          deliverySchedule,
+          subscriptionWeeks: planData.subscriptionWeeks || 4,
+          mealTypes: planData.customizations?.mealTypes || [],
+          snacks: planData.customizations?.snacks || "no-snacks",
+          deliverySchedule: planData.deliverySchedule || deliverySchedule,
+          allergies: planData.customizations?.dietaryRestrictions || [],
+          priceBreakdown: planData.priceBreakdown,
         }
 
         setMealPlan(mealPlanData)
-        console.log("Loaded meal plan data:", mealPlanData)
-      } else {
-        console.log("No meal plan data found in localStorage")
       }
     } catch (error) {
-      console.error("Error loading meal plan data:", error)
       // Don't set error state, just continue without meal plan
     }
   }
@@ -216,6 +205,10 @@ export function CheckoutContent() {
           deliveryOption: formData.deliveryOption,
         },
         billing: billingAddress,
+        payment: {
+          method: formData.paymentMethod,
+          status: "pending",
+        },
         order: {
           cartItems:
             cart?.items?.map((item: any) => ({
@@ -230,10 +223,13 @@ export function CheckoutContent() {
             planName: mealPlan.planName,
             planId: mealPlan.planId,
             planPrice: mealPlan.planPrice,
-            duration: mealPlan.duration,
-            mealsPerWeek: mealPlan.mealsPerWeek,
-            mealTypes: mealPlan.customizations?.dietaryRestrictions || [],
-          } : undefined, // Include meal plan data if exists
+            durationWeeks: mealPlan.subscriptionWeeks,
+            daysPerWeek: mealPlan.deliverySchedule?.selectedDays?.length || 5,
+            mealTypes: mealPlan.mealTypes,
+            allergies: mealPlan.allergies,
+            deliverySchedule: mealPlan.deliverySchedule,
+            priceBreakdown: mealPlan.priceBreakdown,
+          } : undefined,
         },
       }
 
@@ -280,17 +276,12 @@ export function CheckoutContent() {
           localStorage.removeItem("selectedMealPlan")
           localStorage.removeItem("mealPlanCustomizations")
           localStorage.removeItem("mealPlanDelivery")
-          console.log("Meal plan data cleared from localStorage")
         }
-      } catch (clearError) {
-        console.error("Error clearing local data:", clearError)
-        // Don't fail the order if clearing fails
+      } catch {
       }
 
-      // Redirect to confirmation
-      router.push(`/checkout/confirmation?orderId=${orderId}`)
+      router.push(`/checkout/confirmation?orderId=${orderId}&payment=${formData.paymentMethod}`)
     } catch (error) {
-      console.error("Error submitting order:", error)
       setError(error instanceof Error ? error.message : "Failed to create order")
     } finally {
       setSubmitting(false)
@@ -591,11 +582,11 @@ export function CheckoutContent() {
           {/* Delivery Options */}
           <Card>
             <CardHeader>
-              <CardTitle>Delivery Options</CardTitle>
+              <CardTitle>Options de livraison</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <label className="flex items-center">
+                <label className="flex items-center cursor-pointer">
                   <input
                     type="radio"
                     name="deliveryOption"
@@ -604,9 +595,9 @@ export function CheckoutContent() {
                     onChange={handleInputChange}
                     className="mr-2"
                   />
-                  Standard Delivery (Free) - 2-3 business days
+                  Livraison standard (Gratuite) — 2-3 jours ouvrés
                 </label>
-                <label className="flex items-center">
+                <label className="flex items-center cursor-pointer">
                   <input
                     type="radio"
                     name="deliveryOption"
@@ -615,7 +606,49 @@ export function CheckoutContent() {
                     onChange={handleInputChange}
                     className="mr-2"
                   />
-                  Express Delivery (+30 MAD) - Same day
+                  Livraison express (+30 MAD) — Le jour même
+                </label>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Mode de paiement</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <label className={`flex items-start p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  formData.paymentMethod === "cod" ? "border-fitnest-green bg-green-50" : "border-gray-200"
+                }`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={formData.paymentMethod === "cod"}
+                    onChange={handleInputChange}
+                    className="mr-3 mt-0.5"
+                  />
+                  <div>
+                    <span className="font-medium">Paiement à la livraison</span>
+                    <p className="text-sm text-gray-500">Payez en espèces lors de la réception de votre commande</p>
+                  </div>
+                </label>
+                <label className={`flex items-start p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  formData.paymentMethod === "bank_transfer" ? "border-fitnest-green bg-green-50" : "border-gray-200"
+                }`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="bank_transfer"
+                    checked={formData.paymentMethod === "bank_transfer"}
+                    onChange={handleInputChange}
+                    className="mr-3 mt-0.5"
+                  />
+                  <div>
+                    <span className="font-medium">Virement bancaire</span>
+                    <p className="text-sm text-gray-500">Effectuez un virement — les détails vous seront envoyés par email</p>
+                  </div>
                 </label>
               </div>
             </CardContent>
@@ -625,27 +658,25 @@ export function CheckoutContent() {
         {/* Order Summary */}
         <Card>
           <CardHeader>
-            <CardTitle>Order Summary</CardTitle>
+            <CardTitle>Résumé de la commande</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
-                {/* Meal Plan Section */}
                 {mealPlan && (
                   <>
                     <div className="bg-green-50 p-4 rounded-lg">
-                      <h3 className="font-semibold text-green-800 mb-2">Meal Plan Subscription</h3>
+                      <h3 className="font-semibold text-green-800 mb-2">Abonnement repas</h3>
                       <div className="space-y-2">
                         <div className="flex justify-between">
                           <div>
                             <p className="font-medium">{mealPlan.planName}</p>
                             <p className="text-sm text-gray-600">
-                              {mealPlan.duration} • {mealPlan.mealsPerWeek} meals/week
+                              {mealPlan.duration} • {mealPlan.mealTypes.length} repas/jour
                             </p>
-                            {mealPlan.customizations && (
+                            {mealPlan.allergies && mealPlan.allergies.length > 0 && (
                               <div className="text-xs text-gray-500 mt-1">
-                                {mealPlan.customizations.dietaryRestrictions &&
-                                  `Diet: ${mealPlan.customizations.dietaryRestrictions.join(", ")}`}
+                                Restrictions : {mealPlan.allergies.join(", ")}
                               </div>
                             )}
                           </div>

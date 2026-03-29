@@ -8,42 +8,46 @@ export const revalidate = 0
 
 const siteUrl = "https://fitnest.ma"
 
-// Global metadata for SEO and social sharing
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Fitnest.ma | Healthy Meal Delivery in Morocco",
+    default: "Fitnest.ma — Plans Repas Sains Livrés à Domicile au Maroc",
     template: "%s | Fitnest.ma",
   },
   description:
-    "Fitnest.ma delivers healthy, chef-prepared meals and tailored meal plans across Morocco. Choose your goal, customize your meals, and enjoy fresh deliveries.",
+    "Fitnest.ma livre des repas sains préparés par des chefs et des plans repas personnalisés partout au Maroc. Choisissez votre objectif, personnalisez vos repas et profitez de livraisons fraîches.",
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Fitnest.ma | Healthy Meal Delivery in Morocco",
+    title: "Fitnest.ma — Plans Repas Sains Livrés à Domicile au Maroc",
     description:
-      "Healthy, chef-prepared meals and meal plans delivered to your door. Weight loss, stay fit, and muscle gain programs tailored to your goals.",
+      "Repas sains préparés par des chefs, livrés chez vous. Programmes Weight Loss, Stay Fit, Muscle Gain et Keto adaptés à vos objectifs.",
     siteName: "Fitnest.ma",
+    locale: "fr_MA",
     images: [
       {
         url: "/images/og/fitnest-home.jpg",
         width: 1200,
         height: 630,
-        alt: "Fitnest.ma healthy meal delivery",
+        alt: "Fitnest.ma — livraison de repas sains au Maroc",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fitnest.ma | Healthy Meal Delivery in Morocco",
+    title: "Fitnest.ma — Plans Repas Sains Livrés à Domicile",
     description:
-      "Healthy, chef-prepared meals and meal plans delivered to your door. Weight loss, stay fit, and muscle gain programs tailored to your goals.",
+      "Repas sains préparés par des chefs, livrés chez vous. Programmes adaptés à vos objectifs fitness.",
   },
   alternates: {
     canonical: siteUrl,
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 }
 
@@ -53,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body>
         <ClientLayout>{children}</ClientLayout>
       </body>
