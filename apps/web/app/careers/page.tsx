@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import Image from "next/image"
 
 export const metadata: Metadata = {
-  title: "Careers | Fitnest",
+  title: "Carrières | Fitnest.ma",
   description:
-    "Join the Fitnest team and help us revolutionize healthy eating in Morocco. Explore current job openings and career opportunities.",
+    "Rejoignez l'équipe Fitnest.ma : offres cuisine, nutrition et logistique au Maroc. Carrières dans la livraison de repas sains et le bien-être.",
 }
 
 export default function CareersPage() {

@@ -11,9 +11,9 @@ import { ShoppingCart, Plus } from "lucide-react"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {
-  title: "Express Shop | Fitnest.ma",
+  title: "Boutique Express | Fitnest.ma",
   description:
-    "Order healthy snacks, supplements, and accessories from the Fitnest Express Shop. One-off purchases delivered with your meals.",
+    "Snacks sains, compléments et accessoires Fitnest.ma : achats ponctuels livrés avec vos repas au Maroc. Commandez en ligne en quelques clics.",
 }
 
 export default async function ExpressShop() {

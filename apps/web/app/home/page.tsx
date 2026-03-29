@@ -41,7 +41,7 @@ export default function Home() {
           setProducts(data.slice(0, 4)) // Show only first 4 products
         }
       } catch (error) {
-        console.error('Error fetching products:', error)
+        console.error("Erreur lors du chargement des produits :", error)
       } finally {
         setLoadingProducts(false)
       }
@@ -60,7 +60,7 @@ export default function Home() {
         {/* Mobile Hero Image */}
         <Image
           src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Fintest-Hompegae-mobile.jpg"
-          alt="Fitnest.ma Hero Banner - Mobile"
+          alt="Bannière d'accueil Fitnest.ma — mobile"
           fill
           className="object-cover object-center md:hidden"
           priority
@@ -69,7 +69,7 @@ export default function Home() {
         {/* Desktop Hero Image */}
         <Image
           src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
-          alt="Fitnest.ma Hero Banner - Desktop"
+          alt="Bannière d'accueil Fitnest.ma — bureau"
           fill
           className="object-cover object-center hidden md:block"
           priority
@@ -160,7 +160,7 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Programme repas perte de poids" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
@@ -168,8 +168,8 @@ export default function Home() {
               <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.weightLoss.description}</p>
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "420 Dhs" : "420 MAD"}</span>
+                  <span className="text-[10px] font-normal text-gray-500">à partir de</span>
+                  <span className="text-xl font-bold text-fitnest-green">420 Dhs</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -201,13 +201,13 @@ export default function Home() {
             {/* Stay Fit Plan - Popular */}
             <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative border-2 border-fitnest-orange">
               <div className="absolute top-4 right-4">
-                <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  {locale === "fr" ? "POPULAIRE" : "POPULAR"}
+                  <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  POPULAIRE
                 </span>
               </div>
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Stay Fit Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Programme repas maintien forme" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
@@ -215,8 +215,8 @@ export default function Home() {
               <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.stayFit.description}</p>
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "450 dhs" : "450 MAD"}</span>
+                  <span className="text-[10px] font-normal text-gray-500">à partir de</span>
+                  <span className="text-xl font-bold text-fitnest-green">450 Dhs</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -249,7 +249,7 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Programme repas prise de masse" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
@@ -257,8 +257,8 @@ export default function Home() {
               <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.muscleGain.description}</p>
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "500 dhs" : "500 MAD"}</span>
+                  <span className="text-[10px] font-normal text-gray-500">à partir de</span>
+                  <span className="text-xl font-bold text-fitnest-green">500 Dhs</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -343,7 +343,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1547592180-85f173990554?w=280&h=160&fit=crop"
-                      alt="Meal Prep Tips"
+                      alt="Conseils de préparation des repas"
                       fill
                       className="object-cover"
                     />
@@ -372,7 +372,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=280&h=160&fit=crop"
-                      alt="Nutrition Myths"
+                      alt="Mythes sur la nutrition"
                       fill
                       className="object-cover"
                     />
@@ -399,7 +399,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=280&h=160&fit=crop"
-                      alt="Weight Loss Plateau"
+                      alt="Plateau de perte de poids"
                       fill
                       className="object-cover"
                     />
@@ -429,7 +429,7 @@ export default function Home() {
             {/* Blog Post 1 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md transition-transform hover:shadow-lg">
               <div className="relative h-48">
-                <Image src="https://images.unsplash.com/photo-1547592180-85f173990554?w=384&h=192&fit=crop" alt="Meal Prep Tips" fill className="object-cover" />
+                <Image src="https://images.unsplash.com/photo-1547592180-85f173990554?w=384&h=192&fit=crop" alt="Conseils de préparation des repas" fill className="object-cover" />
               </div>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
@@ -458,7 +458,7 @@ export default function Home() {
               <div className="relative h-48">
                 <Image
                   src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=384&h=192&fit=crop"
-                  alt="Nutrition Myths"
+                  alt="Mythes sur la nutrition"
                   fill
                   className="object-cover"
                 />
@@ -490,7 +490,7 @@ export default function Home() {
               <div className="relative h-48">
                 <Image
                   src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=384&h=192&fit=crop"
-                  alt="Weight Loss Plateau"
+                  alt="Plateau de perte de poids"
                   fill
                   className="object-cover"
                 />
@@ -562,7 +562,7 @@ export default function Home() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">{locale === "fr" ? "Pas d'image" : "No image"}</span>
+                        <span className="text-gray-400 text-sm">Pas d&apos;image</span>
                       </div>
                     )}
                   </div>
@@ -575,13 +575,13 @@ export default function Home() {
                       <span className="text-fitnest-green font-bold text-sm sm:text-base">
                         {product.salePrice ? (
                           <>
-                            {product.salePrice} MAD
-                            <span className="text-gray-500 text-xs line-through ml-2">{product.price} MAD</span>
+                            {product.salePrice} Dhs
+                            <span className="text-gray-500 text-xs line-through ml-2">{product.price} Dhs</span>
                           </>
                         ) : (
                           <>
-                            {locale === "fr" && <span>{t.home.expressShop.from} </span>}
-                            {product.price} MAD
+                            <span>{t.home.expressShop.from} </span>
+                            {product.price} Dhs
                           </>
                         )}
                       </span>
@@ -597,7 +597,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-600">{locale === "fr" ? "Aucun produit disponible" : "No products available"}</p>
+              <p className="text-gray-600">Aucun produit disponible</p>
             </div>
           )}
 

@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export const metadata: Metadata = {
-  title: "How It Works | Fitnest.ma",
+  title: "Comment ça marche | Fitnest.ma",
   description:
-    "See how Fitnest meal plans work: choose your goal, customize your meals, and receive fresh deliveries across Morocco.",
+    "Choisissez votre formule, personnalisez vos repas et recevez des livraisons fraîches à domicile au Maroc. Les étapes simples du service Fitnest.ma.",
 }
 
 export default function HowItWorksPage() {

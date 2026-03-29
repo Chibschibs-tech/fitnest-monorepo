@@ -1,9 +1,10 @@
-Phase 3: Payment method selection and payment status tracking
+Phase 4: SEO and French-first content overhaul
 
-- Add payment method UI in checkout: COD and Bank Transfer options
-- Add payment_method + payment_status columns to orders and subscriptions
-- Update create-unified API to store payment method/status in DB columns
-- Update admin order status API to support paymentStatus updates
-- Rewrite confirmation page with French content, payment-specific messaging
-- Pass orderId and payment method to confirmation via URL params
-- Update schema.ts with new payment columns
+- Set lang=fr in root layout (Phase 1), French metadata + OG tags
+- Add French SEO metadata layouts for client pages: blog, contact,
+  login, register, privacy, terms, legal
+- Update server-side metadata to French: about, careers, faq,
+  how-it-works, express-shop, menu
+- Translate home page alt texts, badges, prices to French
+- Overhaul i18n.ts: natural French translations, Casablanca address,
+  consistent pricing (MAD), meal plan names kept in English
