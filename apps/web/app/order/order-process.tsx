@@ -14,7 +14,21 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { cn } from "@/lib/utils"
 import { DeliveryCalendar } from "@/components/delivery-calendar"
-import { calculatePrice, type MealSelection, type PriceBreakdown, formatPrice } from "@/lib/pricing-model"
+// Pricing is computed by the DB-driven engine via /api/calculate-price.
+function formatPrice(amount: number, currency = "MAD"): string {
+  return `${(amount ?? 0).toFixed(2)} ${currency}`
+}
+
+type Pricing = {
+  pricePerDay: number
+  totalDays: number
+  weeks: number
+  subtotal: number
+  discountPct: number
+  discountLabel: string
+  discountAmount: number
+  total: number
+}
 
 // Define meal plan data
 const mealPlans = {
@@ -205,9 +219,10 @@ export function OrderProcess() {
     menu?: string
   }>({})
 
-  // Pricing calculation state
-  const [priceBreakdown, setPriceBreakdown] = useState<PriceBreakdown | null>(null)
+  // Pricing calculation state (from the DB-driven engine)
+  const [pricing, setPricing] = useState<Pricing | null>(null)
   const [pricingError, setPricingError] = useState<string>("")
+  const [pricingLoading, setPricingLoading] = useState(false)
 
   // Calendar rules - Fixed: Proper calculation for 1 month = 4 weeks
   const today = new Date()
@@ -223,29 +238,73 @@ export function OrderProcess() {
   const sortedSelectedDays = [...selectedDays].sort((a, b) => a.getTime() - b.getTime())
   const startDate = sortedSelectedDays.length > 0 ? sortedSelectedDays[0] : undefined
 
-  // Calculate pricing whenever selection changes
+  // Calculate pricing whenever selection changes — DB-driven engine.
   useEffect(() => {
-    if (selectedPlanId && selectedDays.length >= 3) {
-      try {
-        const selection: MealSelection = {
-          planId: selectedPlanId,
-          mainMeals: selectedMealTypes.includes("lunch") && selectedMealTypes.includes("dinner") ? 2 : 1,
-          breakfast: selectedMealTypes.includes("breakfast"),
-          snacks: snackOptions.find((opt) => opt.id === selectedSnacks)?.value || 0,
-          selectedDays: selectedDays,
-          subscriptionWeeks: durationOptions.find((opt) => opt.value === duration)?.weeks || 1,
-          promoCode: promoCode || undefined,
-        }
+    const planName = selectedPlanId ? mealPlans[selectedPlanId as keyof typeof mealPlans]?.title : ""
+    const totalDays = selectedDays.length
 
-        const breakdown = calculatePrice(selection, promoCode || undefined)
-        setPriceBreakdown(breakdown)
-        setPricingError("")
-      } catch (error) {
-        setPricingError(error instanceof Error ? error.message : "Pricing calculation error")
-        setPriceBreakdown(null)
-      }
+    if (!planName || totalDays < 3) {
+      setPricing(null)
+      return
     }
-  }, [selectedPlanId, selectedMealTypes, selectedSnacks, selectedDays, duration, promoCode])
+
+    const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+    const snackCount = snackOptions.find((o) => o.id === selectedSnacks)?.value || 0
+    const meals = [...selectedMealTypes.map(cap), ...Array.from({ length: snackCount }, () => "Snack")]
+    const weeks = durationOptions.find((o) => o.value === duration)?.weeks || 1
+    const daysPerWeek = Math.min(7, Math.max(1, Math.round(totalDays / weeks)))
+
+    let ignore = false
+    setPricingLoading(true)
+    ;(async () => {
+      try {
+        const res = await fetch("/api/calculate-price", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ plan: planName, meals, days: daysPerWeek, duration: weeks }),
+        })
+        const json = await res.json()
+        if (ignore) return
+        if (!res.ok) {
+          setPricingError(json?.error || "Pricing unavailable")
+          setPricing(null)
+          return
+        }
+        const calc = json.calculation || json.data || json
+        const pricePerDay = Number(calc.pricePerDay) || 0
+        const gross = Number(calc.grossWeekly) || 0
+        const final = Number(calc.finalWeekly) || 0
+        const rate = gross > 0 ? (gross - final) / gross : 0
+        const subtotal = Math.round(pricePerDay * totalDays * 100) / 100
+        const discountAmount = Math.round(subtotal * rate * 100) / 100
+        const label =
+          Array.isArray(calc.discountsApplied) && calc.discountsApplied.length
+            ? calc.discountsApplied.map((d: any) => `${d.type} ${d.percentage}%`).join(" + ")
+            : ""
+        setPricing({
+          pricePerDay,
+          totalDays,
+          weeks,
+          subtotal,
+          discountPct: Math.round(rate * 1000) / 10,
+          discountLabel: label,
+          discountAmount,
+          total: Math.round((subtotal - discountAmount) * 100) / 100,
+        })
+        setPricingError("")
+      } catch (e) {
+        if (ignore) return
+        setPricingError(e instanceof Error ? e.message : "Pricing calculation error")
+        setPricing(null)
+      } finally {
+        if (!ignore) setPricingLoading(false)
+      }
+    })()
+
+    return () => {
+      ignore = true
+    }
+  }, [selectedPlanId, selectedMealTypes, selectedSnacks, selectedDays, duration])
 
   // Reset selected days if duration changes and selected days fall outside the new range
   useEffect(() => {
@@ -342,7 +401,7 @@ export function OrderProcess() {
         const mealPlanData = {
           planId: selectedPlanId,
           planName: selectedPlan?.title,
-          planPrice: priceBreakdown?.finalTotal || 0,
+          planPrice: pricing?.total || 0,
           duration: `${selectedDays.length} days`,
           subscriptionWeeks: durationOptions.find((opt) => opt.value === duration)?.weeks || 1,
           customizations: {
@@ -357,7 +416,7 @@ export function OrderProcess() {
             selectedDays: sortedSelectedDays.map((d) => d.toISOString()),
             startDate: startDate?.toISOString(),
           },
-          priceBreakdown: priceBreakdown,
+          pricing: pricing,
         }
         localStorage.setItem("selectedMealPlan", JSON.stringify(mealPlanData))
         router.push("/checkout")
@@ -381,7 +440,7 @@ export function OrderProcess() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12">
+    <div className="container mx-auto px-4 py-6 md:py-12 pb-28 lg:pb-12">
       <div className="mb-8">
         <Button variant="ghost" onClick={handleBack} className="mb-4">
           <ChevronLeft className="mr-2 h-4 w-4" />
@@ -419,7 +478,7 @@ export function OrderProcess() {
                 <CardTitle>Choose Your Plan Options</CardTitle>
                 <CardDescription>Customize your meal plan to fit your needs</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-8">
+              <CardContent className="space-y-6">
                 {/* Meal Plan Selection */}
                 <div>
                   <Label className="text-base font-medium mb-3 block">Choose your meal plan</Label>
@@ -458,7 +517,7 @@ export function OrderProcess() {
                 <div>
                   <Label className="text-base font-medium mb-3 block">How many meals per day?</Label>
                   <p className="text-sm text-gray-500 mb-4">Select a minimum of 2 meals, including lunch or dinner.</p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-3 gap-2 md:gap-4">
                     {mealTypes.map((mealType) => (
                       <div key={mealType.id} className="relative">
                         <input
@@ -487,8 +546,8 @@ export function OrderProcess() {
                             </div>
                           )}
                           <div className="text-center">
-                            <h3 className="font-semibold">{mealType.label}</h3>
-                            <p className="text-sm text-gray-500">{mealType.description}</p>
+                            <h3 className="font-semibold text-sm md:text-base">{mealType.label}</h3>
+                            <p className="text-xs text-gray-500 hidden sm:block">{mealType.description}</p>
                           </div>
                         </label>
                       </div>
@@ -503,7 +562,7 @@ export function OrderProcess() {
                   <RadioGroup
                     value={selectedSnacks}
                     onValueChange={setSelectedSnacks}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                    className="grid grid-cols-3 gap-2 md:gap-4"
                   >
                     {snackOptions.map((option) => (
                       <div key={option.id}>
@@ -513,8 +572,8 @@ export function OrderProcess() {
                           className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-white p-4 hover:bg-gray-50 hover:border-gray-200 peer-data-[state=checked]:border-fitnest-green [&:has([data-state=checked])]:border-fitnest-green cursor-pointer"
                         >
                           <div className="text-center">
-                            <h3 className="font-semibold">{option.label}</h3>
-                            <p className="text-sm text-gray-500">{option.description}</p>
+                            <h3 className="font-semibold text-sm md:text-base">{option.label}</h3>
+                            <p className="text-xs text-gray-500 hidden sm:block">{option.description}</p>
                           </div>
                         </Label>
                       </div>
@@ -528,7 +587,7 @@ export function OrderProcess() {
                   <RadioGroup
                     value={String(duration)}
                     onValueChange={(value) => setDuration(Number(value))}
-                    className="grid gap-4 md:grid-cols-3"
+                    className="grid grid-cols-3 gap-2 md:gap-4"
                   >
                     {durationOptions.map((option) => (
                       <div key={option.value}>
@@ -563,10 +622,8 @@ export function OrderProcess() {
                       Clear
                     </Button>
                   </div>
-                  {promoCode && priceBreakdown?.discounts.seasonalDiscount > 0 && (
-                    <p className="text-green-600 text-sm mt-2">
-                      ✓ Promo code applied! Save {formatPrice(priceBreakdown.discounts.seasonalDiscount)}
-                    </p>
+                  {promoCode && (
+                    <p className="text-gray-500 text-xs mt-2">Promo codes are applied at checkout.</p>
                   )}
                 </div>
 
@@ -859,79 +916,30 @@ export function OrderProcess() {
 
                 <Separator />
 
-                {/* Pricing Breakdown - UPDATED: Better display for multi-week subscriptions */}
-                {priceBreakdown && (
+                {/* Pricing Breakdown - DB-driven engine */}
+                {pricingLoading && !pricing && <p className="text-sm text-gray-500">Calculating price…</p>}
+                {pricing && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Cost Per Day:</span>
-                      <span>{formatPrice(priceBreakdown.pricePerDay)}</span>
+                      <span>{formatPrice(pricing.pricePerDay)}</span>
                     </div>
-
-                    {/* Only show weekly cost for 1-week subscriptions */}
-                    {duration === 1 && (
-                      <div className="flex justify-between text-sm">
-                        <span>Weekly Cost:</span>
-                        <span>{formatPrice(priceBreakdown.pricePerWeek)}</span>
+                    <div className="flex justify-between text-sm">
+                      <span>Subtotal ({pricing.totalDays} days):</span>
+                      <span>{formatPrice(pricing.subtotal)}</span>
+                    </div>
+                    {pricing.discountAmount > 0 && (
+                      <div className="flex justify-between text-sm text-green-600">
+                        <span>Discount{pricing.discountLabel ? ` (${pricing.discountLabel})` : ""}:</span>
+                        <span>-{formatPrice(pricing.discountAmount)}</span>
                       </div>
                     )}
-
-                    {priceBreakdown.discounts.totalDiscount > 0 && (
-                      <>
-                        <div className="flex justify-between text-sm">
-                          <span>Subtotal:</span>
-                          <span>
-                            {formatPrice(
-                              priceBreakdown.subscriptionTotals.subscriptionSubtotal +
-                                priceBreakdown.discounts.totalDiscount,
-                            )}
-                          </span>
-                        </div>
-
-                        {priceBreakdown.discounts.appliedWeeklyDiscount > 0 && (
-                          <div className="flex justify-between text-sm text-green-600">
-                            <span>Volume Discount ({priceBreakdown.discounts.appliedWeeklyDiscount}%):</span>
-                            <span>
-                              -
-                              {formatPrice(
-                                priceBreakdown.discounts.totalDiscount -
-                                  priceBreakdown.discounts.durationDiscount -
-                                  priceBreakdown.discounts.seasonalDiscount,
-                              )}
-                            </span>
-                          </div>
-                        )}
-
-                        {priceBreakdown.discounts.durationDiscount > 0 && (
-                          <div className="flex justify-between text-sm text-green-600">
-                            <span>Duration Discount:</span>
-                            <span>-{formatPrice(priceBreakdown.discounts.durationDiscount)}</span>
-                          </div>
-                        )}
-
-                        {priceBreakdown.discounts.seasonalDiscount > 0 && (
-                          <div className="flex justify-between text-sm text-green-600">
-                            <span>Promo Discount:</span>
-                            <span>-{formatPrice(priceBreakdown.discounts.seasonalDiscount)}</span>
-                          </div>
-                        )}
-
-                        <div className="flex justify-between text-sm font-medium text-green-600">
-                          <span>Total Savings:</span>
-                          <span>-{formatPrice(priceBreakdown.discounts.totalDiscount)}</span>
-                        </div>
-                      </>
-                    )}
-
                     <div className="flex justify-between font-semibold text-lg pt-2 border-t">
                       <span>Final Total:</span>
-                      <span>{formatPrice(priceBreakdown.finalTotal)}</span>
+                      <span>{formatPrice(pricing.total)}</span>
                     </div>
-
-                    <div className="text-xs text-gray-500 space-y-1">
-                      <div>Total Items: {priceBreakdown.totalItems}</div>
-                      <div>
-                        Duration: {priceBreakdown.totalWeeks} week{priceBreakdown.totalWeeks > 1 ? "s" : ""}
-                      </div>
+                    <div className="text-xs text-gray-500">
+                      {pricing.weeks} week{pricing.weeks > 1 ? "s" : ""} · {pricing.totalDays} deliveries
                     </div>
                   </div>
                 )}
@@ -970,6 +978,25 @@ export function OrderProcess() {
               </CardFooter>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile sticky total bar */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t bg-white p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
+        <div className="container mx-auto flex items-center justify-between gap-3">
+          <div className="leading-tight">
+            <div className="text-xs text-gray-500">
+              {pricing ? `${pricing.totalDays} days · ${pricing.weeks} wk` : "Build your plan"}
+            </div>
+            <div className="text-lg font-semibold">{pricing ? formatPrice(pricing.total) : "—"}</div>
+          </div>
+          <Button
+            onClick={handleNext}
+            disabled={step === 1 ? !meetsMinimumRequirements() : !isMenuComplete()}
+            className={cn(step === 2 && "bg-fitnest-orange hover:bg-fitnest-orange/90")}
+          >
+            {step === 1 ? "Continue" : "Checkout"}
+          </Button>
         </div>
       </div>
     </div>

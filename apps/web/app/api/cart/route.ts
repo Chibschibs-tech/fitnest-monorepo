@@ -381,7 +381,7 @@ export async function PUT(request: Request) {
       }
 
       const discountRules = await sql`
-        SELECT discount_type, condition_value, discount_percentage, stackable
+        SELECT discount_type, condition_value, discount_percentage, stackable, stacking_behavior
         FROM discount_rules
         WHERE is_active = true
           AND (valid_from IS NULL OR valid_from <= NOW())

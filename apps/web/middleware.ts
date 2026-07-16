@@ -82,6 +82,7 @@ const publicRoutes = [
   "/api/products-simple",
   "/api/products-basic",
   "/api/products/[id]",
+  "/api/calculate-price",
   "/api/cart",
   "/api/cart/count",
   "/api/cart/add",

@@ -47,23 +47,37 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 1. Fetch meal prices from DB
-    const mealPrices: MealPrice[] = await sql`
+    // 1. Fetch the plan's price map, then build the per-day list from the
+    //    requested meals. Case-insensitive, and duplicates are allowed
+    //    (e.g. two snacks per day) so each occurrence is priced.
+    const priceRows: Array<{ meal_type: string; base_price_mad: number }> = await sql`
       SELECT meal_type, base_price_mad
       FROM meal_type_prices
-      WHERE plan_name = ${plan} AND meal_type = ANY(${meals}::text[]) AND is_active = true
+      WHERE plan_name = ${plan} AND is_active = true
     `
 
-    if (mealPrices.length !== meals.length) {
+    const priceMap = new Map(
+      priceRows.map((r) => [String(r.meal_type).toLowerCase(), r]),
+    )
+
+    const mealPrices: MealPrice[] = []
+    const unpriced: string[] = []
+    for (const m of meals) {
+      const row = priceMap.get(String(m).toLowerCase())
+      if (row) mealPrices.push({ meal_type: row.meal_type, base_price_mad: row.base_price_mad })
+      else unpriced.push(m)
+    }
+
+    if (mealPrices.length === 0) {
       return NextResponse.json(
-        { error: "Some meals not found for this plan" },
+        { error: "No priced meals found for this plan", unpriced },
         { status: 404 },
       )
     }
 
     // 2. Fetch discount rules
     const discountRules: DiscountRule[] = await sql`
-      SELECT discount_type, condition_value, discount_percentage, stackable
+      SELECT discount_type, condition_value, discount_percentage, stackable, stacking_behavior
       FROM discount_rules
       WHERE is_active = true
         AND (valid_from IS NULL OR valid_from <= NOW())
