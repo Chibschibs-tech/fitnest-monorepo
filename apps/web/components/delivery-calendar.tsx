@@ -1,11 +1,11 @@
-"use client"
+﻿"use client"
 
 import "react-day-picker/dist/style.css"
 import "./delivery-calendar.css"
 
 import { useEffect, useMemo, useState } from "react"
 import { DayPicker } from "react-day-picker"
-import { enGB } from "date-fns/locale"
+import { fr } from "date-fns/locale"
 import { addDays, compareAsc, endOfDay, format, isSameDay, startOfDay, startOfWeek } from "date-fns"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -31,7 +31,7 @@ type Props = {
  * DeliveryCalendar
  * - 48h rule: today and tomorrow are disabled
  * - Week window: starts at current week's Monday and spans `allowedWeeks` weeks (inclusive)
- * - Two months side-by-side on ≥640px to reduce empty space
+ * - Two months side-by-side on â‰¥640px to reduce empty space
  * - Selected dates chips + Clear all
  * - No blue rings, solid green selection
  */
@@ -49,7 +49,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
   const weeks = Math.max(1, allowedWeeks || 1)
   const allowedEnd = endOfDay(addDays(anchorStart, weeks * 7 - 1))
 
-  // Responsive: 2 months on ≥640px, 1 month on small screens
+  // Responsive: 2 months on â‰¥640px, 1 month on small screens
   const [months, setMonths] = useState(2)
   useEffect(() => {
     const mql = window.matchMedia("(max-width: 640px)")
@@ -67,7 +67,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
   return (
     <div className={cn("rounded-xl border bg-white p-4", className)}>
       <DayPicker
-        locale={enGB}
+        locale={fr}
         mode="multiple"
         selected={value}
         onSelect={(days) => onChange(days || [])}
@@ -150,22 +150,22 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: "#264e35" }} />
-          Selected
+          Selectionne
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full bg-gray-200" />
-          Unavailable
+          Indisponible
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full border border-gray-300 bg-white" />
-          Today
+          Aujourd hui
         </span>
       </div>
 
       {/* Selected date chips + Clear all */}
       <div className="mt-5 flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-gray-700">Selected dates</p>
+          <p className="text-sm font-medium text-gray-700">Jours selectionnes</p>
           <Button
             variant="ghost"
             size="sm"
@@ -173,12 +173,12 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
             onClick={clearAll}
             disabled={selectedSorted.length === 0}
           >
-            Clear all
+            Tout effacer
           </Button>
         </div>
 
         {selectedSorted.length === 0 ? (
-          <p className="text-sm text-gray-500">No dates selected yet.</p>
+          <p className="text-sm text-gray-500">Aucun jour selectionne pour le moment.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {selectedSorted.map((d) => {

@@ -619,7 +619,7 @@ export function OrderProcess() {
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-fitnest-green focus:border-transparent"
                     />
                     <Button type="button" variant="outline" onClick={() => setPromoCode("")} disabled={!promoCode}>
-                      Clear
+                      Effacer
                     </Button>
                   </div>
                   {promoCode && (
@@ -647,7 +647,7 @@ export function OrderProcess() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Button variant="outline" onClick={handleBack}>
-                  Back
+                  Retour
                 </Button>
                 <Button onClick={handleNext} disabled={!meetsMinimumRequirements()}>
                   Continuer vers le menu
@@ -833,7 +833,7 @@ export function OrderProcess() {
               </CardContent>
               <CardFooter className="flex justify-between">
                 <Button variant="outline" onClick={handleBack}>
-                  Back
+                  Retour
                 </Button>
                 <Button
                   onClick={handleNext}
@@ -871,9 +871,9 @@ export function OrderProcess() {
                         {selectedMealTypes.length} repas,{" "}
                         {selectedSnacks !== "0-snacks"
                           ? selectedSnacks === "1-snack"
-                            ? "1 snack"
-                            : "2 snacks"
-                          : "no snacks"}
+                            ? "1 collation"
+                            : "2 collations"
+                          : "sans collation"}
                       </p>
                     </div>
                   </div>
@@ -894,10 +894,10 @@ export function OrderProcess() {
                     <span>Collations par jour :</span>
                     <span>
                       {selectedSnacks === "0-snacks"
-                        ? "No snacks"
+                        ? "Sans collation"
                         : selectedSnacks === "1-snack"
-                          ? "1 snack"
-                          : "2 snacks"}
+                          ? "1 collation"
+                          : "2 collations"}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -939,7 +939,7 @@ export function OrderProcess() {
                       <span>{formatPrice(pricing.total)}</span>
                     </div>
                     <div className="text-xs text-gray-500">
-                      {pricing.weeks} semaine{pricing.weeks > 1 ? "s" : ""} Â· {pricing.totalDays} livraisons
+                      {pricing.weeks} semaine{pricing.weeks > 1 ? "s" : ""} Â- {pricing.totalDays} livraisons
                     </div>
                   </div>
                 )}
@@ -986,7 +986,7 @@ export function OrderProcess() {
         <div className="container mx-auto flex items-center justify-between gap-3">
           <div className="leading-tight">
             <div className="text-xs text-gray-500">
-              {pricing ? `${pricing.totalDays} days Â· ${pricing.weeks} wk` : "Compose ton plan"}
+              {pricing ? `${pricing.totalDays} days Â- ${pricing.weeks} wk` : "Compose ton plan"}
             </div>
             <div className="text-lg font-semibold">{pricing ? formatPrice(pricing.total) : "â€”"}</div>
           </div>
