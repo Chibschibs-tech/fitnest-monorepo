@@ -238,7 +238,7 @@ export function OrderProcess() {
   const sortedSelectedDays = [...selectedDays].sort((a, b) => a.getTime() - b.getTime())
   const startDate = sortedSelectedDays.length > 0 ? sortedSelectedDays[0] : undefined
 
-  // Calculate pricing whenever selection changes â€” DB-driven engine.
+  // Calculate pricing whenever selection changes - DB-driven engine.
   useEffect(() => {
     const planName = selectedPlanId ? mealPlans[selectedPlanId as keyof typeof mealPlans]?.title : ""
     const totalDays = selectedDays.length
@@ -917,7 +917,7 @@ export function OrderProcess() {
                 <Separator />
 
                 {/* Pricing Breakdown - DB-driven engine */}
-                {pricingLoading && !pricing && <p className="text-sm text-gray-500">Calcul du prixâ€¦</p>}
+                {pricingLoading && !pricing && <p className="text-sm text-gray-500">Calcul du prix...</p>}
                 {pricing && (
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -939,7 +939,7 @@ export function OrderProcess() {
                       <span>{formatPrice(pricing.total)}</span>
                     </div>
                     <div className="text-xs text-gray-500">
-                      {pricing.weeks} semaine{pricing.weeks > 1 ? "s" : ""} Â- {pricing.totalDays} livraisons
+                      {pricing.weeks} semaine{pricing.weeks > 1 ? "s" : ""} - {pricing.totalDays} livraisons
                     </div>
                   </div>
                 )}
@@ -986,9 +986,9 @@ export function OrderProcess() {
         <div className="container mx-auto flex items-center justify-between gap-3">
           <div className="leading-tight">
             <div className="text-xs text-gray-500">
-              {pricing ? `${pricing.totalDays} days Â- ${pricing.weeks} wk` : "Compose ton plan"}
+              {pricing ? `${pricing.totalDays} jours - ${pricing.weeks} sem.` : "Compose ton plan"}
             </div>
-            <div className="text-lg font-semibold">{pricing ? formatPrice(pricing.total) : "â€”"}</div>
+            <div className="text-lg font-semibold">{pricing ? formatPrice(pricing.total) : "-"}</div>
           </div>
           <Button
             onClick={handleNext}

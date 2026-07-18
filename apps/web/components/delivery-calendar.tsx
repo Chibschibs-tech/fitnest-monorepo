@@ -31,7 +31,7 @@ type Props = {
  * DeliveryCalendar
  * - 48h rule: today and tomorrow are disabled
  * - Week window: starts at current week's Monday and spans `allowedWeeks` weeks (inclusive)
- * - Two months side-by-side on â‰¥640px to reduce empty space
+ * - Two months side-by-side on >=640px to reduce empty space
  * - Selected dates chips + Clear all
  * - No blue rings, solid green selection
  */
@@ -49,7 +49,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
   const weeks = Math.max(1, allowedWeeks || 1)
   const allowedEnd = endOfDay(addDays(anchorStart, weeks * 7 - 1))
 
-  // Responsive: 2 months on â‰¥640px, 1 month on small screens
+  // Responsive: 2 months on >=640px, 1 month on small screens
   const [months, setMonths] = useState(2)
   useEffect(() => {
     const mql = window.matchMedia("(max-width: 640px)")
@@ -183,7 +183,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
           <div className="flex flex-wrap gap-2">
             {selectedSorted.map((d) => {
               const key = format(d, "yyyy-MM-dd")
-              const label = format(d, "EEE, MMM d") // e.g., Thu, Aug 14
+              const label = format(d, "EEE d MMM", { locale: fr }) // ex. jeu. 14 aout
               return (
                 <Badge
                   key={key}
