@@ -58,6 +58,11 @@ const navigation = [
         href: "/admin/pricing",
         icon: Calculator,
       },
+      {
+        name: "Compose ton plan",
+        href: "/admin/compose",
+        icon: Calculator,
+      },
     ],
   },
   {

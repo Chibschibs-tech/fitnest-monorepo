@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next"
+import type { Metadata } from "next"
 import Link from "next/link"
 import { getPlanEntryPrices, ENTRY_DAYS, ENTRY_MEALS } from "@/lib/plan-pricing"
 
@@ -65,7 +65,7 @@ export default async function PlansPage() {
 
               <div className="mt-4 flex flex-col gap-2">
                 <a
-                  href={`/compose-ton-plan?plan=${p.slug}`}
+                  href={`/order?plan=${p.slug}`}
                   className="inline-flex items-center justify-center rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90"
                 >
                   Configurer cette formule
@@ -80,6 +80,21 @@ export default async function PlansPage() {
             </article>
           )
         })}
+      </section>
+
+      <section className="rounded-xl border-2 border-fitnest-green bg-white p-6 md:p-8 text-center">
+        <h2 className="text-2xl font-bold mb-2">Ou compose ton plan</h2>
+        <p className="text-gray-600 max-w-2xl mx-auto mb-5">
+          Tu vises des macros precises ? Construis chaque plat toi-meme : choisis ta proteine, ton
+          feculent, tes legumes et tes supplements, suis tes calories en direct, enregistre tes plats
+          et monte ta semaine.
+        </p>
+        <a
+          href="/compose-ton-plan"
+          className="inline-flex items-center justify-center rounded-full bg-fitnest-orange px-6 py-3 text-sm font-medium text-white hover:bg-fitnest-orange/90"
+        >
+          Composer mon plan
+        </a>
       </section>
     </main>
   )

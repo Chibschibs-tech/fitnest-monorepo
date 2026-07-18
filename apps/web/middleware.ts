@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 const publicRoutes = [
@@ -20,6 +20,8 @@ const publicApiPrefixes = [
   "/api/calculate-price",
   // Public B2B lead capture from /entreprises.
   "/api/company-leads",
+  // Public: the Compose ton plan builder must work before login.
+  "/api/compose",
 ]
 
 function isPublicRoute(pathname: string): boolean {
