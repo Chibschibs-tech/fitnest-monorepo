@@ -51,6 +51,10 @@ export default function Home() {
   return (
     <>
       {/* Hero Section - Full screen with navbar overlay */}
+      {/* Hero copy lives inside the image, so the page needs a real, crawlable H1. */}
+      <h1 className="sr-only">
+        FitNest - livraison de repas sains et plans repas sur mesure à Casablanca
+      </h1>
       <section 
         className="relative flex items-end bg-gray-100 h-screen w-full"
         style={{

@@ -54,17 +54,17 @@ interface SavedMeal {
 }
 
 const SLOT_LABEL: Record<Slot, string> = {
-  protein: "Proteine",
-  carb: "Feculent",
-  veg: "Legumes",
+  protein: "Protéine",
+  carb: "Féculent",
+  veg: "Légumes",
   sauce: "Sauce",
-  extra: "Supplements",
+  extra: "Suppléments",
 }
 
 const MEAL_LABEL: Record<string, string> = {
-  Breakfast: "Petit-dejeuner",
-  Lunch: "Dejeuner",
-  Dinner: "Diner",
+  Breakfast: "Petit-déjeuner",
+  Lunch: "Déjeuner",
+  Dinner: "Dîner",
   Snack: "Collation",
 }
 
@@ -187,9 +187,10 @@ export function Composer() {
   const weekTotal = meals.reduce((s, m) => s + num(m.price_mad) * num(m.quantity_per_week), 0)
   const weekMeals = meals.reduce((s, m) => s + num(m.quantity_per_week), 0)
 
-  if (loading) return <p className="text-sm text-gray-500">Chargement...</p>
+  if (loading) return <p className="text-sm text-gray-500">Chargement…</p>
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <>
+    <div className="grid gap-6 lg:grid-cols-3 pb-24 lg:pb-0">
       <div className="lg:col-span-2 space-y-6">
         <div className="rounded-xl border bg-white p-5">
           <label className="block text-sm font-medium mb-2">Type de repas</label>
@@ -198,7 +199,7 @@ export function Composer() {
               <button
                 key={s.meal_type}
                 onClick={() => { setMealType(s.meal_type); setPicks({}) }}
-                className={mealType === s.meal_type ? "rounded-md border-2 px-3 py-2 text-sm border-fitnest-green bg-fitnest-green/5 font-medium" : "rounded-md border-2 px-3 py-2 text-sm border-gray-200"}
+                className={mealType === s.meal_type ? "min-h-[44px] rounded-md border-2 px-3 py-2 text-sm border-fitnest-green bg-fitnest-green/5 font-medium" : "min-h-[44px] rounded-md border-2 px-3 py-2 text-sm border-gray-200"}
               >
                 {MEAL_LABEL[s.meal_type] || s.meal_type}
               </button>
@@ -206,7 +207,7 @@ export function Composer() {
           </div>
           {settings && (
             <p className="text-xs text-gray-500 mt-3">
-              Prix de base {num(settings.base_price_mad).toFixed(0)} MAD. Inclus : {settings.included_protein} proteine, {settings.included_carb} feculent, {settings.included_veg} legumes, {settings.included_sauce} sauce. Maximum {settings.max_extras} supplements.
+              Prix de base {num(settings.base_price_mad).toFixed(0)} MAD. Inclus : {settings.included_protein} protéine, {settings.included_carb} féculent, {settings.included_veg} légumes, {settings.included_sauce} sauce. Maximum {settings.max_extras} suppléments.
             </p>
           )}
         </div>
@@ -226,16 +227,16 @@ export function Composer() {
                         <p className="text-sm font-medium truncate">
                           {c.name} <span className="text-gray-500 font-normal">{c.portion_grams} g</span>
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-[13px] text-gray-600">
                           {num(c.kcal)} kcal - {num(c.protein_g)}g P
                           {num(c.surcharge_mad) > 0 ? " - premium +" + num(c.surcharge_mad) + " MAD" : ""}
                           {" - portion sup. +" + num(c.extra_portion_price_mad) + " MAD"}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <Button variant="outline" size="sm" onClick={() => bump(c.id, -1)} disabled={q === 0} aria-label="Retirer">-</Button>
-                        <span className="w-6 text-center text-sm">{q}</span>
-                        <Button variant="outline" size="sm" onClick={() => bump(c.id, 1)} aria-label="Ajouter">+</Button>
+                        <Button variant="outline" size="icon" onClick={() => bump(c.id, -1)} disabled={q === 0} aria-label={"Retirer une portion de " + c.name}>-</Button>
+                        <span className="w-8 text-center text-base font-medium tabular-nums">{q}</span>
+                        <Button variant="outline" size="icon" onClick={() => bump(c.id, 1)} aria-label={"Ajouter une portion de " + c.name}>+</Button>
                       </div>
                     </div>
                   )
@@ -251,19 +252,19 @@ export function Composer() {
             <p className="text-sm font-medium mb-3">Ton plat</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div className="rounded-md bg-gray-50 p-3">
-                <p className="text-xs text-gray-500">Calories</p>
+                <p className="text-[13px] text-gray-600">Calories</p>
                 <p className="text-xl font-semibold">{priced ? priced.kcal : 0}</p>
               </div>
               <div className="rounded-md bg-gray-50 p-3">
-                <p className="text-xs text-gray-500">Proteines</p>
+                <p className="text-[13px] text-gray-600">Protéines</p>
                 <p className="text-xl font-semibold">{priced ? priced.protein_g : 0} g</p>
               </div>
               <div className="rounded-md bg-gray-50 p-3">
-                <p className="text-xs text-gray-500">Glucides</p>
+                <p className="text-[13px] text-gray-600">Glucides</p>
                 <p className="text-xl font-semibold">{priced ? priced.carbs_g : 0} g</p>
               </div>
               <div className="rounded-md bg-gray-50 p-3">
-                <p className="text-xs text-gray-500">Lipides</p>
+                <p className="text-[13px] text-gray-600">Lipides</p>
                 <p className="text-xl font-semibold">{priced ? priced.fat_g : 0} g</p>
               </div>
             </div>
@@ -272,7 +273,7 @@ export function Composer() {
               <span>{priced ? priced.basePrice.toFixed(2) : num(settings?.base_price_mad).toFixed(2)} MAD</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Supplements</span>
+              <span className="text-gray-600">Suppléments</span>
               <span>{priced ? priced.extrasPrice.toFixed(2) : "0.00"} MAD</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t mt-2 pt-2">
@@ -280,7 +281,7 @@ export function Composer() {
               <span>{priced ? priced.total.toFixed(2) : "0.00"} MAD</span>
             </div>
             {priced && (
-              <p className="text-xs text-gray-500 mt-1">{priced.extrasUsed} / {priced.maxExtras} supplements utilises</p>
+              <p className="text-xs text-gray-500 mt-1">{priced.extrasUsed} / {priced.maxExtras} suppléments utilises</p>
             )}
             {priced && !priced.valid && <p className="text-sm text-red-600 mt-2">{priced.errors[0]}</p>}
             <input
@@ -314,21 +315,21 @@ export function Composer() {
           <div className="rounded-xl border bg-white p-5">
             <p className="text-sm font-medium mb-3">Mes plats - ma semaine</p>
             {meals.length === 0 ? (
-              <p className="text-sm text-gray-500">Aucun plat enregistre pour le moment.</p>
+              <p className="text-sm text-gray-500">Aucun plat enregistré pour le moment.</p>
             ) : (
               <div className="space-y-2">
                 {meals.map((m) => (
                   <div key={m.id} className="flex items-center justify-between gap-2 border-b pb-2">
                     <div className="min-w-0">
                       <p className="text-sm font-medium truncate">{m.name}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-[13px] text-gray-600">
                         {num(m.kcal)} kcal - {num(m.protein_g)}g P - {num(m.price_mad).toFixed(2)} MAD
                       </p>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <Button variant="outline" size="sm" onClick={() => setWeekly(m.id, num(m.quantity_per_week) - 1)}>-</Button>
-                      <span className="w-6 text-center text-sm">{m.quantity_per_week}</span>
-                      <Button variant="outline" size="sm" onClick={() => setWeekly(m.id, num(m.quantity_per_week) + 1)}>+</Button>
+                      <Button variant="outline" size="icon" onClick={() => setWeekly(m.id, num(m.quantity_per_week) - 1)} aria-label={"Retirer une fois " + m.name}>-</Button>
+                      <span className="w-8 text-center text-base font-medium tabular-nums">{m.quantity_per_week}</span>
+                      <Button variant="outline" size="icon" onClick={() => setWeekly(m.id, num(m.quantity_per_week) + 1)} aria-label={"Ajouter une fois " + m.name}>+</Button>
                     </div>
                   </div>
                 ))}
@@ -342,5 +343,27 @@ export function Composer() {
         </div>
       </div>
     </div>
+
+      {/* Mobile sticky action bar - price and CTA stay in the thumb zone */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t bg-white p-3 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
+        <div className="container mx-auto flex items-center justify-between gap-3">
+          <div className="leading-tight">
+            <div className="text-[13px] text-gray-600">
+              {priced ? `${priced.kcal} kcal · ${priced.protein_g}g P` : "Compose ton plat"}
+            </div>
+            <div className="text-lg font-semibold">
+              {priced ? `${priced.total.toFixed(2)} MAD` : "—"}
+            </div>
+          </div>
+          <Button
+            onClick={save}
+            disabled={saving || !name.trim() || !priced || !priced.valid}
+            className="bg-fitnest-orange hover:bg-fitnest-orange/90"
+          >
+            Enregistrer
+          </Button>
+        </div>
+      </div>
+    </>
   )
 }

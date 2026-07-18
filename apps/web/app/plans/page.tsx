@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const PLANS = [
   { key: "Weight Loss", slug: "weight-loss", title: "Weight Loss", desc: "Objectif perte de poids" },
   { key: "Stay Fit", slug: "stay-fit", title: "Stay Fit", desc: "Rester en forme au quotidien" },
-  { key: "Muscle Gain", slug: "muscle-gain", title: "Muscle Gain", desc: "Prise de masse maitrisee" },
+  { key: "Muscle Gain", slug: "muscle-gain", title: "Muscle Gain", desc: "Prise de masse maîtrisée" },
 ]
 
 export default async function PlansPage() {
@@ -27,7 +27,7 @@ export default async function PlansPage() {
       <header className="text-center space-y-2">
         <h1 className="text-3xl font-bold">Nos formules</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Choisissez la formule adaptee a vos objectifs, puis configurez vos jours par semaine et vos repas par jour.
+          Choisissez la formule adaptée à vos objectifs, puis configurez vos jours par semaine et vos repas par jour.
         </p>
       </header>
 
@@ -50,7 +50,7 @@ export default async function PlansPage() {
                       <span className="text-sm font-normal text-gray-600">MAD / semaine</span>
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
-                      A partir de - {ENTRY_MEALS.length} repas/jour, {ENTRY_DAYS} jours/semaine
+                      À partir de - {ENTRY_MEALS.length} repas/jour, {ENTRY_DAYS} jours/semaine
                     </p>
                     <p className="text-xs text-gray-500">
                       soit {price.pricePerDay.toFixed(2)} MAD / jour
@@ -58,7 +58,7 @@ export default async function PlansPage() {
                   </div>
                 ) : (
                   <p className="text-xs text-gray-500 mb-4">
-                    Prix calcule lors de la configuration de votre formule.
+                    Prix calculé lors de la configuration de votre formule.
                   </p>
                 )}
               </div>
@@ -85,8 +85,8 @@ export default async function PlansPage() {
       <section className="rounded-xl border-2 border-fitnest-green bg-white p-6 md:p-8 text-center">
         <h2 className="text-2xl font-bold mb-2">Ou compose ton plan</h2>
         <p className="text-gray-600 max-w-2xl mx-auto mb-5">
-          Tu vises des macros precises ? Construis chaque plat toi-meme : choisis ta proteine, ton
-          feculent, tes legumes et tes supplements, suis tes calories en direct, enregistre tes plats
+          Tu vises des macros précises ? Construis chaque plat toi-même : choisis ta protéine, ton
+          féculent, tes légumes et tes suppléments, suis tes calories en direct, enregistre tes plats
           et monte ta semaine.
         </p>
         <a

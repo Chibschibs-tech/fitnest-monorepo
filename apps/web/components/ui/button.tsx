@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md hover:shadow-lg",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-sm font-medium touch-manipulation ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 shadow-md hover:shadow-lg",
   {
     variants: {
       variant: {
@@ -15,11 +15,14 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
+      // Mobile-first sizing: every control is at least 44px tall on touch
+      // devices (Apple HIG 44pt / Material 48dp), tightening only on md+ where
+      // a precise pointer is available.
       size: {
-        default: "h-10 px-6 py-2",
-        sm: "h-9 px-4",
+        default: "h-11 px-6 py-2 md:h-10",
+        sm: "h-11 px-4 md:h-9",
         lg: "h-12 px-8",
-        icon: "h-10 w-10",
+        icon: "h-11 w-11 md:h-10 md:w-10",
       },
     },
     defaultVariants: {

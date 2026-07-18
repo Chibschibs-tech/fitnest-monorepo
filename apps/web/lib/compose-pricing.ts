@@ -143,7 +143,7 @@ export function priceComposedMeal(
   }
 
   if (settings.protein_required && proteinUnits === 0) {
-    errors.push("Une proteine est obligatoire.")
+    errors.push("Une protéine est obligatoire.")
   }
   if (extrasUsed > settings.max_extras) {
     errors.push("Maximum " + settings.max_extras + " supplements par plat.")

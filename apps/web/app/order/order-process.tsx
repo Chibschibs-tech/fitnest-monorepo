@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
@@ -35,37 +35,37 @@ const mealPlans = {
   "weight-loss": {
     title: "Weight Loss",
     description:
-      "Repas a calories controlees (1200-1500 kcal/jour) pour perdre du poids sans jamais avoir faim.",
+      "Repas à calories contrôlées (1200-1500 kcal/jour) pour perdre du poids sans jamais avoir faim.",
     basePrice: 350,
     image: "/vibrant-weight-loss-meal.png",
   },
   "stay-fit": {
     title: "Stay Fit",
     description:
-      "Repas equilibres (1600-1900 kcal/jour) avec le juste equilibre proteines, glucides et bons lipides.",
+      "Repas équilibrés (1600-1900 kcal/jour) avec le juste équilibre protéines, glucides et bons lipides.",
     basePrice: 320,
     image: "/vibrant-nutrition-plate.png",
   },
   "muscle-gain": {
     title: "Muscle Gain",
     description:
-      "Repas riches en proteines (2200-2500 kcal/jour) pour la prise de masse et la recuperation.",
+      "Repas riches en protéines (2200-2500 kcal/jour) pour la prise de masse et la récupération.",
     basePrice: 400,
     image: "/hearty-muscle-meal.png",
   },
   keto: {
     title: "Keto",
     description:
-      "Repas pauvres en glucides et riches en bons lipides (1700-1900 kcal/jour) pour atteindre et maintenir la cetose.",
+      "Repas pauvres en glucides et riches en bons lipides (1700-1900 kcal/jour) pour atteindre et maintenir la cétose.",
     basePrice: 380,
     image: "/colorful-keto-plate.png",
   },
 }
 
 const mealTypes = [
-  { id: "breakfast", label: "Petit-dejeuner", description: "Bien commencer la journee" },
-  { id: "lunch", label: "Dejeuner", description: "L energie du midi" },
-  { id: "dinner", label: "Diner", description: "Un soir leger et complet" },
+  { id: "breakfast", label: "Petit-déjeuner", description: "Bien commencer la journée" },
+  { id: "lunch", label: "Déjeuner", description: "L'énergie du midi" },
+  { id: "dinner", label: "Dîner", description: "Un soir léger et complet" },
 ]
 
 const snackOptions = [
@@ -148,7 +148,7 @@ function validateDeliveryDays(selectedDays: Date[], duration: number): string[] 
   if (duration === 1) {
     // 1 week: at least 3 days
     if (totalDays < 3) {
-      errors.push("Choisis au moins 3 jours de livraison pour un abonnement d une semaine")
+      errors.push("Choisis au moins 3 jours de livraison pour un abonnement d'une semaine")
     }
   } else if (duration === 2) {
     // 2 weeks: at least 6 days total with at least 2 days in the second week
@@ -159,24 +159,24 @@ function validateDeliveryDays(selectedDays: Date[], duration: number): string[] 
       const weeks = Object.keys(weekGroups).sort()
 
       if (weeks.length < 2) {
-        errors.push("Repartis tes jours de livraison sur les deux semaines")
+        errors.push("Répartis tes jours de livraison sur les deux semaines")
       } else {
         const secondWeekDays = weekGroups[weeks[1]]?.length || 0
         if (secondWeekDays < 2) {
-          errors.push("Choisis au moins 2 jours de livraison la deuxieme semaine")
+          errors.push("Choisis au moins 2 jours de livraison la deuxième semaine")
         }
       }
     }
   } else if (duration === 4) {
     // 1 month: at least 10 days total with at least 2 days in the second, third, and fourth weeks
     if (totalDays < 10) {
-      errors.push("Choisis au moins 10 jours de livraison pour un abonnement d un mois")
+      errors.push("Choisis au moins 10 jours de livraison pour un abonnement d'un mois")
     } else {
       const weekGroups = groupDatesByWeek(selectedDays)
       const weeks = Object.keys(weekGroups).sort()
 
       if (weeks.length < 4) {
-        errors.push("Repartis tes jours de livraison sur les 4 semaines")
+        errors.push("Répartis tes jours de livraison sur les 4 semaines")
       } else {
         // Check weeks 2, 3, and 4 have at least 2 days each
         for (let i = 1; i < 4; i++) {
@@ -476,7 +476,7 @@ export function OrderProcess() {
             <Card>
               <CardHeader>
                 <CardTitle>Compose ton plan</CardTitle>
-                <CardDescription>Choisis ton programme, tes repas, tes jours et la duree.</CardDescription>
+                <CardDescription>Choisis ton programme, tes repas, tes jours et la durée.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Meal Plan Selection */}
@@ -516,7 +516,7 @@ export function OrderProcess() {
                 {/* Meal Types Selection */}
                 <div>
                   <Label className="text-base font-medium mb-3 block">Combien de repas par jour ?</Label>
-                  <p className="text-sm text-gray-500 mb-4">Choisis au moins 2 repas, dont le dejeuner ou le diner.</p>
+                  <p className="text-sm text-gray-500 mb-4">Choisis au moins 2 repas, dont le déjeuner ou le dîner.</p>
                   <div className="grid grid-cols-3 gap-2 md:gap-4">
                     {mealTypes.map((mealType) => (
                       <div key={mealType.id} className="relative">
@@ -583,7 +583,7 @@ export function OrderProcess() {
 
                 {/* Duration Selection */}
                 <div>
-                  <Label className="text-base font-medium mb-3 block">Duree de l abonnement</Label>
+                  <Label className="text-base font-medium mb-3 block">Durée de l abonnement</Label>
                   <RadioGroup
                     value={String(duration)}
                     onValueChange={(value) => setDuration(Number(value))}
@@ -623,7 +623,7 @@ export function OrderProcess() {
                     </Button>
                   </div>
                   {promoCode && (
-                    <p className="text-gray-500 text-xs mt-2">Les codes promo sont appliques au paiement.</p>
+                    <p className="text-gray-500 text-xs mt-2">Les codes promo sont appliqués au paiement.</p>
                   )}
                 </div>
 
@@ -631,9 +631,9 @@ export function OrderProcess() {
                 <div>
                   <Label className="text-base font-medium mb-3 block">Choisis tes jours de livraison</Label>
                   <p className="text-sm text-gray-500 mb-4">
-                    Clique sur les dates ou tu souhaites etre livre.
+                    Clique sur les dates où tu souhaites être livré.
                     {duration === 1 && " Au moins 3 jours."}
-                    {duration === 2 && " Au moins 6 jours, dont 2 la deuxieme semaine."}
+                    {duration === 2 && " Au moins 6 jours, dont 2 la deuxième semaine."}
                     {duration === 4 && " Au moins 10 jours, dont 2 par semaine sur les semaines 2, 3 et 4."}
                   </p>
                   <DeliveryCalendar
@@ -852,7 +852,7 @@ export function OrderProcess() {
           <div className="sticky top-20">
             <Card>
               <CardHeader>
-                <CardTitle>Recapitulatif</CardTitle>
+                <CardTitle>Récapitulatif</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {selectedPlan && (
@@ -884,7 +884,7 @@ export function OrderProcess() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Programme :</span>
-                    <span>{selectedPlan?.title || "Non selectionne"}</span>
+                    <span>{selectedPlan?.title || "Non sélectionné"}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Repas par jour :</span>
@@ -905,12 +905,12 @@ export function OrderProcess() {
                     <span>{selectedDays.length} jours</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span>Duree :</span>
+                    <span>Durée :</span>
                     <span>{durationOptions.find((opt) => opt.value === duration)?.label}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Debut :</span>
-                    <span>{startDate ? format(startDate, "MMM d, yyyy") : "Non selectionne"}</span>
+                    <span>{startDate ? format(startDate, "MMM d, yyyy") : "Non sélectionné"}</span>
                   </div>
                 </div>
 
@@ -956,7 +956,7 @@ export function OrderProcess() {
                     <Info className="h-5 w-5 text-fitnest-orange mr-2" />
                     <div className="text-sm text-gray-600">
                       <p className="font-medium">Abonnement flexible</p>
-                      <p>Tu peux mettre en pause, modifier ou annuler a tout moment.</p>
+                      <p>Tu peux mettre en pause, modifier ou annuler à tout moment.</p>
                     </div>
                   </div>
                 </div>

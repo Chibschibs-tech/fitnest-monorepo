@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import "react-day-picker/dist/style.css"
 import "./delivery-calendar.css"
@@ -150,7 +150,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
       <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full" style={{ backgroundColor: "#264e35" }} />
-          Selectionne
+          Sélectionné
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full bg-gray-200" />
@@ -158,14 +158,14 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
         </span>
         <span className="inline-flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-full border border-gray-300 bg-white" />
-          Aujourd hui
+          Aujourd'hui
         </span>
       </div>
 
       {/* Selected date chips + Clear all */}
       <div className="mt-5 flex flex-col gap-3">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-gray-700">Jours selectionnes</p>
+          <p className="text-sm font-medium text-gray-700">Jours sélectionnés</p>
           <Button
             variant="ghost"
             size="sm"
@@ -178,7 +178,7 @@ export function DeliveryCalendar({ value, onChange, allowedWeeks, className }: P
         </div>
 
         {selectedSorted.length === 0 ? (
-          <p className="text-sm text-gray-500">Aucun jour selectionne pour le moment.</p>
+          <p className="text-sm text-gray-500">Aucun jour sélectionné pour le moment.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {selectedSorted.map((d) => {
