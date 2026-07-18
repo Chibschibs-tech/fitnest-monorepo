@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pricing engine regression tests (no test runner required).
  * Run with:  node --experimental-strip-types apps/web/scripts/test-pricing.ts
  *
@@ -6,7 +6,7 @@
  * All current DB discount rules are behavior "best" (single largest applies),
  * backfilled from the legacy stackable=false flag.
  */
-import { calculateSubscriptionPrice, type DiscountRule, type MealPrice } from "../lib/pricing-calculator.ts";
+import { calculateSubscriptionPrice, type DiscountRule, type MealPrice } from "../../../packages/core/src/pricing-calculator.ts";
 
 const prices: Record<string, MealPrice[]> = {
   "Weight Loss": [

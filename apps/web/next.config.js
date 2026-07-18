@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Compile the shared workspace package (pure TS) as part of the app build.
+  transpilePackages: ["@fitnest/core"],
   reactStrictMode: false,
   swcMinify: true,
   eslint: {

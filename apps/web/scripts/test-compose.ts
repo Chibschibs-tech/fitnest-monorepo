@@ -1,4 +1,4 @@
-import { priceComposedMeal, weeklyTotal, type ComposeComponent, type ComposeSettings } from "../lib/compose-pricing.ts"
+import { priceComposedMeal, weeklyTotal, type ComposeComponent, type ComposeSettings } from "../../../packages/core/src/compose-pricing.ts"
 
 const C: ComposeComponent[] = [
   { id: 1, slot: "protein", name: "Poulet", portion_grams: 150, kcal: 248, protein_g: 46.5, carbs_g: 0, fat_g: 5.4, surcharge_mad: 0, extra_portion_price_mad: 25 },

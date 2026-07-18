@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fitnest/core": "workspace:*",
     "@auth/core": "latest",
     "@aws-sdk/client-rds-data": "latest",
     "@cloudflare/workers-types": "latest",
