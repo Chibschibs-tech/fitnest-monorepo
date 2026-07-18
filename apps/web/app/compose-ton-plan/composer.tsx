@@ -69,6 +69,11 @@ const MEAL_LABEL: Record<string, string> = {
 }
 
 const SLOTS: Slot[] = ["protein", "carb", "veg", "sauce", "extra"]
+const MEAL_ORDER = ["Breakfast", "Lunch", "Dinner", "Snack"]
+const mealRank = (t: string) => {
+  const i = MEAL_ORDER.indexOf(t)
+  return i === -1 ? 99 : i
+}
 const num = (v: unknown) => Number(v) || 0
 export function Composer() {
   const [components, setComponents] = useState<Component[]>([])
@@ -189,7 +194,7 @@ export function Composer() {
         <div className="rounded-xl border bg-white p-5">
           <label className="block text-sm font-medium mb-2">Type de repas</label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {settingsList.map((s) => (
+            {[...settingsList].sort((a, b) => mealRank(a.meal_type) - mealRank(b.meal_type)).map((s) => (
               <button
                 key={s.meal_type}
                 onClick={() => { setMealType(s.meal_type); setPicks({}) }}
