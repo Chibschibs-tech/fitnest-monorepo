@@ -1,37 +1,32 @@
 /**
- * Compatibility layer - re-exports from new auth.ts
- * This allows existing code to continue working without changes
+ * Compatibility layer - re-exports the real implementations from auth.ts.
+ * Kept so the ~80 files importing "@/lib/simple-auth" keep working while every
+ * function goes through the single bcrypt-based source of truth in auth.ts.
  */
 
-import { hashPassword, initAuthTables, ensureAdminUser, authenticateUser, createSession, getSessionUser, deleteSession, createUser as createUserNew } from "./auth"
-import { sql } from "./db"
+import {
+  hashPassword,
+  initAuthTables,
+  ensureAdminUser,
+  authenticateUser,
+  createSession,
+  getSessionUser,
+  deleteSession,
+  createUser,
+} from "./auth"
 
-// Re-export functions with legacy names
 export const simpleHash = hashPassword
 export const initTables = initAuthTables
-export { ensureAdminUser, authenticateUser, createSession, getSessionUser, deleteSession }
-
-export async function createUser(name: string, email: string, password: string) {
-  try {
-    const normalizedEmail = email.toLowerCase().trim()
-    const hashedPassword = hashPassword(password)
-
-    // Check if user already exists
-    const existingUser = await sql`SELECT id FROM users WHERE LOWER(email) = LOWER(${normalizedEmail})`
-    if (existingUser.length > 0) {
-      return null
-    }
-
-    // Create user
-    const result = await sql`
-      INSERT INTO users (name, email, password)
-      VALUES (${name}, ${normalizedEmail}, ${hashedPassword})
-      RETURNING id, name, email, role
-    `
-
-    return result[0]
-  } catch (error) {
-    console.error("Error creating user:", error)
-    return null
-  }
+export {
+  hashPassword,
+  ensureAdminUser,
+  authenticateUser,
+  createSession,
+  getSessionUser,
+  deleteSession,
+  // Previously this file had its own createUser that stored the *Promise*
+  // from hashPassword (missing await) instead of the bcrypt hash, so every
+  // new registration got an unusable, unhashed password. Now it delegates to
+  // the correct, awaited implementation.
+  createUser,
 }
