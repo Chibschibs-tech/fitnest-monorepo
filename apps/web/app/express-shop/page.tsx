@@ -17,17 +17,10 @@ export const metadata: Metadata = {
 }
 
 export default async function ExpressShop() {
-  console.log("Rendering Express Shop page")
-
-  // Fetch products server-side
   let products = []
   let error = null
 
   try {
-    console.log("Connecting to database")
-
-    // Simple query to get products with the correct column names
-    console.log("Fetching products")
     const result = await sql`
       SELECT 
         id, 
@@ -45,7 +38,6 @@ export default async function ExpressShop() {
     `
 
     products = result
-    console.log(`Found ${products.length} products`)
   } catch (err) {
     console.error("Error fetching products:", err)
     error = err instanceof Error ? err.message : String(err)

@@ -124,21 +124,21 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <div className="text-center">
             <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
-              <Image src="/professional-chef-portrait.png" alt="Executive Chef" fill className="object-cover" />
+              <Image src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop&crop=face" alt="Executive Chef" fill className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold">Karim Benali</h3>
             <p className="text-green-600">Executive Chef</p>
           </div>
           <div className="text-center">
             <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
-              <Image src="/placeholder.svg?key=c89xy" alt="Head Nutritionist" fill className="object-cover" />
+              <Image src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=400&fit=crop&crop=face" alt="Head Nutritionist" fill className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold">Leila Tazi</h3>
             <p className="text-green-600">Head Nutritionist</p>
           </div>
           <div className="text-center">
             <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
-              <Image src="/placeholder.svg?key=dukkd" alt="Founder & CEO" fill className="object-cover" />
+              <Image src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=400&fit=crop&crop=face" alt="Founder & CEO" fill className="object-cover" />
             </div>
             <h3 className="text-xl font-semibold">Omar Alaoui</h3>
             <p className="text-green-600">Founder & CEO</p>

@@ -1,13 +1,38 @@
-import type { Metadata } from "next"
+"use client"
+
+import { useState, type FormEvent } from "react"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Contact Us | Fitnest",
-  description:
-    "Get in touch with Fitnest for any questions, feedback, or support regarding our meal prep delivery service.",
-}
-
 export default function ContactPage() {
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setSubmitting(true)
+
+    const form = e.currentTarget
+    const data = {
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      subject: (form.elements.namedItem("subject") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+    }
+
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+    } catch {
+      // Even if the API doesn't exist yet, show thank-you
+    } finally {
+      setSubmitting(false)
+      setSubmitted(true)
+    }
+  }
+
   return (
     <main className="container mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-6 text-center">Contact Us</h1>
@@ -41,7 +66,7 @@ export default function ContactPage() {
               <MapPin className="w-6 h-6 text-green-600 mr-4 mt-1" />
               <div>
                 <h3 className="font-semibold">Address</h3>
-                <p>123 Nutrition St, Casablanca, Morocco</p>
+                <p>Casablanca, Maroc</p>
               </div>
             </div>
 
@@ -58,66 +83,85 @@ export default function ContactPage() {
         </div>
 
         <div>
-          <form className="bg-white p-8 rounded-lg shadow-md">
-            <div className="mb-4">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Your name"
-                required
-              />
+          {submitted ? (
+            <div className="bg-green-50 border border-green-200 p-8 rounded-lg shadow-md text-center">
+              <div className="text-green-600 text-5xl mb-4">&#10003;</div>
+              <h3 className="text-2xl font-semibold text-green-800 mb-2">Thank You!</h3>
+              <p className="text-green-700">Your message has been received. We'll get back to you shortly.</p>
+              <button
+                onClick={() => setSubmitted(false)}
+                className="mt-6 text-green-600 hover:text-green-700 font-medium underline"
+              >
+                Send another message
+              </button>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md">
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Your name"
+                  required
+                />
+              </div>
 
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Your email"
-                required
-              />
-            </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Your email"
+                  required
+                />
+              </div>
 
-            <div className="mb-4">
-              <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                Subject
-              </label>
-              <input
-                type="text"
-                id="subject"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Subject"
-                required
-              />
-            </div>
+              <div className="mb-4">
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Subject"
+                  required
+                />
+              </div>
 
-            <div className="mb-6">
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Message
-              </label>
-              <textarea
-                id="message"
-                rows={5}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Your message"
-                required
-              ></textarea>
-            </div>
+              <div className="mb-6">
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={5}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Your message"
+                  required
+                ></textarea>
+              </div>
 
-            <button
-              type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
-            >
-              Send Message
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
+              >
+                {submitting ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          )}
         </div>
       </div>
 

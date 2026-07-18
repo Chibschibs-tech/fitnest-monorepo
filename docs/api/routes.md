@@ -1,13 +1,13 @@
 # API Documentation
 
-**Last Updated:** 2025-12-24T16:30:59.757Z
-**Total Routes:** 162
+**Last Updated:** 2026-03-28T22:50:07.134Z
+**Total Routes:** 164
 
 ## Overview
 
 This document is automatically generated from the codebase. It lists all API routes available in the FitNest application.
 
-## Public API Routes (161)
+## Public API Routes (163)
 
 ### /apiadmin/bootstrap
 - **Methods:** POST
@@ -417,6 +417,10 @@ This document is automatically generated from the codebase. It lists all API rou
 - **Methods:** POST
 - **File:** `\apps\web\app\api\create-test-data\route.ts`
 
+### /apidb-audit
+- **Methods:** GET
+- **File:** `\apps\web\app\api\db-audit\route.ts`
+
 ### /apidb-diagnostic
 - **Methods:** GET
 - **File:** `\apps\web\app\api\db-diagnostic\route.ts`
@@ -424,6 +428,10 @@ This document is automatically generated from the codebase. It lists all API rou
 ### /apidb/check-connection
 - **Methods:** GET
 - **File:** `\apps\web\app\api\db\check-connection\route.ts`
+
+### /apideployment-check
+- **Methods:** GET
+- **File:** `\apps\web\app\api\deployment-check\route.ts`
 
 ### /apidirect-seed-products
 - **Methods:** GET

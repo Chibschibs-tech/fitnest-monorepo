@@ -1,147 +1,104 @@
 // lib/db.ts
-// Universal database client - supports both Neon and local PostgreSQL
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+// Universal database client — supports Supabase (pooler), Neon, and local PostgreSQL
 import { Pool } from "pg";
-import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 
-// Lazy init
-let _client: any = null;
-let _db: any = null;
-let _isNeon: boolean = false;
+let _pool: Pool | null = null;
 
-function isNeonUrl(url: string): boolean {
-  // Neon URLs typically contain 'neon.tech' or use HTTP protocol
-  return url.includes("neon.tech") || url.includes("neon") || url.startsWith("https://");
+function isBuildTime(): boolean {
+  return (
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    (process.env.VERCEL === "1" && !process.env.DATABASE_URL)
+  );
 }
 
-function isLocalUrl(url: string): boolean {
-  // Local URLs are standard postgresql:// connections
-  return url.startsWith("postgresql://") && (url.includes("localhost") || url.includes("127.0.0.1"));
-}
-
-function getClient() {
-  if (_client) return _client;
+function getPool(): Pool | null {
+  if (_pool) return _pool;
 
   const url = process.env.DATABASE_URL;
-  // Don't throw during build time - return a stub
   if (!url) {
-    // During build or when DATABASE_URL is not set, return null to avoid errors
-    // This allows the build to complete even without database connection
-    if (process.env.NEXT_PHASE === "phase-production-build" || process.env.VERCEL) {
-      // During Vercel build, DATABASE_URL might not be available yet
-      console.warn("DATABASE_URL is missing - using stub client (build time)");
+    if (isBuildTime()) {
+      console.warn("DATABASE_URL is missing — stub client for build time");
       return null;
     }
-    // Only throw in runtime production if we're not in Vercel
     if (process.env.NODE_ENV === "production") {
       throw new Error("DATABASE_URL is missing");
     }
-    // During build, return a stub that won't execute queries
-    console.warn("DATABASE_URL is missing - using stub client (build time)");
+    console.warn("DATABASE_URL is missing — stub client");
     return null;
   }
 
-  // Determine which client to use
-  if (isNeonUrl(url)) {
-    // Use Neon HTTP client
-    _isNeon = true;
-    _client = neon(url);
-    _db = drizzle(_client);
-    return _client;
-  } else {
-    // Use pg Pool for local PostgreSQL or other standard connections
-    _isNeon = false;
-    const pool = new Pool({ connectionString: url });
-    _client = pool;
-    _db = drizzlePg(pool);
-    return _client;
-  }
+  _pool = new Pool({
+    connectionString: url,
+    max: 10,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 10000,
+    ssl: url.includes("supabase.com") || url.includes("neon.tech")
+      ? { rejectUnauthorized: false }
+      : undefined,
+  });
+
+  return _pool;
 }
 
 /**
- * SQL template tag compatible with both Neon and pg
- * For Neon: uses HTTP client directly
- * For pg: converts template tag to parameterized query and normalizes result
+ * SQL template tag — converts tagged template to parameterized query.
+ * Returns rows array directly for easy destructuring.
+ *
+ * Usage: const users = await sql`SELECT * FROM users WHERE id = ${id}`;
  */
 export const sql: any = ((strings: TemplateStringsArray, ...values: any[]) => {
-  const client = getClient();
-  if (!client) {
-    // During build time, return empty array to avoid errors
-    return Promise.resolve([]);
+  const pool = getPool();
+  if (!pool) return Promise.resolve([]);
+
+  let queryText = strings[0];
+  const params: any[] = [];
+
+  for (let i = 0; i < values.length; i++) {
+    params.push(values[i]);
+    queryText += `$${params.length}` + (strings[i + 1] || "");
   }
-  
-  if (_isNeon) {
-    // Neon HTTP client - use as template tag
-    const client = getClient();
-    return (client as any)(strings, ...values);
-  } else {
-    // For pg, convert template tag to parameterized query
-    const pool = getClient() as Pool;
-    let queryText = strings[0];
-    const params: any[] = [];
-    
-    for (let i = 0; i < values.length; i++) {
-      params.push(values[i]);
-      queryText += `$${params.length}` + (strings[i + 1] || '');
-    }
-    
-    // Execute query and normalize result to match Neon format (array of rows)
-    return pool.query(queryText, params).then((pgResult: any) => {
-      // Normalize: return rows array directly to match Neon behavior
-      return pgResult.rows || [];
-    });
-  }
+
+  return pool.query(queryText, params).then((result) => result.rows || []);
 }) as any;
 
-// Add query method for compatibility
+/**
+ * Explicit query method for dynamic SQL strings.
+ * Returns { rows: [...] } for compatibility with existing code.
+ */
 (sql as any).query = async (text: string, params?: any[]) => {
-  const client = getClient();
-  if (!client) {
-    // During build time, return empty result
-    return { rows: [] };
-  }
-  
-  if (_isNeon) {
-    // Neon HTTP
-    return await (client as any).query(text, params);
-  } else {
-    // pg Pool
-    const result = await (client as Pool).query(text, params);
-    return { rows: result.rows };
+  const pool = getPool();
+  if (!pool) return { rows: [] };
+  const result = await pool.query(text, params);
+  return { rows: result.rows };
+};
+
+/**
+ * Transaction helper — runs a callback inside a Postgres transaction.
+ */
+(sql as any).transaction = async (fn: (client: any) => Promise<any>) => {
+  const pool = getPool();
+  if (!pool) throw new Error("No database connection");
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const result = await fn(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
   }
 };
 
-(sql as any).array = (...args: any[]) => {
-  if (_isNeon) {
-    return (getClient() as any).array?.(...args);
-  }
-  // pg doesn't have array method, use query instead
-  return (sql as any).query(...args);
-};
-
-(sql as any).transaction = (...args: any[]) => {
-  if (_isNeon) {
-    return (getClient() as any).transaction?.(...args);
-  }
-  // For pg, transactions need to be handled differently
-  throw new Error("Transactions not yet implemented for local PostgreSQL. Use Neon for transaction support.");
-};
-
-// Drizzle instance
-export const db = (() => {
-  if (_db) return _db;
-  getClient(); // Initialize
-  return _db;
-})();
-
-// Helper: return rows directly
-export async function q<T = any>(text: string, params?: any[]) {
+/**
+ * Helper: run a query and return rows directly.
+ */
+export async function q<T = any>(text: string, params?: any[]): Promise<T[]> {
   const result = await (sql as any).query(text, params);
   return (result.rows || result) as T[];
 }
 
-// Stub exports for Drizzle schema imports (if needed)
-// These are placeholders to prevent build errors
 export const mealPreferences = null as any;
 export const notificationPreferences = null as any;

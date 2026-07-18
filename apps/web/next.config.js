@@ -26,6 +26,11 @@ const nextConfig = {
         hostname: 'obtmksfewry4ishp.public.blob.vercel-storage.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
     ],
   },
 }

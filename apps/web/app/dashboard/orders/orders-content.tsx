@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { DashboardLayout } from "../dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -40,7 +39,7 @@ export function OrdersContent() {
         }
 
         const data = await response.json()
-        setOrders(data.orders || [])
+        setOrders(Array.isArray(data) ? data : data.orders || [])
       } catch (error) {
         console.error("Error loading orders:", error)
         setError("Failed to load your orders. Please try again.")
@@ -140,65 +139,16 @@ export function OrdersContent() {
     }
   }
 
-  // Mock data for demonstration
-  const mockOrders: Order[] = [
-    {
-      id: "ORD-12345",
-      date: "2023-06-01T14:30:00",
-      status: "delivered",
-      total: 349,
-      items: 3,
-      type: "meal_plan",
-    },
-    {
-      id: "ORD-12346",
-      date: "2023-05-15T10:15:00",
-      status: "delivered",
-      total: 249,
-      items: 2,
-      type: "express_shop",
-    },
-    {
-      id: "ORD-12347",
-      date: "2023-06-10T09:45:00",
-      status: "processing",
-      total: 499,
-      items: 5,
-      type: "mixed",
-    },
-    {
-      id: "ORD-12348",
-      date: "2023-06-12T16:20:00",
-      status: "pending",
-      total: 199,
-      items: 1,
-      type: "express_shop",
-    },
-    {
-      id: "ORD-12349",
-      date: "2023-05-05T11:30:00",
-      status: "cancelled",
-      total: 299,
-      items: 3,
-      type: "meal_plan",
-    },
-  ]
-
-  // Use mock data for now, replace with actual data when available
-  const displayOrders = orders.length > 0 ? filteredOrders : mockOrders
-
   if (isLoading) {
     return (
-      <DashboardLayout>
-        <div className="flex h-[60vh] items-center justify-center">
-          <LoadingSpinner size="lg" />
-        </div>
-      </DashboardLayout>
+      <div className="flex h-[60vh] items-center justify-center">
+        <LoadingSpinner size="lg" />
+      </div>
     )
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Order History</h1>
         <p className="text-gray-600">View and track all your orders</p>
@@ -266,13 +216,13 @@ export function OrdersContent() {
         <CardHeader>
           <CardTitle>Your Orders</CardTitle>
           <CardDescription>
-            {displayOrders.length} order{displayOrders.length !== 1 ? "s" : ""} found
+            {filteredOrders.length} order{filteredOrders.length !== 1 ? "s" : ""} found
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {displayOrders.length > 0 ? (
+          {filteredOrders.length > 0 ? (
             <div className="space-y-4">
-              {displayOrders.map((order) => (
+              {filteredOrders.map((order) => (
                 <div key={order.id} className="overflow-hidden rounded-lg border">
                   <div className="flex flex-col justify-between p-4 sm:flex-row sm:items-center">
                     <div className="mb-4 flex items-center space-x-4 sm:mb-0">
@@ -330,6 +280,6 @@ export function OrdersContent() {
           )}
         </CardContent>
       </Card>
-    </DashboardLayout>
+    </>
   )
 }

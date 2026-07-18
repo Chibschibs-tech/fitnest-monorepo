@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+import { getSessionUser } from '@/lib/simple-auth'
 import { sql } from '@/lib/db'
 import { createErrorResponse } from '@/lib/error-handler'
 
@@ -6,6 +8,16 @@ export const dynamic = "force-dynamic"
 
 export async function GET(request: Request) {
   try {
+    const cookieStore = cookies()
+    const sessionId = cookieStore.get("session-id")?.value
+    if (!sessionId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+    const user = await getSessionUser(sessionId)
+    if (!user || user.role !== "admin") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const { searchParams } = new URL(request.url)
     const planId = searchParams.get('plan_id')
     
@@ -36,6 +48,16 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const cookieStore = cookies()
+    const sessionId = cookieStore.get("session-id")?.value
+    if (!sessionId) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+    const user = await getSessionUser(sessionId)
+    if (!user || user.role !== "admin") {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
     const body = await request.json()
     const { name, description, plan_id, meal_type, calories, protein, carbs, fat, image_url } = body
     

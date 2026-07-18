@@ -4,69 +4,41 @@
  */
 
 import { sql } from "@/lib/db"
-import crypto from "crypto"
+import bcrypt from "bcryptjs"
 import { v4 as uuidv4 } from "uuid"
 
-// Password hashing
-export function hashPassword(password: string): string {
-  return crypto
-    .createHash("sha256")
-    .update(password + "fitnest-salt-2024")
-    .digest("hex")
+const BCRYPT_ROUNDS = 12;
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, BCRYPT_ROUNDS);
 }
 
-// Initialize database tables
-export async function initAuthTables() {
-  try {
-    // Create users table
-    await sql`
-      CREATE TABLE IF NOT EXISTS users (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        role VARCHAR(50) DEFAULT 'customer',
-        status VARCHAR(20) DEFAULT 'active',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        last_login_at TIMESTAMP
-      )
-    `
-
-    // Create sessions table
-    await sql`
-      CREATE TABLE IF NOT EXISTS sessions (
-        id VARCHAR(255) PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        expires_at TIMESTAMP NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `
-
-    // Create indexes for performance
-    try {
-      await sql`CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id)`
-      await sql`CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at)`
-      await sql`CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)`
-    } catch (err) {
-      // Indexes might already exist
-      console.log("Index creation:", err)
-    }
-
-    console.log("[AUTH] Tables initialized successfully")
-    return true
-  } catch (error) {
-    console.error("[AUTH] Error initializing tables:", error)
-    return false
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  if (hash.length === 64 && /^[a-f0-9]+$/.test(hash)) {
+    // Legacy SHA-256 hash — migrate on next login
+    const crypto = await import("crypto");
+    const legacyHash = crypto.createHash("sha256").update(password + "fitnest-salt-2024").digest("hex");
+    return legacyHash === hash;
   }
+  return bcrypt.compare(password, hash);
 }
 
-// Ensure admin user exists
+// Tables are managed via Supabase migration — no runtime DDL needed.
+export async function initAuthTables() {
+  console.log("[AUTH] Tables managed by Supabase migration — skipping runtime DDL");
+  return true;
+}
+
 export async function ensureAdminUser() {
   try {
-    const adminEmail = "chihab@ekwip.ma".toLowerCase().trim()
-    const adminPassword = "FITnest123!"
-    const hashedPassword = hashPassword(adminPassword)
+    const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      console.log("[AUTH] ADMIN_EMAIL or ADMIN_PASSWORD not set — skipping admin user setup");
+      return false;
+    }
+    const hashedPassword = await hashPassword(adminPassword);
 
     // Check if admin exists
     const existing = await sql`
@@ -108,10 +80,8 @@ export async function ensureAdminUser() {
 // Authenticate user
 export async function authenticateUser(email: string, password: string) {
   try {
-    const normalizedEmail = email.toLowerCase().trim()
-    const hashedPassword = hashPassword(password)
+    const normalizedEmail = email.toLowerCase().trim();
 
-    // Find user with case-insensitive email
     const users = await sql`
       SELECT id, name, email, password, role, status
       FROM users
@@ -131,18 +101,23 @@ export async function authenticateUser(email: string, password: string) {
       return null
     }
 
-    // Verify password
-    if (user.password !== hashedPassword) {
-      console.log("[AUTH] Password mismatch for:", normalizedEmail)
-      return null
+    const passwordValid = await verifyPassword(password, user.password);
+    if (!passwordValid) {
+      console.log("[AUTH] Password mismatch for:", normalizedEmail);
+      return null;
     }
 
-    // Update last login
+    // Auto-migrate legacy SHA-256 hashes to bcrypt on successful login
+    if (user.password.length === 64 && /^[a-f0-9]+$/.test(user.password)) {
+      const bcryptHash = await hashPassword(password);
+      await sql`UPDATE users SET password = ${bcryptHash}, updated_at = NOW() WHERE id = ${user.id}`;
+      console.log("[AUTH] Migrated password hash to bcrypt for:", normalizedEmail);
+    }
+
     try {
-      await sql`UPDATE users SET last_login_at = NOW() WHERE id = ${user.id}`
+      await sql`UPDATE users SET last_login_at = NOW() WHERE id = ${user.id}`;
     } catch (err) {
-      // Non-critical
-      console.log("[AUTH] Failed to update last_login_at:", err)
+      console.log("[AUTH] Failed to update last_login_at:", err);
     }
 
     console.log("[AUTH] User authenticated:", { id: user.id, email: user.email, role: user.role })
@@ -252,7 +227,7 @@ export async function cleanExpiredSessions() {
 export async function createUser(name: string, email: string, password: string) {
   try {
     const normalizedEmail = email.toLowerCase().trim()
-    const hashedPassword = hashPassword(password)
+    const hashedPassword = await hashPassword(password)
 
     // Check if user already exists
     const existing = await sql`
