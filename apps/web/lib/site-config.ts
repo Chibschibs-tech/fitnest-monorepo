@@ -4,7 +4,10 @@
  */
 export const siteConfig = {
   name: "FitNest",
-  url: process.env.NEXT_PUBLIC_APP_URL || "https://www.fitnest.ma",
+  // Canonical production host. Deliberately NOT read from NEXT_PUBLIC_APP_URL:
+  // on Vercel that resolves to the *.vercel.app preview domain, which would
+  // leak into robots.txt, the sitemap and every canonical tag.
+  url: "https://www.fitnest.ma",
   email: "contact@fitnest.ma",
   phone: "+212-6-00-00-00-00",
 

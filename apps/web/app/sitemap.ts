@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next"
 import { sql } from "@/lib/db"
+import { siteConfig } from "@/lib/site-config"
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.fitnest.ma"
+const siteUrl = siteConfig.url
 
 // Public, indexable routes. Each is emitted with fr/en alternates so Google
 // can serve the right language per user.

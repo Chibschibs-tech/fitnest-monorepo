@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
+import { siteConfig } from "@/lib/site-config"
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.fitnest.ma"
+const siteUrl = siteConfig.url
 
 export default function robots(): MetadataRoute.Robots {
   return {
