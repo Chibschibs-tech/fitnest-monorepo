@@ -24,10 +24,12 @@ const STATIC_ROUTES: Array<{ path: string; priority: number; freq: "daily" | "we
   { path: "/legal", priority: 0.2, freq: "monthly" },
 ]
 
+const enPath = (path: string) => (path === "/" ? "/en" : `/en${path}`)
+
 const alternates = (path: string) => ({
   languages: {
     fr: `${siteUrl}${path}`,
-    en: `${siteUrl}${path}?lang=en`,
+    en: `${siteUrl}${enPath(path)}`,
     "x-default": `${siteUrl}${path}`,
   },
 })
@@ -35,25 +37,33 @@ const alternates = (path: string) => ({
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date()
 
-  const entries: MetadataRoute.Sitemap = STATIC_ROUTES.map((r) => ({
-    url: `${siteUrl}${r.path}`,
-    lastModified: now,
-    changeFrequency: r.freq,
-    priority: r.priority,
-    alternates: alternates(r.path),
-  }))
+  // Both languages are listed: each has its own indexable URL.
+  const entries: MetadataRoute.Sitemap = STATIC_ROUTES.flatMap((r) => [
+    {
+      url: `${siteUrl}${r.path}`,
+      lastModified: now,
+      changeFrequency: r.freq,
+      priority: r.priority,
+      alternates: alternates(r.path),
+    },
+    {
+      url: `${siteUrl}${enPath(r.path)}`,
+      lastModified: now,
+      changeFrequency: r.freq,
+      priority: Math.max(0.1, r.priority - 0.1),
+      alternates: alternates(r.path),
+    },
+  ])
 
   // Meal plan detail pages, straight from the DB so new plans are indexed automatically.
   try {
     const plans = await sql`SELECT slug FROM meal_plans WHERE published = true`
     for (const p of plans as Array<{ slug: string }>) {
-      entries.push({
-        url: `${siteUrl}/meal-plans/${p.slug}`,
-        lastModified: now,
-        changeFrequency: "weekly",
-        priority: 0.8,
-        alternates: alternates(`/meal-plans/${p.slug}`),
-      })
+      const path = `/meal-plans/${p.slug}`
+      entries.push(
+        { url: `${siteUrl}${path}`, lastModified: now, changeFrequency: "weekly", priority: 0.8, alternates: alternates(path) },
+        { url: `${siteUrl}${enPath(path)}`, lastModified: now, changeFrequency: "weekly", priority: 0.7, alternates: alternates(path) },
+      )
     }
   } catch {
     // A DB hiccup must never break the sitemap.

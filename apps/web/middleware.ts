@@ -15,8 +15,8 @@ const publicRoutes = [
 const publicApiPrefixes = [
   "/api/auth/", "/api/products", "/api/cart", "/api/meal-plans",
   "/api/meals", "/api/waitlist", "/api/health", "/api/guest-orders",
-  // Pricing must be readable by guests: the /order builder and the plan cards
-  // call it before anyone logs in.
+  // Pricing must be readable by guests: the builders and plan cards call it
+  // before anyone logs in.
   "/api/calculate-price",
   // Public B2B lead capture from /entreprises.
   "/api/company-leads",
@@ -52,24 +52,48 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  if (isPublicRoute(pathname)) {
-    return NextResponse.next()
+  // ---- Locale routing -------------------------------------------------
+  // French is the default and lives at the root (/plans). English is served
+  // from an /en prefix (/en/plans) so both languages have their own crawlable
+  // URL. The /en prefix is rewritten away, so no route files need to move.
+  const isEnglish = pathname === "/en" || pathname.startsWith("/en/")
+  const routePath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname
+  const locale = isEnglish ? "en" : "fr"
+
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("x-locale", locale)
+  requestHeaders.set("x-pathname", routePath)
+
+  const withLocale = (res: NextResponse) => res
+
+  // API routes are never locale-prefixed.
+  if (isPublicRoute(routePath)) {
+    if (isEnglish) {
+      const url = request.nextUrl.clone()
+      url.pathname = routePath
+      return withLocale(NextResponse.rewrite(url, { request: { headers: requestHeaders } }))
+    }
+    return withLocale(NextResponse.next({ request: { headers: requestHeaders } }))
   }
 
   const sessionId = request.cookies.get("session-id")?.value
 
   if (!sessionId) {
-    if (pathname.startsWith("/api/")) {
+    if (routePath.startsWith("/api/")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-    const loginUrl = new URL("/login", request.url)
+    const loginUrl = new URL(isEnglish ? "/en/login" : "/login", request.url)
     loginUrl.searchParams.set("redirect", pathname)
     return NextResponse.redirect(loginUrl)
   }
 
-  // Session cookie exists - let route handlers validate it against the DB.
-  // Admin role checks also happen server-side in the admin layout/routes.
-  return NextResponse.next()
+  // Session cookie exists - route handlers validate it against the DB.
+  if (isEnglish) {
+    const url = request.nextUrl.clone()
+    url.pathname = routePath
+    return withLocale(NextResponse.rewrite(url, { request: { headers: requestHeaders } }))
+  }
+  return withLocale(NextResponse.next({ request: { headers: requestHeaders } }))
 }
 
 export const config = {

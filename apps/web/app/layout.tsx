@@ -1,5 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import { ClientLayout } from "./client-layout"
 import { siteConfig, buildAlternates } from "@/lib/site-config"
 import { LocalBusinessJsonLd, WebSiteJsonLd } from "@/components/seo-jsonld"
@@ -70,8 +71,12 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Set by middleware from the URL (/en prefix), so the document language
+  // always matches the language Google is indexing for this URL.
+  const locale = headers().get("x-locale") === "en" ? "en" : "fr"
+
   return (
-    <html lang="fr">
+    <html lang={locale}>
       <head>
         <LocalBusinessJsonLd />
         <WebSiteJsonLd />

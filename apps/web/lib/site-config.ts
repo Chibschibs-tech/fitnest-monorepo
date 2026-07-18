@@ -35,15 +35,25 @@ export const siteConfig = {
     "Healthy meal delivery in Casablanca, Morocco. Weight loss, maintenance and muscle gain meal plans with macros on every meal and daily delivery.",
 } as const
 
-/** Build canonical + hreflang alternates for a page. */
-export function buildAlternates(path: string) {
+/**
+ * Canonical + hreflang for a page.
+ * French is the default and lives at the root; English is served from /en.
+ */
+export function enPath(path: string) {
+  return path === "/" ? "/en" : `/en${path}`
+}
+
+export function buildAlternates(path: string, locale: "fr" | "en" = "fr") {
   const base = siteConfig.url
+  const fr = `${base}${path}`
+  const en = `${base}${enPath(path)}`
   return {
-    canonical: `${base}${path}`,
+    canonical: locale === "en" ? en : fr,
     languages: {
-      fr: `${base}${path}`,
-      en: `${base}${path}?lang=en`,
-      "x-default": `${base}${path}`,
+      "fr-MA": fr,
+      fr,
+      en,
+      "x-default": fr,
     },
   }
 }

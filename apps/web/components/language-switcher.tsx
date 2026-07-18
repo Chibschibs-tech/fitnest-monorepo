@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function LanguageSwitcher() {
-  const { locale, setLocale, availableLocales } = useLanguage()
+  const { locale, availableLocales, pathFor } = useLanguage()
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
@@ -83,10 +83,13 @@ export function LanguageSwitcher() {
         {availableLocales.map((loc) => (
           <DropdownMenuItem
             key={loc}
-            onClick={() => setLocale(loc)}
+            asChild
             className={locale === loc ? "bg-fitnest-green/10 text-fitnest-green" : ""}
           >
-            {localeNames[loc]}
+            {/* A real link: the other language is a distinct, crawlable URL. */}
+            <a href={pathFor(loc)} hrefLang={loc}>
+              {localeNames[loc]}
+            </a>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
