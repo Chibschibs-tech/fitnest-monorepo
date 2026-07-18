@@ -66,13 +66,13 @@ export default async function PlansPage() {
               <div className="mt-4 flex flex-col gap-2">
                 <a
                   href={`/order?plan=${p.slug}`}
-                  className="inline-flex items-center justify-center rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-fitnest-green px-5 py-3 text-sm font-medium text-white hover:bg-fitnest-green/90"
                 >
                   Configurer cette formule
                 </a>
                 <Link
                   href="/meal-plans"
-                  className="inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border px-5 py-3 text-sm hover:border-fitnest-green hover:text-fitnest-green"
                 >
                   Voir tous les plans repas
                 </Link>
@@ -91,7 +91,7 @@ export default async function PlansPage() {
         </p>
         <a
           href="/compose-ton-plan"
-          className="inline-flex items-center justify-center rounded-full bg-fitnest-orange px-6 py-3 text-sm font-medium text-white hover:bg-fitnest-orange/90"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-fitnest-orange px-6 py-3 text-sm font-medium text-white hover:bg-fitnest-orange/90"
         >
           Composer mon plan
         </a>

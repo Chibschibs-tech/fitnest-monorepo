@@ -9,18 +9,18 @@ export default function Footer(){
         <div>
           <div className="font-semibold">Navigation</div>
           <div className="grid grid-cols-2 gap-2 text-sm mt-2">
-            <a href="/plans" className="text-gray-700 hover:text-fitnest-green">Meal Plans</a>
-            <a href="/menu" className="text-gray-700 hover:text-fitnest-green">Meals</a>
-            <a href="/catalogue" className="text-gray-700 hover:text-fitnest-green">How It Works</a>
-            <a href="/subscribe" className="text-gray-700 hover:text-fitnest-green">Subscribe</a>
+            <a href="/plans" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">Meal Plans</a>
+            <a href="/menu" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">Meals</a>
+            <a href="/catalogue" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">How It Works</a>
+            <a href="/subscribe" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">Subscribe</a>
           </div>
         </div>
         <div>
           <div className="font-semibold">Légal</div>
           <div className="grid gap-2 text-sm mt-2">
-            <a href="#" className="text-gray-700 hover:text-fitnest-green">CGU</a>
-            <a href="#" className="text-gray-700 hover:text-fitnest-green">Confidentialité</a>
-            <a href="#" className="text-gray-700 hover:text-fitnest-green">Mentions légales</a>
+            <a href="#" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">CGU</a>
+            <a href="#" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">Confidentialité</a>
+            <a href="#" className="inline-flex min-h-[44px] items-center text-gray-700 hover:text-fitnest-green">Mentions légales</a>
           </div>
         </div>
       </div>

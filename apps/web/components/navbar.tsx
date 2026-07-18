@@ -74,7 +74,7 @@ export default function Navbar() {
       <div className="w-full flex h-20 items-center relative px-4 py-2">
         {/* Mobile menu button - absolute left */}
         <button
-          className={`md:hidden absolute left-4 rounded-full border p-2 z-10 transition-all ${
+          className={`md:hidden absolute left-4 h-11 w-11 rounded-full border p-2 z-10 transition-all ${
             isHomePage && !scrolled
               ? "border-white/30 text-white bg-black/20 backdrop-blur-sm"
               : "border-gray-300 bg-white shadow-sm"
