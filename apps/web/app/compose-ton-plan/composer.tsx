@@ -1,9 +1,9 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { composeCopy, localeFromPath } from "@/lib/compose-i18n"
+import { composeCopy } from "@/lib/compose-i18n"
+import type { Locale } from "@/lib/i18n"
 
 type Slot = "protein" | "carb" | "veg" | "sauce" | "extra"
 
@@ -64,9 +64,8 @@ const mealRank = (t: string) => {
   return i === -1 ? 99 : i
 }
 const num = (v: unknown) => Number(v) || 0
-export function Composer() {
-  const pathname = usePathname() || "/"
-  const T = composeCopy[localeFromPath(pathname)]
+export function Composer({ locale = "fr" }: { locale?: Locale }) {
+  const T = composeCopy[locale]
   const SLOT_LABEL = T.slots
   const MEAL_LABEL = T.meals as Record<string, string>
 
