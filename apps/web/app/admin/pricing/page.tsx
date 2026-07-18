@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -22,12 +22,15 @@ interface MealPrice {
   updated_at: string
 }
 
+type StackingBehavior = "stack" | "exclusive" | "best"
+
 interface DiscountRule {
   id: number
   discount_type: string
   condition_value: number
   discount_percentage: number
   stackable: boolean
+  stacking_behavior: StackingBehavior
   is_active: boolean
   valid_from: string | null
   valid_to: string | null
@@ -97,6 +100,33 @@ export default function PricingPage() {
       setError(err instanceof Error ? err.message : "Failed to load data")
     } finally {
       setLoading(false)
+    }
+  }
+
+  // How a discount combines with the others:
+  //   best      -> only the largest of the competing discounts applies (default)
+  //   stack     -> always adds on top of the others
+  //   exclusive -> applies alone and suppresses every other discount
+  const updateStackingBehavior = async (ruleId: number, behavior: StackingBehavior) => {
+    const previous = discountRules
+    setDiscountRules((rules) =>
+      rules.map((r) =>
+        r.id === ruleId ? { ...r, stacking_behavior: behavior, stackable: behavior === "stack" } : r,
+      ),
+    )
+    try {
+      const res = await fetch(`/api/admin/pricing/discount-rules/${ruleId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stacking_behavior: behavior }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data?.error || "Update failed")
+      }
+    } catch (err) {
+      setDiscountRules(previous)
+      setError(err instanceof Error ? err.message : "Failed to update stacking behavior")
     }
   }
 
@@ -298,13 +328,13 @@ export default function PricingPage() {
                             {calculationResult.discountsApplied.map((discount, index) => (
                               <div key={index} className="flex justify-between text-sm">
                                 <span>
-                                  {discount.type === "days_per_week"
+                                  {discount.type.startsWith("days")
                                     ? `${discount.condition} days/week`
                                     : `${discount.condition} weeks`}
                                   :
                                 </span>
                                 <span className="text-green-600">
-                                  -{(discount.percentage * 100).toFixed(1)}% (-{discount.amount.toFixed(2)} MAD)
+                                  -{Number(discount.percentage).toFixed(1)}% (-{discount.amount.toFixed(2)} MAD)
                                 </span>
                               </div>
                             ))}
@@ -391,7 +421,7 @@ export default function PricingPage() {
                       <TableHead>Type</TableHead>
                       <TableHead>Condition</TableHead>
                       <TableHead>Discount</TableHead>
-                      <TableHead>Stackable</TableHead>
+                      <TableHead>Combines with others</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
@@ -401,15 +431,22 @@ export default function PricingPage() {
                       <TableRow key={rule.id}>
                         <TableCell className="font-medium">{rule.discount_type.replace("_", " ")}</TableCell>
                         <TableCell>
-                          {rule.discount_type === "days_per_week"
+                          {rule.discount_type.startsWith("days")
                             ? `${rule.condition_value} days`
                             : `${rule.condition_value} weeks`}
                         </TableCell>
-                        <TableCell>{(rule.discount_percentage * 100).toFixed(1)}%</TableCell>
+                        <TableCell>{Number(rule.discount_percentage).toFixed(1)}%</TableCell>
                         <TableCell>
-                          <Badge variant={rule.stackable ? "default" : "secondary"}>
-                            {rule.stackable ? "Yes" : "No"}
-                          </Badge>
+                          <select
+                            value={rule.stacking_behavior || "best"}
+                            onChange={(e) => updateStackingBehavior(rule.id, e.target.value as StackingBehavior)}
+                            className="border rounded-md px-2 py-1 text-sm bg-white"
+                            title="How this discount combines with other discounts"
+                          >
+                            <option value="best">Best only (largest wins)</option>
+                            <option value="stack">Stack (adds on top)</option>
+                            <option value="exclusive">Exclusive (overrides all)</option>
+                          </select>
                         </TableCell>
                         <TableCell>
                           <Badge variant={rule.is_active ? "default" : "secondary"}>
