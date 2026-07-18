@@ -1,7 +1,9 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { composeCopy, localeFromPath } from "@/lib/compose-i18n"
 
 type Slot = "protein" | "carb" | "veg" | "sauce" | "extra"
 
@@ -53,20 +55,7 @@ interface SavedMeal {
   quantity_per_week: number
 }
 
-const SLOT_LABEL: Record<Slot, string> = {
-  protein: "Protéine",
-  carb: "Féculent",
-  veg: "Légumes",
-  sauce: "Sauce",
-  extra: "Suppléments",
-}
 
-const MEAL_LABEL: Record<string, string> = {
-  Breakfast: "Petit-déjeuner",
-  Lunch: "Déjeuner",
-  Dinner: "Dîner",
-  Snack: "Collation",
-}
 
 const SLOTS: Slot[] = ["protein", "carb", "veg", "sauce", "extra"]
 const MEAL_ORDER = ["Breakfast", "Lunch", "Dinner", "Snack"]
@@ -76,6 +65,11 @@ const mealRank = (t: string) => {
 }
 const num = (v: unknown) => Number(v) || 0
 export function Composer() {
+  const pathname = usePathname() || "/"
+  const T = composeCopy[localeFromPath(pathname)]
+  const SLOT_LABEL = T.slots
+  const MEAL_LABEL = T.meals as Record<string, string>
+
   const [components, setComponents] = useState<Component[]>([])
   const [settingsList, setSettingsList] = useState<Settings[]>([])
   const [mealType, setMealType] = useState("Lunch")
@@ -187,13 +181,13 @@ export function Composer() {
   const weekTotal = meals.reduce((s, m) => s + num(m.price_mad) * num(m.quantity_per_week), 0)
   const weekMeals = meals.reduce((s, m) => s + num(m.quantity_per_week), 0)
 
-  if (loading) return <p className="text-sm text-gray-500">Chargement…</p>
+  if (loading) return <p className="text-sm text-gray-500">{T.loading}</p>
   return (
     <>
     <div className="grid gap-6 lg:grid-cols-3 pb-24 lg:pb-0">
       <div className="lg:col-span-2 space-y-6">
         <div className="rounded-xl border bg-white p-5">
-          <label className="block text-sm font-medium mb-2">Type de repas</label>
+          <label className="block text-sm font-medium mb-2">{T.mealType}</label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[...settingsList].sort((a, b) => mealRank(a.meal_type) - mealRank(b.meal_type)).map((s) => (
               <button
@@ -207,7 +201,7 @@ export function Composer() {
           </div>
           {settings && (
             <p className="text-xs text-gray-500 mt-3">
-              Prix de base {num(settings.base_price_mad).toFixed(0)} MAD. Inclus : {settings.included_protein} protéine, {settings.included_carb} féculent, {settings.included_veg} légumes, {settings.included_sauce} sauce. Maximum {settings.max_extras} suppléments.
+              {T.basePrice} {num(settings.base_price_mad).toFixed(0)} MAD. {T.included}: {settings.included_protein} {T.slots.protein}, {settings.included_carb} {T.slots.carb}, {settings.included_veg} {T.slots.veg}, {settings.included_sauce} {T.slots.sauce}. {T.maxExtras} {settings.max_extras} {T.extrasSuffix}.
             </p>
           )}
         </div>
@@ -229,14 +223,14 @@ export function Composer() {
                         </p>
                         <p className="text-[13px] text-gray-600">
                           {num(c.kcal)} kcal - {num(c.protein_g)}g P
-                          {num(c.surcharge_mad) > 0 ? " - premium +" + num(c.surcharge_mad) + " MAD" : ""}
-                          {" - portion sup. +" + num(c.extra_portion_price_mad) + " MAD"}
+                          {num(c.surcharge_mad) > 0 ? " - " + T.premium + " +" + num(c.surcharge_mad) + " MAD" : ""}
+                          {" - " + T.extraPortion + " +" + num(c.extra_portion_price_mad) + " MAD"}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <Button variant="outline" size="icon" onClick={() => bump(c.id, -1)} disabled={q === 0} aria-label={"Retirer une portion de " + c.name}>-</Button>
+                        <Button variant="outline" size="icon" onClick={() => bump(c.id, -1)} disabled={q === 0} aria-label={T.remove + " " + c.name}>-</Button>
                         <span className="w-8 text-center text-base font-medium tabular-nums">{q}</span>
-                        <Button variant="outline" size="icon" onClick={() => bump(c.id, 1)} aria-label={"Ajouter une portion de " + c.name}>+</Button>
+                        <Button variant="outline" size="icon" onClick={() => bump(c.id, 1)} aria-label={T.add + " " + c.name}>+</Button>
                       </div>
                     </div>
                   )
@@ -249,7 +243,7 @@ export function Composer() {
       <div className="lg:col-span-1">
         <div className="sticky top-20 space-y-4">
           <div className="rounded-xl border bg-white p-5">
-            <p className="text-sm font-medium mb-3">Ton plat</p>
+            <p className="text-sm font-medium mb-3">{T.yourPlate}</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div className="rounded-md bg-gray-50 p-3">
                 <p className="text-[13px] text-gray-600">Calories</p>
@@ -269,15 +263,15 @@ export function Composer() {
               </div>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Base</span>
+              <span className="text-gray-600">{T.base}</span>
               <span>{priced ? priced.basePrice.toFixed(2) : num(settings?.base_price_mad).toFixed(2)} MAD</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Suppléments</span>
+              <span className="text-gray-600">{T.extras}</span>
               <span>{priced ? priced.extrasPrice.toFixed(2) : "0.00"} MAD</span>
             </div>
             <div className="flex justify-between font-semibold text-lg border-t mt-2 pt-2">
-              <span>Prix du plat</span>
+              <span>{T.platePrice}</span>
               <span>{priced ? priced.total.toFixed(2) : "0.00"} MAD</span>
             </div>
             {priced && (
@@ -288,11 +282,11 @@ export function Composer() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Nom de ton plat"
+              placeholder={T.namePlaceholder}
               className="w-full mt-4 rounded-md border border-gray-300 px-3 py-2 text-sm"
             />
             <div className="flex items-center gap-2 mt-2">
-              <label className="text-sm text-gray-600">Fois par semaine</label>
+              <label className="text-sm text-gray-600">{T.timesPerWeek}</label>
               <input
                 type="number"
                 min={1}
@@ -307,15 +301,15 @@ export function Composer() {
               disabled={saving || !name.trim() || !priced || !priced.valid}
               className="w-full mt-3 bg-fitnest-orange hover:bg-fitnest-orange/90"
             >
-              Enregistrer dans mes plats
+              {T.save}
             </Button>
             {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
           </div>
 
           <div className="rounded-xl border bg-white p-5">
-            <p className="text-sm font-medium mb-3">Mes plats - ma semaine</p>
+            <p className="text-sm font-medium mb-3">{T.myMeals}</p>
             {meals.length === 0 ? (
-              <p className="text-sm text-gray-500">Aucun plat enregistré pour le moment.</p>
+              <p className="text-sm text-gray-500">{T.empty}</p>
             ) : (
               <div className="space-y-2">
                 {meals.map((m) => (
@@ -334,7 +328,7 @@ export function Composer() {
                   </div>
                 ))}
                 <div className="flex justify-between font-semibold pt-2">
-                  <span>Total semaine - {weekMeals} plats</span>
+                  <span>{T.weekTotalPrefix} - {weekMeals} {T.plates}</span>
                   <span>{weekTotal.toFixed(2)} MAD</span>
                 </div>
               </div>
@@ -349,7 +343,7 @@ export function Composer() {
         <div className="container mx-auto flex items-center justify-between gap-3">
           <div className="leading-tight">
             <div className="text-[13px] text-gray-600">
-              {priced ? `${priced.kcal} kcal · ${priced.protein_g}g P` : "Compose ton plat"}
+              {priced ? `${priced.kcal} kcal · ${priced.protein_g}g P` : T.yourPlate}
             </div>
             <div className="text-lg font-semibold">
               {priced ? `${priced.total.toFixed(2)} MAD` : "—"}
@@ -360,7 +354,7 @@ export function Composer() {
             disabled={saving || !name.trim() || !priced || !priced.valid}
             className="bg-fitnest-orange hover:bg-fitnest-orange/90"
           >
-            Enregistrer
+            {T.save}
           </Button>
         </div>
       </div>

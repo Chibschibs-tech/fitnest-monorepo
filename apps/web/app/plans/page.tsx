@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { getPlanEntryPrices, ENTRY_DAYS, ENTRY_MEALS } from "@/lib/plan-pricing"
+import { headers } from "next/headers"
+import { plansCopy } from "@/lib/compose-i18n"
 
 export const dynamic = "force-dynamic"
 
@@ -18,6 +20,8 @@ const PLANS = [
 ]
 
 export default async function PlansPage() {
+  const locale = headers().get("x-locale") === "en" ? "en" : "fr"
+  const T = plansCopy[locale]
   // Prices come from the same engine that prices the builder and checkout,
   // so a card can never show a number the customer will not actually pay.
   const prices = await getPlanEntryPrices(PLANS.map((p) => p.key))
@@ -25,9 +29,9 @@ export default async function PlansPage() {
   return (
     <main className="container px-4 py-10 space-y-8">
       <header className="text-center space-y-2">
-        <h1 className="text-3xl font-bold">Nos formules</h1>
+        <h1 className="text-3xl font-bold">{T.title}</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Choisissez la formule adaptée à vos objectifs, puis configurez vos jours par semaine et vos repas par jour.
+          {T.intro}
         </p>
       </header>
 
@@ -47,13 +51,13 @@ export default async function PlansPage() {
                   <div className="mb-4">
                     <p className="text-2xl font-bold text-fitnest-green">
                       {price.weekly.toFixed(2)}{" "}
-                      <span className="text-sm font-normal text-gray-600">MAD / semaine</span>
+                      <span className="text-sm font-normal text-gray-600">{T.perWeek}</span>
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                       À partir de - {ENTRY_MEALS.length} repas/jour, {ENTRY_DAYS} jours/semaine
                     </p>
                     <p className="text-xs text-gray-500">
-                      soit {price.pricePerDay.toFixed(2)} MAD / jour
+                      soit {price.pricePerDay.toFixed(2)} {T.perDay}
                     </p>
                   </div>
                 ) : (
@@ -83,7 +87,7 @@ export default async function PlansPage() {
       </section>
 
       <section className="rounded-xl border-2 border-fitnest-green bg-white p-6 md:p-8 text-center">
-        <h2 className="text-2xl font-bold mb-2">Ou compose ton plan</h2>
+        <h2 className="text-2xl font-bold mb-2">{T.composeTitle}</h2>
         <p className="text-gray-600 max-w-2xl mx-auto mb-5">
           Tu vises des macros précises ? Construis chaque plat toi-même : choisis ta protéine, ton
           féculent, tes légumes et tes suppléments, suis tes calories en direct, enregistre tes plats
