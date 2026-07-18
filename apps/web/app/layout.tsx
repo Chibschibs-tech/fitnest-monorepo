@@ -2,8 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { ClientLayout } from "./client-layout"
-import { siteConfig, buildAlternates } from "@/lib/site-config"
+import { siteConfig } from "@/lib/site-config"
 import { LocalBusinessJsonLd, WebSiteJsonLd } from "@/components/seo-jsonld"
+import { SeoCanonical } from "@/components/seo-canonical"
 import "./globals.css"
 
 export const dynamic = "force-dynamic"
@@ -56,7 +57,6 @@ export const metadata: Metadata = {
     title: "FitNest | Livraison de repas sains à Casablanca",
     description: siteConfig.descriptionFr,
   },
-  alternates: buildAlternates("/"),
   robots: {
     index: true,
     follow: true,
@@ -78,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang={locale}>
       <head>
+        <SeoCanonical />
         <LocalBusinessJsonLd />
         <WebSiteJsonLd />
       </head>
