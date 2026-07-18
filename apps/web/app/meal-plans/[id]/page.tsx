@@ -245,7 +245,7 @@ export default async function MealPlanPage({ params }: { params: { id: string } 
                 )}
               </div>
               <Button asChild size="lg" className="bg-fitnest-orange hover:bg-orange-600 text-white">
-                <Link href={`/order?plan=${params.id}`}>Configurer cette formule</Link>
+                <Link href={`/compose-ton-plan?plan=${params.id}`}>Configurer cette formule</Link>
               </Button>
             </div>
             <div className="relative">
@@ -372,7 +372,7 @@ export default async function MealPlanPage({ params }: { params: { id: string } 
                 <h3 className="text-xl font-bold mb-2">Ready to Start?</h3>
                 <p className="text-green-100 mb-4">Join thousands of satisfied customers</p>
                 <Button asChild className="w-full bg-fitnest-orange hover:bg-orange-600">
-                  <Link href={`/order?plan=${params.id}`}>
+                  <Link href={`/compose-ton-plan?plan=${params.id}`}>
                     {entry ? `Commander - ${entry.weekly.toFixed(2)} MAD/semaine` : "Commander"}
                   </Link>
                 </Button>

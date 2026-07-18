@@ -8,7 +8,7 @@ const publicRoutes = [
   "/plans", "/meal-plans", "/menu", "/meals", "/catalogue", "/express-shop", "/entreprises",
   "/waitlist", "/waitlist/success",
   "/checkout", "/checkout/guest", "/checkout/guest-details", "/checkout/guest-confirmation",
-  "/cart", "/shopping-cart", "/order",
+  "/cart", "/shopping-cart", "/order", "/compose-ton-plan",
   "/subscribe", "/subscribe/thanks",
 ]
 

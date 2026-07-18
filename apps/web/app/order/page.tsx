@@ -1,7 +1,10 @@
-"use client"
+﻿import { redirect } from "next/navigation"
 
-import { OrderProcess } from "./order-process"
-
-export default function OrderPage() {
-  return <OrderProcess />
+export default function OrderPage({
+  searchParams,
+}: {
+  searchParams?: { plan?: string }
+}) {
+  const plan = searchParams?.plan
+  redirect(plan ? `/compose-ton-plan?plan=${encodeURIComponent(plan)}` : "/compose-ton-plan")
 }
