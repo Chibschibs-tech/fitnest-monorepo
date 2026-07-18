@@ -1,9 +1,21 @@
-import { notFound } from "next/navigation"
+﻿import { notFound } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 import { CheckCircle, Clock, Users, Utensils } from "lucide-react"
+import { getPlanEntryPrices } from "@/lib/plan-pricing"
+
+export const dynamic = "force-dynamic"
+
+// Page slug -> meal_type_prices.plan_name
+const PLAN_NAME: Record<string, string> = {
+  "weight-loss": "Weight Loss",
+  "muscle-gain": "Muscle Gain",
+  keto: "Keto",
+  "stay-fit": "Stay Fit",
+}
 
 const mealPlans = {
   "weight-loss": {
@@ -135,7 +147,7 @@ const mealPlans = {
       },
       {
         name: "Beef & Cauliflower Mash",
-        description: "Grass-fed beef with cauliflower mash and sautéed spinach",
+        description: "Grass-fed beef with cauliflower mash and sautÃ©ed spinach",
         calories: 520,
         image: "/classic-beef-broccoli.png",
       },
@@ -198,13 +210,19 @@ const mealPlans = {
   },
 }
 
-export default function MealPlanPage({ params }: { params: { id: string } }) {
+export default async function MealPlanPage({ params }: { params: { id: string } }) {
   // Handle both numeric IDs and string slugs
   const plan = mealPlans[params.id as keyof typeof mealPlans]
 
   if (!plan) {
     notFound()
   }
+
+  // Live price from the pricing engine - never a hardcoded number, so this page
+  // can never disagree with /plans, the builder or checkout.
+  const planName = PLAN_NAME[params.id]
+  const priceMap = planName ? await getPlanEntryPrices([planName]) : {}
+  const entry = planName ? priceMap[planName] : undefined
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -218,14 +236,16 @@ export default function MealPlanPage({ params }: { params: { id: string } }) {
               <p className="text-xl mb-6 text-green-100">{plan.description}</p>
               <div className="flex items-center gap-4 mb-8">
                 <div className="text-3xl font-bold">
-                  {plan.price} MAD/{plan.duration}
+                  {entry ? `${entry.weekly.toFixed(2)} MAD/semaine` : "Prix sur configuration"}
                 </div>
-                {plan.originalPrice && (
-                  <div className="text-lg line-through text-green-200">{plan.originalPrice} MAD</div>
+                {entry && (
+                  <div className="text-sm text-green-100">
+                    A partir de - 2 repas/jour, 5 jours/semaine
+                  </div>
                 )}
               </div>
-              <Button size="lg" className="bg-fitnest-orange hover:bg-orange-600 text-white">
-                Start Your Plan
+              <Button asChild size="lg" className="bg-fitnest-orange hover:bg-orange-600 text-white">
+                <Link href={`/order?plan=${params.id}`}>Configurer cette formule</Link>
               </Button>
             </div>
             <div className="relative">
@@ -351,8 +371,10 @@ export default function MealPlanPage({ params }: { params: { id: string } }) {
               <CardContent className="p-6 text-center">
                 <h3 className="text-xl font-bold mb-2">Ready to Start?</h3>
                 <p className="text-green-100 mb-4">Join thousands of satisfied customers</p>
-                <Button className="w-full bg-fitnest-orange hover:bg-orange-600">
-                  Order Now - {plan.price} MAD/week
+                <Button asChild className="w-full bg-fitnest-orange hover:bg-orange-600">
+                  <Link href={`/order?plan=${params.id}`}>
+                    {entry ? `Commander - ${entry.weekly.toFixed(2)} MAD/semaine` : "Commander"}
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
