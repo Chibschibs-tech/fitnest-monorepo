@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Pricing engine regression tests (no test runner required).
  * Run with:  node --experimental-strip-types apps/web/scripts/test-pricing.ts
  *
@@ -64,14 +64,14 @@ function check(name: string, got: number, exp: number) {
   check("C finalWeekly", r.finalWeekly, 1096.5);
   check("C total", r.totalRoundedMAD, 8772);
 }
-// D: STACK — days5(3%) stacks with dur4(10%): 750*0.97=727.5 then *0.90=654.75 *4 = 2619
+// D: STACK â€” days5(3%) stacks with dur4(10%): 750*0.97=727.5 then *0.90=654.75 *4 = 2619
 {
   const rulesStack: DiscountRule[] = rulesBest.map((x) => (x.discount_type === "days" ? { ...x, stacking_behavior: "stack" as const } : x));
   const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesStack, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
   check("D stacked finalWeekly", r.finalWeekly, 654.75);
   check("D stacked total", r.totalRoundedMAD, 2619);
 }
-// E: EXCLUSIVE — a 25% exclusive rule suppresses all others: 750*0.75=562.5 *4 = 2250
+// E: EXCLUSIVE â€” a 25% exclusive rule suppresses all others: 750*0.75=562.5 *4 = 2250
 {
   const rulesEx: DiscountRule[] = rulesBest.map((x) => (x.discount_type === "duration" && x.condition_value === 4 ? { ...x, discount_percentage: 25, stacking_behavior: "exclusive" as const } : x));
   const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesEx, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
@@ -82,6 +82,20 @@ function check(name: string, got: number, exp: number) {
 {
   const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 3, 1, rulesBest, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
   check("F nodiscount total", r.totalRoundedMAD, 450);
+}
+
+// G: plan-card entry prices (lib/plan-pricing.ts baseline: Lunch+Dinner, 5 days, 1 week)
+// These are the numbers rendered on /plans, and must equal what checkout charges.
+{
+  const entry = (plan: string, expPerDay: number, expWeekly: number) => {
+    const r = calculateSubscriptionPrice(pick(plan, ["Lunch", "Dinner"]), 5, 1, rulesBest, plan, ["Lunch", "Dinner"]);
+    check(`G ${plan} entry perDay`, r.pricePerDay, expPerDay);
+    check(`G ${plan} entry weekly`, r.finalWeekly, expWeekly);
+  };
+  // Weight Loss  55+50=105/day x5 = 525, days5 -3% => 509.25
+  entry("Weight Loss", 105, 509.25);
+  // Muscle Gain  70+65=135/day x5 = 675, days5 -3% => 654.75
+  entry("Muscle Gain", 135, 654.75);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);
