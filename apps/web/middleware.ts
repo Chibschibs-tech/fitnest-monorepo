@@ -38,10 +38,16 @@ function isPublicRoute(pathname: string): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Crawler + static assets must never hit auth, or Google cannot index the site.
   if (
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/favicon.ico") ||
-    pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot)$/)
+    pathname === "/robots.txt" ||
+    pathname === "/sitemap.xml" ||
+    pathname.startsWith("/sitemap") ||
+    pathname === "/manifest.json" ||
+    pathname === "/manifest.webmanifest" ||
+    pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|woff|woff2|ttf|eot|xml|txt|webmanifest)$/)
   ) {
     return NextResponse.next()
   }
