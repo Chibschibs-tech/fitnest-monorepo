@@ -5,7 +5,7 @@ const publicRoutes = [
   "/", "/home",
   "/login", "/register", "/forgot-password",
   "/about", "/blog", "/careers", "/contact", "/faq", "/privacy", "/terms", "/how-it-works", "/legal",
-  "/plans", "/meal-plans", "/menu", "/meals", "/catalogue", "/express-shop",
+  "/plans", "/meal-plans", "/menu", "/meals", "/catalogue", "/express-shop", "/entreprises",
   "/waitlist", "/waitlist/success",
   "/checkout", "/checkout/guest", "/checkout/guest-details", "/checkout/guest-confirmation",
   "/cart", "/shopping-cart", "/order",
@@ -18,6 +18,8 @@ const publicApiPrefixes = [
   // Pricing must be readable by guests: the /order builder and the plan cards
   // call it before anyone logs in.
   "/api/calculate-price",
+  // Public B2B lead capture from /entreprises.
+  "/api/company-leads",
 ]
 
 function isPublicRoute(pathname: string): boolean {
