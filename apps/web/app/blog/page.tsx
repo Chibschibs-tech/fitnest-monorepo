@@ -3,12 +3,13 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { useLanguage } from "@/components/language-provider"
+import { useLanguage, localePath } from "@/components/language-provider"
 import { getTranslations, defaultLocale } from "@/lib/i18n"
 import { useState, useEffect } from "react"
 
 export default function BlogPage() {
   const { locale } = useLanguage()
+  const L = (href: string) => localePath(href, locale)
   const [mounted, setMounted] = useState(false)
   
   useEffect(() => {
@@ -102,7 +103,7 @@ export default function BlogPage() {
             <h2 className="text-xl md:text-2xl font-bold mb-3">{blogPosts[0].title}</h2>
             <p className="text-gray-600 mb-6 text-sm md:text-base">{blogPosts[0].excerpt}</p>
             <div className="mt-auto">
-              <Link href={`/blog/${blogPosts[0].slug}`}>
+              <Link href={L(`/blog/${blogPosts[0].slug}`)}>
                 <Button className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full md:w-auto">
                   {t.home.blog.readArticle}
                 </Button>
@@ -139,7 +140,7 @@ export default function BlogPage() {
               <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">{post.date}</span>
-                <Link href={`/blog/${post.slug}`}>
+                <Link href={L(`/blog/${post.slug}`)}>
                   <Button
                     variant="outline"
                     className="border-fitnest-green text-fitnest-green hover:bg-fitnest-green hover:text-white"
