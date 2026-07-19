@@ -49,7 +49,10 @@ export default function Home() {
   // Keep the visitor's language on every in-page link too (not just the navbar).
   const L = (href: string) => localePath(href, locale)
 
-  const t = getTranslations(mounted ? locale : defaultLocale)
+  // Locale comes from the URL (via the provider), which is available during SSR
+  // too — so render the page in the URL's language immediately, no French flash
+  // and no French content indexed on /en pages.
+  const t = getTranslations(locale)
 
   // Fetch Express Shop products
   useEffect(() => {
