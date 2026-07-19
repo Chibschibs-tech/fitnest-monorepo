@@ -98,9 +98,9 @@ export default function Home() {
       {/* Content wrapper - starts after hero */}
       <div className="relative z-10 bg-white">
       {/* How It Works Section */}
-      <section className="py-16 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 md:mb-12">
             <p className="text-sm font-semibold uppercase text-fitnest-orange mb-2">{t.home.howItWorks.label}</p>
             <h2 className="text-3xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.title}</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -110,7 +110,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Step 1: Choose Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <UtensilsCrossed className="h-10 w-10 text-fitnest-orange" />
@@ -123,7 +123,7 @@ export default function Home() {
             </div>
 
             {/* Step 2: We Cook */}
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <ChefHat className="h-10 w-10 text-fitnest-orange" />
@@ -136,7 +136,7 @@ export default function Home() {
             </div>
 
             {/* Step 3: We Deliver */}
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <Truck className="h-10 w-10 text-fitnest-orange" />
@@ -152,16 +152,16 @@ export default function Home() {
       </section>
 
       {/* Featured Meal Plans Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="mb-2 text-center text-3xl font-bold text-fitnest-green">{t.home.choosePlan.title}</h2>
-          <p className="mb-12 text-center text-gray-600 max-w-2xl mx-auto">
+          <p className="mb-8 md:mb-12 text-center text-gray-600 max-w-2xl mx-auto">
             {t.home.choosePlan.subtitle}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Weight Loss Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative">
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
@@ -203,7 +203,7 @@ export default function Home() {
             </div>
 
             {/* Stay Fit Plan - Popular */}
-            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative border-2 border-fitnest-orange">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative border-2 border-fitnest-orange">
               <div className="absolute top-4 right-4">
                 <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
                   {locale === "fr" ? "POPULAIRE" : "POPULAR"}
@@ -250,7 +250,7 @@ export default function Home() {
             </div>
 
             {/* Muscle Gain Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-8 flex flex-col relative">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative">
               <div className="flex justify-center mb-6">
                 <div className="relative w-32 h-32 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
@@ -295,9 +295,9 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">{t.home.whyChooseFitnest.title}</h2>
+          <h2 className="mb-8 md:mb-12 text-center text-3xl font-bold">{t.home.whyChooseFitnest.title}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:grid-cols-3">
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
@@ -331,7 +331,7 @@ export default function Home() {
       </section>
 
       {/* Blog Section - Improved mobile horizontal scrolling */}
-      <section className="py-20 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="mb-2 text-center text-3xl font-bold">{t.home.blog.title}</h2>
           <p className="mb-8 text-center text-gray-600 max-w-2xl mx-auto">
@@ -531,10 +531,10 @@ export default function Home() {
       </section>
 
       {/* Express Shop Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="mb-2 text-center text-3xl font-bold">{t.home.expressShop.title}</h2>
-          <p className="mb-12 text-center text-gray-600 max-w-2xl mx-auto">
+          <p className="mb-8 md:mb-12 text-center text-gray-600 max-w-2xl mx-auto">
             {t.home.expressShop.subtitle}
           </p>
 
@@ -614,7 +614,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-fitnest-green py-20 text-white">
+      <section className="bg-fitnest-green py-14 md:py-16 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="mb-6 text-3xl font-bold">{t.home.cta.title}</h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg">
