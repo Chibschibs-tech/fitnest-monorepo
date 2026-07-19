@@ -5,7 +5,7 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { useState, useEffect } from "react"
-import { useLanguage } from "./language-provider"
+import { useLanguage, localePath, stripLocale } from "./language-provider"
 import { getTranslations } from "@/lib/i18n"
 import { LanguageSwitcher } from "./language-switcher"
 
@@ -18,7 +18,11 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const { locale } = useLanguage()
   const t = getTranslations(locale)
-  const isActive = (p: string) => pathname === p
+  // Keep the visitor in their language across every internal link: French stays
+  // at the root, English keeps its /en prefix. Active state compares the
+  // locale-stripped path so highlighting works on both languages.
+  const L = (href: string) => localePath(href, locale)
+  const isActive = (p: string) => stripLocale(pathname || "/") === p
 
   const isHomePage = pathname === "/" || pathname === "/home"
 
@@ -49,6 +53,8 @@ export default function Navbar() {
     { href: "/home", label: t.nav.home },
     { href: "/plans", label: t.nav.mealPlans },
     { href: "/menu", label: t.nav.meals },
+    { href: "/compose-ton-plan", label: t.nav.compose },
+    { href: "/entreprises", label: t.nav.business },
     { href: "/catalogue", label: t.nav.howItWorks },
     { href: "/contact", label: t.nav.contact },
   ]
@@ -74,7 +80,7 @@ export default function Navbar() {
       <div className="w-full flex h-20 items-center relative px-4 py-2">
         {/* Mobile menu button - absolute left */}
         <button
-          className={`md:hidden absolute left-4 h-11 w-11 rounded-full border p-2 z-10 transition-all ${
+          className={`lg:hidden absolute left-4 h-11 w-11 rounded-full border p-2 z-10 transition-all ${
             isHomePage && !scrolled
               ? "border-white/30 text-white bg-black/20 backdrop-blur-sm"
               : "border-gray-300 bg-white shadow-sm"
@@ -86,7 +92,7 @@ export default function Navbar() {
         </button>
 
         {/* Centered content - desktop - all items as one centered group with pill-shaped background */}
-        <div className="hidden md:flex items-center justify-center w-full">
+        <div className="hidden lg:flex items-center justify-center w-full">
           <div
             className="flex items-center px-6 py-2 rounded-full transition-all shadow-sm"
             style={
@@ -105,8 +111,8 @@ export default function Navbar() {
                   }
             }
           >
-            <div className="flex items-center" style={{ gap: "3rem" }}>
-              <Link href="/" className="flex items-center space-x-2">
+            <div className="flex items-center" style={{ gap: "1.75rem" }}>
+              <Link href={L("/")} className="flex items-center space-x-2">
                 <Image
                   src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Logo/Logo-Fitnest-Vert.png"
                   alt="Fitnest.ma Logo"
@@ -116,11 +122,11 @@ export default function Navbar() {
                   priority
                 />
               </Link>
-              <nav className="flex items-center space-x-6">
+              <nav className="flex items-center space-x-5">
                 {routes.map((r) => (
                   <Link
                     key={r.href}
-                    href={r.href}
+                    href={L(r.href)}
                     className={`text-sm font-medium transition-colors ${
                       isHomePage && !scrolled
                         ? `hover:text-white ${isActive(r.href) ? "text-white" : "text-white/90"}`
@@ -134,7 +140,7 @@ export default function Navbar() {
               <LanguageSwitcher />
               {!loading && (
                 <Link
-                  href={user ? "/dashboard" : "/login"}
+                  href={L(user ? "/dashboard" : "/login")}
                   className={`text-sm font-medium transition-colors ${
                     isHomePage && !scrolled
                       ? `hover:text-white ${isActive(user ? "/dashboard" : "/login") ? "text-white" : "text-white/90"}`
@@ -145,7 +151,7 @@ export default function Navbar() {
                 </Link>
               )}
               <Link
-                href="/subscribe"
+                href={L("/subscribe")}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   isHomePage && !scrolled
                     ? "bg-white text-fitnest-green hover:bg-white/90"
@@ -159,7 +165,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile logo - centered with pill background */}
-        <Link href="/" className="md:hidden flex items-center space-x-2 px-3 py-1.5 rounded-full transition-all" style={
+        <Link href={L("/")} className="lg:hidden flex items-center space-x-2 px-3 py-1.5 rounded-full transition-all" style={
           isHomePage && !scrolled
             ? {
                 backgroundColor: "rgba(0, 0, 0, 0.2)",
@@ -204,7 +210,7 @@ export default function Navbar() {
                 {routes.map((r) => (
                   <Link
                     key={r.href}
-                    href={r.href}
+                    href={L(r.href)}
                     className={`py-2 text-sm font-medium hover:text-fitnest-green ${
                       isActive(r.href) ? "text-fitnest-green" : "text-gray-600"
                     }`}
@@ -215,7 +221,7 @@ export default function Navbar() {
                 ))}
                 {!loading && (
                   <Link
-                    href={user ? "/dashboard" : "/login"}
+                    href={L(user ? "/dashboard" : "/login")}
                     className={`py-2 text-sm font-medium hover:text-fitnest-green ${
                       isActive(user ? "/dashboard" : "/login") ? "text-fitnest-green" : "text-gray-600"
                     }`}
@@ -228,7 +234,7 @@ export default function Navbar() {
                   <LanguageSwitcher />
                 </div>
                 <Link
-                  href="/subscribe"
+                  href={L("/subscribe")}
                   className="rounded-full bg-fitnest-green px-4 py-2 text-center text-sm font-medium text-white hover:bg-fitnest-green/90"
                   onClick={() => setOpen(false)}
                 >

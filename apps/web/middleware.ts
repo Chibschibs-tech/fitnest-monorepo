@@ -18,6 +18,7 @@ const publicApiPrefixes = [
   // Pricing must be readable by guests: the builders and plan cards call it
   // before anyone logs in.
   "/api/calculate-price",
+  "/api/plan-entry-prices",
   // Public B2B lead capture from /entreprises.
   "/api/company-leads",
   // Public: the Compose ton plan builder must work before login.

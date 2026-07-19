@@ -23,10 +23,28 @@ export default function Home() {
   const [mounted, setMounted] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [loadingProducts, setLoadingProducts] = useState(true)
-  
+  const [planPrices, setPlanPrices] = useState<Record<string, { weekly: number; pricePerDay: number }>>({})
+
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Real engine prices for the plan cards — same source as /plans and checkout,
+  // so the homepage can never show a stale number.
+  useEffect(() => {
+    fetch("/api/plan-entry-prices")
+      .then((r) => r.json())
+      .then((d) => { if (d?.prices) setPlanPrices(d.prices) })
+      .catch(() => {})
+  }, [])
+
+  // Fallbacks equal today's engine output, so even on fetch failure the card
+  // matches /plans rather than reverting to old teaser numbers.
+  const planPrice = (key: string, fallback: number) => {
+    const w = planPrices[key]?.weekly
+    const v = w ? Math.round(w) : fallback
+    return locale === "fr" ? `${v} Dhs` : `${v} MAD`
+  }
 
   const t = getTranslations(mounted ? locale : defaultLocale)
 
@@ -173,7 +191,7 @@ export default function Home() {
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "420 Dhs" : "420 MAD"}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Weight Loss", 509)}</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -220,7 +238,7 @@ export default function Home() {
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "450 dhs" : "450 MAD"}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Stay Fit", 558)}</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -262,7 +280,7 @@ export default function Home() {
               <div className="text-center mb-6">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{locale === "fr" ? "500 dhs" : "500 MAD"}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Muscle Gain", 655)}</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
