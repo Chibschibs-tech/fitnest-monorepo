@@ -15,7 +15,7 @@ export default function BlogPage() {
     setMounted(true)
   }, [])
 
-  const t = getTranslations(mounted ? locale : defaultLocale)
+  const t = getTranslations(locale)
 
   // Blog posts data with translations
   const blogPosts = [

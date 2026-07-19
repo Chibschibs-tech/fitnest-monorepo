@@ -15,7 +15,7 @@ export default function WaitlistSuccessPage() {
     setMounted(true)
   }, [])
 
-  const t = getTranslations(mounted ? locale : defaultLocale)
+  const t = getTranslations(locale)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-fitnest-green/10 via-white to-fitnest-orange/10 flex items-center justify-center p-4">

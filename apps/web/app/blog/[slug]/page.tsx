@@ -178,8 +178,8 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     setMounted(true)
   }, [])
 
-  const t = getTranslations(mounted ? locale : defaultLocale)
-  const postData = getBlogPostContent(params.slug, mounted ? locale : defaultLocale)
+  const t = getTranslations(locale)
+  const postData = getBlogPostContent(params.slug, locale)
 
   if (!postData) {
     notFound()
