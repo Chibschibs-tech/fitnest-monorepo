@@ -112,10 +112,10 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-10 md:py-14 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl lg:text-5xl font-bold text-fitnest-green mb-4">
+          <div className="text-center mb-6">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-fitnest-green mb-4">
               {locale === "fr" ? "Menu de cette semaine" : "This Week's Menu"}
             </h1>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
@@ -184,7 +184,7 @@ export default function MenuPage() {
       </section>
 
       {/* Meals Grid Section */}
-      <section className="py-16 bg-white">
+      <section className="py-10 bg-white">
         <div className="container mx-auto px-4">
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -247,32 +247,18 @@ export default function MenuPage() {
                       <h3 className="text-xl font-bold text-fitnest-green mb-2">{meal.name}</h3>
                       <p className="text-gray-600 text-sm mb-4 line-clamp-2">{meal.description}</p>
                       
-                      {/* Nutrition Info */}
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">
-                            {locale === "fr" ? "Protéines" : "Protein"}
-                          </span>
-                          <span className="font-semibold text-fitnest-green">
-                            {Math.round(meal.protein)}g
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">
-                            {locale === "fr" ? "Glucides" : "Carbs"}
-                          </span>
-                          <span className="font-semibold text-fitnest-green">
-                            {Math.round(meal.carbs)}g
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">
-                            {locale === "fr" ? "Lipides" : "Fat"}
-                          </span>
-                          <span className="font-semibold text-fitnest-green">
-                            {Math.round(meal.fat)}g
-                          </span>
-                        </div>
+                      {/* Nutrition Info — compact macro chips */}
+                      <div className="grid grid-cols-3 gap-2 mb-4">
+                        {[
+                          { l: locale === "fr" ? "Prot." : "Protein", v: Math.round(meal.protein) },
+                          { l: locale === "fr" ? "Gluc." : "Carbs", v: Math.round(meal.carbs) },
+                          { l: locale === "fr" ? "Lip." : "Fat", v: Math.round(meal.fat) },
+                        ].map((m) => (
+                          <div key={m.l} className="rounded-lg bg-gray-50 py-2 text-center">
+                            <div className="text-sm font-semibold text-fitnest-green">{m.v}g</div>
+                            <div className="text-[11px] text-gray-500">{m.l}</div>
+                          </div>
+                        ))}
                       </div>
 
                       {/* Tags */}
@@ -316,9 +302,9 @@ export default function MenuPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-fitnest-green text-white">
+      <section className="py-14 bg-fitnest-green text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-6 text-3xl font-bold">
+          <h2 className="mb-6 text-2xl md:text-3xl font-bold">
             {locale === "fr"
               ? "Prêt à commencer votre parcours santé ?"
               : "Ready to Start Your Health Journey?"}
