@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Check } from "lucide-react"
-import { useLanguage } from "@/components/language-provider"
+import { useLanguage, localePath } from "@/components/language-provider"
 import { getTranslations } from "@/lib/i18n"
 
 interface Meal {
@@ -40,6 +40,7 @@ interface MealPlan {
 export default function MenuPage() {
   const { locale } = useLanguage()
   const t = getTranslations(locale)
+  const L = (href: string) => localePath(href, locale)
   const [meals, setMeals] = useState<Meal[]>([])
   const [mealPlans, setMealPlans] = useState<MealPlan[]>([])
   const [loading, setLoading] = useState(true)
@@ -275,7 +276,7 @@ export default function MenuPage() {
                         </div>
                       )}
 
-                      <Link href={`/meals/${meal.id}`}>
+                      <Link href={L(`/meals/${meal.id}`)}>
                         <Button className="w-full rounded-full bg-fitnest-green text-white hover:bg-fitnest-green/90">
                           {locale === "fr" ? "Voir les détails" : "View Details"}
                         </Button>
@@ -314,7 +315,7 @@ export default function MenuPage() {
               ? "Rejoignez-nous dans notre mission de rendre une alimentation saine simple, agréable et partie intégrante de la vie quotidienne. Faites le premier pas vers un vous plus sain dès aujourd'hui."
               : "Join us in our mission to make healthy eating simple, enjoyable, and part of everyday life. Take the first step toward a healthier you today."}
           </p>
-          <Link href="/subscribe">
+          <Link href={L("/subscribe")}>
             <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full px-8 py-6 text-lg">
               {locale === "fr" ? "S'abonner maintenant" : "Subscribe Now"}
             </Button>

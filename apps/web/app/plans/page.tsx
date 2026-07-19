@@ -28,6 +28,8 @@ const num = (v: unknown) => Number(v ?? 0) || 0
 export default async function PlansPage() {
   const locale = headers().get("x-locale") === "en" ? "en" : "fr"
   const T = plansCopy[locale]
+  // Keep the visitor's language on every internal link (server-side locale).
+  const L = (href: string) => (locale === "en" ? (href === "/" ? "/en" : `/en${href}`) : href)
 
   // Prices come from the same engine that prices the builder and checkout,
   // so a card can never show a number the customer will not actually pay.
@@ -157,7 +159,7 @@ export default async function PlansPage() {
 
                 <div className="mt-6 flex flex-col gap-2">
                   <a
-                    href={`/order?plan=${p.slug}`}
+                    href={L(`/order?plan=${p.slug}`)}
                     className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-fitnest-green px-5 py-3 text-sm font-medium text-white hover:bg-fitnest-green/90"
                   >
                     {T.configure}
@@ -174,7 +176,7 @@ export default async function PlansPage() {
         <section className="rounded-2xl border bg-white p-6 md:p-8">
           <div className="flex items-baseline justify-between gap-4 mb-5">
             <h2 className="text-xl md:text-2xl font-bold">{T.typicalTitle}</h2>
-            <Link href="/menu" className="text-sm text-fitnest-green hover:underline whitespace-nowrap">
+            <Link href={L("/menu")} className="text-sm text-fitnest-green hover:underline whitespace-nowrap">
               {T.menuBandCta} →
             </Link>
           </div>
@@ -210,7 +212,7 @@ export default async function PlansPage() {
         <section className="space-y-4">
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="text-xl md:text-2xl font-bold">{T.menuBandTitle}</h2>
-            <Link href="/menu" className="text-sm text-fitnest-green hover:underline whitespace-nowrap">
+            <Link href={L("/menu")} className="text-sm text-fitnest-green hover:underline whitespace-nowrap">
               {T.menuBandCta} →
             </Link>
           </div>
@@ -218,7 +220,7 @@ export default async function PlansPage() {
             {featured.map((m) => (
               <Link
                 key={m.title + m.image_url}
-                href="/menu"
+                href={L("/menu")}
                 className="group relative rounded-xl overflow-hidden bg-gray-100 aspect-[3/2]"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -245,7 +247,7 @@ export default async function PlansPage() {
         <h2 className="text-2xl font-bold mb-2">{T.composeTitle}</h2>
         <p className="text-gray-600 max-w-2xl mx-auto mb-5">{T.composeIntro}</p>
         <a
-          href="/compose-ton-plan"
+          href={L("/compose-ton-plan")}
           className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-fitnest-orange px-6 py-3 text-sm font-medium text-white hover:bg-fitnest-orange/90"
         >
           {T.composeCta}

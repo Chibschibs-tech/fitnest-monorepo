@@ -58,7 +58,7 @@ export const translations = {
         },
         weightLoss: {
           title: 'LOW CARB',
-          subtitle: 'Eat lighter. Stay sharp',
+          subtitle: 'Mangez léger, restez affûté',
           description: 'Repas équilibrés avec une teneur réduite en glucides',
           features: {
             reducedCarbs: 'Glucides réduits, énergie stable',
@@ -70,7 +70,7 @@ export const translations = {
         },
         stayFit: {
           title: 'BALANCED',
-          subtitle: 'The smart everyday choice.',
+          subtitle: 'Le choix malin du quotidien',
           description: 'Équilibre parfait des nutriments pour une alimentation saine',
           features: {
             wellBalanced: 'Macros bien équilibrées',
@@ -82,7 +82,7 @@ export const translations = {
         },
         muscleGain: {
           title: 'PROTEIN POWER',
-          subtitle: 'Fuel. Recover. Perform.',
+          subtitle: 'Énergie, récupération, performance',
           description: 'Protéines élevées pour la croissance musculaire et la performance',
           features: {
             highProtein: 'Apport élevé en protéines',

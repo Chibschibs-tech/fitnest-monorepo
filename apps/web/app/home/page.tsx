@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronRight, Check, UtensilsCrossed, ChefHat, Truck, Heart, CheckCircle2, TrendingUp } from "lucide-react"
-import { useLanguage } from "@/components/language-provider"
+import { useLanguage, localePath } from "@/components/language-provider"
 import { getTranslations, defaultLocale } from "@/lib/i18n"
 import { useState, useEffect } from "react"
 
@@ -45,6 +45,9 @@ export default function Home() {
     const v = w ? Math.round(w) : fallback
     return locale === "fr" ? `${v} Dhs` : `${v} MAD`
   }
+
+  // Keep the visitor's language on every in-page link too (not just the navbar).
+  const L = (href: string) => localePath(href, locale)
 
   const t = getTranslations(mounted ? locale : defaultLocale)
 
@@ -99,12 +102,12 @@ export default function Home() {
         />
         <div className="relative z-10 container mx-auto px-4 pb-8 sm:pb-12 md:pb-16">
           <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4">
-            <Link href="/meal-plans">
+            <Link href={L("/meal-plans")}>
               <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
                 {t.home.hero.viewMealPlans}
               </Button>
             </Link>
-            <Link href="/how-it-works">
+            <Link href={L("/how-it-works")}>
               <Button className="bg-white text-fitnest-green hover:bg-white/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
                 {t.home.hero.howItWorks}
               </Button>
@@ -195,7 +198,7 @@ export default function Home() {
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
-              <Link href="/meal-plans/weight-loss" className="mb-6">
+              <Link href={L("/meal-plans/weight-loss")} className="mb-6">
                 <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.weightLoss.select}
                 </Button>
@@ -242,7 +245,7 @@ export default function Home() {
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
-              <Link href="/meal-plans/balanced-nutrition" className="mb-6">
+              <Link href={L("/meal-plans/balanced-nutrition")} className="mb-6">
                 <Button className="w-full rounded-full bg-fitnest-orange text-white hover:bg-fitnest-orange/90 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.stayFit.select}
                 </Button>
@@ -284,7 +287,7 @@ export default function Home() {
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
-              <Link href="/meal-plans/muscle-gain" className="mb-6">
+              <Link href={L("/meal-plans/muscle-gain")} className="mb-6">
                 <Button className="w-full rounded-full bg-gray-100 text-fitnest-green hover:bg-gray-200 shadow-md hover:shadow-lg">
                   {t.home.choosePlan.muscleGain.select}
                 </Button>
@@ -381,7 +384,7 @@ export default function Home() {
                       {t.home.blog.post1.title}
                     </h3>
                     <Link
-                      href="/blog/healthy-meal-prep"
+                      href={L("/blog/healthy-meal-prep")}
                       className="text-fitnest-orange font-medium text-sm flex items-center"
                     >
                       {t.home.blog.readMore} <ChevronRight className="h-4 w-4 ml-1" />
@@ -408,7 +411,7 @@ export default function Home() {
                     </div>
                     <h3 className="text-lg font-bold mb-2 line-clamp-2">{t.home.blog.post2.title}</h3>
                     <Link
-                      href="/blog/nutrition-myths"
+                      href={L("/blog/nutrition-myths")}
                       className="text-fitnest-orange font-medium text-sm flex items-center"
                     >
                       {t.home.blog.readMore} <ChevronRight className="h-4 w-4 ml-1" />
@@ -435,7 +438,7 @@ export default function Home() {
                     </div>
                     <h3 className="text-lg font-bold mb-2 line-clamp-2">{t.home.blog.post3.title}</h3>
                     <Link
-                      href="/blog/weight-loss-plateau"
+                      href={L("/blog/weight-loss-plateau")}
                       className="text-fitnest-orange font-medium text-sm flex items-center"
                     >
                       {t.home.blog.readMore} <ChevronRight className="h-4 w-4 ml-1" />
@@ -464,7 +467,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4 line-clamp-2">
                   {t.home.blog.post1.description}
                 </p>
-                <Link href="/blog/healthy-meal-prep">
+                <Link href={L("/blog/healthy-meal-prep")}>
                   <Button
                     variant="outline"
                     className="w-full border-fitnest-orange text-fitnest-orange hover:bg-fitnest-orange hover:text-white"
@@ -496,7 +499,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4 line-clamp-2">
                   {t.home.blog.post2.description}
                 </p>
-                <Link href="/blog/nutrition-myths">
+                <Link href={L("/blog/nutrition-myths")}>
                   <Button
                     variant="outline"
                     className="w-full border-fitnest-orange text-fitnest-orange hover:bg-fitnest-orange hover:text-white"
@@ -528,7 +531,7 @@ export default function Home() {
                 <p className="text-gray-600 mb-4 line-clamp-2">
                   {t.home.blog.post3.description}
                 </p>
-                <Link href="/blog/weight-loss-plateau">
+                <Link href={L("/blog/weight-loss-plateau")}>
                   <Button
                     variant="outline"
                     className="w-full border-fitnest-orange text-fitnest-orange hover:bg-fitnest-orange hover:text-white"
@@ -541,7 +544,7 @@ export default function Home() {
           </div>
 
           <div className="mt-10 text-center">
-            <Link href="/blog">
+            <Link href={L("/blog")}>
               <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">{t.home.blog.viewAllArticles}</Button>
             </Link>
           </div>
@@ -607,7 +610,7 @@ export default function Home() {
                           </>
                         )}
                       </span>
-                      <Link href={`/express-shop/${product.id}`} className="w-full sm:w-auto">
+                      <Link href={L(`/express-shop/${product.id}`)} className="w-full sm:w-auto">
                         <Button size="sm" className="bg-fitnest-green hover:bg-fitnest-green/90 text-white w-full sm:w-auto">
                           {t.home.expressShop.shopNow}
                         </Button>
@@ -624,7 +627,7 @@ export default function Home() {
           )}
 
           <div className="mt-10 text-center">
-            <Link href="/express-shop">
+            <Link href={L("/express-shop")}>
               <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">{t.home.expressShop.visitExpressShop}</Button>
             </Link>
           </div>
@@ -638,7 +641,7 @@ export default function Home() {
           <p className="mx-auto mb-8 max-w-2xl text-lg">
             {t.home.cta.description}
           </p>
-          <Link href="/order">
+          <Link href={L("/order")}>
             <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90">{t.home.cta.button}</Button>
           </Link>
         </div>
