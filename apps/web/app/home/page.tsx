@@ -142,44 +142,38 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-6xl mx-auto">
-            {/* Step 1: Choose Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-4 md:p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
-                  <UtensilsCrossed className="h-10 w-10 text-fitnest-orange" />
-                </div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-8 max-w-6xl mx-auto">
+            {/* Step 1: Choose Plan — row on mobile, centred card on desktop */}
+            <div className="bg-white rounded-xl shadow-md md:shadow-lg p-4 md:p-8 flex flex-row md:flex-col items-center gap-4 md:gap-0 text-left md:text-center">
+              <div className="shrink-0 md:mb-6 flex h-12 w-12 md:h-20 md:w-20 items-center justify-center rounded-lg bg-fitnest-orange/10">
+                <UtensilsCrossed className="h-6 w-6 md:h-10 md:w-10 text-fitnest-orange" />
               </div>
-              <h3 className="text-xl font-bold text-fitnest-green mb-2 sm:mb-4">{t.home.howItWorks.choosePlan.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.home.howItWorks.choosePlan.description}
-              </p>
+              <div>
+                <h3 className="text-base md:text-xl font-bold text-fitnest-green mb-0.5 md:mb-4">{t.home.howItWorks.choosePlan.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{t.home.howItWorks.choosePlan.description}</p>
+              </div>
             </div>
 
             {/* Step 2: We Cook */}
-            <div className="bg-white rounded-lg shadow-lg p-4 md:p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
-                  <ChefHat className="h-10 w-10 text-fitnest-orange" />
-                </div>
+            <div className="bg-white rounded-xl shadow-md md:shadow-lg p-4 md:p-8 flex flex-row md:flex-col items-center gap-4 md:gap-0 text-left md:text-center">
+              <div className="shrink-0 md:mb-6 flex h-12 w-12 md:h-20 md:w-20 items-center justify-center rounded-lg bg-fitnest-orange/10">
+                <ChefHat className="h-6 w-6 md:h-10 md:w-10 text-fitnest-orange" />
               </div>
-              <h3 className="text-xl font-bold text-fitnest-green mb-2 sm:mb-4">{t.home.howItWorks.weCook.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.home.howItWorks.weCook.description}
-              </p>
+              <div>
+                <h3 className="text-base md:text-xl font-bold text-fitnest-green mb-0.5 md:mb-4">{t.home.howItWorks.weCook.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{t.home.howItWorks.weCook.description}</p>
+              </div>
             </div>
 
             {/* Step 3: We Deliver */}
-            <div className="bg-white rounded-lg shadow-lg p-4 md:p-8 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
-                  <Truck className="h-10 w-10 text-fitnest-orange" />
-                </div>
+            <div className="bg-white rounded-xl shadow-md md:shadow-lg p-4 md:p-8 flex flex-row md:flex-col items-center gap-4 md:gap-0 text-left md:text-center">
+              <div className="shrink-0 md:mb-6 flex h-12 w-12 md:h-20 md:w-20 items-center justify-center rounded-lg bg-fitnest-orange/10">
+                <Truck className="h-6 w-6 md:h-10 md:w-10 text-fitnest-orange" />
               </div>
-              <h3 className="text-xl font-bold text-fitnest-green mb-2 sm:mb-4">{t.home.howItWorks.weDeliver.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {t.home.howItWorks.weDeliver.description}
-              </p>
+              <div>
+                <h3 className="text-base md:text-xl font-bold text-fitnest-green mb-0.5 md:mb-4">{t.home.howItWorks.weDeliver.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{t.home.howItWorks.weDeliver.description}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -370,33 +364,33 @@ export default function Home() {
       <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="mb-8 md:mb-12 text-center text-3xl font-bold">{t.home.whyChooseFitnest.title}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 md:grid-cols-3">
-            <div className="rounded-lg p-4 md:p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
-                <Heart className="h-10 w-10 text-fitnest-green" />
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-8">
+            <div className="rounded-xl p-4 md:p-6 shadow-md md:shadow-lg bg-gray-50 flex flex-row md:flex-col items-center gap-4 md:gap-0 text-left md:text-center">
+              <div className="shrink-0 md:mx-auto md:mb-4 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-lg bg-fitnest-green/10">
+                <Heart className="h-6 w-6 md:h-10 md:w-10 text-fitnest-green" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.healthFirst.title}</h3>
-              <p className="text-gray-600">
-                {t.home.whyChooseFitnest.healthFirst.description}
-              </p>
+              <div>
+                <h3 className="mb-0.5 md:mb-2 text-base md:text-xl font-semibold">{t.home.whyChooseFitnest.healthFirst.title}</h3>
+                <p className="text-gray-600 text-sm md:text-base">{t.home.whyChooseFitnest.healthFirst.description}</p>
+              </div>
             </div>
-            <div className="rounded-lg p-4 md:p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-orange/10 text-fitnest-orange">
-                <CheckCircle2 className="h-10 w-10 text-fitnest-orange" />
+            <div className="rounded-xl p-4 md:p-6 shadow-md md:shadow-lg bg-gray-50 flex flex-row md:flex-col items-center gap-4 md:gap-0 text-left md:text-center">
+              <div className="shrink-0 md:mx-auto md:mb-4 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-lg bg-fitnest-orange/10">
+                <CheckCircle2 className="h-6 w-6 md:h-10 md:w-10 text-fitnest-orange" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.simplicity.title}</h3>
-              <p className="text-gray-600">
-                {t.home.whyChooseFitnest.simplicity.description}
-              </p>
+              <div>
+                <h3 className="mb-0.5 md:mb-2 text-base md:text-xl font-semibold">{t.home.whyChooseFitnest.simplicity.title}</h3>
+                <p className="text-gray-600 text-sm md:text-base">{t.home.whyChooseFitnest.simplicity.description}</p>
+              </div>
             </div>
-            <div className="rounded-lg p-4 md:p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
-                <TrendingUp className="h-10 w-10 text-fitnest-green" />
+            <div className="rounded-xl p-4 md:p-6 shadow-md md:shadow-lg bg-gray-50 flex flex-row md:flex-col items-center gap-4 md:gap-0 text-left md:text-center">
+              <div className="shrink-0 md:mx-auto md:mb-4 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-lg bg-fitnest-green/10">
+                <TrendingUp className="h-6 w-6 md:h-10 md:w-10 text-fitnest-green" />
               </div>
-              <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.transformation.title}</h3>
-              <p className="text-gray-600">
-                {t.home.whyChooseFitnest.transformation.description}
-              </p>
+              <div>
+                <h3 className="mb-0.5 md:mb-2 text-base md:text-xl font-semibold">{t.home.whyChooseFitnest.transformation.title}</h3>
+                <p className="text-gray-600 text-sm md:text-base">{t.home.whyChooseFitnest.transformation.description}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -652,9 +646,9 @@ export default function Home() {
               ))}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pb-4 scrollbar-hide sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 sm:overflow-visible">
               {products.map((product) => (
-                <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105">
+                <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105 min-w-[72%] shrink-0 snap-center sm:min-w-0">
                   <div className="relative h-48">
                     {product.imageUrl ? (
                       <Image 
