@@ -470,6 +470,20 @@ export function OrderProcess() {
         </div>
       </div>
 
+      {/* Cross-link to the ingredient-level composer, so clients always see the option */}
+      <a
+        href="/compose-ton-plan"
+        className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-fitnest-orange/30 bg-fitnest-orange/5 p-4 transition-colors hover:bg-fitnest-orange/10"
+      >
+        <div>
+          <p className="font-semibold text-fitnest-green">Envie de créer tes propres plats ?</p>
+          <p className="text-sm text-gray-600">
+            Compose chaque plat à la portion près — protéine, féculent, légumes — et suis tes macros en direct.
+          </p>
+        </div>
+        <span className="shrink-0 whitespace-nowrap font-medium text-fitnest-orange">Composer mes plats →</span>
+      </a>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           {step === 1 && (

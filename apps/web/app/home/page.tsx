@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronRight, Check, UtensilsCrossed, ChefHat, Truck, Heart, CheckCircle2, TrendingUp } from "lucide-react"
 import { useLanguage, localePath } from "@/components/language-provider"
 import { getTranslations, defaultLocale } from "@/lib/i18n"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 interface Product {
   id: number
@@ -48,6 +48,17 @@ export default function Home() {
 
   // Keep the visitor's language on every in-page link too (not just the navbar).
   const L = (href: string) => localePath(href, locale)
+
+  // Mobile plan carousel: track which card is centred so the dots reflect it.
+  const plansRef = useRef<HTMLDivElement>(null)
+  const [activeSlide, setActiveSlide] = useState(0)
+  const onPlansScroll = () => {
+    const el = plansRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    const i = max > 0 ? Math.round((el.scrollLeft / max) * 2) : 0
+    setActiveSlide(Math.max(0, Math.min(2, i)))
+  }
 
   // Locale comes from the URL (via the provider), which is available during SSR
   // too — so render the page in the URL's language immediately, no French flash
@@ -131,41 +142,41 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-6xl mx-auto">
             {/* Step 1: Choose Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-4 md:p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <UtensilsCrossed className="h-10 w-10 text-fitnest-orange" />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.choosePlan.title}</h3>
+              <h3 className="text-xl font-bold text-fitnest-green mb-2 sm:mb-4">{t.home.howItWorks.choosePlan.title}</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 {t.home.howItWorks.choosePlan.description}
               </p>
             </div>
 
             {/* Step 2: We Cook */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-4 md:p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <ChefHat className="h-10 w-10 text-fitnest-orange" />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.weCook.title}</h3>
+              <h3 className="text-xl font-bold text-fitnest-green mb-2 sm:mb-4">{t.home.howItWorks.weCook.title}</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 {t.home.howItWorks.weCook.description}
               </p>
             </div>
 
             {/* Step 3: We Deliver */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
+            <div className="bg-white rounded-lg shadow-lg p-4 md:p-8 text-center">
               <div className="flex justify-center mb-6">
                 <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <Truck className="h-10 w-10 text-fitnest-orange" />
                 </div>
               </div>
-              <h3 className="text-xl font-bold text-fitnest-green mb-4">{t.home.howItWorks.weDeliver.title}</h3>
+              <h3 className="text-xl font-bold text-fitnest-green mb-2 sm:mb-4">{t.home.howItWorks.weDeliver.title}</h3>
               <p className="text-gray-600 text-sm leading-relaxed">
                 {t.home.howItWorks.weDeliver.description}
               </p>
@@ -182,18 +193,25 @@ export default function Home() {
             {t.home.choosePlan.subtitle}
           </p>
 
-          <div className="flex md:grid md:grid-cols-3 gap-6 max-w-6xl mx-auto overflow-x-auto md:overflow-visible snap-x snap-mandatory -mx-4 px-4 md:mx-auto md:px-0 pb-4 md:pb-0 scrollbar-hide">
+          <p className="md:hidden text-center text-xs text-gray-500 mb-3">
+            {locale === "fr" ? "Glissez pour comparer les 3 formules →" : "Swipe to compare all 3 plans →"}
+          </p>
+          <div
+            ref={plansRef}
+            onScroll={onPlansScroll}
+            className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto overflow-x-auto md:overflow-visible snap-x snap-mandatory -mx-4 px-4 md:mx-auto md:px-0 pb-4 md:pb-0 scrollbar-hide"
+          >
             {/* Weight Loss Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative min-w-[86%] shrink-0 snap-center md:min-w-0">
+            <div className="bg-white rounded-lg shadow-lg p-5 md:p-8 flex flex-col relative min-w-[80%] shrink-0 snap-center md:min-w-0">
               <div className="flex justify-center mb-4 sm:mb-6">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden">
+                <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
               <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.weightLoss.subtitle}</p>
-              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.weightLoss.description}</p>
-              <div className="text-center mb-6">
+              <p className="hidden sm:block text-gray-600 mb-4 text-center text-xs">{t.home.choosePlan.weightLoss.description}</p>
+              <div className="text-center mb-4">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
                   <span className="text-xl font-bold text-fitnest-green">{planPrice("Weight Loss", 509)}</span>
@@ -205,7 +223,7 @@ export default function Home() {
                   {t.home.choosePlan.weightLoss.select}
                 </Button>
               </Link>
-              <ul className="space-y-3 flex-1">
+              <ul className="space-y-2 flex-1">
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-600 text-sm">{t.home.choosePlan.weightLoss.features.reducedCarbs}</span>
@@ -226,21 +244,21 @@ export default function Home() {
             </div>
 
             {/* Stay Fit Plan - Popular */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative border-2 border-fitnest-orange min-w-[86%] shrink-0 snap-center md:min-w-0">
+            <div className="bg-white rounded-lg shadow-lg p-5 md:p-8 flex flex-col relative border-2 border-fitnest-orange min-w-[80%] shrink-0 snap-center md:min-w-0">
               <div className="absolute top-4 right-4">
                 <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
                   {locale === "fr" ? "POPULAIRE" : "POPULAR"}
                 </span>
               </div>
               <div className="flex justify-center mb-6">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden">
+                <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Stay Fit Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
               <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.stayFit.subtitle}</p>
-              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.stayFit.description}</p>
-              <div className="text-center mb-6">
+              <p className="hidden sm:block text-gray-600 mb-4 text-center text-xs">{t.home.choosePlan.stayFit.description}</p>
+              <div className="text-center mb-4">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
                   <span className="text-xl font-bold text-fitnest-green">{planPrice("Stay Fit", 558)}</span>
@@ -252,7 +270,7 @@ export default function Home() {
                   {t.home.choosePlan.stayFit.select}
                 </Button>
               </Link>
-              <ul className="space-y-3 flex-1">
+              <ul className="space-y-2 flex-1">
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-600 text-sm">{t.home.choosePlan.stayFit.features.wellBalanced}</span>
@@ -273,16 +291,16 @@ export default function Home() {
             </div>
 
             {/* Muscle Gain Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative min-w-[86%] shrink-0 snap-center md:min-w-0">
+            <div className="bg-white rounded-lg shadow-lg p-5 md:p-8 flex flex-col relative min-w-[80%] shrink-0 snap-center md:min-w-0">
               <div className="flex justify-center mb-4 sm:mb-6">
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden">
+                <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
               <p className="text-gray-600 mb-1 text-center text-sm font-medium">{t.home.choosePlan.muscleGain.subtitle}</p>
-              <p className="text-gray-600 mb-6 text-center text-xs">{t.home.choosePlan.muscleGain.description}</p>
-              <div className="text-center mb-6">
+              <p className="hidden sm:block text-gray-600 mb-4 text-center text-xs">{t.home.choosePlan.muscleGain.description}</p>
+              <div className="text-center mb-4">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
                   <span className="text-xl font-bold text-fitnest-green">{planPrice("Muscle Gain", 655)}</span>
@@ -294,7 +312,7 @@ export default function Home() {
                   {t.home.choosePlan.muscleGain.select}
                 </Button>
               </Link>
-              <ul className="space-y-3 flex-1">
+              <ul className="space-y-2 flex-1">
                 <li className="flex items-start">
                   <Check className="h-5 w-5 text-fitnest-orange mr-2 flex-shrink-0 mt-0.5" />
                   <span className="text-gray-600 text-sm">{t.home.choosePlan.muscleGain.features.highProtein}</span>
@@ -314,6 +332,15 @@ export default function Home() {
               </ul>
             </div>
           </div>
+          {/* Swipe dots (mobile) */}
+          <div className="md:hidden flex justify-center gap-2 mt-1">
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className={`h-2 rounded-full transition-all ${activeSlide === i ? "w-5 bg-fitnest-green" : "w-2 bg-gray-300"}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -328,8 +355,8 @@ export default function Home() {
           </h2>
           <p className="mx-auto mb-6 max-w-xl text-white/85">
             {locale === "fr"
-              ? "Construis chaque plat toi-même : choisis ta protéine, ton féculent, tes légumes. Suis tes calories et macros en direct, enregistre tes plats et monte ta semaine."
-              : "Build every meal yourself: choose your protein, carb and vegetables. Track calories and macros live, save your meals and assemble your week."}
+              ? "Un objectif précis à atteindre ? Des macros à remplir chaque jour ? Compose chaque plat selon tes besoins — protéine, féculent, légumes — suis tes calories en direct et enregistre tes plats favoris."
+              : "A specific goal to hit? Daily macros to fill? Build every meal to fit your needs — protein, carb, vegetables — track your calories live and save your favourite meals."}
           </p>
           <Link href={L("/compose-ton-plan")}>
             <Button className="rounded-full bg-fitnest-orange px-8 py-6 text-base text-white hover:bg-fitnest-orange/90">
@@ -343,8 +370,8 @@ export default function Home() {
       <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="mb-8 md:mb-12 text-center text-3xl font-bold">{t.home.whyChooseFitnest.title}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:grid-cols-3">
-            <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 md:grid-cols-3">
+            <div className="rounded-lg p-4 md:p-6 text-center shadow-lg bg-gray-50">
               <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
                 <Heart className="h-10 w-10 text-fitnest-green" />
               </div>
@@ -353,7 +380,7 @@ export default function Home() {
                 {t.home.whyChooseFitnest.healthFirst.description}
               </p>
             </div>
-            <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
+            <div className="rounded-lg p-4 md:p-6 text-center shadow-lg bg-gray-50">
               <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-orange/10 text-fitnest-orange">
                 <CheckCircle2 className="h-10 w-10 text-fitnest-orange" />
               </div>
@@ -362,7 +389,7 @@ export default function Home() {
                 {t.home.whyChooseFitnest.simplicity.description}
               </p>
             </div>
-            <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
+            <div className="rounded-lg p-4 md:p-6 text-center shadow-lg bg-gray-50">
               <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
                 <TrendingUp className="h-10 w-10 text-fitnest-green" />
               </div>
