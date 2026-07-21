@@ -172,7 +172,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile logo - centered with pill background */}
-        <Link href={L("/")} className="lg:hidden flex items-center space-x-2 px-3 py-1.5 rounded-full transition-all" style={
+        <Link href={L("/")} className="lg:hidden mx-auto flex items-center space-x-2 px-3 py-1.5 rounded-full transition-all" style={
           isHomePage && !scrolled
             ? {
                 backgroundColor: "rgba(0, 0, 0, 0.2)",

@@ -66,7 +66,7 @@ export default function EntreprisesPage() {
 
         <div className="grid gap-5 md:grid-cols-2 max-w-5xl mx-auto">
           {/* Segment 1 — Événementiel */}
-          <article className="flex flex-col rounded-2xl border-2 border-fitnest-orange/30 bg-white p-6 md:p-8 shadow-sm">
+          <article className="flex flex-col rounded-2xl border-2 border-fitnest-orange/30 bg-white p-5 md:p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-fitnest-orange/10">
                 <PartyPopper className="h-6 w-6 text-fitnest-orange" />
@@ -75,7 +75,7 @@ export default function EntreprisesPage() {
                 Événementiel · ponctuel
               </span>
             </div>
-            <h3 className="text-xl font-bold mb-2">FitNest Events — Buffets &amp; événements</h3>
+            <h3 className="text-lg sm:text-xl font-bold mb-2">FitNest Events — Buffets &amp; événements</h3>
             <p className="text-gray-600 text-sm mb-4">
               Séminaire, team building, journée bien-être, afterwork : un buffet healthy, généreux et
               macro-conscient. Wraps, bowls, salades, energy balls, jus détox — présenté, livré et installé.
@@ -94,7 +94,7 @@ export default function EntreprisesPage() {
           </article>
 
           {/* Segment 2 — Abonnement équipes */}
-          <article className="flex flex-col rounded-2xl border-2 border-fitnest-green/30 bg-white p-6 md:p-8 shadow-sm">
+          <article className="flex flex-col rounded-2xl border-2 border-fitnest-green/30 bg-white p-5 md:p-8 shadow-sm">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-fitnest-green/10">
                 <Building2 className="h-6 w-6 text-fitnest-green" />
@@ -103,7 +103,7 @@ export default function EntreprisesPage() {
                 Abonnement · déjeuners d'équipe
               </span>
             </div>
-            <h3 className="text-xl font-bold mb-2">FitNest Corporate — Le déjeuner de vos équipes</h3>
+            <h3 className="text-lg sm:text-xl font-bold mb-2">FitNest Corporate — Le déjeuner de vos équipes</h3>
             <p className="text-gray-600 text-sm mb-4">
               Vos collaborateurs commandent chaque matin leur déjeuner depuis leur compte FitNest, sur un
               menu dédié à votre entreprise. Livraison groupée à vos bureaux, chaque jour.
