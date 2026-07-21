@@ -205,7 +205,7 @@ export default function ShoppingCartPage() {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold">Your Cart</h1>
+          <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold">Your Cart</h1>
           <p className="mx-auto max-w-2xl text-gray-600">Review the items in your cart before checkout.</p>
         </div>
 
@@ -226,7 +226,7 @@ export default function ShoppingCartPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="mb-8 text-center">
-        <h1 className="mb-2 text-4xl font-bold">Your Cart</h1>
+        <h1 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold">Your Cart</h1>
         <p className="mx-auto max-w-2xl text-gray-600">Review the items in your cart before checkout.</p>
       </div>
 

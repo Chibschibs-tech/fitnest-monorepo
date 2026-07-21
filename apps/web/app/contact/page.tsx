@@ -35,7 +35,7 @@ export default function ContactPage() {
 
   return (
     <main className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-6 text-center">Contact Us</h1>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">Contact Us</h1>
 
       <div className="max-w-5xl mx-auto mt-12 grid md:grid-cols-2 gap-12">
         <div>

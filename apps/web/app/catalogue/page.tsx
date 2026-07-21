@@ -21,7 +21,7 @@ export default function Catalogue(){
     <div className="container py-10 space-y-10">
       {/* Hero */}
       <section className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight">Healthy meals, delivered.</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Healthy meals, delivered.</h1>
         <p className="mt-2 text-gray-600 max-w-2xl mx-auto">
           Choose your plan, select your meals, we cook & deliver. Simple, fresh and tailored to your goals.
         </p>

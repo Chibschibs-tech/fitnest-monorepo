@@ -52,7 +52,7 @@ export default function FAQPage() {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-4">Frequently Asked Questions</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4">Frequently Asked Questions</h1>
         <p className="text-gray-600 text-center mb-12">
           Find answers to common questions about our meal delivery service
         </p>

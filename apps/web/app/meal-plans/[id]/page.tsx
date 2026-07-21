@@ -228,11 +228,11 @@ export default async function MealPlanPage({ params }: { params: { id: string } 
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="relative bg-gradient-to-r from-fitnest-green to-green-600 text-white">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-10 md:py-16">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <Badge className="mb-4 bg-white/20 text-white border-white/30">{plan.calories} calories per day</Badge>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{plan.name}</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4">{plan.name}</h1>
               <p className="text-xl mb-6 text-green-100">{plan.description}</p>
               <div className="flex items-center gap-4 mb-8">
                 <div className="text-3xl font-bold">
@@ -262,7 +262,7 @@ export default async function MealPlanPage({ params }: { params: { id: string } 
       </div>
 
       {/* Plan Details */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-10 md:py-16">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">

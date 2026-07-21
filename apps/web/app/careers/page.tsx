@@ -11,7 +11,7 @@ export default function CareersPage() {
   return (
     <main className="container mx-auto px-4 py-12">
       <section className="mb-16">
-        <h1 className="text-4xl font-bold mb-6 text-center">Join Our Team</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 text-center">Join Our Team</h1>
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-lg mb-6">
             At Fitnest, we're on a mission to revolutionize healthy eating in Morocco. We're looking for passionate,
