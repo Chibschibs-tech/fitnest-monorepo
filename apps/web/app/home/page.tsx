@@ -74,47 +74,46 @@ export default function Home() {
   }, [])
   return (
     <>
-      {/* Hero Section - Full screen with navbar overlay */}
-      {/* Hero copy lives inside the image, so the page needs a real, crawlable H1. */}
-      <h1 className="sr-only">
-        FitNest - livraison de repas sains et plans repas sur mesure à Casablanca
-      </h1>
-      <section 
-        className="relative flex items-end bg-gray-100 h-screen w-full"
-        style={{
-          zIndex: 0
-        }}
-      >
-        {/* Mobile Hero Image */}
+      {/* Hero Section — real text over a food photo (translatable, never clips) */}
+      <section className="relative isolate flex min-h-[88vh] w-full items-center overflow-hidden">
         <Image
-          src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Fintest-Hompegae-mobile.jpg"
-          alt="Fitnest.ma Hero Banner - Mobile"
+          src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1600&q=80&auto=format&fit=crop"
+          alt=""
           fill
-          className="object-cover object-center md:hidden"
           priority
           sizes="100vw"
+          className="object-cover object-center -z-10"
         />
-        {/* Desktop Hero Image */}
-        <Image
-          src="https://kjfqnhte2vxtsffe.public.blob.vercel-storage.com/Images/Hero%20image%20Fitnest%20life%20can%20be%20messy"
-          alt="Fitnest.ma Hero Banner - Desktop"
-          fill
-          className="object-cover object-center hidden md:block"
-          priority
-          sizes="100vw"
-        />
-        <div className="relative z-10 container mx-auto px-4 pb-8 sm:pb-12 md:pb-16">
-          <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4">
-            <Link href={L("/meal-plans")}>
-              <Button className="bg-fitnest-orange text-white hover:bg-fitnest-orange/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
-                {t.home.hero.viewMealPlans}
-              </Button>
-            </Link>
-            <Link href={L("/how-it-works")}>
-              <Button className="bg-white text-fitnest-green hover:bg-white/90 w-full sm:w-auto text-sm sm:text-base px-6 py-2 sm:px-8 sm:py-3">
-                {t.home.hero.howItWorks}
-              </Button>
-            </Link>
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-fitnest-green/85 via-fitnest-green/60 to-fitnest-green/90" />
+        <div className="container mx-auto px-5 py-28 sm:py-32">
+          <div className="max-w-2xl text-white">
+            <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-wide text-fitnest-orange">
+              {locale === "fr" ? "Repas sains, livrés à Casablanca" : "Healthy meals, delivered in Casablanca"}
+            </p>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-[1.05]">
+              {locale === "fr" ? (
+                <>La vie peut être compliquée.<br />Vos <span className="text-fitnest-orange">repas</span>, non.</>
+              ) : (
+                <>Life can be messy.<br />Your <span className="text-fitnest-orange">meals</span> shouldn&apos;t.</>
+              )}
+            </h1>
+            <p className="mt-5 max-w-lg text-base sm:text-lg text-white/90">
+              {locale === "fr"
+                ? "Des repas équilibrés, préparés chaque jour et livrés chez toi. Choisis un programme ou compose tes propres plats."
+                : "Balanced meals, freshly prepared and delivered to your door. Pick a plan or build your own."}
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <Link href={L("/meal-plans")} className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto bg-fitnest-orange text-white hover:bg-fitnest-orange/90 rounded-full px-8 py-6 text-base">
+                  {t.home.hero.viewMealPlans}
+                </Button>
+              </Link>
+              <Link href={L("/how-it-works")} className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto bg-white text-fitnest-green hover:bg-white/90 rounded-full px-8 py-6 text-base">
+                  {t.home.hero.howItWorks}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -136,7 +135,7 @@ export default function Home() {
             {/* Step 1: Choose Plan */}
             <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
               <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <UtensilsCrossed className="h-10 w-10 text-fitnest-orange" />
                 </div>
               </div>
@@ -149,7 +148,7 @@ export default function Home() {
             {/* Step 2: We Cook */}
             <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
               <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <ChefHat className="h-10 w-10 text-fitnest-orange" />
                 </div>
               </div>
@@ -162,7 +161,7 @@ export default function Home() {
             {/* Step 3: We Deliver */}
             <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 text-center">
               <div className="flex justify-center mb-6">
-                <div className="w-20 h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
+                <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-lg bg-fitnest-orange/10 flex items-center justify-center">
                   <Truck className="h-10 w-10 text-fitnest-orange" />
                 </div>
               </div>
@@ -183,11 +182,11 @@ export default function Home() {
             {t.home.choosePlan.subtitle}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="flex md:grid md:grid-cols-3 gap-6 max-w-6xl mx-auto overflow-x-auto md:overflow-visible snap-x snap-mandatory -mx-4 px-4 md:mx-auto md:px-0 pb-4 md:pb-0 scrollbar-hide">
             {/* Weight Loss Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative">
-              <div className="flex justify-center mb-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative min-w-[86%] shrink-0 snap-center md:min-w-0">
+              <div className="flex justify-center mb-4 sm:mb-6">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
                 </div>
               </div>
@@ -227,14 +226,14 @@ export default function Home() {
             </div>
 
             {/* Stay Fit Plan - Popular */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative border-2 border-fitnest-orange">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative border-2 border-fitnest-orange min-w-[86%] shrink-0 snap-center md:min-w-0">
               <div className="absolute top-4 right-4">
                 <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
                   {locale === "fr" ? "POPULAIRE" : "POPULAR"}
                 </span>
               </div>
               <div className="flex justify-center mb-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Stay Fit Meal Plan" fill className="object-cover" />
                 </div>
               </div>
@@ -274,9 +273,9 @@ export default function Home() {
             </div>
 
             {/* Muscle Gain Plan */}
-            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative">
-              <div className="flex justify-center mb-6">
-                <div className="relative w-32 h-32 rounded-full overflow-hidden">
+            <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 flex flex-col relative min-w-[86%] shrink-0 snap-center md:min-w-0">
+              <div className="flex justify-center mb-4 sm:mb-6">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden">
                   <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
                 </div>
               </div>
@@ -318,13 +317,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Compose ton plan Section */}
+      <section className="py-12 md:py-16 bg-fitnest-green text-white">
+        <div className="container mx-auto px-4 text-center max-w-3xl">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-fitnest-orange">
+            {locale === "fr" ? "Sur mesure" : "Made to measure"}
+          </p>
+          <h2 className="mb-3 text-3xl font-bold">
+            {locale === "fr" ? "Compose ton plan" : "Build your own plan"}
+          </h2>
+          <p className="mx-auto mb-6 max-w-xl text-white/85">
+            {locale === "fr"
+              ? "Construis chaque plat toi-même : choisis ta protéine, ton féculent, tes légumes. Suis tes calories et macros en direct, enregistre tes plats et monte ta semaine."
+              : "Build every meal yourself: choose your protein, carb and vegetables. Track calories and macros live, save your meals and assemble your week."}
+          </p>
+          <Link href={L("/compose-ton-plan")}>
+            <Button className="rounded-full bg-fitnest-orange px-8 py-6 text-base text-white hover:bg-fitnest-orange/90">
+              {locale === "fr" ? "Composer mon plan" : "Build my plan"}
+            </Button>
+          </Link>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="mb-8 md:mb-12 text-center text-3xl font-bold">{t.home.whyChooseFitnest.title}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:grid-cols-3">
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
+              <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
                 <Heart className="h-10 w-10 text-fitnest-green" />
               </div>
               <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.healthFirst.title}</h3>
@@ -333,7 +354,7 @@ export default function Home() {
               </p>
             </div>
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-orange/10 text-fitnest-orange">
+              <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-orange/10 text-fitnest-orange">
                 <CheckCircle2 className="h-10 w-10 text-fitnest-orange" />
               </div>
               <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.simplicity.title}</h3>
@@ -342,13 +363,41 @@ export default function Home() {
               </p>
             </div>
             <div className="rounded-lg p-6 text-center shadow-lg bg-gray-50">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
+              <div className="mx-auto mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-lg bg-fitnest-green/10 text-fitnest-green">
                 <TrendingUp className="h-10 w-10 text-fitnest-green" />
               </div>
               <h3 className="mb-2 text-xl font-semibold">{t.home.whyChooseFitnest.transformation.title}</h3>
               <p className="text-gray-600">
                 {t.home.whyChooseFitnest.transformation.description}
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Corporate / Entreprises Section */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto rounded-2xl border bg-gray-50 p-6 md:p-10 md:flex md:items-center md:gap-8">
+            <div className="md:flex-1">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-fitnest-orange">
+                {locale === "fr" ? "FitNest Entreprises" : "FitNest for Business"}
+              </p>
+              <h2 className="mb-3 text-2xl md:text-3xl font-bold text-fitnest-green">
+                {locale === "fr" ? "La santé de vos équipes, livrée." : "Your team's health, delivered."}
+              </h2>
+              <p className="mb-5 text-gray-600 md:mb-0">
+                {locale === "fr"
+                  ? "Buffets healthy pour vos événements et déjeuners quotidiens pour vos collaborateurs — livraison groupée, macros affichées, cuisine agréée ONSSA."
+                  : "Healthy buffets for your events and daily lunches for your team — grouped delivery, macros shown, ONSSA-approved kitchen."}
+              </p>
+            </div>
+            <div className="md:shrink-0">
+              <Link href={L("/entreprises")}>
+                <Button className="w-full md:w-auto rounded-full bg-fitnest-green px-8 py-6 text-base text-white hover:bg-fitnest-green/90">
+                  {locale === "fr" ? "Découvrir l'offre entreprise" : "Explore business plans"}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

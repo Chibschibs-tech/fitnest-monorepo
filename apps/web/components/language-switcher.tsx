@@ -1,6 +1,6 @@
 "use client"
 
-import { useLanguage } from "./language-provider"
+import { useLanguage, stripLocale } from "./language-provider"
 import { Button } from "@/components/ui/button"
 import { Globe } from "lucide-react"
 import { useState, useEffect } from "react"
@@ -18,7 +18,8 @@ export function LanguageSwitcher() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
 
-  const isHomePage = pathname === "/" || pathname === "/home"
+  const homePath = stripLocale(pathname || "/")
+  const isHomePage = homePath === "/" || homePath === "/home"
 
   useEffect(() => {
     setMounted(true)

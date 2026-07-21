@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import { Providers } from "@/components/providers"
 import { usePathname } from "next/navigation"
+import { stripLocale } from "@/components/language-provider"
 
 export function ClientLayout({
   children,
@@ -13,9 +14,10 @@ export function ClientLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const isWaitlistPage = pathname === "/waitlist"
+  const p = stripLocale(pathname || "/")
+  const isWaitlistPage = p === "/waitlist"
 
-  const isHomePage = pathname === "/" || pathname === "/home"
+  const isHomePage = p === "/" || p === "/home"
   
   return (
     <Providers>
