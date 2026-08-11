@@ -1,113 +1,69 @@
-import { sql } from "@/lib/db"
 import { NextRequest, NextResponse } from "next/server"
 import {
-  calculateSubscriptionPrice,
-  type MealPrice,
-  type DiscountRule,
-} from "@/lib/pricing-calculator"
+  computeSubscriptionPrice,
+  computeSubscriptionPriceByPlanTitle,
+  PricingError,
+} from "@/lib/subscription-pricing"
 
 /**
- * Public pricing endpoint used by /subscribe and /subscribe/checkout.
+ * Public pricing endpoint used by the plan builder, the checkout, the admin
+ * subscription form and the mobile app.
  *
- * NOTE:
- * - Internally delegates to the shared pricing-calculator module so that
- *   admin and customer flows always use the same logic.
- * - Response keeps backward-compatible top-level fields (basePerDay, grossWeekly, total)
- *   while also exposing the full calculator result under `calculation`.
+ * Delegates to computeSubscriptionPrice — the single pricing function — so
+ * every surface always shows the exact amount that will be billed.
+ *
+ * Accepts either `mealPlanId` (preferred) or the legacy `plan` display name.
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { plan, meals, days, duration } = body as {
+    const { plan, mealPlanId, meals, days, duration } = body as {
       plan?: string
+      mealPlanId?: number
       meals?: string[]
       days?: number
       duration?: number
     }
 
-    // Basic validation (more detailed validation happens in admin endpoint)
-    if (!plan || !Array.isArray(meals) || meals.length === 0) {
+    if ((!plan && !mealPlanId) || !Array.isArray(meals) || meals.length === 0) {
       return NextResponse.json(
-        { error: "Missing or invalid fields: plan, meals (array)" },
+        { error: "Missing or invalid fields: plan or mealPlanId, meals (array)" },
         { status: 400 },
       )
     }
-
     if (!days || days < 1 || days > 7) {
-      return NextResponse.json(
-        { error: "days must be between 1 and 7" },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: "days must be between 1 and 7" }, { status: 400 })
     }
-
     if (!duration || duration < 1) {
-      return NextResponse.json(
-        { error: "duration must be >= 1" },
-        { status: 400 },
-      )
+      return NextResponse.json({ error: "duration must be >= 1" }, { status: 400 })
     }
 
-    // 1. Fetch the plan's price map, then build the per-day list from the
-    //    requested meals. Case-insensitive, and duplicates are allowed
-    //    (e.g. two snacks per day) so each occurrence is priced.
-    const priceRows: Array<{ meal_type: string; base_price_mad: number }> = await sql`
-      SELECT meal_type, base_price_mad
-      FROM meal_type_prices
-      WHERE plan_name = ${plan} AND is_active = true
-    `
+    const input = { mealTypes: meals, daysPerWeek: days, durationWeeks: duration }
+    const price = mealPlanId
+      ? await computeSubscriptionPrice({ mealPlanId, ...input })
+      : await computeSubscriptionPriceByPlanTitle(plan as string, input)
 
-    const priceMap = new Map(
-      priceRows.map((r) => [String(r.meal_type).toLowerCase(), r]),
-    )
-
-    const mealPrices: MealPrice[] = []
-    const unpriced: string[] = []
-    for (const m of meals) {
-      const row = priceMap.get(String(m).toLowerCase())
-      if (row) mealPrices.push({ meal_type: row.meal_type, base_price_mad: row.base_price_mad })
-      else unpriced.push(m)
-    }
-
-    if (mealPrices.length === 0) {
-      return NextResponse.json(
-        { error: "No priced meals found for this plan", unpriced },
-        { status: 404 },
-      )
-    }
-
-    // 2. Fetch discount rules
-    const discountRules: DiscountRule[] = await sql`
-      SELECT discount_type, condition_value, discount_percentage, stackable, stacking_behavior
-      FROM discount_rules
-      WHERE is_active = true
-        AND (valid_from IS NULL OR valid_from <= NOW())
-        AND (valid_to IS NULL OR valid_to >= NOW())
-    `
-
-    // 3. Delegate to shared calculator
-    const result = calculateSubscriptionPrice(
-      mealPrices,
-      days,
-      duration,
-      discountRules,
-      plan,
-      meals,
-    )
-
-    // Backward-compatible shape for existing /subscribe pages
+    // Backward-compatible shape for existing pages (top-level totals + full
+    // breakdown under `calculation`).
     return NextResponse.json({
       success: true,
       currency: "MAD",
-      basePerDay: result.pricePerDay,
-      grossWeekly: result.grossWeekly,
-      total: result.totalRoundedMAD,
-      calculation: result,
+      mealPlanId: price.mealPlanId,
+      basePerDay: price.pricePerDay,
+      grossWeekly: price.calculation.grossWeekly,
+      subtotal: price.subtotal,
+      discountPercentage: price.discountPercentage,
+      total: price.total,
+      totalRoundedMAD: price.total,
+      finalWeekly: price.calculation.finalWeekly,
+      discountsApplied: price.calculation.discountsApplied,
+      calculation: price.calculation,
     })
   } catch (error) {
+    if (error instanceof PricingError) {
+      return NextResponse.json({ error: error.message }, { status: error.status })
+    }
     console.error("Error calculating price:", error)
-    return NextResponse.json(
-      { error: "Failed to calculate price" },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: "Failed to calculate price" }, { status: 500 })
   }
 }

@@ -5,7 +5,7 @@ import { mad } from "../../../lib/format";
 type Meal = "Breakfast" | "Lunch" | "Dinner";
 
 export default function CheckoutPage(){
-  const [plan, setPlan] = useState("Weight Loss");
+  const [plan, setPlan] = useState("Low Carb");
   const [meals, setMeals] = useState<Meal[]>(["Breakfast","Lunch"]);
   const [days, setDays] = useState(5);
   const [duration, setDuration] = useState(4);

@@ -9,14 +9,14 @@
 import { calculateSubscriptionPrice, type DiscountRule, type MealPrice } from "../../../packages/core/src/pricing-calculator.ts";
 
 const prices: Record<string, MealPrice[]> = {
-  "Weight Loss": [
+  "Low Carb": [
     { meal_type: "Breakfast", base_price_mad: 45 },
     { meal_type: "Lunch", base_price_mad: 55 },
     { meal_type: "Dinner", base_price_mad: 50 },
     { meal_type: "Snack", base_price_mad: 20 },
     { meal_type: "Drink", base_price_mad: 12 },
   ],
-  "Muscle Gain": [
+  "Protein Power": [
     { meal_type: "Breakfast", base_price_mad: 55 },
     { meal_type: "Lunch", base_price_mad: 70 },
     { meal_type: "Dinner", base_price_mad: 65 },
@@ -46,20 +46,20 @@ function check(name: string, got: number, exp: number) {
 
 // A: WL B/L/D 5d 4w -> best-of(days5 3%, dur4 10%) = 10% => 750*0.9=675/wk *4 = 2700
 {
-  const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesBest, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
+  const r = calculateSubscriptionPrice(pick("Low Carb", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesBest, "Low Carb", ["Breakfast", "Lunch", "Dinner"]);
   check("A grossWeekly", r.grossWeekly, 750);
   check("A finalWeekly", r.finalWeekly, 675);
   check("A total", r.totalRoundedMAD, 2700);
 }
 // B: WL B/L/D 6d 12w -> best-of(5%,20%)=20% => 900*0.8=720 *12 = 8640
 {
-  const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 6, 12, rulesBest, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
+  const r = calculateSubscriptionPrice(pick("Low Carb", ["Breakfast", "Lunch", "Dinner"]), 6, 12, rulesBest, "Low Carb", ["Breakfast", "Lunch", "Dinner"]);
   check("B finalWeekly", r.finalWeekly, 720);
   check("B total", r.totalRoundedMAD, 8640);
 }
 // C: MG B/L/D/Snack 6d 8w -> 215/day gross 1290; best-of(5%,15%)=15% => 1096.5 *8 = 8772
 {
-  const r = calculateSubscriptionPrice(pick("Muscle Gain", ["Breakfast", "Lunch", "Dinner", "Snack"]), 6, 8, rulesBest, "Muscle Gain", ["Breakfast", "Lunch", "Dinner", "Snack"]);
+  const r = calculateSubscriptionPrice(pick("Protein Power", ["Breakfast", "Lunch", "Dinner", "Snack"]), 6, 8, rulesBest, "Protein Power", ["Breakfast", "Lunch", "Dinner", "Snack"]);
   check("C grossWeekly", r.grossWeekly, 1290);
   check("C finalWeekly", r.finalWeekly, 1096.5);
   check("C total", r.totalRoundedMAD, 8772);
@@ -67,20 +67,20 @@ function check(name: string, got: number, exp: number) {
 // D: STACK â€” days5(3%) stacks with dur4(10%): 750*0.97=727.5 then *0.90=654.75 *4 = 2619
 {
   const rulesStack: DiscountRule[] = rulesBest.map((x) => (x.discount_type === "days" ? { ...x, stacking_behavior: "stack" as const } : x));
-  const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesStack, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
+  const r = calculateSubscriptionPrice(pick("Low Carb", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesStack, "Low Carb", ["Breakfast", "Lunch", "Dinner"]);
   check("D stacked finalWeekly", r.finalWeekly, 654.75);
   check("D stacked total", r.totalRoundedMAD, 2619);
 }
 // E: EXCLUSIVE â€” a 25% exclusive rule suppresses all others: 750*0.75=562.5 *4 = 2250
 {
   const rulesEx: DiscountRule[] = rulesBest.map((x) => (x.discount_type === "duration" && x.condition_value === 4 ? { ...x, discount_percentage: 25, stacking_behavior: "exclusive" as const } : x));
-  const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesEx, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
+  const r = calculateSubscriptionPrice(pick("Low Carb", ["Breakfast", "Lunch", "Dinner"]), 5, 4, rulesEx, "Low Carb", ["Breakfast", "Lunch", "Dinner"]);
   check("E exclusive finalWeekly", r.finalWeekly, 562.5);
   check("E exclusive total", r.totalRoundedMAD, 2250);
 }
 // F: no discount (3 days, 1 week) -> gross => total 450
 {
-  const r = calculateSubscriptionPrice(pick("Weight Loss", ["Breakfast", "Lunch", "Dinner"]), 3, 1, rulesBest, "Weight Loss", ["Breakfast", "Lunch", "Dinner"]);
+  const r = calculateSubscriptionPrice(pick("Low Carb", ["Breakfast", "Lunch", "Dinner"]), 3, 1, rulesBest, "Low Carb", ["Breakfast", "Lunch", "Dinner"]);
   check("F nodiscount total", r.totalRoundedMAD, 450);
 }
 
@@ -92,10 +92,23 @@ function check(name: string, got: number, exp: number) {
     check(`G ${plan} entry perDay`, r.pricePerDay, expPerDay);
     check(`G ${plan} entry weekly`, r.finalWeekly, expWeekly);
   };
-  // Weight Loss  55+50=105/day x5 = 525, days5 -3% => 509.25
-  entry("Weight Loss", 105, 509.25);
-  // Muscle Gain  70+65=135/day x5 = 675, days5 -3% => 654.75
-  entry("Muscle Gain", 135, 654.75);
+  // Low Carb  55+50=105/day x5 = 525, days5 -3% => 509.25
+  entry("Low Carb", 105, 509.25);
+  // Protein Power  70+65=135/day x5 = 675, days5 -3% => 654.75
+  entry("Protein Power", 135, 654.75);
+}
+
+// H: ACCEPTANCE — Protein Power (ex-Muscle Gain) + {Lunch, Dinner} + 5 days + 6 weeks.
+// Every surface (plan card, builder, checkout) goes through the same
+// computeSubscriptionPrice, which delegates to this engine, so this IS the
+// billed amount: 135/day x5 = 675/wk; best-of(days5 3%, duration<=6 -> tier 4
+// = 10%) = 10% => 607.5/wk x6 = 3645 (NOT the undiscounted 4050).
+{
+  const r = calculateSubscriptionPrice(pick("Protein Power", ["Lunch", "Dinner"]), 5, 6, rulesBest, "Protein Power", ["Lunch", "Dinner"]);
+  check("H MG 5d/6w pricePerDay", r.pricePerDay, 135);
+  check("H MG 5d/6w grossWeekly", r.grossWeekly, 675);
+  check("H MG 5d/6w finalWeekly", r.finalWeekly, 607.5);
+  check("H MG 5d/6w total", r.totalRoundedMAD, 3645);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

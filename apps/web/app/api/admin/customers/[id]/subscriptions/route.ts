@@ -48,26 +48,27 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       }, { status: 404 })
     }
 
-    // Get all subscriptions for this customer
-    // Join with plan_variants and meal_plans to get plan details
+    // Get all subscriptions for this customer.
+    // Configuration and price come from the FROZEN columns on the subscription.
     const subscriptions = await sql`
       SELECT 
         s.id,
         s.user_id,
-        s.plan_variant_id,
+        s.meal_plan_id,
         s.status,
         s.starts_at,
         s.renews_at,
         s.notes,
-        pv.label as plan_variant_label,
-        pv.weekly_price_mad as weekly_base_price_mad,
-        pv.days_per_week,
-        pv.meals_per_day,
+        s.meal_types,
+        s.days_per_week,
+        s.duration_weeks,
+        s.price_per_day_mad,
+        s.discount_percentage,
+        s.total_mad,
         mp.title as meal_plan_title,
         mp.slug as meal_plan_slug
       FROM subscriptions s
-      LEFT JOIN plan_variants pv ON s.plan_variant_id = pv.id
-      LEFT JOIN meal_plans mp ON pv.meal_plan_id = mp.id
+      LEFT JOIN meal_plans mp ON s.meal_plan_id = mp.id
       WHERE s.user_id = ${customerId}
       ORDER BY s.starts_at DESC
     `

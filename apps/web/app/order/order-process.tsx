@@ -31,33 +31,32 @@ type Pricing = {
 }
 
 // Define meal plan data
+// `title` must match meal_plans.title — it is the name sent to the pricing
+// engine (/api/calculate-price) and to /api/checkout. The object keys are the
+// URL slugs used by /plans and the homepage links.
 const mealPlans = {
   "weight-loss": {
-    title: "Weight Loss",
+    title: "Low Carb",
     description:
       "Repas à calories contrôlées (1200-1500 kcal/jour) pour perdre du poids sans jamais avoir faim.",
-    basePrice: 350,
     image: "/vibrant-weight-loss-meal.png",
   },
   "stay-fit": {
-    title: "Stay Fit",
+    title: "Balanced",
     description:
       "Repas équilibrés (1600-1900 kcal/jour) avec le juste équilibre protéines, glucides et bons lipides.",
-    basePrice: 320,
     image: "/vibrant-nutrition-plate.png",
   },
   "muscle-gain": {
-    title: "Muscle Gain",
+    title: "Protein Power",
     description:
       "Repas riches en protéines (2200-2500 kcal/jour) pour la prise de masse et la récupération.",
-    basePrice: 400,
     image: "/hearty-muscle-meal.png",
   },
   keto: {
     title: "Keto",
     description:
       "Repas pauvres en glucides et riches en bons lipides (1700-1900 kcal/jour) pour atteindre et maintenir la cétose.",
-    basePrice: 380,
     image: "/colorful-keto-plate.png",
   },
 }

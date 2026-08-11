@@ -97,7 +97,7 @@ export function OrderContent() {
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-lg">Weight Loss</h3>
+                      <h3 className="font-semibold text-lg">Low Carb</h3>
                       <p className="text-gray-600 text-sm mt-1">1200-1500 calories per day</p>
                       <ul className="mt-3 space-y-1">
                         <li className="text-sm flex items-center">
@@ -126,7 +126,7 @@ export function OrderContent() {
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-lg">Balanced Nutrition</h3>
+                      <h3 className="font-semibold text-lg">Balanced</h3>
                       <p className="text-gray-600 text-sm mt-1">1800-2000 calories per day</p>
                       <ul className="mt-3 space-y-1">
                         <li className="text-sm flex items-center">
@@ -155,7 +155,7 @@ export function OrderContent() {
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-lg">Muscle Gain</h3>
+                      <h3 className="font-semibold text-lg">Protein Power</h3>
                       <p className="text-gray-600 text-sm mt-1">2500-2800 calories per day</p>
                       <ul className="mt-3 space-y-1">
                         <li className="text-sm flex items-center">

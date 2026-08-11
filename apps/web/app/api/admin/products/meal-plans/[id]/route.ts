@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { sql } from "@/lib/db"
 import { getSessionUser } from "@/lib/simple-auth"
 import { createErrorResponse, Errors } from "@/lib/error-handler"
+import { getPlanEntryPrices } from "@/lib/plan-pricing"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -42,13 +43,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         COALESCE(mpc.id, NULL) as category_id,
         mp.published as is_active,
         mp.created_at,
-        COALESCE(MIN(pv.weekly_price_mad), 0) as price_per_week,
-        COALESCE(COUNT(DISTINCT pv.id), 0) as variant_count,
         COALESCE(COUNT(DISTINCT s.id), 0) as subscribers_count
       FROM meal_plans mp
       LEFT JOIN mp_categories mpc ON mp.mp_category_id = mpc.id
-      LEFT JOIN plan_variants pv ON mp.id = pv.meal_plan_id
-      LEFT JOIN subscriptions s ON pv.id = s.plan_variant_id AND s.status = 'active'
+      LEFT JOIN subscriptions s ON s.meal_plan_id = mp.id AND s.status = 'active'
       WHERE mp.id = ${mealPlanId}
       GROUP BY mp.id, mp.slug, mp.title, mp.summary, mp.mp_category_id, mp.audience, mpc.name, mpc.id, mp.published, mp.created_at
     `
@@ -59,18 +57,20 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const plan = result[0]
 
+    // Entry price ("à partir de") from the single pricing engine
+    const entryPrices = await getPlanEntryPrices([plan.name])
+
     return NextResponse.json({
       success: true,
       mealPlan: {
         id: plan.id,
         name: plan.name,
         description: plan.description || '',
-        price_per_week: Number(plan.price_per_week) || 0,
+        price_per_week: entryPrices[plan.name]?.weekly ?? 0,
         category: plan.category || 'Unknown',
         mp_category_id: plan.mp_category_id || plan.category_id,
         is_available: plan.is_active,
         subscribers_count: Number(plan.subscribers_count) || 0,
-        variant_count: Number(plan.variant_count) || 0,
         created_at: plan.created_at,
       },
     })
@@ -196,9 +196,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     // Check if there are active subscriptions using this plan
     const activeSubscriptions = await sql`
       SELECT COUNT(*) as count
-      FROM subscriptions s
-      JOIN plan_variants pv ON s.plan_variant_id = pv.id
-      WHERE pv.meal_plan_id = ${mealPlanId} AND s.status = 'active'
+      FROM subscriptions
+      WHERE meal_plan_id = ${mealPlanId} AND status = 'active'
     `
 
     if (Number(activeSubscriptions[0]?.count || 0) > 0) {

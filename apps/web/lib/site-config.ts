@@ -24,9 +24,9 @@ export const siteConfig = {
   ],
 
   plans: [
-    { slug: "weight-loss", name: "Weight Loss" },
-    { slug: "stay-fit", name: "Stay Fit" },
-    { slug: "muscle-gain", name: "Muscle Gain" },
+    { slug: "weight-loss", name: "Low Carb" },
+    { slug: "stay-fit", name: "Balanced" },
+    { slug: "muscle-gain", name: "Protein Power" },
   ],
 
   descriptionFr:

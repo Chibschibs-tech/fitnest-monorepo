@@ -244,11 +244,11 @@ export default function MealPlanPreviewPage() {
   const getPlanName = () => {
     switch (preferences.planType) {
       case "weight_loss":
-        return "Weight Loss"
+        return "Low Carb"
       case "balanced":
-        return "Balanced Nutrition"
+        return "Balanced"
       case "muscle_gain":
-        return "Muscle Gain"
+        return "Protein Power"
       case "keto":
         return "Keto"
       default:

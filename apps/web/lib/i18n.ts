@@ -205,7 +205,7 @@ export const translations = {
         subtitle: 'Simple, pratique et conçu pour votre mode de vie chargé',
         step1: {
           title: 'Choisissez votre plan',
-          description: 'Sélectionnez parmi nos plans Low Cal, Balanced ou Muscle Gain adaptés à vos objectifs',
+          description: 'Sélectionnez parmi nos plans Low Carb, Balanced ou Protein Power adaptés à vos objectifs',
         },
         step2: {
           title: 'Nous préparons et cuisinons',

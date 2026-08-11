@@ -10,14 +10,15 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = {
   title: "Nos formules & menu | Fitnest.ma",
   description:
-    "Comparez les formules FitNest — Weight Loss, Stay Fit, Muscle Gain — avec des prix transparents et les valeurs nutritionnelles réelles de notre menu. Livraison à Casablanca.",
+    "Comparez les formules FitNest — Low Carb, Balanced, Protein Power — avec des prix transparents et les valeurs nutritionnelles réelles de notre menu. Livraison à Casablanca.",
 }
 
-// `key` must match meal_type_prices.plan_name; `slug` is what /order expects.
+// `key` must match meal_plans.title (the pricing engine resolves plans by
+// title); `slug` is what /order expects and also keys the i18n goals copy.
 const PLANS = [
-  { key: "Weight Loss", slug: "weight-loss", title: "Weight Loss" },
-  { key: "Stay Fit", slug: "stay-fit", title: "Stay Fit" },
-  { key: "Muscle Gain", slug: "muscle-gain", title: "Muscle Gain" },
+  { key: "Low Carb", slug: "weight-loss", title: "Low Carb" },
+  { key: "Balanced", slug: "stay-fit", title: "Balanced" },
+  { key: "Protein Power", slug: "muscle-gain", title: "Protein Power" },
 ] as const
 
 type DayRow = { meal_type: string; kcal: number; protein: number; carbs: number; fat: number }

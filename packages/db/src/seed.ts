@@ -38,55 +38,43 @@ async function upsertMealPlans() {
   if (error) throw error;
 }
 
-async function upsertVariantsAndDays() {
-  // Récupérer IDs des plans
-  const { data: plans, error } = await admin.from("meal_plans").select("id, slug");
+async function upsertMealTypePrices() {
+  // Le prix d'un jour = somme des prix des types de repas sélectionnés
+  // (meal_type_prices est le SEUL moteur de prix).
+  const { data: plans, error } = await admin.from("meal_plans").select("id, title, slug");
   if (error) throw error;
 
-  const keto = plans?.find(p => p.slug === "keto-classic");
-  const bal  = plans?.find(p => p.slug === "balanced-essentials");
-  if (!keto || !bal) throw new Error("Meal plans not found after insert");
+  const rows: Array<{
+    meal_plan_id: number;
+    plan_name: string; // DEPRECATED — rempli pour compat, ne plus lire
+    meal_type: string;
+    base_price_mad: string;
+    is_active: boolean;
+  }> = [];
 
-  // Variants (exemples)
-  const variants = [
-    { meal_plan_id: keto.id, label: "5 jours • 3 repas/jour", days_per_week: 5, meals_per_day: 3, weekly_base_price_mad: "899.00", published: true },
-    { meal_plan_id: bal.id,  label: "5 jours • 2 repas/jour", days_per_week: 5, meals_per_day: 2, weekly_base_price_mad: "749.00", published: true },
+  const defaults: Array<[string, string]> = [
+    ["Breakfast", "45.00"],
+    ["Lunch", "55.00"],
+    ["Dinner", "50.00"],
   ];
-  const { data: insertedVariants, error: vErr } = await admin
-    .from("plan_variants")
-    .upsert(variants)
-    .select("id, meal_plan_id");
-  if (vErr) throw vErr;
 
-  // Tous les meals
-  const { data: allMeals, error: mErr } = await admin.from("meals").select("id, slug");
-  if (mErr) throw mErr;
-  const mealIds = (allMeals ?? []).map(m => m.id);
-  if (mealIds.length === 0) throw new Error("No meals to assign");
-
-  // Jours * slots => plan_meals
-  const planMealsRows: Array<{plan_variant_id:number; day_index:number; slot_index:number; meal_id:number}> = [];
-  for (const v of insertedVariants ?? []) {
-    const isKeto = v.meal_plan_id === keto.id;
-    const days   = 5;
-    const perDay = isKeto ? 3 : 2;
-    let cursor   = 0;
-    for (let d = 0; d < days; d++) {
-      for (let s = 0; s < perDay; s++) {
-        planMealsRows.push({
-          plan_variant_id: v.id,
-          day_index: d,
-          slot_index: s,
-          meal_id: mealIds[cursor % mealIds.length],
-        });
-        cursor++;
-      }
+  for (const plan of plans ?? []) {
+    for (const [mealType, price] of defaults) {
+      rows.push({
+        meal_plan_id: plan.id,
+        plan_name: plan.title,
+        meal_type: mealType,
+        base_price_mad: price,
+        is_active: true,
+      });
     }
   }
 
-  if (planMealsRows.length) {
-    const { error: pmErr } = await admin.from("plan_meals").insert(planMealsRows);
-    if (pmErr) throw pmErr;
+  if (rows.length) {
+    const { error: pErr } = await admin
+      .from("meal_type_prices")
+      .upsert(rows, { onConflict: "meal_plan_id,meal_type" });
+    if (pErr) throw pErr;
   }
 }
 
@@ -98,8 +86,8 @@ async function upsertVariantsAndDays() {
     console.log("Seeding meal plans…");
     await upsertMealPlans();
 
-    console.log("Seeding variants & plan meals…");
-    await upsertVariantsAndDays();
+    console.log("Seeding meal type prices…");
+    await upsertMealTypePrices();
 
     console.log("✅ Seed terminé.");
   } catch (e: any) {

@@ -9,6 +9,7 @@ import {
   timestamp,
   date,
   jsonb,
+  unique,
 } from "drizzle-orm/pg-core";
 
 /* =================== AUTHENTICATION & USERS =================== */
@@ -68,18 +69,6 @@ export const mealPlans = pgTable("meal_plans", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const planVariants = pgTable("plan_variants", {
-  id: serial("id").primaryKey(),
-  mealPlanId: integer("meal_plan_id")
-    .notNull()
-    .references(() => mealPlans.id, { onDelete: "cascade" }),
-  label: varchar("label", { length: 120 }).notNull(),
-  daysPerWeek: integer("days_per_week").notNull().default(5),
-  mealsPerDay: integer("meals_per_day").notNull().default(3),
-  weeklyPriceMad: numeric("weekly_price_mad", { precision: 10, scale: 2 }).notNull(),
-  published: boolean("published").default(true).notNull(),
-});
-
 export const meals = pgTable("meals", {
   id: serial("id").primaryKey(),
   slug: varchar("slug", { length: 160 }).notNull().unique(),
@@ -112,23 +101,33 @@ export const mealPlanMeals = pgTable("meal_plan_meals", {
   mealId: integer("meal_id")
     .notNull()
     .references(() => meals.id, { onDelete: "cascade" }),
-  planVariantId: integer("plan_variant_id").references(() => planVariants.id, {
-    onDelete: "set null",
-  }),
   sortOrder: integer("sort_order").default(0),
 });
 
 /* =================== PRICING =================== */
 
-export const mealTypePrices = pgTable("meal_type_prices", {
-  id: serial("id").primaryKey(),
-  planName: varchar("plan_name", { length: 100 }).notNull(),
-  mealType: varchar("meal_type", { length: 50 }).notNull(),
-  basePriceMad: numeric("base_price_mad", { precision: 10, scale: 2 }).notNull(),
-  isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+export const mealTypePrices = pgTable(
+  "meal_type_prices",
+  {
+    id: serial("id").primaryKey(),
+    mealPlanId: integer("meal_plan_id")
+      .notNull()
+      .references(() => mealPlans.id, { onDelete: "cascade" }),
+    /** @deprecated Do not read or write — use mealPlanId. Removal scheduled. */
+    planName: varchar("plan_name", { length: 100 }).notNull(),
+    mealType: varchar("meal_type", { length: 50 }).notNull(),
+    basePriceMad: numeric("base_price_mad", { precision: 10, scale: 2 }).notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    mealPlanMealTypeUnique: unique("meal_type_prices_meal_plan_id_meal_type_key").on(
+      table.mealPlanId,
+      table.mealType,
+    ),
+  }),
+);
 
 export const discountRules = pgTable("discount_rules", {
   id: serial("id").primaryKey(),
@@ -136,6 +135,10 @@ export const discountRules = pgTable("discount_rules", {
   conditionValue: integer("condition_value").notNull(),
   discountPercentage: numeric("discount_percentage", { precision: 5, scale: 2 }).notNull(),
   stackable: boolean("stackable").default(false).notNull(),
+  stackingBehavior: varchar("stacking_behavior", { length: 20 })
+    .$type<"stack" | "exclusive" | "best">()
+    .default("best")
+    .notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   validFrom: timestamp("valid_from"),
   validTo: timestamp("valid_to"),
@@ -216,9 +219,19 @@ export const subscriptions = pgTable("subscriptions", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  planVariantId: integer("plan_variant_id").references(() => planVariants.id, {
-    onDelete: "set null",
-  }),
+  // Configuration and price are FROZEN at signup: a later tariff change must
+  // never alter the amount of an already-sold subscription.
+  mealPlanId: integer("meal_plan_id")
+    .notNull()
+    .references(() => mealPlans.id, { onDelete: "restrict" }),
+  mealTypes: text("meal_types").array().notNull(),
+  daysPerWeek: integer("days_per_week").notNull(),
+  durationWeeks: integer("duration_weeks").notNull(),
+  pricePerDayMad: numeric("price_per_day_mad", { precision: 10, scale: 2 }).notNull(),
+  discountPercentage: numeric("discount_percentage", { precision: 5, scale: 2 })
+    .default("0")
+    .notNull(),
+  totalMad: numeric("total_mad", { precision: 10, scale: 2 }).notNull(),
   status: varchar("status", { length: 50 }).notNull().default("active"),
   startsAt: timestamp("starts_at"),
   renewsAt: timestamp("renews_at"),

@@ -6,10 +6,9 @@ import { sql } from "@/lib/db"
 import { getSessionUser } from "@/lib/simple-auth"
 import { Errors } from "@/lib/error-handler"
 import {
-  calculateSubscriptionPrice,
-  type MealPrice,
-  type DiscountRule,
-} from "@/lib/pricing-calculator"
+  computeSubscriptionPrice,
+  PricingError,
+} from "@/lib/subscription-pricing"
 
 // Helper to check admin auth
 async function checkAdminAuth(request: NextRequest) {
@@ -25,6 +24,8 @@ async function checkAdminAuth(request: NextRequest) {
 
   return { error: null, user }
 }
+
+const round2 = (n: number) => Math.round(n * 100) / 100
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -56,10 +57,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const body = await request.json()
 
     // Validate required fields
-    if (!body.plan_variant_id) {
+    const mealPlanId = Number.parseInt(body.meal_plan_id)
+    if (!mealPlanId || isNaN(mealPlanId)) {
       return NextResponse.json({ 
         success: false, 
-        error: "plan_variant_id is required" 
+        error: "meal_plan_id is required" 
       }, { status: 400 })
     }
 
@@ -100,108 +102,61 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       }, { status: 400 })
     }
 
-    // Get plan variant details
-    const planVariant = await sql`
-      SELECT 
-        pv.id,
-        pv.meal_plan_id,
-        pv.label,
-        pv.weekly_price_mad as weekly_base_price_mad,
-        pv.days_per_week as variant_days_per_week,
-        pv.meals_per_day,
-        mp.title as meal_plan_title,
-        mp.slug as meal_plan_slug
-      FROM plan_variants pv
-      JOIN meal_plans mp ON pv.meal_plan_id = mp.id
-      WHERE pv.id = ${body.plan_variant_id}
-    `
-
-    if (planVariant.length === 0) {
-      return NextResponse.json({ 
-        success: false, 
-        error: "Plan variant not found" 
-      }, { status: 404 })
-    }
-
-    const variant = planVariant[0]
-
-    // Calculate price using the shared pricing calculator
-    let calculatedPrice = 0
-    let priceBreakdown: any = null
-
+    // Price computed by the single pricing function
+    let price
     try {
-      // Get meal prices for the variant's meal plan (by title/plan name)
-      const mealPrices: MealPrice[] = await sql`
-        SELECT meal_type, base_price_mad
-        FROM meal_type_prices
-        WHERE plan_name = ${variant.meal_plan_title}
-          AND meal_type = ANY(${body.meal_types}::text[])
-          AND is_active = true
-      `
-
-      if (mealPrices.length === 0) {
-        // If no meal prices are found, fall back to variant weekly price
-        console.warn("No meal_type_prices found for plan", variant.meal_plan_title)
-        const baseWeekly =
-          parseFloat(variant.weekly_base_price_mad || variant.weekly_price_mad || 0) || 0
-        calculatedPrice = baseWeekly * body.duration_weeks
-      } else {
-        const discountRules: DiscountRule[] = await sql`
-          SELECT discount_type, condition_value, discount_percentage, stackable
-          FROM discount_rules
-          WHERE is_active = true
-            AND (valid_from IS NULL OR valid_from <= NOW())
-            AND (valid_to IS NULL OR valid_to >= NOW())
-        `
-
-        const result = calculateSubscriptionPrice(
-          mealPrices,
-          body.days_per_week,
-          body.duration_weeks,
-          discountRules,
-          variant.meal_plan_title,
-          body.meal_types,
-        )
-
-        let finalWeekly = result.finalWeekly
-        const discountsApplied = [...result.discountsApplied]
-
-        // Apply admin override discount if provided (as a final extra discount)
-        if (
-          body.admin_discount_percentage !== undefined &&
-          body.admin_discount_percentage > 0
-        ) {
-          const adminDiscountAmount = finalWeekly * (body.admin_discount_percentage / 100)
-          finalWeekly -= adminDiscountAmount
-          discountsApplied.push({
-            type: "admin_override",
-            condition: 0,
-            percentage: body.admin_discount_percentage,
-            amount: adminDiscountAmount,
-          })
-        }
-
-        calculatedPrice = Math.round(finalWeekly * body.duration_weeks * 100) / 100
-
-        priceBreakdown = {
-          ...result,
-          finalWeekly,
-          totalRoundedMAD: calculatedPrice,
-          discountsApplied,
-        }
-      }
+      price = await computeSubscriptionPrice({
+        mealPlanId,
+        mealTypes: body.meal_types,
+        daysPerWeek: body.days_per_week,
+        durationWeeks: body.duration_weeks,
+      })
     } catch (priceError) {
-      console.error("Error calculating price:", priceError)
-      // Fallback to plan variant base price
-      const baseWeekly =
-        parseFloat(variant.weekly_base_price_mad || variant.weekly_price_mad || 0) || 0
-      calculatedPrice = baseWeekly * body.duration_weeks
+      if (priceError instanceof PricingError) {
+        return NextResponse.json({ 
+          success: false, 
+          error: priceError.message 
+        }, { status: priceError.status })
+      }
+      throw priceError
     }
 
-    // Use admin override price if provided
-    const finalPrice = body.admin_override_price !== undefined 
-      ? parseFloat(body.admin_override_price) 
-      : calculatedPrice
+    let finalPrice = price.total
+    const discountsApplied = [...price.calculation.discountsApplied]
+
+    // Apply admin override discount if provided (as a final extra discount)
+    if (
+      body.admin_discount_percentage !== undefined &&
+      body.admin_discount_percentage > 0
+    ) {
+      const adminDiscountAmount = round2(finalPrice * (body.admin_discount_percentage / 100))
+      finalPrice = round2(finalPrice - adminDiscountAmount)
+      discountsApplied.push({
+        type: "admin_override",
+        condition: 0,
+        percentage: body.admin_discount_percentage,
+        behavior: "stack",
+        amount: adminDiscountAmount,
+      })
+    }
+
+    // Use admin override price if provided (wins over everything)
+    if (body.admin_override_price !== undefined) {
+      finalPrice = round2(parseFloat(body.admin_override_price))
+    }
+
+    // Effective discount actually granted vs the gross subtotal — frozen on the row
+    const effectiveDiscountPct =
+      price.subtotal > 0
+        ? Math.min(100, Math.max(0, round2(((price.subtotal - finalPrice) / price.subtotal) * 100)))
+        : 0
+
+    const priceBreakdown = {
+      ...price.calculation,
+      subtotal: price.subtotal,
+      discountsApplied,
+      totalRoundedMAD: finalPrice,
+    }
 
     // Parse start date
     const startDate = body.start_date 
@@ -212,16 +167,15 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const renewsAt = new Date(startDate)
     renewsAt.setDate(renewsAt.getDate() + (body.duration_weeks * 7))
 
-    // Create subscription
+    // Create subscription with the FROZEN configuration and price
     const subscriptionNotes = JSON.stringify({
-      meal_types: body.meal_types,
-      days_per_week: body.days_per_week,
-      duration_weeks: body.duration_weeks,
-      total_price: finalPrice,
       payment_method: body.payment_method,
       created_by_admin: true,
       admin_id: authCheck.user?.id,
       admin_notes: body.admin_notes || null,
+      admin_discount_percentage: body.admin_discount_percentage || null,
+      admin_discount_reason: body.admin_discount_reason || null,
+      admin_override_price: body.admin_override_price || null,
       delivery_address: body.delivery_address || null,
       delivery_notes: body.delivery_notes || null,
     })
@@ -229,7 +183,13 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const subscriptionResult = await sql`
       INSERT INTO subscriptions (
         user_id,
-        plan_variant_id,
+        meal_plan_id,
+        meal_types,
+        days_per_week,
+        duration_weeks,
+        price_per_day_mad,
+        discount_percentage,
+        total_mad,
         status,
         starts_at,
         renews_at,
@@ -237,13 +197,19 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       )
       VALUES (
         ${customerId},
-        ${body.plan_variant_id},
+        ${mealPlanId},
+        ${body.meal_types}::text[],
+        ${body.days_per_week},
+        ${body.duration_weeks},
+        ${price.pricePerDay},
+        ${effectiveDiscountPct},
+        ${finalPrice},
         'active',
         ${startDate.toISOString()},
         ${renewsAt.toISOString()},
         ${subscriptionNotes}
       )
-      RETURNING id, user_id, plan_variant_id, status, starts_at, renews_at
+      RETURNING id, user_id, meal_plan_id, status, starts_at, renews_at, total_mad
     `
 
     const subscription = subscriptionResult[0]
@@ -252,19 +218,19 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const orderResult = await sql`
       INSERT INTO orders (
         user_id,
-        total,
+        total_amount,
         status,
         created_at,
         updated_at
       )
       VALUES (
         ${customerId},
-        ${Math.round(finalPrice * 100)},
+        ${finalPrice},
         'pending',
         NOW(),
         NOW()
       )
-      RETURNING id, user_id, total, status
+      RETURNING id, user_id, total_amount, status
     `
 
     const orderId = orderResult[0].id
@@ -274,6 +240,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       INSERT INTO order_items (
         order_id,
         product_id,
+        description,
         quantity,
         unit_price,
         created_at
@@ -281,21 +248,18 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       VALUES (
         ${orderId},
         NULL,
+        ${`Subscription: ${price.planTitle} (${body.meal_types.join(", ")}, ${body.days_per_week}d/w, ${body.duration_weeks}w)`},
         1,
-        ${Math.round(finalPrice * 100)},
+        ${finalPrice},
         NOW()
       )
     `
 
-    // Generate delivery schedule
+    // Generate delivery schedule (one delivery per week on the start weekday)
     const deliveryDates: Date[] = []
     const startDateObj = new Date(startDate)
-    
-    // Generate deliveries for each week
+
     for (let week = 0; week < body.duration_weeks; week++) {
-      // For each day of the week selected
-      // For simplicity, we'll create one delivery per week on the first day
-      // You can enhance this to create deliveries for each selected day
       const deliveryDate = new Date(startDateObj)
       deliveryDate.setDate(deliveryDate.getDate() + (week * 7))
       deliveryDates.push(deliveryDate)
@@ -305,14 +269,16 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     for (const deliveryDate of deliveryDates) {
       await sql`
         INSERT INTO deliveries (
+          subscription_id,
           order_id,
           status,
-          scheduled_date,
+          delivery_date,
           created_at
         )
         VALUES (
+          ${subscription.id},
           ${orderId},
-          'scheduled',
+          'pending',
           ${deliveryDate.toISOString().split('T')[0]},
           NOW()
         )
@@ -324,10 +290,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       subscription: {
         id: subscription.id,
         user_id: subscription.user_id,
-        plan_variant_id: subscription.plan_variant_id,
+        meal_plan_id: subscription.meal_plan_id,
         status: subscription.status,
         starts_at: subscription.starts_at,
         renews_at: subscription.renews_at,
+        total_mad: Number(subscription.total_mad),
       },
       order: {
         id: orderId,
@@ -350,4 +317,3 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     }, { status: 500 })
   }
 }
-

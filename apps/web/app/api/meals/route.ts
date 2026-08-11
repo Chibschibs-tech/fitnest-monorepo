@@ -32,8 +32,7 @@ export async function GET(request: NextRequest) {
           m.published as is_active
         FROM meals m
         INNER JOIN meal_plan_meals mpm ON m.id = mpm.meal_id
-        INNER JOIN plan_variants pv ON mpm.plan_variant_id = pv.id
-        WHERE pv.meal_plan_id = ${planId}::integer
+        WHERE mpm.meal_plan_id = ${planId}::integer
           AND m.published = true
           ${mealType && mealType !== "all" ? sql`AND m.meal_type = ${mealType}` : sql``}
         ORDER BY m.meal_type ASC, m.title ASC

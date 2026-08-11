@@ -324,7 +324,7 @@ export function MPCategoriesContent() {
         <div>
           <h1 className="text-3xl font-bold">MP Categories</h1>
           <p className="text-gray-500 mt-1">
-            Diet families (Keto, Balanced, Muscle Gain, etc.) used as the pricing and nutrition
+            Diet families (Keto, Balanced, Protein Power, etc.) used as the pricing and nutrition
             profiles for meal plans. Base prices per meal type are configured under{" "}
             <span className="font-semibold">Pricing → Pricing Management</span>, and discount rules
             under the same section.

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic"
  * Same engine as /plans and checkout, so the homepage can never show a
  * number the customer will not actually pay.
  */
-const PLAN_KEYS = ["Weight Loss", "Stay Fit", "Muscle Gain"]
+const PLAN_KEYS = ["Low Carb", "Balanced", "Protein Power"]
 
 export async function GET() {
   try {

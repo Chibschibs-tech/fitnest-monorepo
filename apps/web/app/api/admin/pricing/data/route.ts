@@ -8,7 +8,8 @@ export async function GET(request: NextRequest) {
       sql`SELECT * FROM discount_rules WHERE is_active = true`
     ])
 
-    const plans = ["Weight Loss", "Stay Fit", "Muscle Gain"]
+    const planRows = await sql`SELECT title FROM meal_plans ORDER BY id`
+    const plans = planRows.map((r: any) => r.title)
     const mealTypes = ["Breakfast", "Lunch", "Dinner"]
 
     return NextResponse.json({

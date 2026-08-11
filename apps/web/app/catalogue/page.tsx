@@ -35,7 +35,7 @@ export default function Catalogue(){
       <section>
         <h2 className="text-xl font-semibold mb-3">How it works</h2>
         <div className="grid gap-4 md:grid-cols-3">
-          <Step n={1} title="Pick your plan" desc="Weight Loss, Stay Fit or Muscle Gain. Change anytime." />
+          <Step n={1} title="Pick your plan" desc="Low Carb, Balanced or Protein Power. Change anytime." />
           <Step n={2} title="Choose your meals" desc="Breakfast, lunch, dinner — portioned to your goals." />
           <Step n={3} title="We cook & deliver" desc="Fresh, balanced meals delivered to your door." />
         </div>

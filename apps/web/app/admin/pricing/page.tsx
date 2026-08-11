@@ -70,7 +70,7 @@ export default function PricingPage() {
 
   // Simulator state
   const [simulatorData, setSimulatorData] = useState({
-    plan: "Weight Loss",
+    plan: "Low Carb",
     meals: ["Breakfast"],
     days: 5,
     duration: 4,
@@ -218,9 +218,9 @@ export default function PricingPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Weight Loss">Weight Loss</SelectItem>
-                        <SelectItem value="Stay Fit">Stay Fit</SelectItem>
-                        <SelectItem value="Muscle Gain">Muscle Gain</SelectItem>
+                        <SelectItem value="Low Carb">Low Carb</SelectItem>
+                        <SelectItem value="Balanced">Balanced</SelectItem>
+                        <SelectItem value="Protein Power">Protein Power</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

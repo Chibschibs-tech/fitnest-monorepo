@@ -10,7 +10,7 @@ const mockOrders = {
   28: {
     id: 28,
     plan_id: 1,
-    plan_name: "Balanced Nutrition",
+    plan_name: "Balanced",
     status: "active",
     total_amount: 28000,
     created_at: "2025-08-16T00:00:00.000Z",
@@ -20,7 +20,7 @@ const mockOrders = {
   27: {
     id: 27,
     plan_id: 2,
-    plan_name: "Muscle Gain Plan",
+    plan_name: "Protein Power Plan",
     status: "active",
     total_amount: 9600,
     created_at: "2025-08-11T00:00:00.000Z",
@@ -30,7 +30,7 @@ const mockOrders = {
   26: {
     id: 26,
     plan_id: 2,
-    plan_name: "Muscle Gain Plan",
+    plan_name: "Protein Power Plan",
     status: "active",
     total_amount: 9600,
     created_at: "2025-08-10T00:00:00.000Z",

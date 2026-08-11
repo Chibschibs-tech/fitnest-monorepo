@@ -127,15 +127,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
     console.log("Using mock order data for subscription:", subscriptionId)
 
     const mockOrderData = {
-      28: { days: ["monday", "wednesday", "friday"], weeks: 4, planName: "Balanced Nutrition" },
-      27: { days: ["tuesday", "thursday"], weeks: 3, planName: "Muscle Gain Plan" },
-      26: { days: ["monday", "thursday"], weeks: 2, planName: "Muscle Gain Plan" },
+      28: { days: ["monday", "wednesday", "friday"], weeks: 4, planName: "Balanced" },
+      27: { days: ["tuesday", "thursday"], weeks: 3, planName: "Protein Power Plan" },
+      26: { days: ["monday", "thursday"], weeks: 2, planName: "Protein Power Plan" },
     }
 
     const mockData = mockOrderData[subscriptionId] || {
       days: ["monday", "wednesday", "friday"],
       weeks: 2,
-      planName: "Weight Loss Plan",
+      planName: "Low Carb Plan",
     }
     const startDate = new Date()
     startDate.setDate(startDate.getDate() + 1) // Start tomorrow

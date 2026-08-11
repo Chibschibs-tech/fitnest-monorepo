@@ -2,7 +2,10 @@ import { NextResponse } from "next/server"
 import { sql } from "@/lib/db"
 import { cookies } from "next/headers"
 import { v4 as uuidv4 } from "uuid"
-import { calculateSubscriptionPrice } from "@/lib/pricing-calculator"
+import {
+  computeSubscriptionPriceByPlanTitle,
+  PricingError,
+} from "@/lib/subscription-pricing"
 
 export const dynamic = "force-dynamic"
 
@@ -207,44 +210,24 @@ export async function POST(request: Request) {
         )
       }
 
-      // Calculate subscription price using pricing API
+      // Price computed by the single pricing function
       try {
-        const mealPrices = await sql`
-          SELECT meal_type, base_price_mad
-          FROM meal_type_prices
-          WHERE plan_name = ${plan_name} 
-            AND meal_type = ANY(${meal_types}::text[]) 
-            AND is_active = true
-        `
+        const price = await computeSubscriptionPriceByPlanTitle(plan_name, {
+          mealTypes: meal_types,
+          daysPerWeek: days_per_week,
+          durationWeeks: duration_weeks,
+        })
 
-        if (mealPrices.length !== meal_types.length) {
-          return NextResponse.json(
-            { error: "Some meal types not found for this plan" },
-            { status: 404 }
-          )
-        }
-
-        const discountRules = await sql`
-          SELECT discount_type, condition_value, discount_percentage, stackable
-          FROM discount_rules
-          WHERE is_active = true
-            AND (valid_from IS NULL OR valid_from <= NOW())
-            AND (valid_to IS NULL OR valid_to >= NOW())
-        `
-
-        const pricingResult = calculateSubscriptionPrice(
-          mealPrices as any[],
-          days_per_week,
-          duration_weeks,
-          discountRules as any[],
-          plan_name,
-          meal_types
-        )
-
-        unitPrice = pricingResult.totalRoundedMAD
+        unitPrice = price.total
         totalPrice = unitPrice // Subscriptions always quantity 1
 
       } catch (pricingError) {
+        if (pricingError instanceof PricingError) {
+          return NextResponse.json(
+            { error: pricingError.message },
+            { status: pricingError.status }
+          )
+        }
         console.error("Error calculating subscription price:", pricingError)
         return NextResponse.json(
           { error: "Failed to calculate subscription price" },
@@ -364,38 +347,23 @@ export async function PUT(request: Request) {
       const finalDaysPerWeek = days_per_week || cartItem.days_per_week
       const finalDurationWeeks = duration_weeks || cartItem.duration_weeks
 
-      // Recalculate price
-      const mealPrices = await sql`
-        SELECT meal_type, base_price_mad
-        FROM meal_type_prices
-        WHERE plan_name = ${plan_name} 
-          AND meal_type = ANY(${finalMealTypes}::text[]) 
-          AND is_active = true
-      `
-
-      if (mealPrices.length !== finalMealTypes.length) {
-        return NextResponse.json(
-          { error: "Some meal types not found for this plan" },
-          { status: 404 }
-        )
+      // Recalculate price with the single pricing function
+      let price
+      try {
+        price = await computeSubscriptionPriceByPlanTitle(plan_name, {
+          mealTypes: finalMealTypes,
+          daysPerWeek: finalDaysPerWeek,
+          durationWeeks: finalDurationWeeks,
+        })
+      } catch (pricingError) {
+        if (pricingError instanceof PricingError) {
+          return NextResponse.json(
+            { error: pricingError.message },
+            { status: pricingError.status }
+          )
+        }
+        throw pricingError
       }
-
-      const discountRules = await sql`
-        SELECT discount_type, condition_value, discount_percentage, stackable, stacking_behavior
-        FROM discount_rules
-        WHERE is_active = true
-          AND (valid_from IS NULL OR valid_from <= NOW())
-          AND (valid_to IS NULL OR valid_to >= NOW())
-      `
-
-      const pricingResult = calculateSubscriptionPrice(
-        mealPrices as any[],
-        finalDaysPerWeek,
-        finalDurationWeeks,
-        discountRules as any[],
-        plan_name,
-        finalMealTypes
-      )
 
       await sql`
         UPDATE cart_items
@@ -403,8 +371,8 @@ export async function PUT(request: Request) {
           meal_types = ${finalMealTypes}::text[],
           days_per_week = ${finalDaysPerWeek},
           duration_weeks = ${finalDurationWeeks},
-          unit_price = ${pricingResult.totalRoundedMAD},
-          total_price = ${pricingResult.totalRoundedMAD},
+          unit_price = ${price.total},
+          total_price = ${price.total},
           updated_at = NOW()
         WHERE id = ${item_id}
       `

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import { getSessionUser } from "@/lib/simple-auth"
-import { sql, db } from "@/lib/db"
+import { sql } from "@/lib/db"
 
 
 export const dynamic = "force-dynamic"
@@ -50,29 +50,14 @@ export async function GET() {
       `
       const ordersRevenue = Number(ordersRevenueResult[0]?.total) || 0
 
-      // Subscriptions revenue (extract from notes or calculate)
+      // Subscriptions revenue: the amount FROZEN on each subscription at signup
       const subscriptionsRevenueResult = await sql`
-        SELECT 
-          s.notes,
-          pv.weekly_price_mad
-        FROM subscriptions s
-        LEFT JOIN plan_variants pv ON s.plan_variant_id = pv.id
-        WHERE s.created_at >= ${thirtyDaysAgo.toISOString()}
-        AND s.status = 'active'
+        SELECT COALESCE(SUM(total_mad), 0) as total
+        FROM subscriptions
+        WHERE created_at >= ${thirtyDaysAgo.toISOString()}
+        AND status = 'active'
       `
-      
-      let subscriptionsRevenue = 0
-      for (const sub of subscriptionsRevenueResult) {
-        try {
-          const notes = sub.notes ? JSON.parse(sub.notes) : {}
-          const totalPrice = notes.total_price || sub.weekly_price_mad || 0
-          const durationWeeks = notes.duration_weeks || 1
-          subscriptionsRevenue += Number(totalPrice) * Number(durationWeeks)
-        } catch (e) {
-          // If notes parsing fails, use weekly_price_mad
-          subscriptionsRevenue += Number(sub.weekly_price_mad || 0)
-        }
-      }
+      const subscriptionsRevenue = Number(subscriptionsRevenueResult[0]?.total) || 0
 
       totalRevenue = ordersRevenue + subscriptionsRevenue
     } catch (error) {
@@ -155,8 +140,7 @@ export async function GET() {
           mp.title as plan_name,
           COUNT(s.id) as subscription_count
         FROM subscriptions s
-        JOIN plan_variants pv ON s.plan_variant_id = pv.id
-        JOIN meal_plans mp ON pv.meal_plan_id = mp.id
+        JOIN meal_plans mp ON s.meal_plan_id = mp.id
         WHERE s.created_at >= ${thirtyDaysAgo.toISOString()}
         GROUP BY mp.id, mp.title
         ORDER BY subscription_count DESC

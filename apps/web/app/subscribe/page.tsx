@@ -5,7 +5,7 @@ type Meal = "Breakfast" | "Lunch" | "Dinner";
 
 export default function SubscribePage(){
   const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-  const urlPlan = useMemo(() => (search?.get("plan") || "Weight Loss"), [search]);
+  const urlPlan = useMemo(() => (search?.get("plan") || "Low Carb"), [search]);
 
   const [plan, setPlan] = useState(urlPlan);
   const [meals, setMeals] = useState<Meal[]>(["Breakfast","Lunch"]);
@@ -42,7 +42,7 @@ export default function SubscribePage(){
         <div>
           <div className="text-xs text-gray-500 mb-1">Plan</div>
           <select value={plan} onChange={e=>setPlan(e.target.value)} className="rounded-md border px-3 py-2">
-            <option>Weight Loss</option><option>Stay Fit</option><option>Muscle Gain</option>
+            <option>Low Carb</option><option>Balanced</option><option>Protein Power</option>
           </select>
         </div>
         <div>

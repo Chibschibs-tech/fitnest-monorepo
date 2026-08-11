@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
 export default function PriceSimulatorTab({ data }) {
-  const [plan, setPlan] = useState("Weight Loss")
+  const [plan, setPlan] = useState("Low Carb")
   const [meals, setMeals] = useState(["Breakfast"])
   const [daysPerWeek, setDaysPerWeek] = useState(5)
   const [durationWeeks, setDurationWeeks] = useState(4)
@@ -48,9 +48,9 @@ export default function PriceSimulatorTab({ data }) {
               onChange={(e) => setPlan(e.target.value)}
               className="w-full border rounded px-3 py-2"
             >
-              <option>Weight Loss</option>
-              <option>Stay Fit</option>
-              <option>Muscle Gain</option>
+              <option>Low Carb</option>
+              <option>Balanced</option>
+              <option>Protein Power</option>
             </select>
           </div>
           <div>

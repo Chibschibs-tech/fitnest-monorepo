@@ -9,21 +9,21 @@ import { getPlanEntryPrices } from "@/lib/plan-pricing"
 
 export const dynamic = "force-dynamic"
 
-// Page slug -> meal_type_prices.plan_name
+// Page slug -> meal_plans.title (the pricing engine resolves plans by title)
 const PLAN_NAME: Record<string, string> = {
-  "weight-loss": "Weight Loss",
-  "muscle-gain": "Muscle Gain",
+  "weight-loss": "Low Carb",
+  "muscle-gain": "Protein Power",
   keto: "Keto",
-  "stay-fit": "Stay Fit",
+  "stay-fit": "Balanced",
 }
 
 const mealPlans = {
   "weight-loss": {
     id: "weight-loss",
-    name: "Weight Loss Plan",
+    name: "Low Carb Plan",
     description: "Calorie-controlled meals designed to help you lose weight while staying satisfied.",
     longDescription:
-      "Our Weight Loss Plan is scientifically designed to create a sustainable caloric deficit while ensuring you get all the nutrients your body needs. Each meal is portion-controlled and packed with lean proteins, fiber-rich vegetables, and complex carbohydrates to keep you feeling full and energized throughout your weight loss journey.",
+      "Our Low Carb Plan is scientifically designed to create a sustainable caloric deficit while ensuring you get all the nutrients your body needs. Each meal is portion-controlled and packed with lean proteins, fiber-rich vegetables, and complex carbohydrates to keep you feeling full and energized throughout your weight loss journey.",
     price: 350,
     originalPrice: 420,
     duration: "week",
@@ -69,10 +69,10 @@ const mealPlans = {
   },
   "muscle-gain": {
     id: "muscle-gain",
-    name: "Muscle Gain Plan",
+    name: "Protein Power Plan",
     description: "Protein-rich meals to support muscle growth and recovery after workouts.",
     longDescription:
-      "Fuel your muscle-building goals with our high-protein Muscle Gain Plan. Each meal is carefully crafted to provide optimal protein timing and amino acid profiles to support muscle protein synthesis. Combined with complex carbohydrates for energy and healthy fats for hormone production.",
+      "Fuel your muscle-building goals with our high-protein Protein Power Plan. Each meal is carefully crafted to provide optimal protein timing and amino acid profiles to support muscle protein synthesis. Combined with complex carbohydrates for energy and healthy fats for hormone production.",
     price: 400,
     originalPrice: 480,
     duration: "week",
@@ -161,10 +161,10 @@ const mealPlans = {
   },
   "stay-fit": {
     id: "stay-fit",
-    name: "Stay Fit Plan",
+    name: "Balanced Plan",
     description: "Balanced nutrition to maintain your weight and support an active lifestyle.",
     longDescription:
-      "Maintain your ideal weight and support your active lifestyle with our balanced Stay Fit Plan. Each meal provides the perfect balance of macronutrients to fuel your workouts, support recovery, and maintain your current physique.",
+      "Maintain your ideal weight and support your active lifestyle with our Balanced Plan. Each meal provides the perfect balance of macronutrients to fuel your workouts, support recovery, and maintain your current physique.",
     price: 320,
     originalPrice: 380,
     duration: "week",

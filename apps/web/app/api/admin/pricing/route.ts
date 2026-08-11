@@ -35,8 +35,9 @@ export async function GET() {
       ORDER BY discount_type, condition_value
     `
 
-    // Return metadata
-    const plans = ["Weight Loss", "Stay Fit", "Muscle Gain"]
+    // Plans come from the catalog itself — never hardcode names again.
+    const planRows = await sql`SELECT title FROM meal_plans ORDER BY id`
+    const plans = planRows.map((r: any) => r.title)
     const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snacks"]
 
     return NextResponse.json({

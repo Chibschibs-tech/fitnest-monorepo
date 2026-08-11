@@ -3,10 +3,9 @@ import { sql } from "@/lib/db"
 import { sendOrderConfirmationEmail } from "@/lib/email-utils"
 import { cookies } from "next/headers"
 import {
-  calculateSubscriptionPrice,
-  type MealPrice,
-  type DiscountRule,
-} from "@/lib/pricing-calculator"
+  computeSubscriptionPriceByPlanTitle,
+  PricingError,
+} from "@/lib/subscription-pricing"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
@@ -181,45 +180,28 @@ export async function POST(request: Request) {
       )
     }
 
-    // Recalculate subscription totals on the server using pricing engine
-    // and ignore any frontend-provided total_price for safety.
+    // Recalculate subscription totals on the server using the single pricing
+    // function, ignoring any frontend-provided total_price for safety.
     for (const sub of subscriptions) {
       try {
-        const mealPrices: MealPrice[] = await sql`
-          SELECT meal_type, base_price_mad
-          FROM meal_type_prices
-          WHERE plan_name = ${sub.plan_name}
-            AND meal_type = ANY(${sub.meal_types}::text[])
-            AND is_active = true
-        `
+        const price = await computeSubscriptionPriceByPlanTitle(sub.plan_name, {
+          mealTypes: sub.meal_types,
+          daysPerWeek: sub.days_per_week,
+          durationWeeks: sub.duration_weeks,
+        })
 
-        if (mealPrices.length === 0) {
-          console.warn("No meal_type_prices found for plan in unified order:", sub.plan_name)
+        // Replace whatever total was previously counted for this subscription
+        cartSubtotal += price.total - Number(sub.total_price || 0)
+        sub.total_price = price.total
+        ;(sub as any).price = price
+        ;(sub as any).pricing_breakdown = price.calculation
+      } catch (priceError) {
+        if (priceError instanceof PricingError) {
+          console.warn(
+            `Pricing failed for plan "${sub.plan_name}" in unified order: ${priceError.message}`,
+          )
           continue
         }
-
-        const discountRules: DiscountRule[] = await sql`
-          SELECT discount_type, condition_value, discount_percentage, stackable
-          FROM discount_rules
-          WHERE is_active = true
-            AND (valid_from IS NULL OR valid_from <= NOW())
-            AND (valid_to IS NULL OR valid_to >= NOW())
-        `
-
-        const result = calculateSubscriptionPrice(
-          mealPrices,
-          sub.days_per_week,
-          sub.duration_weeks,
-          discountRules,
-          sub.plan_name,
-          sub.meal_types,
-        )
-
-        sub.total_price = result.totalRoundedMAD
-        ;(sub as any).pricing_breakdown = result
-
-        cartSubtotal += result.totalRoundedMAD
-      } catch (priceError) {
         console.error("Error recalculating subscription price in unified order:", priceError)
       }
     }
@@ -235,7 +217,7 @@ export async function POST(request: Request) {
     const deliveryDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000) // 2 days from now
     const now = new Date()
 
-    const results = {
+    const results: { orders: any[]; subscriptions: any[] } = {
       orders: [],
       subscriptions: [],
     }
@@ -246,19 +228,19 @@ export async function POST(request: Request) {
         const orderResult = await sql`
           INSERT INTO orders (
             user_id, 
-            total,
+            total_amount,
             status,
             created_at,
             updated_at
           ) 
           VALUES (
             ${userId}, 
-            ${Math.round(totalAmount * 100)},
+            ${totalAmount},
             'pending',
             ${now.toISOString()},
             ${now.toISOString()}
           )
-          RETURNING id, user_id, total, status
+          RETURNING id, user_id, total_amount, status
         `
 
         const orderId = orderResult[0].id
@@ -278,7 +260,7 @@ export async function POST(request: Request) {
               ${orderId}, 
               ${item.productId}, 
               ${item.quantity}, 
-              ${Math.round(item.price * 100)},
+              ${item.price},
               ${now.toISOString()}
             )
           `
@@ -306,32 +288,29 @@ export async function POST(request: Request) {
     // Create subscriptions for meal plans
     for (const sub of subscriptions) {
       try {
-        // Find plan_variant_id from plan_name
-        const planVariant = await sql`
-          SELECT pv.id 
-          FROM plan_variants pv
-          JOIN meal_plans mp ON pv.meal_plan_id = mp.id
-          WHERE mp.title = ${sub.plan_name}
-          LIMIT 1
-        `
-
-        if (planVariant.length === 0) {
-          console.warn(`Plan variant not found for plan: ${sub.plan_name}`)
+        const price = (sub as any).price
+        if (!price) {
+          console.warn(`No server-side price for plan "${sub.plan_name}" — subscription skipped`)
           continue
         }
-
-        const planVariantId = planVariant[0].id
 
         // Calculate dates
         const startsAt = new Date()
         const renewsAt = new Date(startsAt)
         renewsAt.setDate(renewsAt.getDate() + (sub.duration_weeks * 7))
 
-        // Create subscription with status "active" (track "new" in notes)
+        // Create subscription with the FROZEN configuration and price
+        // (status "active", track "new" in notes)
         const subscription = await sql`
           INSERT INTO subscriptions (
             user_id,
-            plan_variant_id,
+            meal_plan_id,
+            meal_types,
+            days_per_week,
+            duration_weeks,
+            price_per_day_mad,
+            discount_percentage,
+            total_mad,
             status,
             starts_at,
             renews_at,
@@ -339,24 +318,25 @@ export async function POST(request: Request) {
           )
           VALUES (
             ${userId},
-            ${planVariantId},
+            ${price.mealPlanId},
+            ${sub.meal_types}::text[],
+            ${sub.days_per_week},
+            ${sub.duration_weeks},
+            ${price.pricePerDay},
+            ${price.discountPercentage},
+            ${price.total},
             'active',
             ${startsAt.toISOString()},
             ${renewsAt.toISOString()},
             ${JSON.stringify({
               subscription_status: 'new',
               payment_status: 'pending',
-              plan_name: sub.plan_name,
-              meal_types: sub.meal_types,
-              days_per_week: sub.days_per_week,
-              duration_weeks: sub.duration_weeks,
-              total_price: sub.total_price,
               shipping_address: deliveryAddress,
               payment_method: body.order.payment_method || 'pending',
               created_at: new Date().toISOString(),
             })}
           )
-          RETURNING id, user_id, plan_variant_id, status
+          RETURNING id, user_id, meal_plan_id, status
         `
 
         const subscriptionId = subscription[0].id

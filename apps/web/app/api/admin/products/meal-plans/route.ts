@@ -5,6 +5,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { sql } from '@/lib/db'
 import { getSessionUser } from "@/lib/simple-auth"
 import { createErrorResponse } from "@/lib/error-handler"
+import { getPlanEntryPrices } from "@/lib/plan-pricing"
 
 // Helper to check admin auth
 async function checkAdminAuth(request: NextRequest) {
@@ -26,8 +27,6 @@ export async function GET(request: NextRequest) {
     const authCheck = await checkAdminAuth(request)
     if (authCheck.error) return authCheck.error
 
-    // Use correct meal_plans schema from Drizzle
-    // Join with plan_variants to get pricing info and mp_categories for category info
     const mealPlansResult = await sql`
       SELECT 
         mp.id,
@@ -39,31 +38,32 @@ export async function GET(request: NextRequest) {
         COALESCE(mpc.id, NULL) as category_id,
         mp.published as is_active,
         mp.created_at,
-        COALESCE(MIN(pv.weekly_price_mad), 0) as price_per_week,
-        COALESCE(COUNT(DISTINCT pv.id), 0) as variant_count,
         COALESCE(COUNT(DISTINCT s.id), 0) as subscribers_count
       FROM meal_plans mp
       LEFT JOIN mp_categories mpc ON mp.mp_category_id = mpc.id
-      LEFT JOIN plan_variants pv ON mp.id = pv.meal_plan_id
-      LEFT JOIN subscriptions s ON pv.id = s.plan_variant_id AND s.status = 'active'
+      LEFT JOIN subscriptions s ON s.meal_plan_id = mp.id AND s.status = 'active'
       GROUP BY mp.id, mp.slug, mp.title, mp.summary, mp.mp_category_id, mp.audience, mpc.name, mpc.id, mp.published, mp.created_at
       ORDER BY mp.created_at DESC
     `
+
+    // Entry price ("à partir de") from the single pricing engine
+    const entryPrices = await getPlanEntryPrices(
+      mealPlansResult.map((plan: any) => plan.name),
+    )
 
     // Format response to match frontend expectations
     const mealPlans = mealPlansResult.map((plan: any) => ({
       id: plan.id,
       name: plan.name,
       description: plan.description || '',
-      price_per_week: Number(plan.price_per_week) || 0,
-      duration_weeks: 4, // Default, can be customized per variant
-      meals_per_day: 3, // Default, can be customized per variant
+      price_per_week: entryPrices[plan.name]?.weekly ?? 0,
+      duration_weeks: 4, // Default, customized per subscription
+      meals_per_day: 3, // Default, customized per subscription
       category: plan.category || 'Unknown',
       mp_category_id: plan.category_id || plan.mp_category_id || null,
       image_url: null, // Can be added later
       is_available: plan.is_active,
       subscribers_count: Number(plan.subscribers_count) || 0,
-      variant_count: Number(plan.variant_count) || 0,
       created_at: plan.created_at,
     }))
 
@@ -135,9 +135,8 @@ export async function POST(request: NextRequest) {
         category: categoryName,
         mp_category_id: newMealPlan.mp_category_id,
         is_available: newMealPlan.published,
-        price_per_week: 0, // Pricing is in plan_variants
+        price_per_week: 0, // Pricing is defined in meal_type_prices (admin > pricing)
         subscribers_count: 0,
-        variant_count: 0,
         created_at: newMealPlan.created_at,
       },
     }, { status: 201 })

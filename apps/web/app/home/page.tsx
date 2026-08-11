@@ -195,11 +195,11 @@ export default function Home() {
             onScroll={onPlansScroll}
             className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto overflow-x-auto md:overflow-visible snap-x snap-mandatory -mx-4 px-4 md:mx-auto md:px-0 pb-4 md:pb-0 scrollbar-hide"
           >
-            {/* Weight Loss Plan */}
+            {/* Low Carb plan */}
             <div className="bg-white rounded-lg shadow-lg p-5 md:p-8 flex flex-col relative min-w-[80%] shrink-0 snap-center md:min-w-0">
               <div className="flex justify-center mb-4 sm:mb-6">
                 <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Weight Loss Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=400&fit=crop" alt="Low Carb Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.weightLoss.title}</h3>
@@ -208,7 +208,7 @@ export default function Home() {
               <div className="text-center mb-4">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Weight Loss", 509)}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Low Carb", 509)}</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -237,7 +237,7 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Stay Fit Plan - Popular */}
+            {/* Balanced plan - Popular */}
             <div className="bg-white rounded-lg shadow-lg p-5 md:p-8 flex flex-col relative border-2 border-fitnest-orange min-w-[80%] shrink-0 snap-center md:min-w-0">
               <div className="absolute top-4 right-4">
                 <span className="bg-fitnest-orange text-white text-xs font-semibold px-3 py-1 rounded-full">
@@ -246,7 +246,7 @@ export default function Home() {
               </div>
               <div className="flex justify-center mb-6">
                 <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Stay Fit Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=400&fit=crop" alt="Balanced Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.stayFit.title}</h3>
@@ -255,7 +255,7 @@ export default function Home() {
               <div className="text-center mb-4">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Stay Fit", 558)}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Balanced", 558)}</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>
@@ -284,11 +284,11 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Muscle Gain Plan */}
+            {/* Protein Power plan */}
             <div className="bg-white rounded-lg shadow-lg p-5 md:p-8 flex flex-col relative min-w-[80%] shrink-0 snap-center md:min-w-0">
               <div className="flex justify-center mb-4 sm:mb-6">
                 <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden">
-                  <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Muscle Gain Meal Plan" fill className="object-cover" />
+                  <Image src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=400&fit=crop" alt="Protein Power Meal Plan" fill className="object-cover" />
                 </div>
               </div>
               <h3 className="text-2xl font-bold mb-2 text-fitnest-green text-center">{t.home.choosePlan.muscleGain.title}</h3>
@@ -297,7 +297,7 @@ export default function Home() {
               <div className="text-center mb-4">
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-[10px] font-normal text-gray-500">{locale === "fr" ? "à partir de" : "from"}</span>
-                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Muscle Gain", 655)}</span>
+                  <span className="text-xl font-bold text-fitnest-green">{planPrice("Protein Power", 655)}</span>
                   <span className="text-gray-600 text-xs">{t.home.choosePlan.week}</span>
                 </div>
               </div>

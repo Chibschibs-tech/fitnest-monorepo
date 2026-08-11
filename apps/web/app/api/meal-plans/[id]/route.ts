@@ -8,12 +8,8 @@ import { getPlanEntryPrices } from "@/lib/plan-pricing"
 /**
  * Public meal-plan detail.
  *
- * Rewritten against the REAL schema (meal_plans / plan_variants / meal_plan_meals /
- * meals). The previous version queried columns and a table that do not exist
- * (name, plan_type, weekly_price, meal_plan_items) and always returned 500.
- *
- * Price comes from the pricing engine, never from a stored value, so it can
- * never disagree with the builder or checkout.
+ * Price comes from the single pricing engine, never from a stored value, so
+ * it can never disagree with the builder or checkout.
  */
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
@@ -43,13 +39,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     const plan = plans[0]
 
-    const variants = await sql`
-      SELECT id, label, days_per_week, meals_per_day
-      FROM plan_variants
-      WHERE meal_plan_id = ${plan.id} AND published = true
-      ORDER BY days_per_week ASC, meals_per_day ASC
-    `
-
     const meals = await sql`
       SELECT m.id, m.slug, m.title, m.description, m.meal_type, m.category,
              m.kcal, m.protein, m.carbs, m.fat, m.fiber, m.image_url, m.allergens, m.tags,
@@ -74,12 +63,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
       published: plan.published,
       // "A partir de" price, computed by the pricing engine.
       entryPrice: entry ? { perDay: entry.pricePerDay, weekly: entry.weekly } : null,
-      variants: variants.map((v: any) => ({
-        id: v.id,
-        label: v.label,
-        daysPerWeek: v.days_per_week,
-        mealsPerDay: v.meals_per_day,
-      })),
+      // The configuration (meals/day, days/week, duration) is chosen freely in
+      // the builder; there is no fixed-variant catalog anymore.
+      variants: [],
       meals: meals.map((m: any) => ({
         id: m.id,
         slug: m.slug,

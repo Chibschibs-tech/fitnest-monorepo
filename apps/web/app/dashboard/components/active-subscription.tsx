@@ -50,7 +50,7 @@ export default function ActiveSubscription() {
   // Sample data - in a real app, this would come from an API
   const subscription = {
     id: 1,
-    plan: "Weight Loss",
+    plan: "Low Carb",
     status: isPaused ? "Paused" : "Active",
     startDate: "April 15, 2023",
     nextBillingDate: "May 15, 2023",
@@ -514,17 +514,17 @@ export default function ActiveSubscription() {
                     <div className="flex items-center justify-between space-x-2 border rounded-lg p-3">
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="weight-loss" id="weight-loss" />
-                        <Label htmlFor="weight-loss">Weight Loss</Label>
+                        <Label htmlFor="weight-loss">Low Carb</Label>
                       </div>
                       <Badge>Current</Badge>
                     </div>
                     <div className="flex items-center space-x-2 border rounded-lg p-3">
                       <RadioGroupItem value="balanced" id="balanced" />
-                      <Label htmlFor="balanced">Balanced Nutrition</Label>
+                      <Label htmlFor="balanced">Balanced</Label>
                     </div>
                     <div className="flex items-center space-x-2 border rounded-lg p-3">
                       <RadioGroupItem value="muscle-gain" id="muscle-gain" />
-                      <Label htmlFor="muscle-gain">Muscle Gain</Label>
+                      <Label htmlFor="muscle-gain">Protein Power</Label>
                     </div>
                     <div className="flex items-center space-x-2 border rounded-lg p-3">
                       <RadioGroupItem value="keto" id="keto" />
@@ -658,21 +658,21 @@ export default function ActiveSubscription() {
             <div className="flex items-center justify-between border-b pb-4">
               <div>
                 <p className="font-medium">May 15, 2023</p>
-                <p className="text-sm text-gray-500">Weight Loss Plan (5 days)</p>
+                <p className="text-sm text-gray-500">Low Carb Plan (5 days)</p>
               </div>
               <p className="font-medium">349 MAD</p>
             </div>
             <div className="flex items-center justify-between border-b pb-4">
               <div>
                 <p className="font-medium">May 22, 2023</p>
-                <p className="text-sm text-gray-500">Weight Loss Plan (5 days)</p>
+                <p className="text-sm text-gray-500">Low Carb Plan (5 days)</p>
               </div>
               <p className="font-medium">349 MAD</p>
             </div>
             <div className="flex items-center justify-between border-b pb-4">
               <div>
                 <p className="font-medium">May 29, 2023</p>
-                <p className="text-sm text-gray-500">Weight Loss Plan (5 days)</p>
+                <p className="text-sm text-gray-500">Low Carb Plan (5 days)</p>
               </div>
               <p className="font-medium">349 MAD</p>
             </div>

@@ -79,12 +79,10 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
   const [actionLoading, setActionLoading] = useState<number | null>(null)
   const [isCreateSubscriptionOpen, setIsCreateSubscriptionOpen] = useState(false)
   const [mealPlans, setMealPlans] = useState<any[]>([])
-  const [planVariants, setPlanVariants] = useState<any[]>([])
   const [priceBreakdown, setPriceBreakdown] = useState<any>(null)
   const [priceLoading, setPriceLoading] = useState(false)
   const [subscriptionFormData, setSubscriptionFormData] = useState({
     meal_plan_id: "",
-    plan_variant_id: "",
     meal_types: [] as string[],
     days_per_week: 5,
     duration_weeks: 4,
@@ -285,49 +283,19 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
     }
   }
 
-  const fetchPlanVariants = async (mealPlanId: string) => {
-    if (!mealPlanId) {
-      setPlanVariants([])
-      return
-    }
-    try {
-      const response = await fetch(`/api/admin/meal-plans/${mealPlanId}/variants`)
-      const data = await response.json()
-      if (response.ok && data.success) {
-        setPlanVariants(data.variants || [])
-        // Auto-select first variant if available
-        if (data.variants && data.variants.length > 0) {
-          setSubscriptionFormData(prev => ({
-            ...prev,
-            plan_variant_id: data.variants[0].id.toString(),
-          }))
-        }
-      }
-    } catch (err) {
-      console.error("Error fetching plan variants:", err)
-    }
-  }
-
-  useEffect(() => {
-    if (subscriptionFormData.meal_plan_id) {
-      fetchPlanVariants(subscriptionFormData.meal_plan_id)
-    }
-  }, [subscriptionFormData.meal_plan_id])
-
   const calculatePrice = async () => {
-    if (!subscriptionFormData.meal_plan_id || !subscriptionFormData.plan_variant_id || subscriptionFormData.meal_types.length < 2) {
+    if (!subscriptionFormData.meal_plan_id || subscriptionFormData.meal_types.length < 2) {
       setPriceBreakdown(null)
       return
     }
 
     setPriceLoading(true)
     try {
-      const selectedPlan = mealPlans.find(p => p.id.toString() === subscriptionFormData.meal_plan_id)
       const response = await fetch("/api/calculate-price", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          plan: selectedPlan?.name || selectedPlan?.title || "",
+          mealPlanId: Number.parseInt(subscriptionFormData.meal_plan_id),
           meals: subscriptionFormData.meal_types,
           days: subscriptionFormData.days_per_week,
           duration: subscriptionFormData.duration_weeks,
@@ -366,7 +334,7 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
 
   useEffect(() => {
     calculatePrice()
-  }, [subscriptionFormData.meal_plan_id, subscriptionFormData.plan_variant_id, subscriptionFormData.meal_types, subscriptionFormData.days_per_week, subscriptionFormData.duration_weeks, subscriptionFormData.admin_discount_percentage])
+  }, [subscriptionFormData.meal_plan_id, subscriptionFormData.meal_types, subscriptionFormData.days_per_week, subscriptionFormData.duration_weeks, subscriptionFormData.admin_discount_percentage])
 
   const handleCreateSubscription = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -375,7 +343,7 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
 
     try {
       const payload: any = {
-        plan_variant_id: Number.parseInt(subscriptionFormData.plan_variant_id),
+        meal_plan_id: Number.parseInt(subscriptionFormData.meal_plan_id),
         meal_types: subscriptionFormData.meal_types,
         days_per_week: subscriptionFormData.days_per_week,
         duration_weeks: subscriptionFormData.duration_weeks,
@@ -411,7 +379,6 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
         setIsCreateSubscriptionOpen(false)
         setSubscriptionFormData({
           meal_plan_id: "",
-          plan_variant_id: "",
           meal_types: [],
           days_per_week: 5,
           duration_weeks: 4,
@@ -737,7 +704,7 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <h3 className="font-semibold text-lg">
-                              {subscription.meal_plan_title || subscription.plan_variant_label || "Unknown Plan"}
+                              {subscription.meal_plan_title || "Unknown Plan"}
                             </h3>
                             <Badge
                               variant={
@@ -756,10 +723,10 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
                           </div>
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                             <div>
-                              <span className="font-medium">Plan:</span> {subscription.plan_variant_label || "N/A"}
+                              <span className="font-medium">Plan:</span> {subscription.meal_plan_title || "N/A"}
                             </div>
                             <div>
-                              <span className="font-medium">Price:</span> {Number(subscription.weekly_base_price_mad || 0).toFixed(2)} MAD/week
+                              <span className="font-medium">Price:</span> {Number(subscription.total_mad || 0).toFixed(2)} MAD total
                             </div>
                             <div>
                               <span className="font-medium">Started:</span> {subscription.starts_at ? new Date(subscription.starts_at).toLocaleDateString() : "N/A"}
@@ -772,9 +739,9 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
                                 <span className="font-medium">Days/Week:</span> {subscription.days_per_week}
                               </div>
                             )}
-                            {subscription.meals_per_day && (
+                            {Array.isArray(subscription.meal_types) && subscription.meal_types.length > 0 && (
                               <div>
-                                <span className="font-medium">Meals/Day:</span> {subscription.meals_per_day}
+                                <span className="font-medium">Meals:</span> {subscription.meal_types.join(", ")}
                               </div>
                             )}
                           </div>
@@ -1104,7 +1071,6 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
                   setSubscriptionFormData(prev => ({
                     ...prev,
                     meal_plan_id: value,
-                    plan_variant_id: "",
                     meal_types: [],
                   }))
                 }}
@@ -1122,32 +1088,8 @@ export default function CustomerDetailContent({ customerId }: { customerId: stri
               </Select>
             </div>
 
-            {/* Plan Variant Selection */}
-            {subscriptionFormData.meal_plan_id && (
-              <div className="space-y-2">
-                <Label htmlFor="plan_variant">Plan Variant *</Label>
-                <Select
-                  value={subscriptionFormData.plan_variant_id}
-                  onValueChange={(value) => {
-                    setSubscriptionFormData(prev => ({ ...prev, plan_variant_id: value }))
-                  }}
-                >
-                  <SelectTrigger id="plan_variant">
-                    <SelectValue placeholder="Select a plan variant" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {planVariants.map((variant) => (
-                      <SelectItem key={variant.id} value={variant.id.toString()}>
-                        {variant.label} - {variant.days_per_week} days/week, {variant.meals_per_day} meals/day - {Number(variant.weekly_base_price_mad || 0).toFixed(2)} MAD/week
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-
             {/* Meal Types */}
-            {subscriptionFormData.plan_variant_id && (
+            {subscriptionFormData.meal_plan_id && (
               <div className="space-y-2">
                 <Label>Meal Types * (Select at least 2)</Label>
                 <div className="flex gap-4">

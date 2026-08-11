@@ -70,9 +70,9 @@ export function MealDetail({ meal, open, onOpenChange, onAddToMeals }: MealDetai
               <h3 className="font-medium mb-2">Plan Variations</h3>
               <Tabs defaultValue="muscleGain" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="muscleGain">Muscle Gain</TabsTrigger>
-                  <TabsTrigger value="weightLoss">Weight Loss</TabsTrigger>
-                  <TabsTrigger value="stayFit">Stay Fit</TabsTrigger>
+                  <TabsTrigger value="muscleGain">Protein Power</TabsTrigger>
+                  <TabsTrigger value="weightLoss">Low Carb</TabsTrigger>
+                  <TabsTrigger value="stayFit">Balanced</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="muscleGain" className="space-y-4">

@@ -111,15 +111,15 @@ export default function MealCustomizationPage() {
             <CardContent>
               <Tabs defaultValue="weight_loss" onValueChange={setSelectedPlan} className="w-full">
                 <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-4">
-                  <TabsTrigger value="weight_loss">Weight Loss</TabsTrigger>
+                  <TabsTrigger value="weight_loss">Low Carb</TabsTrigger>
                   <TabsTrigger value="balanced">Balanced</TabsTrigger>
-                  <TabsTrigger value="muscle_gain">Muscle Gain</TabsTrigger>
+                  <TabsTrigger value="muscle_gain">Protein Power</TabsTrigger>
                   <TabsTrigger value="keto">Keto</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="weight_loss">
                   <div className="space-y-4">
-                    <h3 className="font-medium">Weight Loss Plan</h3>
+                    <h3 className="font-medium">Low Carb Plan</h3>
                     <p className="text-sm text-gray-600">
                       Designed to help you lose weight while maintaining energy and satisfaction. Calorie-controlled
                       portions with high protein content to keep you full.
@@ -134,7 +134,7 @@ export default function MealCustomizationPage() {
 
                 <TabsContent value="balanced">
                   <div className="space-y-4">
-                    <h3 className="font-medium">Balanced Nutrition Plan</h3>
+                    <h3 className="font-medium">Balanced Plan</h3>
                     <p className="text-sm text-gray-600">
                       Perfect for maintaining a healthy lifestyle with balanced macronutrients. Ideal for those looking
                       to maintain weight and energy levels.
@@ -149,7 +149,7 @@ export default function MealCustomizationPage() {
 
                 <TabsContent value="muscle_gain">
                   <div className="space-y-4">
-                    <h3 className="font-medium">Muscle Gain Plan</h3>
+                    <h3 className="font-medium">Protein Power Plan</h3>
                     <p className="text-sm text-gray-600">
                       High protein meals to support muscle growth and recovery after workouts. Includes complex
                       carbohydrates for sustained energy.
@@ -366,11 +366,11 @@ export default function MealCustomizationPage() {
                   <div className="text-sm text-gray-500">Selected Plan</div>
                   <div className="font-medium">
                     {selectedPlan === "weight_loss"
-                      ? "Weight Loss"
+                      ? "Low Carb"
                       : selectedPlan === "balanced"
-                        ? "Balanced Nutrition"
+                        ? "Balanced"
                         : selectedPlan === "muscle_gain"
-                          ? "Muscle Gain"
+                          ? "Protein Power"
                           : "Keto"}
                   </div>
                 </div>
