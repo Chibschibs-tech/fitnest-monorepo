@@ -26,7 +26,7 @@ export default function Catalogue(){
           Choose your plan, select your meals, we cook & deliver. Simple, fresh and tailored to your goals.
         </p>
         <div className="mt-4 flex gap-3 justify-center">
-          <a href="/subscribe" className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90">Get started</a>
+          <a href="/order" className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90">Get started</a>
           <a href="/plans" className="rounded-full border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green">See plans</a>
         </div>
       </section>
@@ -67,7 +67,7 @@ export default function Catalogue(){
           <div className="text-sm text-gray-600">Configure your subscription in a few clicks.</div>
         </div>
         <div className="flex gap-3">
-          <a href="/subscribe" className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90">Subscribe</a>
+          <a href="/order" className="rounded-full bg-fitnest-green px-4 py-2 text-sm font-medium text-white hover:bg-fitnest-green/90">Get started</a>
           <a href="/menu" className="rounded-full border px-4 py-2 text-sm hover:border-fitnest-green hover:text-fitnest-green">View menu</a>
         </div>
       </section>

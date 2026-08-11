@@ -14,7 +14,7 @@ export default function Footer() {
     { href: "/compose-ton-plan", label: t.nav.compose },
     { href: "/entreprises", label: t.nav.business },
     { href: "/catalogue", label: t.nav.howItWorks },
-    { href: "/subscribe", label: t.nav.subscribe },
+    { href: "/order", label: t.nav.subscribe },
   ]
 
   const legal =

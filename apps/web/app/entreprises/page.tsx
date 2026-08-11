@@ -6,7 +6,7 @@ import { LeadForm } from "./lead-form"
 export const metadata: Metadata = {
   title: "FitNest Entreprises | Buffets healthy & déjeuners pour vos équipes",
   description:
-    "Buffets healthy pour vos événements et plans repas quotidiens pour vos collaborateurs, adaptés à votre entreprise. Livraison groupée, macros affichées, cuisine agréée ONSSA.",
+    "Buffets healthy pour vos événements et plans repas quotidiens pour vos collaborateurs, adaptés à votre entreprise. Livraison groupée, macros affichées, cuisiné chaque jour.",
 }
 
 const WHATSAPP_URL = "https://wa.me/212600000000?text=Bonjour%20FitNest%2C%20je%20souhaite%20une%20offre%20entreprise"
@@ -152,7 +152,7 @@ export default function EntreprisesPage() {
         </div>
         <div className="flex items-center justify-center gap-3 rounded-lg bg-fitnest-green/5 border border-fitnest-green/20 p-4">
           <ShieldCheck className="h-5 w-5 text-fitnest-green" />
-          <p className="text-sm font-medium text-gray-800">Cuisine agréée ONSSA</p>
+          <p className="text-sm font-medium text-gray-800">Cuisiné chaque jour, jamais congelé</p>
         </div>
       </section>
 

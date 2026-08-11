@@ -9,7 +9,6 @@ const publicRoutes = [
   "/waitlist", "/waitlist/success",
   "/checkout", "/checkout/guest", "/checkout/guest-details", "/checkout/guest-confirmation",
   "/cart", "/shopping-cart", "/order", "/compose-ton-plan",
-  "/subscribe", "/subscribe/thanks",
 ]
 
 const publicApiPrefixes = [
@@ -60,6 +59,11 @@ export async function middleware(request: NextRequest) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/")
   const routePath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname
   const locale = isEnglish ? "en" : "fr"
+
+  // /subscribe (old English-only funnel) is permanently replaced by /order.
+  if (routePath === "/subscribe" || routePath.startsWith("/subscribe/")) {
+    return NextResponse.redirect(new URL(isEnglish ? "/en/order" : "/order", request.url), 301)
+  }
 
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set("x-locale", locale)

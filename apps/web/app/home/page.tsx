@@ -409,8 +409,8 @@ export default function Home() {
               </h2>
               <p className="mb-5 text-gray-600 md:mb-0">
                 {locale === "fr"
-                  ? "Buffets healthy pour vos événements et déjeuners quotidiens pour vos collaborateurs — livraison groupée, macros affichées, cuisine agréée ONSSA."
-                  : "Healthy buffets for your events and daily lunches for your team — grouped delivery, macros shown, ONSSA-approved kitchen."}
+                  ? "Buffets healthy pour vos événements et déjeuners quotidiens pour vos collaborateurs — livraison groupée, macros affichées, cuisiné chaque jour."
+                  : "Healthy buffets for your events and daily lunches for your team — grouped delivery, macros shown, cooked fresh daily."}
               </p>
             </div>
             <div className="md:shrink-0">
@@ -497,7 +497,7 @@ export default function Home() {
                   <div className="relative h-40">
                     <Image
                       src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=280&h=160&fit=crop"
-                      alt="Weight Loss Plateau"
+                      alt="Plateau de perte de poids"
                       fill
                       className="object-cover"
                     />
@@ -588,7 +588,7 @@ export default function Home() {
               <div className="relative h-48">
                 <Image
                   src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=384&h=192&fit=crop"
-                  alt="Weight Loss Plateau"
+                  alt="Plateau de perte de poids"
                   fill
                   className="object-cover"
                 />

@@ -18,7 +18,7 @@ export const translations = {
       contact: 'Contact',
       login: 'Connexion',
       myAccount: 'Mon compte',
-      subscribe: 'S\'abonner',
+      subscribe: 'Démarrer',
     },
     // Home page
     home: {
@@ -463,7 +463,7 @@ export const translations = {
       contact: 'Contact',
       login: 'Login',
       myAccount: 'My account',
-      subscribe: 'Subscribe',
+      subscribe: 'Get started',
     },
     // Home page
     home: {
