@@ -2,17 +2,12 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 import { type NextRequest, NextResponse } from "next/server"
-import { createUser, createSession, initTables } from "@/lib/simple-auth"
-import { createCustomerProfile, initCustomersTable } from "@/lib/customer-management"
+import { createUser, createSession } from "@/lib/simple-auth"
 import { sendWelcomeEmail } from "@/lib/email-utils"
 
 export async function POST(request: NextRequest) {
   try {
-    // Initialize both users and customers tables
-    await initTables()
-    await initCustomersTable()
-
-    const { name, email, password, phone, city, acquisitionSource } = await request.json()
+    const { name, email, password } = await request.json()
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: "Name, email and password required" }, { status: 400 })
@@ -23,17 +18,6 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       return NextResponse.json({ error: "User already exists or creation failed" }, { status: 409 })
-    }
-
-    // Create customer profile
-    const customerProfile = await createCustomerProfile(user.id, {
-      phone,
-      city,
-      acquisition_source: acquisitionSource || "website",
-    })
-
-    if (!customerProfile) {
-      console.warn("Failed to create customer profile for user:", user.id)
     }
 
     // Create session
@@ -51,7 +35,6 @@ export async function POST(request: NextRequest) {
         email: user.email,
         role: user.role,
       },
-      customer: customerProfile,
     })
 
     response.cookies.set("session-id", sessionId, {
