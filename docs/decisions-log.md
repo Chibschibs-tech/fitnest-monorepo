@@ -97,6 +97,10 @@ Un brouillon rattaché au compte, repris sur n'importe quelle surface. Pas d'ét
 Toute règle métier porte sa surface, son marché s'il s'agit d'une observation Calo, et son statut : mesuré, déduit ou supposé. Aucun rapprochement entre relevés de marchés ou de sessions différents.
 **Raison :** plusieurs erreurs d'analyse sont nées de la fusion de relevés QAR et BHD, et de la transposition d'observations du site Calo vers l'app.
 
+### D-023 · 29 août · Six migrations fantômes en production (16–18 juillet)
+La table d'historique de migrations de la production contient six entrées appliquées via CLI entre le 16 et le 18 juillet 2026 (`20260716210751` → `20260718225536`) dont aucun fichier n'a été archivé. Le schéma qu'elles ont produit n'est reconstituable que par introspection (`supabase db dump`, effectuée le 29 août). Les entrées sont marquées `reverted` dans l'historique pour permettre la baseline versionnée — opération de bookkeeping, aucun changement de schéma.
+**Raison :** c'est la justification historique de l'Article II — du SQL appliqué en production sans fichier versionné devient irrécouvrable dès que la session qui l'a produit disparaît.
+
 ---
 
 ## Corrections notables
@@ -113,6 +117,7 @@ Consignées pour éviter leur réintroduction.
 | Le minimum de jours protège la densité de tournée | Faux : la livraison est quotidienne. Il protège le revenu par abonné. |
 | Grille de prix vérifiée « sur deux marchés » | Fusion illégitime de relevés QAR et BHD. |
 | Stripe comme processeur | Stripe ne supporte pas les marchands marocains. |
+| « `coupons` existe en production et pas dans `schema.ts` » (motif de D-017) | Faux : la table `coupons` n'existe pas en production — les routes `/api/admin/coupons` interrogent une table inexistante et échouent en silence. D-017 est maintenue, motif corrigé : doublon avec l'outillage Supabase natif, et retard réel de `schema.ts` constaté par introspection le 29 août (5 tables et 6 colonnes manquantes). |
 
 ---
 
@@ -122,3 +127,7 @@ Consignées pour éviter leur réintroduction.
 Critères d'évaluation : délivrabilité au Maroc, coût par SMS, compatibilité avec Supabase Auth en mode phone.
 **Portée :** bloque l'implémentation de l'identité client, pas la spécification.
 **Note volume :** l'OTP ne sert qu'à la vérification du numéro à l'inscription et à la reprise de session perdue (Article V, v4.1.0) — le volume attendu est faible, à prendre en compte dans l'évaluation du coût.
+
+### Q-002 · 29 août · Policies RLS — à définir avant toute connexion cliente directe
+RLS est activé sur les 24 tables de production, sans aucune policy. Ce n'est pas une brèche active aujourd'hui : le client Supabase JS est dormant, aucune clé n'est définie, et tout le trafic passe par le serveur avec un rôle qui contourne RLS. L'exposition naît à la première connexion cliente directe (clé anon) — les policies doivent exister avant celle-ci.
+**Portée :** bloque l'activation de Supabase Auth côté client, pas la spécification.
