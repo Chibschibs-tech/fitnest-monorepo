@@ -131,3 +131,15 @@ Critères d'évaluation : délivrabilité au Maroc, coût par SMS, compatibilit�
 ### Q-002 · 29 août · Policies RLS — à définir avant toute connexion cliente directe
 RLS est activé sur les 24 tables de production, sans aucune policy. Ce n'est pas une brèche active aujourd'hui : le client Supabase JS est dormant, aucune clé n'est définie, et tout le trafic passe par le serveur avec un rôle qui contourne RLS. L'exposition naît à la première connexion cliente directe (clé anon) — les policies doivent exister avant celle-ci.
 **Portée :** bloque l'activation de Supabase Auth côté client, pas la spécification.
+
+### Q-003 · 30 août · Fidélité — les points expireront-ils ?
+Si oui, la consommation se fera par ancienneté et chaque lot portera sa date d'échéance. Structurant pour le registre du wallet (dont l'unité est une donnée, spec 001 FR-053) — à trancher avant de construire la fidélité, rien avant.
+**Portée :** ne bloque rien aujourd'hui. Le registre conserve déjà le moment d'acquisition de chaque entrée, prérequis de tout mécanisme d'expiration.
+
+---
+
+## Pistes futures — aucun développement
+
+### Réseau social in-app (V2+)
+Discussions entre clients, conseils fitness et lifestyle, avis sur les repas et produits FitNest. Ouvert aux abonnés ET aux clients Express Shop.
+**Conséquence Article XIV, à respecter dès que la notation existera :** un avis est ATTRIBUÉ et DATÉ, jamais un simple compteur agrégé. Le compteur se recalcule, l'attribution est irrécupérable.
