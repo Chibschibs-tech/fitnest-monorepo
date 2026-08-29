@@ -97,6 +97,13 @@ Un brouillon rattaché au compte, repris sur n'importe quelle surface. Pas d'ét
 Toute règle métier porte sa surface, son marché s'il s'agit d'une observation Calo, et son statut : mesuré, déduit ou supposé. Aucun rapprochement entre relevés de marchés ou de sessions différents.
 **Raison :** plusieurs erreurs d'analyse sont nées de la fusion de relevés QAR et BHD, et de la transposition d'observations du site Calo vers l'app.
 
+### D-027 · 30 août · Route deliveries : la fiction est retirée — le repli silencieux est le motif de défaillance à traquer
+Une route de production (`api/subscriptions/[id]/deliveries`) servait des données fictives à deux surfaces client vivantes (`dashboard/components/active-subscription.tsx`, `dashboard/my-meal-plans/[id]/page.tsx`), masquée par un try/catch silencieux : la branche « données réelles » lisait `orders.selected_days` et `orders.selected_weeks`, colonnes inexistantes en production, échouait à chaque appel, et la branche mock fabriquait un calendrier complet — dates, statuts « delivered », prochaine livraison, éligibilité de pause — dans 100 % des cas, sans qu'aucune erreur ne remonte.
+
+Décision fondateur : suppression de toute la branche mock et du try/catch silencieux. La route renvoie une liste vide tant que les livraisons réelles n'existent pas (slice 7). Les deux surfaces affichent un état vide honnête. La branche « données réelles » n'est pas réparée : elle était morte aussi.
+
+**Même famille que le `continue` de create-unified et le `duration_weeks = 4` par défaut : un repli silencieux préféré à une erreur visible. C'est le motif de défaillance à traquer dans tout le code existant.**
+
 ### D-026 · 30 août · Dépendance inter-slice : colonnes `subscriptions` écrites par la slice pricing
 La slice 001 propose trois colonnes nullables sur `subscriptions` : `customer_account_id`, `ended_at`, `price_guaranteed_until`. Leur écriture incombe à la slice pricing/checkout et doit figurer comme **exigences explicites dans sa spec** — pas seulement comme mention dans le plan 001 (contrats d'écriture, `specs/001-identity-account-admission/contracts/api.md`).
 
