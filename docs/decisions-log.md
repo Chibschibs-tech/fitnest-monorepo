@@ -97,6 +97,26 @@ Un brouillon rattaché au compte, repris sur n'importe quelle surface. Pas d'ét
 Toute règle métier porte sa surface, son marché s'il s'agit d'une observation Calo, et son statut : mesuré, déduit ou supposé. Aucun rapprochement entre relevés de marchés ou de sessions différents.
 **Raison :** plusieurs erreurs d'analyse sont nées de la fusion de relevés QAR et BHD, et de la transposition d'observations du site Calo vers l'app.
 
+### D-026 · 30 août · Dépendance inter-slice : colonnes `subscriptions` écrites par la slice pricing
+La slice 001 propose trois colonnes nullables sur `subscriptions` : `customer_account_id`, `ended_at`, `price_guaranteed_until`. Leur écriture incombe à la slice pricing/checkout et doit figurer comme **exigences explicites dans sa spec** — pas seulement comme mention dans le plan 001 (contrats d'écriture, `specs/001-identity-account-admission/contracts/api.md`).
+
+`ended_at` en particulier : sans lui, FR-032 (reconstruction des cohortes — encore actifs à 4/8/12 semaines) est **inapplicable** et la courbe de rétention est perdue (Article IX). `price_guaranteed_until` porte FR-033–034 (gel jamais recalculé, remise d'affiliation incluse par D-025b). `customer_account_id` relie les abonnements au nouveau modèle d'identité — la clé de cohorte `first_subscribed_at` en dépend.
+
+### D-025 · 30 août · Fitnest Pro = remise d'affiliation — pas de grille tarifaire parallèle
+Remplace la proposition précédente du fondateur sur Fitnest Pro. Les conditions négociées sont des **remises** appliquées automatiquement selon le compte connecté. `meal_type_prices` reste la source unique et universelle des prix, quelle que soit l'affiliation — c'est ce qui préserve l'Article IV.
+
+La notion générale est une **affiliation portée par le compte**, pas un mécanisme B2B : un partenariat accordant des conditions à ses membres relève du même modèle. Les menus spéciaux sont un besoin distinct, non couvert par une remise, non traité.
+
+À prévoir sans rien construire (porté dans le plan 001) :
+- **(a)** Le moteur de prix reçoit l'identité du demandeur en entrée dès sa première version — endpoint, aperçu debouncé, cache par configuration. Aujourd'hui elle n'influence rien ; sans elle, l'ajout traverse toute la chaîne plus tard.
+- **(b)** Le gel du prix sur l'abonnement inclut la remise appliquée, au même titre que le prix et le taux de TVA. Un collaborateur quittant son entreprise ne voit pas son prix changer en cours de cycle.
+- **(c)** Cumul : la remise d'affiliation s'applique au prix du plan ; cycle et coupon conservent leur chaîne. Pas de cumul entre affiliation et coupon.
+
+Aucune remise d'affiliation n'est construite. L'exigence est que l'ajouter reste une donnée, pas une refonte (Article XIV).
+
+### D-024 · 30 août · Troisième nom de plan inventé — le motif est confirmé
+« Protein Power Plan » trouvé en dur dans `api/subscriptions/[id]/deliveries/route.ts`, après « Keto Classic » et « Balanced Essentials » dans l'ancien seed. Confirmation du motif de l'Article II : les noms de plans en dur se multiplient partout où la liaison n'est pas faite par identifiant.
+
 ### D-023 · 29 août · Six migrations fantômes en production (16–18 juillet)
 La table d'historique de migrations de la production contient six entrées appliquées via CLI entre le 16 et le 18 juillet 2026 (`20260716210751` → `20260718225536`) dont aucun fichier n'a été archivé. Le schéma qu'elles ont produit n'est reconstituable que par introspection (`supabase db dump`, effectuée le 29 août). Les entrées sont marquées `reverted` dans l'historique pour permettre la baseline versionnée — opération de bookkeeping, aucun changement de schéma.
 **Raison :** c'est la justification historique de l'Article II — du SQL appliqué en production sans fichier versionné devient irrécouvrable dès que la session qui l'a produit disparaît.
@@ -135,6 +155,22 @@ RLS est activé sur les 24 tables de production, sans aucune policy. Ce n'est pa
 ### Q-003 · 30 août · Fidélité — les points expireront-ils ?
 Si oui, la consommation se fera par ancienneté et chaque lot portera sa date d'échéance. Structurant pour le registre du wallet (dont l'unité est une donnée, spec 001 FR-053) — à trancher avant de construire la fidélité, rien avant.
 **Portée :** ne bloque rien aujourd'hui. Le registre conserve déjà le moment d'acquisition de chaque entrée, prérequis de tout mécanisme d'expiration.
+
+---
+
+## Dette consignée — slice pricing/configuration
+
+Défauts constatés, arbitrés « consignés, aucune action », à traiter dans la slice pricing :
+
+- Routes `/api/admin/coupons` : interrogent une table inexistante en production, échouent en silence.
+- Moteur de prix parallèle `compose_components` / `compose_settings` / `custom_meals` (`surcharge_mad`, `base_price_mad`) — violation Article IV.
+- Frais de livraison en dur, dupliqués sur deux écrans checkout (`express ? 20 : 0`) — contredit D-008.
+- Durées de cycle en dur 1/2/4 semaines (`order-process.tsx`) — contredit D-006 (1/4/12).
+- Minimums de jours en dur 3/6/10, variables par durée — contredit D-009 (uniforme 5).
+- « Choisis au moins 2 repas » en dur — contredit D-010 (plancher en valeur).
+- `duration_weeks = 4` en repli silencieux (`create-unified:165`) — même famille que le `continue` qui avale l'échec de création d'abonnement : une valeur par défaut préférée à une erreur visible, le contraire de ce qu'on veut.
+- Code mort : `db-universal.ts`, `db-connection.ts`, `database-service.ts` (joint des colonnes inexistantes).
+- Route `api/subscriptions/[id]/deliveries` : sert des données fictives à des clients réels — décision fondateur en attente (rapport du 30 août).
 
 ---
 
