@@ -29,54 +29,6 @@ export async function initAuthTables() {
   return true;
 }
 
-export async function ensureAdminUser() {
-  try {
-    const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase().trim();
-    const adminPassword = process.env.ADMIN_PASSWORD;
-
-    if (!adminEmail || !adminPassword) {
-      console.log("[AUTH] ADMIN_EMAIL or ADMIN_PASSWORD not set — skipping admin user setup");
-      return false;
-    }
-    const hashedPassword = await hashPassword(adminPassword);
-
-    // Check if admin exists
-    const existing = await sql`
-      SELECT id, email, password, role 
-      FROM users 
-      WHERE LOWER(email) = LOWER(${adminEmail})
-    `
-
-    if (existing.length > 0) {
-      // Update existing admin
-      await sql`
-        UPDATE users 
-        SET 
-          name = 'Chihab Admin',
-          password = ${hashedPassword},
-          role = 'admin',
-          email = ${adminEmail},
-          status = 'active',
-          updated_at = NOW()
-        WHERE id = ${existing[0].id}
-      `
-      console.log("[AUTH] Admin user updated:", adminEmail)
-    } else {
-      // Create new admin
-      await sql`
-        INSERT INTO users (name, email, password, role, status)
-        VALUES ('Chihab Admin', ${adminEmail}, ${hashedPassword}, 'admin', 'active')
-      `
-      console.log("[AUTH] Admin user created:", adminEmail)
-    }
-
-    return true
-  } catch (error) {
-    console.error("[AUTH] Error ensuring admin user:", error)
-    return false
-  }
-}
-
 // Authenticate user
 export async function authenticateUser(email: string, password: string) {
   try {

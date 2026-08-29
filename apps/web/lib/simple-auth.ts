@@ -7,7 +7,6 @@
 import {
   hashPassword,
   initAuthTables,
-  ensureAdminUser,
   authenticateUser,
   createSession,
   getSessionUser,
@@ -19,7 +18,6 @@ export const simpleHash = hashPassword
 export const initTables = initAuthTables
 export {
   hashPassword,
-  ensureAdminUser,
   authenticateUser,
   createSession,
   getSessionUser,
