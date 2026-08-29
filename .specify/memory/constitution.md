@@ -1,5 +1,28 @@
 <!--
-Sync Impact Report
+Sync Impact Report (v4.1.0)
+- Version change: 4.0.0 → 4.1.0 (MINOR: Article V materially expanded — the
+  founder's previous arbitration extended a customer-designed model to staff;
+  corrected)
+- Modified principles:
+  - Article V — Identity & Account, restructured into three populations:
+    - CUSTOMERS: phone remains the anchor; the OTP is clarified as a number
+      VERIFICATION mechanism, not a session mechanism — long-lived sessions on
+      verified devices, re-challenge only on session loss or device change.
+    - STAFF (new): separate table and lifecycle, credentials + password,
+      SMS never used for internal sessions, roles as data, no hardcoded or
+      committed credentials, at least two administrative accounts at all times.
+    - CORPORATE: unchanged (customer account + company code).
+- Added sections: none
+- Removed sections: none (v4.0.0's "No password exists anywhere in the
+  product" is superseded: passwords exist for STAFF only)
+- Follow-up notes:
+  - Migration draft B (identity purge/rebuild) is invalidated: users.password
+    and the sessions table migrate to the staff model instead of being dropped.
+    New draft deferred to the slice-1 spec (cohort/wallet columns land there).
+  - SMS provider: open question recorded in docs/decisions-log.md — blocks
+    implementation, not specification.
+
+Previous report (v4.0.0):
 - Version change: 3.0.0 → 4.0.0 (MAJOR: full rewrite; scope premise corrected,
   Article II inverted, Article I redefines one-off purchase as deferred)
 - Scope change: "mobile-only repository consuming an externally-owned database"
@@ -50,8 +73,9 @@ Sync Impact Report
 
 # FitNest Constitution
 
-**Version:** 4.0.0
+**Version:** 4.1.0
 **Ratified:** 26 August 2026
+**Last Amended:** 29 August 2026
 **Scope:** The entire FitNest product — one repository, one database, two surfaces (`apps/web`, `apps/mobile`), shared business logic in `packages/core`.
 
 This document supersedes all previous versions. It replaces v3.0.0 in full.
@@ -124,11 +148,36 @@ total         = prix_plan + delivery_fee
 
 ## Article V — Identity & Account
 
-- **Phone number plus one-time code is the sole identity anchor.** No password exists anywhere in the product.
-- One phone number is one account, shared across web and mobile. The same person on either surface reaches the same account and the same history.
-- **Email is nullable at account creation and mandatory before payment.** It serves invoices and communication, never identification.
-- Biometric or device sign-in may be layered on as convenience, never as a replacement.
-- Corporate accounts (FitNest Pro) are standard accounts carrying a company code attribute. No parallel user table, no duplicate auth path.
+**CUSTOMERS**
+
+- Phone number is the identity anchor, verified by one-time code at
+  signup. No password.
+- The one-time code VERIFIES the number. It is not the session
+  mechanism: a verified device holds a long-lived session and is not
+  re-challenged on every return. A new code is sent only when the
+  session is lost or the device changes.
+- One phone number is one account, shared across web and mobile.
+- Email is nullable at account creation, mandatory before payment. It
+  serves invoices and communication, never identification.
+- Biometric or device sign-in may be layered on as convenience.
+
+**STAFF**
+
+- Staff accounts are separate from customer accounts, in their own
+  table, with their own lifecycle. A staff member is granted a role,
+  changes role, and is revoked — none of which applies to a customer.
+- Staff authenticate with credentials and a password. SMS is not a
+  session mechanism for internal use.
+- Roles are data. No hardcoded email, no auto-regenerating account, no
+  credential of any kind committed to the repository.
+- At least two staff accounts hold administrative rights at all times,
+  so that losing one device never locks the business out of its own
+  back office.
+
+**CORPORATE**
+
+- FitNest Pro accounts are standard customer accounts carrying a company
+  code attribute. No parallel auth path.
 
 ---
 
@@ -220,3 +269,4 @@ These are historical record. Once written, they are never overwritten by later a
 | Date | Version | Change |
 |---|---|---|
 | 2026-08-26 | 4.0.0 | Full rewrite for monorepo scope. Article II inverted from prohibition to migration discipline. Article I no longer forbids one-off purchase. Article III recast as deferred, not impossible. Pricing, identity, wallet, cohort and traceability articles added from locked decisions. |
+| 2026-08-29 | 4.1.0 | Article V restructured into CUSTOMERS / STAFF / CORPORATE. The OTP verifies the number and is not the session mechanism. Staff accounts get their own table, credential + password auth, roles as data, and a two-admin floor. Corrects the founder's earlier arbitration that extended the customer model to staff. |
