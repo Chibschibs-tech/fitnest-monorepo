@@ -7,7 +7,7 @@ Runnable scenarios proving the feature end-to-end. References: [data-model.md](.
 - `pnpm install` at repo root; Docker running.
 - `supabase start` (local stack) — the proposed migrations of this slice applied **locally only** (production apply is a founder-gated act, Article II).
 - Supabase Auth phone mode with **test phone numbers** configured (fixed OTP, zero SMS — R4). No SMS provider needed.
-- `pnpm --filter web dev` (and `pnpm --filter mobile start` for surface-parity checks).
+- `pnpm --filter my-v0-project dev` for the web app (the package's historical name — renaming is out of this slice's scope) and `pnpm --filter @fitnest/mobile start` for surface-parity checks.
 - Seed: `app_settings` rows (`queue_enabled = true`, `weekly_admission_cap = 8`, `referral_reward_cap = 5`, `admission_dormancy_weeks = 4`, reward sizes), `wallet_units` (`day`, `mad`), one `partners` row with a short code.
 
 ## Scenario walkthroughs (map 1:1 to the spec's user stories)
@@ -16,6 +16,8 @@ Runnable scenarios proving the feature end-to-end. References: [data-model.md](.
 1. With test number A: send OTP, verify, `POST /api/account/claim`. Expect: account exists, `state = "queued"`, position + expected week visible, `claimed_at` and `acquisition_source = "direct"` recorded, **no password, no email asked** (SC-001).
 2. Repeat claim with the same number → same account id, same position (idempotency, edge case 1).
 3. Flip `queue_enabled = false`, claim with fresh number B → `state = "admitted"`, `admitted_at` set immediately, no waiting screen (FR-049/051, scenario 1bis).
+
+> **SC-005 measurement note (founder, 2026-08-30)**: while admission notices are sent manually (FR-015, D-016), the 48-hour response of SC-005 is measured **operationally**, not by software — the system records due/sent, the staff guarantees the delay. The immediate queue-status view (position + expected week) is the software half of the promise.
 
 ### US2 — Waiting without rejection (P1)
 1. Queue enabled, account A queued: `GET /api/account/me` shows position and expected week — never an error shape (FR-014, SC-005).

@@ -118,7 +118,7 @@
 
 - [ ] T032 [P] [US3] Implement device-label derivation from `user_agent` in `packages/core/src/identity/device-label.ts` (shared by both surfaces — R3)
 - [ ] T033 [US3] Implement `GET /api/sessions` + `DELETE /api/sessions/[id]` + `DELETE /api/sessions?scope=others` in `apps/web/app/api/sessions/route.ts` and `apps/web/app/api/sessions/[id]/route.ts`: read `auth.sessions` via service role filtered to caller, revoke server-side (FR-039–041)
-- [ ] T034 [US3] Configure session semantics: minimum practical access-token TTL, no refresh-token expiry in `supabase/config.toml` (local) + document the production dashboard values in `specs/001-identity-account-admission/quickstart.md` (FR-038, R2)
+- [ ] T034 [US3] Configure session semantics: access-token TTL **1 hour** (founder arbitration — revocation is already immediate via per-request server validation), no refresh-token expiry, in `supabase/config.toml` (local) + document the production dashboard values in `docs/supabase-auth-config.md` (FR-038, R2)
 - [ ] T035 [US3] Build web devices view in `apps/web/app/account/devices/page.tsx`: list, disconnect one, disconnect all others (French copy)
 - [ ] T036 [P] [US3] Mirror sign-in persistence + devices view in `apps/mobile` (secure token storage per Supabase SDK defaults; same contracts)
 
@@ -185,7 +185,7 @@
 
 - [ ] T049 Document and test the FR-032 cohort-reconstruction SQL (first-subscription week, still-active at +4/8/12 weeks) as a committed query in `specs/001-identity-account-admission/cohort-query.sql` + a Vitest asserting it against fixtures (SC-004; depends on T007 columns)
 - [ ] T050 [P] Run the full `quickstart.md` validation pass (all US scenarios + queue-mode switch) against the local stack and record results in the PR description
-- [ ] T051 [P] Verify workspace-wide `tsc --noEmit` strict pass and green `pnpm test`; wire both into CI for the PR (Article XI)
+- [ ] T051 [P] Verify workspace-wide `tsc --noEmit` strict pass and green `pnpm test`; wire both into CI for the PR, **including Supabase provisioning in the pipeline** (`supabase start` or equivalent containers) so the integration tests of T015/T022/T031/T038/T045 actually run in CI (Article XI)
 
 ---
 

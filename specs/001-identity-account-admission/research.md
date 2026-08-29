@@ -20,9 +20,9 @@ Phase 0 output. Every NEEDS CLARIFICATION from the Technical Context is resolved
 
 **Problem**: GoTrue access tokens are JWTs valid until expiry (default 1 h) even after the session row is revoked. Naive local JWT verification would let a revoked session keep working for up to an hour — violating SC-009.
 
-**Decision**: two measures. (1) Set access-token TTL to the minimum practical (Supabase dashboard, e.g. 10 min) — refresh is silent, cost-free, and FR-038 lives in the refresh token, not the access token. (2) Every domain server route authenticates with `supabase.auth.getUser(jwt)` (server-side call that validates against the live session) rather than local JWT decode. A revoked session then fails on the **next request**, satisfying "no request made after the revocation succeeds" (SC-009).
+**Decision**: every domain server route authenticates with `supabase.auth.getUser(jwt)` (server-side call that validates against the live session) rather than local JWT decode. A revoked session then fails on the **next request**, satisfying "no request made after the revocation succeeds" (SC-009). **Access-token TTL: 1 hour** (founder arbitration, 2026-08-30) — since revocation is already immediate on the API side via per-request server validation, the TTL only bounds the client's direct calls to Supabase (owner-only RLS reads); a short TTL would multiply refreshes for no real gain.
 
-**Alternatives considered**: local JWT verification with a denylist table — reimplements what `getUser` already does; long TTL + denylist — more moving parts for the same guarantee.
+**Alternatives considered**: short TTL (e.g. 10 min) — rejected by founder: refresh churn without real gain; local JWT verification with a denylist table — reimplements what `getUser` already does.
 
 ## R3 — Device list & per-device revocation (FR-039–041)
 

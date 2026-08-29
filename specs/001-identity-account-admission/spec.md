@@ -206,7 +206,7 @@ This is the only requirement in the whole product that cannot be recovered later
 
 - **FR-033**: A subscription records the price that applied when it was purchased, and the date until which that price is guaranteed.
 - **FR-034**: The guarantee date is set when the subscription is created and is never recalculated afterwards.
-- **FR-035**: The system can identify, at any time, which subscriptions are approaching the end of their guaranteed price.
+- **FR-035**: The system can identify, at any time, which subscriptions are approaching the end of their guaranteed price. *Assumed deferral (founder, 2026-08-30): slice 001 captures the datum (`price_guaranteed_until`, write-once at creation); the surveillance query itself belongs to the analytics slice — see Out of scope.*
 
 ### Requirements added by clarification (session 2026-08-29)
 
@@ -316,5 +316,7 @@ Every rule below carries its surface, its market where it derives from a Calo ob
 - Spending wallet days against a subscription — the ledger model, consumption order, and valuation rules are specified here (FR-045–047) so the ledger is built right; the redemption flow itself belongs to the pricing/billing slice
 - Express Shop and one-off purchase (Article III, deferred) — announced from the start and never dependent on the queue or admission, in either queue mode; the account model must serve it (FR-052)
 - Loyalty points mechanics — no accumulation, rate, conversion, or tier is built (Article III); the wallet's unit-as-data design (FR-053) is the only accommodation
+- Biometric sign-in — deferred out of V1 (founder, 2026-08-30): OTP + long-lived session suffice; Article V and FR-008 declare it optional (MAY), no task builds it
+- FR-035 surveillance query (subscriptions approaching the end of their guaranteed price) — **assumed deferral, not a gap** (founder, 2026-08-30): the `price_guaranteed_until` datum is captured from day one (Article XIV — the data requirement), the query ships with the analytics slice; no subscription approaches its guarantee end within six months of launch
 
 *The slice document's NC-1…NC-4 were resolved by the founder on 2026-08-29 — see Clarifications above and FR-036–041.*
