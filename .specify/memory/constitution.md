@@ -1,5 +1,27 @@
 <!--
-Sync Impact Report (v4.1.0)
+Sync Impact Report (v4.2.0)
+- Version change: 4.1.0 → 4.2.0 (MINOR: new Article XIV — Evolvability)
+- Added sections:
+  - Article XIV — Evolvability: the product gains and reshapes capabilities
+    continuously across all surfaces; no design may assume the current feature
+    set is final. Five principles: business rules live in data (a new plan,
+    cycle, coupon type, delivery zone, or partner is a row, not a release);
+    every surface consumes the same shared engine (per-surface reimplementation
+    is a defect); capabilities are added by extension, not rewrite; data that
+    cannot be reconstructed later is captured from day one even if unconsumed;
+    deferred is not forbidden (Article III governs what is built, XIV governs
+    what must remain possible).
+- Modified principles: none (Article XIV generalises the spirit already present
+  in Articles I, III and IX without changing their text)
+- Removed sections: none
+- Follow-up notes:
+  - Conflicts between Article XIV and existing web code (hardcoded cycle
+    durations, day minimums, delivery fees, meal minimums) reported separately
+    on 2026-08-30; nothing corrected.
+  - First application: the admission queue is specified as a switchable
+    operating mode (spec 001, FR-048–051).
+
+Previous report (v4.1.0)
 - Version change: 4.0.0 → 4.1.0 (MINOR: Article V materially expanded — the
   founder's previous arbitration extended a customer-designed model to staff;
   corrected)
@@ -73,9 +95,9 @@ Previous report (v4.0.0):
 
 # FitNest Constitution
 
-**Version:** 4.1.0
+**Version:** 4.2.0
 **Ratified:** 26 August 2026
-**Last Amended:** 29 August 2026
+**Last Amended:** 30 August 2026
 **Scope:** The entire FitNest product — one repository, one database, two surfaces (`apps/web`, `apps/mobile`), shared business logic in `packages/core`.
 
 This document supersedes all previous versions. It replaces v3.0.0 in full.
@@ -264,9 +286,34 @@ These are historical record. Once written, they are never overwritten by later a
 
 ---
 
+## Article XIV — Evolvability
+
+The product will gain and reshape capabilities continuously across all
+surfaces — web, mobile, admin, and whatever comes next. No design may
+assume the current feature set is final.
+
+- **Business rules live in data, never in code.** Adding a plan, a
+  billing cycle, a coupon type, a delivery zone, or a partner is a row,
+  not a release.
+- **Every surface consumes the same shared engine.** A rule is
+  implemented once and served everywhere. A rule reimplemented per
+  surface is a defect, not a variation.
+- **Capabilities are added by extension, not by rewrite.** A design that
+  requires touching unrelated code to add an adjacent capability has
+  failed this article.
+- **Data that cannot be reconstructed later is captured from day one**,
+  even when the feature that consumes it is not built yet. Absence of a
+  feature is never a reason to discard a fact.
+- **Deferred is not forbidden.** A feature listed as out of scope must
+  remain cheap to add. Article III governs what is built; this article
+  governs what must remain possible.
+
+---
+
 ## Amendment Log
 
 | Date | Version | Change |
 |---|---|---|
 | 2026-08-26 | 4.0.0 | Full rewrite for monorepo scope. Article II inverted from prohibition to migration discipline. Article I no longer forbids one-off purchase. Article III recast as deferred, not impossible. Pricing, identity, wallet, cohort and traceability articles added from locked decisions. |
 | 2026-08-29 | 4.1.0 | Article V restructured into CUSTOMERS / STAFF / CORPORATE. The OTP verifies the number and is not the session mechanism. Staff accounts get their own table, credential + password auth, roles as data, and a two-admin floor. Corrects the founder's earlier arbitration that extended the customer model to staff. |
+| 2026-08-30 | 4.2.0 | Article XIV — Evolvability added: business rules in data, one shared engine for all surfaces, extension over rewrite, unrecoverable data captured from day one, deferred stays cheap to add. First applied to the admission queue, specified as a switchable operating mode. |
