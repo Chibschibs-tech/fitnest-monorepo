@@ -4,7 +4,7 @@ Phase 1 output. Both surfaces (web, mobile) consume exactly these contracts — 
 
 ## Authentication layers
 
-- **Client ↔ Supabase Auth (SDK, no custom route)**: `signInWithOtp({ phone })` sends the code; `verifyOtp({ phone, token })` verifies and opens the session. Rate limiting and cooldowns are Supabase-side (edge case: retry with fresh code, never a permanent lock).
+- **Client ↔ Supabase Auth (SDK, no custom route)**: `signInWithOtp({ phone })` sends the code; `verifyOtp({ phone, token })` verifies and opens the session. Rate limiting and cooldowns are Supabase-side (edge case: retry with fresh code, never a permanent lock). **D-059**: the actual SMS dispatch happens in the server-side Send-SMS hook worker; the client holds only the public anon key — no secret of any kind ships client-side.
 - **Client ↔ domain routes**: bearer access token; server validates via `auth.getUser()` on every request (R2 — this is what makes revocation immediate, SC-009).
 - **Interim staff routes** (`/api/admin/…`): legacy admin session (see plan.md Complexity Tracking). **Written expiry: switches to the staff model in slice 2** — the legacy mechanism (SHA-256, committed static salt) is declared obsolete and must not survive this slice. Every interim staff route writes a `staff_actions` audit row (who, when, what — see data-model.md); this is **mandatory** for first-delivery.
 
@@ -35,13 +35,13 @@ Response: account state, everything derived server-side —
 Queued users get position + expected week, never an error or empty state (FR-009, FR-014, SC-005).
 
 ### `POST /api/account/email`
-Request: `{ email }`. Stores against the account (FR-006/007). Never required outside the payment path (US5 scenario 2).
+Request: `{ email }`. Stores against the account (FR-006/007). Never required outside the payment path (US5 scenario 2). **D-053**: stored unverified (non-unique, non-identifying); the partial UNIQUE constraint applies to verified emails — verification flow dormant until transactional email exists.
 
 ### `POST /api/account/reactivate`
 Reactivates a dormant admission (FR-036): sets `admission_reactivated_at`. No queue re-entry, no blame copy.
 
 ### `GET /api/sessions` / `DELETE /api/sessions/:id`
-Device list from `auth.sessions` (R3): `[{ id, deviceLabel, ip, lastSeenAt, current }]`. DELETE revokes one session server-side, immediate effect (FR-039/040, SC-009). `DELETE /api/sessions?scope=others` revokes all but the current one (lost-phone recovery, FR-041).
+Device list from `auth.sessions` (R3): `[{ id, deviceLabel, ip, lastSeenAt, current }]`. DELETE revokes one session server-side, immediate effect (FR-039/040, SC-009). `DELETE /api/sessions?scope=others` revokes all but the current one (lost-phone recovery, FR-041). **D-053**: when the account holds a **verified email**, mass revocation from a newly-verified device is corroborated by that email (recovery proof); the branch stays dormant until transactional email exists — phone-OTP-only fallback until then.
 
 ### `GET /api/wallet`
 Response: `{ balances: [{ unit, label, amount }], entries: [{ id, unit, amount, reason, sourceType, acquiredAt }] }` — balance always computed from entries (SC-007). Read-only for clients; no consumption endpoint exists in this slice (redemption = pricing slice).
@@ -61,7 +61,7 @@ Marks a notice sent (`sent_at`, `channel`) after the manual send (FR-015, D-016)
 Request: `{ enabled: boolean }`. Disable → single transaction admits every queued account with `admitted_at = now()` + notice rows (FR-050/051). Enable → new claims queue again; the admitted stay admitted (working rule).
 
 ### `PUT /api/admin/settings/:key`
-Updates one `app_settings` row (weekly cap, reward cap, reward sizes, dormancy weeks). Effective on next read — no release (FR-010, US2 scenario 4).
+Writes a **new version row** in `app_settings_versions`, validated against `app_setting_definitions` (type + bounds — D-057); out-of-bounds values are rejected with a visible error, never clamped silently (D-027 motif). Effective on next read — no release (FR-010, US2 scenario 4). History is immutable and visible in the admin screen.
 
 ### `POST /api/admin/first-delivery`
 Request: `{ accountId }`. Manual declaration that the account's first delivery completed (interim trigger, plan.md Complexity Tracking). **Caller traceability is mandatory (founder requirement, 2026-08-30): the endpoint records WHO called it and WHEN** in `staff_actions`, in the same transaction — it engraves `first_delivery_at`, an Article IX write-once datum, and triggers a referral reward; without caller traceability a false cohort is undetectable. Atomically: writes `first_delivery_at` (write-once, FR-028), writes the audit row, and runs reward issuance — FR-020 cap, FR-021 unique number, FR-022 referrer-active evaluated **now**; on pass, wallet entry (unit `day`, size from `referral_reward_days_by_cycle` keyed on the referred person's cycle, FR-019) + `reward_state = 'issued'`; on fail, `never_eligible`. Billing dates untouched (FR-018, SC-008).

@@ -34,13 +34,13 @@ Phase 0 output. Every NEEDS CLARIFICATION from the Technical Context is resolved
 
 ## R4 — SMS provider (Q-001, open)
 
-**Decision**: deferred by founder decision — the choice blocks **implementation of live OTP delivery**, not this plan. Development and testing proceed with Supabase Auth *test phone numbers / test OTPs* (fixed codes, zero SMS sent). The integration point is pure configuration: Supabase supports Twilio, MessageBird, Vonage natively and any provider via the *Send SMS hook* — switching providers is config, not code (Article XIV compliant by construction).
+**Decision**: deferred by founder decision — the choice blocks **implementation of live OTP delivery**, not this plan. Development and testing proceed with Supabase Auth *test phone numbers / test OTPs* (fixed codes, zero SMS sent). The integration point is pure configuration: Supabase supports Twilio, MessageBird, Vonage natively and any provider via the *Send SMS hook* — switching providers is config, not code (Article XIV compliant by construction). **D-059 (2026-09-08)**: OTP dispatch goes through the server-side Send-SMS hook worker; SMS-provider credentials live only server-side; the client holds nothing but the public anon key.
 
 **Criteria recorded in decisions log (Q-001)**: Moroccan deliverability, per-SMS cost, Supabase phone-mode compatibility. Expected volume is low by design (FR-005, SC-003) — weight cost accordingly.
 
 ## R5 — Business-rule configuration storage (FR-010, FR-020, FR-036, FR-048)
 
-**Decision**: a single `app_settings` table (`key text PK`, `value jsonb`, `updated_at`), read server-side. Keys for this slice: `queue_enabled` (bool), `weekly_admission_cap` (int), `referral_reward_cap` (int, default 5), `referral_reward_days_by_cycle` (object: cycle → days), `admission_dormancy_weeks` (int, default 4). Changing any of them is an UPDATE, no release (Article XIV).
+**Decision** *(shape superseded by D-057, 2026-09-08 — see data-model § Settings)*: settings are **typed, bounded, versioned**: `app_setting_definitions` declares type and bounds per key; `app_settings_versions` is an append-only history (value validated by trigger, `changed_by`, `changed_at`); the current value is the highest version. Keys for this slice: `queue_enabled` (bool), `weekly_admission_cap` (int ≥ 0), `referral_reward_cap` (int ≥ 0, default 5), `referral_reward_days_by_cycle` (object: cycle → days), `admission_dormancy_weeks` (int ≥ 1, default 4). Changing any of them is an INSERT of a new version, no release (Article XIV). Invariants (append-only ledger, write-once dates) are **not** settings and cannot be disabled.
 
 **Rationale**: one table, one read path, JSONB gives typed-enough values without a migration per new key. Structured reference data that other tables FK against (partners, wallet units) gets real tables instead — FK integrity beats JSONB there.
 

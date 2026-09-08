@@ -7,8 +7,8 @@ Runnable scenarios proving the feature end-to-end. References: [data-model.md](.
 - `pnpm install` at repo root; Docker running.
 - `supabase start` (local stack) — the proposed migrations of this slice applied **locally only** (production apply is a founder-gated act, Article II).
 - Supabase Auth phone mode with **test phone numbers** configured (fixed OTP, zero SMS — R4). No SMS provider needed.
-- `pnpm --filter my-v0-project dev` for the web app (the package's historical name — renaming is out of this slice's scope) and `pnpm --filter @fitnest/mobile start` for surface-parity checks.
-- Seed: `app_settings` rows (`queue_enabled = true`, `weekly_admission_cap = 8`, `referral_reward_cap = 5`, `admission_dormancy_weeks = 4`, reward sizes), `wallet_units` (`day`, `mad`), one `partners` row with a short code.
+- `pnpm --filter my-v0-project dev` for the web app (the package's historical name — renaming is out of this slice's scope). Web-only slice (D-030): cross-surface checks run web ↔ web with a second browser/device.
+- Seed: `app_setting_definitions` + version-1 values (`queue_enabled = true`, `weekly_admission_cap = 8`, `referral_reward_cap = 5`, `admission_dormancy_weeks = 4`, reward sizes — typed/bounded/versioned per D-057), `wallet_units` (`day`, `mad`), one `partners` row with a short code.
 
 ## Scenario walkthroughs (map 1:1 to the spec's user stories)
 
@@ -26,10 +26,10 @@ Runnable scenarios proving the feature end-to-end. References: [data-model.md](.
 4. Change `weekly_admission_cap` via settings route → expected weeks shift on next read, no client release (US2 scenario 4).
 5. Admit up to the cap, then attempt one more → refused: the cap bounds, never admits (FR-042).
 
-### US3 — Return & cross-surface (P2)
+### US3 — Return & cross-surface (P2, verified web ↔ web per D-030)
 1. Close and reopen the web app with A's session → still signed in, **zero OTP sent** (SC-002).
-2. Sign in on mobile with the same number (one OTP) → same account id, same queue/wallet history (FR-003, SC-006).
-3. `GET /api/sessions` from either surface lists both devices; `DELETE` the other device's session, then replay a request with its old token → rejected on next request (SC-009, R2).
+2. Sign in from a second browser/device with the same number (one OTP) → same account id, same queue/wallet history (FR-003, SC-006).
+3. `GET /api/sessions` from either device lists both sessions; `DELETE` the other device's session, then replay a request with its old token → rejected on next request (SC-009, R2).
 
 ### US4 — Referral (P2)
 1. From an account with an active subscription (fixture), copy `referralCode`; claim number C with it → `referrals` row `pending`, referrer recorded permanently, **no reward yet** (FR-016/017).

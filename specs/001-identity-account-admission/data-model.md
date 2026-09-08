@@ -2,7 +2,7 @@
 
 Phase 1 output. Every table below is a **proposed migration** under `supabase/migrations/` — drafted for founder review, applied by nobody before approval (Article II, founder arbitration 2026-08-29). The DDL sketches are normative for shape, not final SQL.
 
-Conventions: new tables use UUID primary keys (`gen_random_uuid()`), `timestamptz`, snake_case. Legacy tables (`users`, `subscriptions`, …) keep their integer keys; this slice never writes to legacy identity tables.
+Conventions: new tables use UUID primary keys (`gen_random_uuid()`), `timestamptz`, snake_case. Legacy tables (`users`, `subscriptions`, …) keep their integer keys; this slice never writes to legacy identity tables. **Time (D-058)**: every domain timestamp is written at server clock (`now()`), never from a client value; storage is UTC (`timestamptz`); ISO-week boundaries for the weekly cap and cohort reconstruction are computed in **Africa/Casablanca** (single utility in `@fitnest/core/time`).
 
 ## Entity overview
 
@@ -26,7 +26,8 @@ subscriptions (legacy, extended) >── customer_accounts
 | `id` | uuid PK | |
 | `auth_user_id` | uuid UNIQUE NOT NULL → `auth.users(id)` | identity anchor bridge (R1) |
 | `phone_e164` | text UNIQUE NOT NULL | current number; uniqueness = FR-003. History in `phone_number_history` |
-| `email` | text NULL | nullable until payment (FR-006); **not unique** (spec assumption) |
+| `email` | text NULL | nullable until payment (FR-006). **D-053**: unverified email non-unique and non-identifying; a **verified** email is unique per account — partial UNIQUE index on `lower(email) WHERE email_verified_at IS NOT NULL` |
+| `email_verified_at` | timestamptz NULL | D-053: set by the future email-verification flow (dormant until transactional email exists); gates the recovery-proof path of FR-038/FR-040 |
 | `referral_code` | text UNIQUE NOT NULL | own shareable code (R12) |
 | `claimed_at` | timestamptz NOT NULL | write-once (FR-028, FR-031) |
 | `admitted_at` | timestamptz NULL | write-once; set by staff act, or immediately at claim when queue disabled (FR-051) |
@@ -107,7 +108,7 @@ Adding a unit (tomorrow: `point`) = one INSERT. No enum anywhere in code: `@fitn
 | `acquired_at` | timestamptz NOT NULL | acquisition moment — future expiration depends on it (FR-053) |
 | `created_at` | timestamptz NOT NULL | |
 
-- **Append-only**: `BEFORE UPDATE OR DELETE` trigger raises unconditionally — even service role cannot mutate (R10, SC-007). Corrections are compensating entries.
+- **Append-only**: `BEFORE UPDATE OR DELETE` trigger raises unconditionally — even service role cannot mutate (R10, SC-007). Corrections are compensating entries. **This is an invariant, not a setting (D-057): nothing configurable can disable it.**
 - Balance = `SUM(amount) GROUP BY unit` — always derived, never stored (Article VII).
 - Consumption order (FR-046: days before dirhams) and day valuation (FR-047) are `@fitnest/core` rules for the **future** redemption slice; this slice only guarantees the ledger shape they need.
 - RLS: owner SELECT; no client writes.
@@ -137,15 +138,31 @@ Server-only access; surfaced in the interim admin UI.
 
 Append-only (same trigger pattern as `wallet_entries`). **Mandatory for `first_delivery`**: it engraves `first_delivery_at` (Article IX, write-once) and triggers a referral reward — without caller traceability, a false cohort is undetectable. The other interim routes write here too; the table outlives the legacy auth it audits. Server-only access.
 
-### `app_settings` — R5 (FR-010, FR-020, FR-036, FR-048)
+### Settings — typed, bounded, versioned (D-057; supersedes the single-table R5 shape)
 
-| Column | Type |
-|---|---|
-| `key` | text PK |
-| `value` | jsonb NOT NULL |
-| `updated_at` | timestamptz NOT NULL |
+**`app_setting_definitions`** — what a setting is allowed to be:
 
-Seed keys: `queue_enabled`, `weekly_admission_cap`, `referral_reward_cap` (5), `referral_reward_days_by_cycle`, `admission_dormancy_weeks` (4). Server-only access.
+| Column | Type | Rules |
+|---|---|---|
+| `key` | text PK | e.g. `queue_enabled`, `weekly_admission_cap` |
+| `value_type` | text NOT NULL | `boolean`, `integer`, `object`, … |
+| `bounds` | jsonb NULL | e.g. `{"min": 0}` for caps, `{"min": 1}` for dormancy weeks |
+| `description` | text NOT NULL | what the setting governs |
+
+**`app_settings_versions`** — every change, forever:
+
+| Column | Type | Rules |
+|---|---|---|
+| `id` | uuid PK | |
+| `key` | text NOT NULL → `app_setting_definitions(key)` | |
+| `value` | jsonb NOT NULL | validated by trigger against `value_type` + `bounds` |
+| `version` | integer NOT NULL | monotonic per key; UNIQUE (`key`, `version`) |
+| `changed_by` | text NOT NULL | who (legacy admin id now, staff id from slice 2) |
+| `changed_at` | timestamptz NOT NULL | server clock |
+
+- **Append-only** (same trigger pattern as `wallet_entries`): a change is a new version, history is immutable. Current value = highest version per key (view `app_settings_current`).
+- Seed keys: `queue_enabled` (boolean), `weekly_admission_cap` (integer ≥ 0), `referral_reward_cap` (integer ≥ 0, 5), `referral_reward_days_by_cycle` (object), `admission_dormancy_weeks` (integer ≥ 1, 4). Server-only access.
+- **Invariants are not settings (D-057)**: ledger append-only, write-once dates, RLS posture — none of these is expressible as a setting, and no setting can disable them.
 
 ### `subscriptions` (legacy, **extended — proposed**) — FR-030, FR-032–035, FR-037
 

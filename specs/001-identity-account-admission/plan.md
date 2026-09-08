@@ -8,7 +8,7 @@
 
 Build the customer identity model from a fresh base: phone-anchored accounts verified by one-time code (no password), long-lived revocable sessions, a configuration-switchable admission queue, referral and partner attribution captured at claim time, an append-only unit-typed wallet ledger, and the cohort instrumentation that can never be reconstructed later (Article IX).
 
-Technical approach: Supabase Auth in phone/OTP mode carries identity and sessions (`auth.users` ↔ `public.customer_accounts` via `auth_user_id`, reusing the dormant `auth-supabase.ts` skeleton's intent). All domain state lives in new PostgreSQL tables shipped as **proposed** Supabase migrations (Article II: nothing applied without founder approval). Business rules — queue mode, weekly cap, referral cap and reward sizes, dormancy window, wallet units — are rows in configuration/reference tables, never constants (Article XIV). Both surfaces (Next.js web, Expo mobile) consume the same server routes and the same `@fitnest/core` domain logic; no rule is reimplemented per surface.
+Technical approach: Supabase Auth in phone/OTP mode carries identity and sessions (`auth.users` ↔ `public.customer_accounts` via `auth_user_id`, reusing the dormant `auth-supabase.ts` skeleton's intent). All domain state lives in new PostgreSQL tables shipped as **proposed** Supabase migrations (Article II: nothing applied without founder approval — gate T013, explicit). Business rules — queue mode, weekly cap, referral cap and reward sizes, dormancy window, wallet units — are rows in configuration/reference tables, never constants; settings are **typed, bounded, versioned with an immutable history** while ledger immutability is an **invariant no setting can disable** (Article XIV, D-057). Every surface consumes the same server routes and the same `@fitnest/core` domain logic; no rule is reimplemented per surface. **This slice ships web-only UI (D-030)** — `apps/mobile` stays a skeleton, mobile parity is a later slice on the same contracts. OTP dispatch runs through the server-side Send-SMS hook worker and **no secret ever reaches a client** — anon key only (D-059). All domain timestamps are server-clock; ISO weeks compute in Africa/Casablanca (D-058).
 
 ## Technical Context
 
@@ -102,10 +102,11 @@ apps/web/
     ├── supabase/        # browser + server clients (activates dormant auth-supabase.ts intent)
     └── db.ts            # existing pg pool (server-side reads/writes)
 
-apps/mobile/             # same routes, same @fitnest/core; screens mirror web claim/queue/wallet
+apps/mobile/             # UNTOUCHED in this slice (D-030, web-only) — future mobile-parity
+                         # slice consumes the same contracts and @fitnest/core
 ```
 
-**Structure Decision**: single shared backend — all domain writes go through `apps/web/app/api/*` server routes backed by `@fitnest/core` rules; web and mobile are thin clients of the same contracts (Article XIV: one engine, every surface). Supabase Auth is the only component clients talk to directly (OTP send/verify, token refresh); every domain table is behind RLS that denies client writes (research R6).
+**Structure Decision**: single shared backend — all domain writes go through `apps/web/app/api/*` server routes backed by `@fitnest/core` rules; every surface is a thin client of the same contracts (Article XIV: one engine, every surface; D-059). This slice builds the web client only (D-030). Supabase Auth is the only component clients talk to directly (OTP send/verify, token refresh — anon key only, no client secret); every domain table is behind RLS that denies client writes (research R6).
 
 ## Complexity Tracking
 

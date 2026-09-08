@@ -97,6 +97,32 @@ Un brouillon rattaché au compte, repris sur n'importe quelle surface. Pas d'ét
 Toute règle métier porte sa surface, son marché s'il s'agit d'une observation Calo, et son statut : mesuré, déduit ou supposé. Aucun rapprochement entre relevés de marchés ou de sessions différents.
 **Raison :** plusieurs erreurs d'analyse sont nées de la fusion de relevés QAR et BHD, et de la transposition d'observations du site Calo vers l'app.
 
+### D-063 · 8 sept · Vestiges d'authentification retirés
+Arbitrage P4 : la page publique `/waitlist` est supprimée (écriture morte — routes manquantes/503, table email incompatible avec la file téléphone) ; le gate next-auth de l'express-shop est désactivé (mécanisme mort, le site vit sur le cookie `session-id` — famille D-027, échec silencieux) ; les composants orphelins `navbar-auth.tsx` et `mobile-nav.tsx` sont supprimés. La lecture admin de la table `waitlist` est conservée ; le sort de la table elle-même reste un nettoyage séparé.
+
+### D-059 · 8 sept · Plan 001 : contrats partagés, OTP par le worker, aucun secret client
+Le plan de la slice 001 est contraint : toutes les surfaces consomment les mêmes contrats d'API ; l'envoi d'OTP passe par le worker côté serveur (hook Send-SMS Supabase — les identifiants du fournisseur SMS ne vivent que côté serveur) ; le client ne détient aucun secret — uniquement la clé anon publique, les écritures domaine passant par les routes serveur (RLS sans écriture cliente).
+
+### D-058 · 8 sept · Horloge serveur, fuseau Africa/Casablanca
+Toute date d'admission ou de cohorte est enregistrée à l'horloge serveur — jamais celle du client. Les bornes de semaine (plafond hebdomadaire d'admission FR-042, cohortes FR-032) se calculent en semaine ISO dans le fuseau **Africa/Casablanca**. Stockage en `timestamptz` (UTC), interprétation métier dans le fuseau de Casablanca.
+
+### D-057 · 8 sept · Paramètres versionnés, invariants non désactivables
+Les `app_settings` sont **typés, bornés, versionnés** : chaque clé déclare son type et ses bornes, chaque changement est une nouvelle version horodatée et attribuée (qui, quand), la valeur courante est la dernière version — l'historique est immuable. Le journal du wallet reste immuable : c'est un **invariant**, pas un paramètre — aucun réglage ne peut le désactiver. Amendement constitutionnel afférent : Article XIV (paramètres versionnés contre invariants non désactivables).
+
+### D-053 · 8 sept · Aucune fusion d'identités ; l'email vérifié devient unique et preuve de récupération
+Arbitrage P3 : aucune réconciliation n'est construite entre `users` (legacy) et `customer_accounts` — les identités legacy sont des artefacts de test qui meurent avec la slice comptes du personnel / checkout. L'**email vérifié** devient **unique par compte** et sert de **preuve de récupération** (amende l'hypothèse « email non unique » de la spec 001 ; FR-038 et FR-040 amendés). L'email non vérifié reste non identifiant. La vérification d'email suppose l'envoi transactionnel — inexistant à ce jour : la contrainte d'unicité se pose dès maintenant (index partiel sur email vérifié), le parcours de preuve s'active quand l'email transactionnel existera.
+
+### D-052 · 8 sept · Inscription legacy et guest checkout fermés côté serveur ; /login legacy en sursis daté
+Arbitrage P1 : `/api/auth/register` et le guest checkout sont désactivés côté serveur (410) ; plus aucun chemin public ne crée de compte email+mot de passe. `/login` legacy survit **jusqu'à la slice comptes du personnel**, sans MFA — **trou connu, borné et daté** : il ne protège que le back-office de test d'un produit sans clients réels, et meurt avec le modèle personnel (échéance déjà écrite au plan 001, Complexity Tracking).
+
+### D-033 · 8 sept · Copie produit bilingue FR et EN
+Le produit sert sa copie en français **et** en anglais. Amendement constitutionnel afférent : Article X.
+
+### D-030 · 8 sept · Slice 001 web-only
+`apps/mobile` est un squelette-vitrine (Expo 51, trois écrans lecture seule, ni auth ni stockage sécurisé, non publié). Les tâches « mirror mobile » sont retirées du découpage 001. Les garanties multi-surfaces tiennent par construction — contrats d'API partagés et `@fitnest/core` agnostiques de la surface (Article XIV), FR-003 par le modèle Supabase Auth. La parité mobile est une slice dédiée ; US3/SC-006 se vérifie web ↔ web d'ici là.
+
+*Note de numérotation : les identifiants D-028 à D-062 non listés ici correspondent à des décisions fondateur arbitrées hors journal ; ils seront consignés à leur transmission.*
+
 ### D-027 · 30 août · Route deliveries : la fiction est retirée — le repli silencieux est le motif de défaillance à traquer
 Une route de production (`api/subscriptions/[id]/deliveries`) servait des données fictives à deux surfaces client vivantes (`dashboard/components/active-subscription.tsx`, `dashboard/my-meal-plans/[id]/page.tsx`), masquée par un try/catch silencieux : la branche « données réelles » lisait `orders.selected_days` et `orders.selected_weeks`, colonnes inexistantes en production, échouait à chaque appel, et la branche mock fabriquait un calendrier complet — dates, statuts « delivered », prochaine livraison, éligibilité de pause — dans 100 % des cas, sans qu'aucune erreur ne remonte.
 
