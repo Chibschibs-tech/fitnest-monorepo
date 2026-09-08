@@ -5,9 +5,8 @@ import { ImageUpload } from "@/components/image-upload"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { CheckCircle2, ExternalLink } from "lucide-react"
+import { CheckCircle2 } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
 
 export default function WaitlistHeroImagePage() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null)
@@ -105,17 +104,6 @@ export default function WaitlistHeroImagePage() {
                       Copy URL
                     </Button>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Copy this URL and update it in <code className="bg-gray-100 px-1 rounded">apps/web/app/waitlist/page.tsx</code>
-                  </p>
-                </div>
-                <div className="pt-4 border-t">
-                  <Link href="/waitlist" target="_blank">
-                    <Button variant="outline" className="w-full">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      View Waitlist Page
-                    </Button>
-                  </Link>
                 </div>
               </div>
             )}
