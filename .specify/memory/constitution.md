@@ -93,11 +93,24 @@ Previous report (v4.0.0):
     separately (see conversation report of 2026-08-29); nothing corrected.
 -->
 
+<!--
+Sync Impact Report — v4.3.0 (2026-09-08)
+Amended: Article VIII (the server creates the payment session; card details
+are entered on the processor's hosted surface, never on a FitNest surface);
+Article X (user-facing copy served in French AND English — D-033); Article XIV
+(versioned parameters vs non-disablable invariants — D-057).
+Bump: MINOR (4.2.0 → 4.3.0). No article removed or renumbered.
+Downstream: spec 001 already amended on branch 001-identity-account-admission
+(D-053/D-057/D-058/D-059); templates unaffected. Known code divergence:
+user-facing copy is currently FR-or-EN per page, bilingual serving becomes
+the standard going forward (Article XIII.5: code is the defect).
+-->
+
 # FitNest Constitution
 
-**Version:** 4.2.0
+**Version:** 4.3.0
 **Ratified:** 26 August 2026
-**Last Amended:** 30 August 2026
+**Last Amended:** 8 September 2026
 **Scope:** The entire FitNest product — one repository, one database, two surfaces (`apps/web`, `apps/mobile`), shared business logic in `packages/core`.
 
 This document supersedes all previous versions. It replaces v3.0.0 in full.
@@ -227,7 +240,7 @@ Meal delivery is a physical good. Apple In-App Purchase and Google Play Billing 
 
 The payment processor is a Moroccan gateway, **not yet selected**. No processor SDK, brand name, or vendor-specific data model appears anywhere in this repository until that decision is made. The eliminating criterion is support for **recurring tokenised charging**.
 
-The client never talks to a processor directly. It calls a FitNest server endpoint that returns an opaque payment session. Card data, PAN and CVV never touch application code or local storage. Subscription activation is confirmed server-side; a local success callback alone never activates anything.
+The client never talks to a processor directly. **The FitNest server creates the payment session**; the client receives only an opaque reference to it. **Card details are entered on the processor's own hosted surface — never on a FitNest surface.** Card data, PAN and CVV never touch application code or local storage. Subscription activation is confirmed server-side; a local success callback alone never activates anything.
 
 Legal pages — terms of sale, privacy policy, refund and cancellation terms — are a **blocking dependency** of this feature, not a follow-up task.
 
@@ -250,7 +263,7 @@ These are historical record. Once written, they are never overwritten by later a
 - Bottom sheets, not centre modals. Minimum 44pt touch targets. Sticky, thumb-reachable primary action.
 - **Delivery zone is resolved before configuration**, not at checkout. Nobody builds a full basket to discover they cannot be served.
 - Read-tolerant offline: menus and the active subscription render from last-known state. Writes may fail loudly; reads never show a blank screen.
-- All user-facing copy is French. Code, comments, commits, specs, and this document are English.
+- All user-facing copy is served in **French and English** (D-033). Code, comments, commits, specs, and this document are English.
 - Brand: structural green `#005033`; graphic orange `#E0633A` for graphic elements only, never text; accessible orange `#B8481F` for buttons and labels; white background. No dark mode in V1.
 - No health or certification claim that cannot be substantiated. Macros are displayed on every dish; a dish without macro data is a data error, not a rendering edge case.
 
@@ -307,6 +320,12 @@ assume the current feature set is final.
 - **Deferred is not forbidden.** A feature listed as out of scope must
   remain cheap to add. Article III governs what is built; this article
   governs what must remain possible.
+- **Configured values are versioned parameters; guarantees are
+  invariants** (D-057). Every setting is typed, bounded, and versioned
+  with an immutable change history — who changed it, when, to what.
+  Invariants — append-only ledgers, write-once historical dates,
+  deny-by-default access — are never expressible as settings, and no
+  configuration can disable them.
 
 ---
 
@@ -317,3 +336,4 @@ assume the current feature set is final.
 | 2026-08-26 | 4.0.0 | Full rewrite for monorepo scope. Article II inverted from prohibition to migration discipline. Article I no longer forbids one-off purchase. Article III recast as deferred, not impossible. Pricing, identity, wallet, cohort and traceability articles added from locked decisions. |
 | 2026-08-29 | 4.1.0 | Article V restructured into CUSTOMERS / STAFF / CORPORATE. The OTP verifies the number and is not the session mechanism. Staff accounts get their own table, credential + password auth, roles as data, and a two-admin floor. Corrects the founder's earlier arbitration that extended the customer model to staff. |
 | 2026-08-30 | 4.2.0 | Article XIV — Evolvability added: business rules in data, one shared engine for all surfaces, extension over rewrite, unrecoverable data captured from day one, deferred stays cheap to add. First applied to the admission queue, specified as a switchable operating mode. |
+| 2026-09-08 | 4.3.0 | Article VIII: the server creates the payment session and card details are entered on the processor's hosted surface, never on a FitNest surface. Article X: user-facing copy served in French and English (D-033). Article XIV: versioned parameters (typed, bounded, immutable change history) distinguished from non-disablable invariants (D-057). |
