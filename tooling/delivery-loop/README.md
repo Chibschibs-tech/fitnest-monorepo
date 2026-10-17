@@ -18,9 +18,11 @@ node tooling/delivery-loop/src/preflight.mjs
 The last command intentionally exits **2**. It reports missing integrations and
 cannot be enabled by flipping configuration booleans. The existing application
 CI still runs separately; these tests do not establish application readiness.
-The dedicated workflow is supplied as `workflow-template.yml`, not activated.
-GitHub rejected its write under `.github/workflows/` with HTTP 403; ordinary
-source-file writes succeed. Its activation remains a required gate before merge.
+The dedicated workflow is installed at `.github/workflows/delivery-loop.yml`.
+Workflow-write permission was confirmed by a successful commit and read-back on
+2026-10-17. Both this job and existing application CI must pass on the latest PR
+head before merge. `workflow-template.yml` retains the reviewed initial template;
+the active workflow is the source of truth for subsequent changes.
 
 The demo creates a temporary Git repository, submits a deliberately defective
 cost-calculation fixture, observes failing acceptance tests, then submits the
@@ -39,7 +41,7 @@ Logs and a structured report are written under `runtime/` and ignored by Git.
 | `fixtures/recipe-cost.mjs` | Demonstration input only; not an application pricing engine |
 | `test/` | Controller refusal cases, persistence and fixture acceptance |
 | `examples/` | Demo contract and policy; not live authorization |
-| `workflow-template.yml` | Reviewed workflow template; requires authorized installation under `.github/workflows/delivery-loop.yml` |
+| `workflow-template.yml` | Initial reviewed template; active configuration is `.github/workflows/delivery-loop.yml` |
 | `docs/integration.md` | Remaining adapters, controls and rollout sequence |
 
 `applyEvent` is a trusted internal reducer, not an authenticated API. A string
