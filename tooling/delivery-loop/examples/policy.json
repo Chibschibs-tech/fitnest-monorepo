@@ -1,0 +1,14 @@
+{
+  "maxAttempts": 3,
+  "maxCostMicros": 1000000,
+  "reservationMicros": 300000,
+  "attemptTimeoutMs": 600000,
+  "requiredChecks": [
+    "syntax",
+    "acceptance"
+  ],
+  "productionApprovers": [
+    "founder-identity-to-resolve"
+  ],
+  "note": "Simulation only: USD 1 accounting budget, USD 0.30 reservation per attempt. No paid calls. Live use needs an authenticated meter and an enforced provider/proxy limit."
+}
