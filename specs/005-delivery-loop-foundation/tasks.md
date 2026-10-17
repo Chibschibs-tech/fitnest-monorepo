@@ -7,10 +7,9 @@
 - [x] T003 Integrate the bounded reducer and single-host state adapter.
 - [x] T004 Keep recipe acceptance as an isolated fixture and demonstrate repair.
 - [x] T005 Add controller/store refusal tests and restart evidence assertions.
-- [ ] T006 Install the prepared `workflow-template.yml` at
-  `.github/workflows/delivery-loop.yml`. GitHub rejected that path with HTTP 403;
-  ordinary source-file writes succeed. Template validation is complete;
-  activation and remote execution remain blocked.
+- [x] T006 Install the prepared workflow at `.github/workflows/delivery-loop.yml`.
+  Permission updated by the maintainer; installation and read-back verified at
+  `0ef50e647d8f546e8d6bbf186bd399b0b4e291ac` on 2026-10-17. Remote pass is T008.
 - [x] T007 Run local validation and explicitly report the disabled live adapters.
 
 ## Gates still open
