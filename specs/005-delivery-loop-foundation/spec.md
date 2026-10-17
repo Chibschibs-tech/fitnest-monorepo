@@ -10,7 +10,7 @@ attempts and reviewable evidence. A successful model response must not be treate
 as a tested change, a successful deployment or founder approval.
 
 Deliver a deterministic controller, a local persistence adapter, a reproducible
-failure/correction demonstration and an isolated CI workflow template. The first integration
+failure/correction demonstration and an isolated CI workflow. The first integration
 makes the controller reviewable in the real repository without activating an
 unqualified model runner or changing product behavior.
 
@@ -49,8 +49,10 @@ schema. Source provenance and this explicit limit must travel with the fixture.
 
 ## Definition of done
 
-Local tests and the scripted failure/correction demo pass. The dedicated workflow must be activated to
-run the same commands and retain evidence without exposing secrets; this gate
-is currently blocked by a GitHub HTTP 403 on the workflow path. A draft PR
-contains exact scope, validation and remaining integration work. Green CI and
-review are required before merge; no claim of live autonomy is made.
+Local tests and the scripted failure/correction demo pass. The dedicated workflow
+is installed at `.github/workflows/delivery-loop.yml` after the workflow-write
+permission update on 2026-10-17. It runs the same commands and retains evidence
+without deployment secrets. A draft PR contains exact scope, validation and
+remaining integration work. Both foundation and application CI must pass on the
+latest PR head, and review is required before merge. Workflow installation alone
+does not establish a passing run or live autonomy.
