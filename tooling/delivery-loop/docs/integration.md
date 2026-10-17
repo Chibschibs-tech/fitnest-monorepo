@@ -11,16 +11,22 @@
 - Connector read/write capability is available. That is not evidence of a
   configured live runner, secrets, staging or production permissions.
 
-## Workflow publication blocker
+## Workflow installed; execution remains a separate gate
 
-On 2026-10-17, branch creation and an ordinary source-file commit succeeded,
-but GitHub returned HTTP 403 for `.github/workflows/delivery-loop.yml`. Read-back
-returned 404. No automatic retry or alternative execution route was attempted.
-The exact workflow is retained as `workflow-template.yml` for review. It is not
-a discovered GitHub Actions workflow at that location. An authorized maintainer
-must install it at the intended path or grant the connector credential the
-required workflow-writing permission. The precise credential type is not known.
-Existing application CI remains separate; its success cannot stand in for this job.
+The initial workflow-path write returned HTTP 403. After the maintainer confirmed
+the permission update, a new authorized write installed
+`.github/workflows/delivery-loop.yml` in commit
+`0ef50e647d8f546e8d6bbf186bd399b0b4e291ac` on 2026-10-17. Read-back confirmed
+that it matches the reviewed template. The publication permission blocker is
+resolved; the original PR description records the earlier state.
+
+The workflow runs tests, the scripted correction demo and the disabled-live
+preflight, then retains evidence for seven days. It has read-only repository
+permission, pinned actions and a five-minute job timeout. It executes no LLM
+calls or deployments. The active workflow is authoritative; the retained template
+is the initial reviewed copy. Verify both foundation and application CI against
+the latest PR head before merge. Earlier application CI passed at
+`d525812f9ef9b25bc21c42d8eeaa02183882958d`; this is not evidence for a later head.
 
 ## Implementation sequence
 
