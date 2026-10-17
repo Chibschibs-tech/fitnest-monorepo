@@ -1,0 +1,69 @@
+name: Delivery loop foundation
+
+on:
+  pull_request:
+    paths:
+      - 'tooling/delivery-loop/**'
+      - 'specs/005-delivery-loop-foundation/**'
+      - '.github/workflows/delivery-loop.yml'
+  push:
+    branches: [main, delivery-loop-foundation]
+    paths:
+      - 'tooling/delivery-loop/**'
+      - 'specs/005-delivery-loop-foundation/**'
+      - '.github/workflows/delivery-loop.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: delivery-loop-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  foundation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: tooling/delivery-loop
+        shell: bash
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Set up pinned tooling runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: tooling/delivery-loop/.node-version
+      - name: Validate syntax and run acceptance tests
+        run: |
+          mkdir -p runtime/ci
+          for file in src/*.mjs fixtures/*.mjs test/*.mjs; do
+            node --check "$file"
+          done
+          node --test --test-reporter=tap test/*.test.mjs | tee runtime/ci/tests.tap
+      - name: Demonstrate rejected candidate and correction
+        run: node src/demo.mjs | tee runtime/ci/demo.txt
+      - name: Verify live execution stays disabled
+        run: |
+          set +e
+          node src/preflight.mjs > runtime/ci/preflight.json
+          result=$?
+          set -e
+          test "$result" -eq 2
+          node --input-type=module -e '
+            import { readFileSync } from "node:fs";
+            const report = JSON.parse(readFileSync("runtime/ci/preflight.json", "utf8"));
+            if (report.status !== "blocked" || report.liveExecutionEnabled !== false) process.exit(1);
+          '
+      - name: Retain local demonstration evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: delivery-loop-${{ github.run_id }}-${{ github.run_attempt }}
+          path: tooling/delivery-loop/runtime/
+          if-no-files-found: error
+          retention-days: 7

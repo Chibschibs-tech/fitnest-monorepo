@@ -1,0 +1,19 @@
+{
+  "mode": "disabled",
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "repositoryHeadVerified": true,
+  "githubIdentityVerified": true,
+  "githubWriteEnabled": true,
+  "executorVersionPinned": false,
+  "executorSandboxVerified": false,
+  "llmCredentialConfigured": false,
+  "billingLimiterVerified": false,
+  "reviewerConfigured": false,
+  "durableStoreConfigured": false,
+  "stagingIsolated": false,
+  "stagingSmokeChecksConfigured": false,
+  "productionGateConfigured": false,
+  "verifiedBaseSha": "5333ca88f52e9c0ec7daad79cfd919034d863af2",
+  "verifiedAt": "2026-10-17",
+  "note": "Observed connector capabilities are an inventory snapshot, not proof of a live runner integration or authorization to deploy."
+}
