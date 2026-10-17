@@ -1,0 +1,27 @@
+{
+  "id": "MEALS-COST-001",
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "baseSha": null,
+  "specRefs": [
+    "specs/005-delivery-loop-foundation/spec.md#acceptance",
+    "Meals evolution proposal dated 2026-09-11, sections 3.1 and 3.3"
+  ],
+  "acceptanceIds": [
+    "COST-UNKNOWN",
+    "COST-ZERO",
+    "COST-UNITS",
+    "COST-ROUNDING"
+  ],
+  "dependsOn": [],
+  "allowedFiles": [
+    "fixtures/recipe-cost.mjs"
+  ],
+  "protectedFiles": [
+    "src/loop.mjs",
+    "src/store.mjs",
+    "src/preflight.mjs",
+    "test/recipe-cost.test.mjs",
+    "test/loop.test.mjs"
+  ],
+  "integrationNote": "Fixture paths are relative to the temporary demonstration repository. Live tasks require a verified current commit and reviewed monorepo paths."
+}
