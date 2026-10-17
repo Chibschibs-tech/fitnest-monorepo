@@ -5,6 +5,11 @@ Décision technique retenue pour le pilote ; intégrations et qualité sur Fitne
 à qualifier. Ce document n'active aucun appel payant et ne vaut pas approbation
 du budget proposé.
 
+Extension de périmètre le même jour : la [plateforme multi-projet Ekwip](multi-project-platform.md)
+porte désormais le pilotage commun ; Fitnest est son premier projet pilote. Ce
+document conserve les choix de modèles et critères du pilote. La nouvelle
+architecture prévaut pour l'implantation du dashboard et l'orchestration durable.
+
 ## 1. Choix des modèles
 
 | Rôle | Modèle retenu | Travail confié | Limites |
@@ -52,9 +57,12 @@ budget ; le modèle ne choisit pas ses propres plafonds.
 
 Implantation retenue :
 
-- Dépôt unique : `Chibschibs-tech/fitnest-monorepo`.
-- Exécutions : jobs GitHub Actions déclenchés par le contrôleur, avec espace
-  éphémère et isolation du processus. Une tâche active à la fois au démarrage.
+- Dépôt de l'application pilote : `Chibschibs-tech/fitnest-monorepo`. La plateforme
+  commune aura un dépôt privé distinct ; les applications gardent leurs dépôts.
+- Orchestration durable : Temporal et workers TypeScript, selon le cadrage
+  multi-projet. Exécutions initiales : jobs GitHub Actions déclenchés par le
+  contrôleur, avec espace éphémère et isolation du processus. Une tâche active à
+  la fois au démarrage.
 - OpenCode : version épinglée après qualification ; agents configurés par rôle,
   permissions et limite `steps`. Utiliser le SDK pour les sessions et événements,
   ou la sortie JSON de la CLI pour l'adaptateur initial.
@@ -66,9 +74,9 @@ Implantation retenue :
   tâche. Les accès directs aux API fournisseurs sont bloqués depuis son espace.
 - Écritures GitHub et déploiements : services distincts du processus de code ; le
   runner ne possède pas de secret de production.
-- Dashboard : interface interne Next.js, dans le même monorepo, avec
-  authentification et permissions propres. Son hébergement web peut être Vercel ;
-  les sessions longues OpenCode tournent dans le runner.
+- Dashboard : interface interne Next.js de la plateforme Ekwip, avec
+  authentification et isolation par client/projet. Son hébergement web peut être
+  Vercel ; les sessions longues OpenCode tournent dans le runner.
 
 OpenCode documente les fournisseurs Moonshot AI, DeepSeek et Z.AI, le modèle par
 agent, les permissions, le SDK et les événements. La présence d'un fournisseur
@@ -211,6 +219,7 @@ Ordre de réalisation : registre des tâches/coûts et écran connecté en mode
 simulation clairement identifié ; adaptateur OpenCode avec comptage ; première
 tâche réelle bornée ; préproduction ; pilote ; autorisation production. Les
 tests simulés ne sont jamais présentés comme une dépense ou une livraison réelle.
+Cet ordre pour le pilote s'inscrit dans les lots P1 à P4 du cadrage multi-projet.
 
 ## Sources officielles consultées
 
