@@ -10,10 +10,13 @@ Baseline reviewed: main `5333ca88f52e9c0ec7daad79cfd919034d863af2` and slice 001
 | COST-* | `tooling/delivery-loop/test/recipe-cost.test.mjs` |
 | Actual local correction cycle | `src/demo.mjs` runs syntax and acceptance commands on two real local commits |
 
-No application path imports this package. New files are confined to tooling and spec 005. The workflow is
-currently a template within tooling, because GitHub refused the active workflow
-path with HTTP 403. No remote foundation-check success is claimed. The existing pnpm workspace and application CI remain
-the baseline; this pass is not a substitute for their checks.
+No application path imports this package. New files are confined to tooling,
+spec 005 and `.github/workflows/delivery-loop.yml`. The workflow was installed
+and read back after the maintainer updated workflow permission on 2026-10-17.
+The original HTTP 403 publication blocker is resolved. Installation is distinct
+from passing CI: remote evidence must match the latest PR head. The existing
+pnpm workspace and application CI remain the baseline; foundation checks do not
+replace the application build.
 
 Known limits are intentional and visible: adapters are not authenticated or
 implemented; the store is single-host; no real LLM/reviewer is used; budget checks
