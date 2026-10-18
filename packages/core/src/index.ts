@@ -9,3 +9,4 @@
 export * from "./pricing-calculator"
 export * from "./compose-pricing"
 export * from "./time/index"
+export * from "./identity/session"
