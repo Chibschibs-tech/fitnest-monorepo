@@ -212,3 +212,10 @@ Défauts constatés, arbitrés « consignés, aucune action », à traiter dans 
 ### Réseau social in-app (V2+)
 Discussions entre clients, conseils fitness et lifestyle, avis sur les repas et produits FitNest. Ouvert aux abonnés ET aux clients Express Shop.
 **Conséquence Article XIV, à respecter dès que la notation existera :** un avis est ATTRIBUÉ et DATÉ, jamais un simple compteur agrégé. Le compteur se recalcule, l'attribution est irrécupérable.
+
+
+## 2026-10-18 — Delivery baseline synchronization
+
+The founder authorized starting the complete Fitnest delivery plan. The supplied product journal through 2026-09-11 is integrated in [the product baseline](delivery/product-baseline.md). Historical repository D-023–027 and D-052/053 collide with that journal's numbering; they remain above unchanged and are referenced as REPO-D identifiers in the new delivery package. No new business arbitration is implied.
+
+[Security requirements](delivery/security-requirements.md) and the full [backlog](delivery/backlog.json) replace the missing-English-SEC-document blocker. Implementation evidence, constitution PR #5 integration, scoped clarifications and the explicit T013 migration gate remain separate. No migration or production deployment was performed by this synchronization.
