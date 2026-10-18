@@ -607,7 +607,7 @@
       "title": "Platform and data foundation — design and contracts",
       "kind": "contract",
       "owner": "architecture/platform",
-      "status": "planned",
+      "status": "review",
       "outputs": [
         "versioned plan/API/data contracts",
         "acceptance fixtures"
@@ -646,12 +646,19 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "implementation_proposal",
+          "ref": "docs/delivery/foundation-contract.md",
+          "execution_origin": "direct_development_session"
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
       "attempts": 0,
-      "max_attempts": null
+      "max_attempts": null,
+      "review_scope": "Runtime/API/environment contract and D-058 executable prototype under review; not complete platform acceptance."
     },
     {
       "id": "B01-I",
@@ -3540,7 +3547,7 @@
       "title": "Fitnest executor qualification — design and contracts",
       "kind": "contract",
       "owner": "platform/security/QA",
-      "status": "planned",
+      "status": "review",
       "outputs": [
         "versioned plan/API/data contracts",
         "acceptance fixtures"
@@ -3567,12 +3574,19 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "implementation_proposal",
+          "ref": "docs/delivery/executor-gap-review.md",
+          "execution_origin": "direct_development_session"
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
       "attempts": 0,
-      "max_attempts": null
+      "max_attempts": null,
+      "review_scope": "Actual Ekwip pilot restrictions inspected. Fitnest adapter/scheduler/import is still to implement and qualify."
     },
     {
       "id": "BX-I",
@@ -3673,7 +3687,7 @@
       "title": "Add Vitest (pinned) at workspace root and wire `pnpm test`; replace the broken `packages/core` test script (`node --experimental-s",
       "kind": "implementation",
       "owner": "identity/backend + QA",
-      "status": "planned",
+      "status": "review",
       "outputs": [
         "T001 implementation/evidence in source task"
       ],
@@ -3718,13 +3732,20 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "implementation_proposal",
+          "ref": "docs/delivery/foundation-contract.md",
+          "execution_origin": "direct_development_session"
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
       "attempts": 0,
       "max_attempts": null,
-      "legacy_id": "T001"
+      "legacy_id": "T001",
+      "review_scope": "Pinned Vitest and root/core commands pass locally (13 time cases); strict core typecheck passes. CI outcome pending."
     },
     {
       "id": "S001-T002",
@@ -3732,7 +3753,7 @@
       "title": "Add `@supabase/supabase-js` + `@supabase/ssr` (pinned) to `apps/web/package.json`; document `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUB",
       "kind": "implementation",
       "owner": "identity/backend + QA",
-      "status": "planned",
+      "status": "review",
       "outputs": [
         "T002 implementation/evidence in source task"
       ],
@@ -3778,13 +3799,20 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "implementation_proposal",
+          "ref": "docs/delivery/foundation-contract.md",
+          "execution_origin": "direct_development_session"
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
       "attempts": 0,
       "max_attempts": null,
-      "legacy_id": "T002"
+      "legacy_id": "T002",
+      "review_scope": "Supabase SDK versions pinned to existing resolutions; public/server env placeholders documented. No production auth integration claimed."
     },
     {
       "id": "S001-T003",
@@ -3792,7 +3820,7 @@
       "title": "Configure Supabase Auth phone mode with test phone numbers (fixed OTP, zero SMS — research R4) in `supabase/config.toml` for the l",
       "kind": "implementation",
       "owner": "identity/backend + QA",
-      "status": "planned",
+      "status": "review",
       "outputs": [
         "T003 implementation/evidence in source task"
       ],
@@ -3838,13 +3866,20 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "implementation_proposal",
+          "ref": "docs/delivery/foundation-contract.md",
+          "execution_origin": "direct_development_session"
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
       "attempts": 0,
       "max_attempts": null,
-      "legacy_id": "T003"
+      "legacy_id": "T003",
+      "review_scope": "Local config and fixed-OTP qualification workflow prepared. CLI configuration accepted; Docker unavailable locally. Auth integration result pending."
     },
     {
       "id": "S001-T004",
@@ -4455,7 +4490,13 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "prototype",
+          "ref": "packages/core/src/time/time.test.ts",
+          "note": "D-058 pure time prototype qualifies foundation tooling only. Full task and T008 dependency remain open."
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
@@ -6967,7 +7008,7 @@
       "title": "Actual schema/exposure and privilege inventory",
       "kind": "contract",
       "owner": "security/backend",
-      "status": "planned",
+      "status": "review",
       "outputs": [
         "ADR and isolated acceptance fixtures"
       ],
@@ -7002,12 +7043,19 @@
       "merge_gates": [
         "G-CONSTITUTION"
       ],
-      "evidence": [],
+      "evidence": [
+        {
+          "kind": "implementation_proposal",
+          "ref": "docs/delivery/schema-exposure-review.md",
+          "execution_origin": "direct_development_session"
+        }
+      ],
       "budget_usd": null,
       "cost_estimate_usd": null,
       "cost_reconciled_usd": null,
       "attempts": 0,
-      "max_attempts": null
+      "max_attempts": null,
+      "review_scope": "Live metadata and effective privileges captured read-only. Data API exposure/runtime role and integration tests remain open."
     },
     {
       "id": "S001-SEC-C",
