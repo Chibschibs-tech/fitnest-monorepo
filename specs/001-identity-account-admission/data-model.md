@@ -1,5 +1,7 @@
 # Data Model — Identity, Account & Admission (001)
 
+2026-10-18 aligned design. References use docs/delivery/product-baseline.md. S001-SEC-B/C must finalize auth/session and privilege design before migrations are drafted. No schema is applied here.
+
 Phase 1 output. Every table below is a **proposed migration** under `supabase/migrations/` — drafted for founder review, applied by nobody before approval (Article II, founder arbitration 2026-08-29). The DDL sketches are normative for shape, not final SQL.
 
 Conventions: new tables use UUID primary keys (`gen_random_uuid()`), `timestamptz`, snake_case. Legacy tables (`users`, `subscriptions`, …) keep their integer keys; this slice never writes to legacy identity tables. **Time (D-058)**: every domain timestamp is written at server clock (`now()`), never from a client value; storage is UTC (`timestamptz`); ISO-week boundaries for the weekly cap and cohort reconstruction are computed in **Africa/Casablanca** (single utility in `@fitnest/core/time`).
@@ -27,7 +29,7 @@ subscriptions (legacy, extended) >── customer_accounts
 | `auth_user_id` | uuid UNIQUE NOT NULL → `auth.users(id)` | identity anchor bridge (R1) |
 | `phone_e164` | text UNIQUE NOT NULL | current number; uniqueness = FR-003. History in `phone_number_history` |
 | `email` | text NULL | nullable until payment (FR-006). **D-053**: unverified email non-unique and non-identifying; a **verified** email is unique per account — partial UNIQUE index on `lower(email) WHERE email_verified_at IS NOT NULL` |
-| `email_verified_at` | timestamptz NULL | D-053: set by the future email-verification flow (dormant until transactional email exists); gates the recovery-proof path of FR-038/FR-040 |
+| `email_verified_at` | timestamptz NULL | D-053: set by the future email-verification flow (required before public payment/risky recovery); gates the recovery-proof path of FR-038/FR-040 |
 | `referral_code` | text UNIQUE NOT NULL | own shareable code (R12) |
 | `claimed_at` | timestamptz NOT NULL | write-once (FR-028, FR-031) |
 | `admitted_at` | timestamptz NULL | write-once; set by staff act, or immediately at claim when queue disabled (FR-051) |
@@ -42,7 +44,7 @@ subscriptions (legacy, extended) >── customer_accounts
 - **Account states (FR-052)** are all derived, never stored as a status column: *queued* = `admitted_at IS NULL` (queue active); *admitted* = `admitted_at IS NOT NULL`; *dormant* = derivation above; *active-subscriber* = ≥1 active row in `subscriptions` for this account (FR-037: model N, UI 1).
 - **Queue position** is derived: rank by `claimed_at` among `admitted_at IS NULL` (R8). No position column exists.
 - **Write-once enforcement**: `BEFORE UPDATE` trigger rejecting any change to `claimed_at`, `admitted_at` (once non-null), `first_subscribed_at`, `first_delivery_at`, `acquisition_source`, `referred_by_account_id`, `partner_id` (FR-031).
-- RLS: owner may SELECT own row; no client writes (R6).
+- RLS: deny direct client domain access by default; owner reads use authorized API. Any direct owner-read exception must also enforce live session/risk clearance (R6).
 
 ### `phone_number_history` — FR-044
 
@@ -81,8 +83,8 @@ Adding a partner is a row (Article XIV). Server-only access.
 | `reward_wallet_entry_id` | uuid NULL → `wallet_entries(id)` | set when issued (SC-008 traceability) |
 | `reward_evaluated_at` | timestamptz NULL | moment of FR-022 evaluation (first delivery completed) |
 
-- Self-referral rejected at claim (edge case). Cap check (FR-020) counts `reward_state = 'issued'` per referrer against `app_settings.referral_reward_cap` **at issuance**.
-- RLS: referrer may SELECT own rows (their referral activity); no client writes.
+- Self-referral rejected at claim (edge case). Cap check (FR-020) counts `reward_state = 'issued'` per referrer against `app_settings_current.referral_reward_cap` **at issuance**.
+- RLS: deny direct client domain access; API returns only the referrer's activity after owner/session checks.
 
 ### `wallet_units` — FR-053 (R9)
 
@@ -108,10 +110,10 @@ Adding a unit (tomorrow: `point`) = one INSERT. No enum anywhere in code: `@fitn
 | `acquired_at` | timestamptz NOT NULL | acquisition moment — future expiration depends on it (FR-053) |
 | `created_at` | timestamptz NOT NULL | |
 
-- **Append-only**: `BEFORE UPDATE OR DELETE` trigger raises unconditionally — even service role cannot mutate (R10, SC-007). Corrections are compensating entries. **This is an invariant, not a setting (D-057): nothing configurable can disable it.**
+- **Append-only**: `BEFORE UPDATE OR DELETE` trigger raises unconditionally — runtime roles cannot mutate; privileged schema administration is separately controlled (R10, SC-007). Corrections are compensating entries. **This is an invariant, not a setting (D-057): nothing configurable can disable it.**
 - Balance = `SUM(amount) GROUP BY unit` — always derived, never stored (Article VII).
 - Consumption order (FR-046: days before dirhams) and day valuation (FR-047) are `@fitnest/core` rules for the **future** redemption slice; this slice only guarantees the ledger shape they need.
-- RLS: owner SELECT; no client writes.
+- RLS: no direct client domain access by default; authorized owner API only; any exception needs the R6 proof.
 
 ### `admission_notices` — FR-015
 
@@ -123,20 +125,20 @@ Adding a unit (tomorrow: `point`) = one INSERT. No enum anywhere in code: `@fitn
 | `sent_at` | timestamptz NULL | staff marks after manual send (D-016) |
 | `channel` | text NULL | free text at launch (whatsapp/sms/call) |
 
-Server-only access; surfaced in the interim admin UI.
+Server-only access; surfaced in the 003 protected admin UI.
 
-### `staff_actions` — audit of interim staff acts (founder requirement, 2026-08-30)
+### `staff_actions` — audit of authorized staff acts (founder requirement, 2026-08-30)
 
 | Column | Type | Rules |
 |---|---|---|
 | `id` | uuid PK | |
 | `action` | text NOT NULL | `admission`, `queue_mode_change`, `notice_sent`, `first_delivery`, `setting_change` |
 | `account_id` | uuid NULL → `customer_accounts(id)` | the affected account, when applicable |
-| `performed_by` | text NOT NULL | caller identity (legacy admin identifier now; staff account id from slice 2) |
+| `performed_by` | text NOT NULL | validated 003 staff identity or explicit system actor; no arbitrary supplied actor |
 | `performed_at` | timestamptz NOT NULL | |
 | `details` | jsonb NULL | e.g. old/new setting value, notice channel |
 
-Append-only (same trigger pattern as `wallet_entries`). **Mandatory for `first_delivery`**: it engraves `first_delivery_at` (Article IX, write-once) and triggers a referral reward — without caller traceability, a false cohort is undetectable. The other interim routes write here too; the table outlives the legacy auth it audits. Server-only access.
+Append-only (same trigger pattern as `wallet_entries`). **Mandatory for `first_delivery`**: it engraves `first_delivery_at` (Article IX, write-once) and triggers a referral reward — without caller traceability, a false cohort is undetectable. Other staff routes write here too; legacy test history, if retained, is separately identified and never grants authority. Server-only access.
 
 ### Settings — typed, bounded, versioned (D-057; supersedes the single-table R5 shape)
 
@@ -157,7 +159,7 @@ Append-only (same trigger pattern as `wallet_entries`). **Mandatory for `first_d
 | `key` | text NOT NULL → `app_setting_definitions(key)` | |
 | `value` | jsonb NOT NULL | validated by trigger against `value_type` + `bounds` |
 | `version` | integer NOT NULL | monotonic per key; UNIQUE (`key`, `version`) |
-| `changed_by` | text NOT NULL | who (legacy admin id now, staff id from slice 2) |
+| `changed_by` | text NOT NULL | validated staff identity from 003, or explicit bootstrap system actor; no legacy free-text authority |
 | `changed_at` | timestamptz NOT NULL | server clock |
 
 - **Append-only** (same trigger pattern as `wallet_entries`): a change is a new version, history is immutable. Current value = highest version per key (view `app_settings_current`).
@@ -176,13 +178,13 @@ Existing production table (integer PK, frozen pricing already present: `price_pe
 
 FR-035 (guarantee-expiry surveillance) is a query over `price_guaranteed_until`, no extra structure.
 
-## Affiliation — decided, deliberately absent (D-025, R13)
+## Affiliation — decided, deliberately absent (REPO-D-025, R13)
 
 Fitnest Pro and member-condition partnerships are **account-carried affiliations granting automatic discounts** — no parallel price grid, `meal_type_prices` stays the single source (Article IV). Nothing is built in this slice and no column is added: adding affiliation later is a reference table plus one account reference — a row, not a refactor (Article XIV). Distinct from `partners` above: attribution is a write-once claim-time fact; an affiliation is an ongoing condition. The pricing-engine identity input and the discount-inclusive freeze it requires are recorded in [contracts/api.md](./contracts/api.md) § internal write contracts.
 
-## Sessions & devices — no domain table
+## Sessions and risk clearance — design proof required
 
-`auth.sessions` (Supabase) is the device list (R3). No `devices` table is created; the plan deliberately avoids a second source of truth. Device labels derive from `user_agent` at display time.
+Provider sessions are not automatically accessible through the public data API. S001-SEC-C must select a supported owner-scoped listing/revocation design, bounded-lifetime enforcement and any app-side risk/revocation records. Such records supplement provider auth; they do not store raw JWTs. Do not assume a no-domain-table decision before proving immediate revocation and recovery clearance across all paths.
 
 ## State transitions
 
@@ -202,9 +204,19 @@ Queue mode: enabled ⇄ disabled (app_settings). On disable: one transaction adm
 
 ## Validation rules (enforced server-side, tested per Article XI)
 
-- Claim is **idempotent per phone**: existing `phone_e164` → return existing account, no new attribution (FR-016a, edge case 1).
+- Claim is **idempotent per phone**: existing `phone_e164` + cleared ownership → return existing account; risky principal receives proof-required without history, no new attribution (FR-016a, edge case 1).
 - Attribution XOR: `referred_by_account_id` and `partner_id` never both set; consistent with `acquisition_source`. CHECK constraint.
 - Self-referral: `referred_by_account_id <> id`. CHECK constraint.
-- Email format validated at capture (FR-006 boundary); never unique.
-- Admission cap: at admission time, `COUNT(admitted this ISO week) < weekly_admission_cap` — bounds, never admits (FR-042).
+- Email format validated at capture; verification bound to account. Verified normalized email is unique; unverified email is not. Concurrent verification must enforce the partial unique constraint.
+- Admission cap: serialize the weekly counter/lock and admission transaction; `COUNT(admitted this ISO week) < weekly_admission_cap` — bounds, never admits (FR-042).
 - Reward issuance transaction: FR-021 (unique `referred_phone_e164` with an issued reward), FR-020 (cap), FR-022 (referrer has an active subscription **now**) all evaluated at issuance; wallet entry (unit `day`, amount from `referral_reward_days_by_cycle`) and `reward_state='issued'` written atomically.
+
+
+## Required migration-design completion before T004–T007
+
+- Inventory current schema and privileges first; old integer subscriptions/new UUID accounts need an explicit non-destructive bridge, not identity fusion. No legacy data deletion based on an old assumption.
+- Source-unique ledger business keys and idempotency requests, serialized balances/referral caps, compensation links and redemption snapshots must be designed. Monetary representation/rounding is exact; the current numeric sketch does not settle all unit scales.
+- Phone-history policy must distinguish current ownership from historical number eligibility; verified email constraint and risk clearance are mandatory before history access.
+- Audit/settings and wallet runtime roles cannot UPDATE/DELETE/TRUNCATE or alter triggers. Schema owners remain privileged; include their operational controls.
+- Every new or legacy exposed relation/view/function/storage channel is checked before public credentials are shipped. Default is no direct client domain access.
+- Approval package includes SQL order, forward/backfill strategy, compatibility, restore/rollback evidence, concurrent tests and T013 signature. These bullet points are design requirements, not executed migrations.

@@ -1,75 +1,48 @@
-# API Contracts — Identity, Account & Admission (001)
+# API contracts — 001
 
-Phase 1 output. Both surfaces (web, mobile) consume exactly these contracts — no rule is reimplemented client-side (Article XIV). All routes live in `apps/web/app/api/`. Errors follow one shape: `{ error: { code, message } }` with French user-facing messages; a queued person never receives a rejection-shaped response (FR-014).
+Shared versioned contracts for web/app/staff; implementation pending. Domain mutations are server-side, with validated input and `{error:{code,message,requestId}}` localized FR/EN. Success is never fabricated on downstream failure.
 
-## Authentication layers
+## Authentication and authorization
 
-- **Client ↔ Supabase Auth (SDK, no custom route)**: `signInWithOtp({ phone })` sends the code; `verifyOtp({ phone, token })` verifies and opens the session. Rate limiting and cooldowns are Supabase-side (edge case: retry with fresh code, never a permanent lock). **D-059**: the actual SMS dispatch happens in the server-side Send-SMS hook worker; the client holds only the public anon key — no secret of any kind ships client-side.
-- **Client ↔ domain routes**: bearer access token; server validates via `auth.getUser()` on every request (R2 — this is what makes revocation immediate, SC-009).
-- **Interim staff routes** (`/api/admin/…`): legacy admin session (see plan.md Complexity Tracking). **Written expiry: switches to the staff model in slice 2** — the legacy mechanism (SHA-256, committed static salt) is declared obsolete and must not survive this slice. Every interim staff route writes a `staff_actions` audit row (who, when, what — see data-model.md); this is **mandatory** for first-delivery.
+Public client may use Supabase Auth OTP/refresh with public key. Provider secrets and SMS hook live server-side. Application quota/spend controls supplement provider limits. A verified token is only the first check: validate live session/time bounds, independent-proof clearance when required, owner and resource permissions. Proposed domain access is via server APIs; deny direct database access unless equivalently protected and tested. Staff uses 003 identity + TOTP + permission/resource checks, never a forged-cookie or legacy guard.
 
-## Customer routes
+## Customer endpoints
 
-### `POST /api/account/claim`
-Called once after the **first** successful `verifyOtp` on a number. Idempotent per phone.
+| Route | Contract | Acceptance |
+|---|---|---|
+| POST /api/account/claim | Optional public attribution code; principal/phone come from verified auth, not body. Atomic new account + phone history + attribution; existing cleared owner is idempotent. Risky ownership enters proof-required without exposing old account. Queue-off admits immediately | SEC-01/02/04; T015 |
+| GET /api/account/me | Own minimized account and derived queue/subscriber states. Queue has position, expectedWeek (nullable), estimateConditional, paused and capacity version; no fake date at cap zero | SEC-04/29; T014/019 |
+| POST /api/account/email | Capture candidate email on own account. Verification is account/purpose-bound, expiring and single-use; existing proof remains until replacement is safely verified. Unverified email is not unique or identifying | SEC-04; T039; LOT-12 email contract |
+| POST /api/account/reactivate | Dormant admission reactivates with server time, no requeue or blame | T026 |
+| GET /api/sessions | Owner-scoped minimized device labels, times and current marker; no raw tokens and no unnecessary IP disclosure | SEC-03/04 |
+| DELETE /api/sessions/:id | Verify owned target and same independent-proof rule as bulk disconnect; supported revocation strategy from S001-SEC-C | SEC-03/04; T029/031 |
+| DELETE /api/sessions?scope=others | Same proof and owner check, retain current authorized session; no one-by-one bypass | SEC-03/04 |
+| GET /api/wallet | Own balances grouped by unit and paginated entries with reason/source/acquisition time; exact decimal serialization and cursor contract | SEC-26/29; T042/044 |
 
-Request: `{ attribution?: { code: string } }` — a referral code or partner short code, resolved server-side; invalid/own code → attribution silently dropped to `direct` (claiming never fails on a bad code).
+Risk/proof-required responses expose no profile, wallet or order. Verification email is required at payment summary by D-053; if supplier is unavailable, the operation remains pending with a safe recovery path.
 
-Behaviour: creates `customer_accounts` row (claimed_at, acquisition_source, referred_by/partner per R12) + first `phone_number_history` row + `referrals` row when referred. **Queue disabled** (FR-049/051): sets `admitted_at = now()` immediately. Existing account for this phone → returns it unchanged (no re-attribution, FR-016a).
+## Staff endpoints (003 prerequisite)
 
-Response `200`: the same shape as `GET /api/account/me`.
+| Route | Required permission intent and behavior |
+|---|---|
+| GET /api/admin/queue | admissions.read; paginated queue, actual Casablanca ISO-week count and cap |
+| POST /api/admin/admissions | admissions.manage; accountId and request idempotency key; serialize cap check with admission and notice/audit writes |
+| POST /api/admin/notices/:id/sent | admissions.notice; record manual channel/sent timestamp idempotently, never pretend message sent |
+| PUT /api/admin/settings/queue-mode | settings.manage plus required reauth; disable admits all queued and records due notices, atomically/versioned; retries create no duplicates |
+| PUT /api/admin/settings/:key | settings.manage; expected current version, validated next value, conflict on concurrent stale update; immutable audit and no invariant override |
 
-### `GET /api/account/me`
-Response: account state, everything derived server-side —
+Each permission intent must be entered in the 003 matrix with resource scope; unknown permission denies. Cross-origin mutations fail. No general account-only `/api/admin/first-delivery` is exposed.
 
-```jsonc
-{
-  "account": { "id", "phone", "email", "referralCode", "claimedAt", "admittedAt" },
-  "state": "queued" | "admitted" | "dormant",        // FR-052 derivations
-  "queue": { "position": 12, "expectedWeek": "2026-W37" } | null,  // null unless queued & queue enabled
-  "queueEnabled": true,
-  "canConfigureSubscription": false,                  // FR-013: admitted && !dormant
-  "referralAvailable": false                          // FR-022: has active subscription
-}
-```
-Queued users get position + expected week, never an error or empty state (FR-009, FR-014, SC-005).
+## First-delivery integration
 
-### `POST /api/account/email`
-Request: `{ email }`. Stores against the account (FR-006/007). Never required outside the payment path (US5 scenario 2). **D-053**: stored unverified (non-unique, non-identifying); the partial UNIQUE constraint applies to verified emails — verification flow dormant until transactional email exists.
+T037 implements an internal domain handler for an authoritative completed delivery event. Contract includes eventId, deliveryId, subscriptionId, accountId resolved from that delivery, actor/authorized transition and server occurrence time. LOT-11 owns delivery assignment/state. Reject mismatched ownership, unauthorized transition or stale/replayed events. In one transaction/outbox boundary record first_delivery_at once, referral evaluation and source-unique wallet entry; serialize the referrer's cap. Correction is a separate audited event with approved compensation, never deletion or a second reward. Local fixtures may invoke the handler; production cannot invent a delivery to make a test pass.
 
-### `POST /api/account/reactivate`
-Reactivates a dormant admission (FR-036): sets `admission_reactivated_at`. No queue re-entry, no blame copy.
+## Cross-lot write obligations
 
-### `GET /api/sessions` / `DELETE /api/sessions/:id`
-Device list from `auth.sessions` (R3): `[{ id, deviceLabel, ip, lastSeenAt, current }]`. DELETE revokes one session server-side, immediate effect (FR-039/040, SC-009). `DELETE /api/sessions?scope=others` revokes all but the current one (lost-phone recovery, FR-041). **D-053**: when the account holds a **verified email**, mass revocation from a newly-verified device is corroborated by that email (recovery proof); the branch stays dormant until transactional email exists — phone-OTP-only fallback until then.
+- Pricing preview receives authenticated identity and configuration/version context from day one; freeze applied discounts and VAT, preserving REPO-D-025. Affiliation implementation remains outside V1; no affiliation/coupon stacking.
+- Initial paid activation reconciles authenticated provider event, amount, currency and quote; verifies email; sets subscription customer_account_id, cycle/price/discount/tax/rule snapshots and price_guaranteed_until; sets first_subscribed_at only once. Never activate from browser redirect.
+- Termination records ended_at once and subscription-state history sufficient for historical cohorts; current status alone is insufficient.
+- Wallet redemption serializes balance, spends days before MAD, freezes active-beneficiary-rate valuation and source/idempotency key. No active subscription means no day redemption or conversion to cash.
+- Payment/notification/delivery retry use stable business idempotency keys. Outbox consumers deduplicate; failures remain visible to the exception queue.
 
-### `GET /api/wallet`
-Response: `{ balances: [{ unit, label, amount }], entries: [{ id, unit, amount, reason, sourceType, acquiredAt }] }` — balance always computed from entries (SC-007). Read-only for clients; no consumption endpoint exists in this slice (redemption = pricing slice).
-
-## Interim staff routes (legacy-admin protected)
-
-### `GET /api/admin/queue`
-Queued accounts in claim order, with this ISO week's admission count vs `weekly_admission_cap`.
-
-### `POST /api/admin/admissions`
-Request: `{ accountId }`. Manual admission (FR-042): rejects if the weekly cap is reached (the cap bounds, never admits). Sets `admitted_at`, creates the `admission_notices` row (due). Records the **person's effective admission**, never a slot (Article IX).
-
-### `POST /api/admin/notices/:id/sent`
-Marks a notice sent (`sent_at`, `channel`) after the manual send (FR-015, D-016).
-
-### `PUT /api/admin/settings/queue-mode`
-Request: `{ enabled: boolean }`. Disable → single transaction admits every queued account with `admitted_at = now()` + notice rows (FR-050/051). Enable → new claims queue again; the admitted stay admitted (working rule).
-
-### `PUT /api/admin/settings/:key`
-Writes a **new version row** in `app_settings_versions`, validated against `app_setting_definitions` (type + bounds — D-057); out-of-bounds values are rejected with a visible error, never clamped silently (D-027 motif). Effective on next read — no release (FR-010, US2 scenario 4). History is immutable and visible in the admin screen.
-
-### `POST /api/admin/first-delivery`
-Request: `{ accountId }`. Manual declaration that the account's first delivery completed (interim trigger, plan.md Complexity Tracking). **Caller traceability is mandatory (founder requirement, 2026-08-30): the endpoint records WHO called it and WHEN** in `staff_actions`, in the same transaction — it engraves `first_delivery_at`, an Article IX write-once datum, and triggers a referral reward; without caller traceability a false cohort is undetectable. Atomically: writes `first_delivery_at` (write-once, FR-028), writes the audit row, and runs reward issuance — FR-020 cap, FR-021 unique number, FR-022 referrer-active evaluated **now**; on pass, wallet entry (unit `day`, size from `referral_reward_days_by_cycle` keyed on the referred person's cycle, FR-019) + `reward_state = 'issued'`; on fail, `never_eligible`. Billing dates untouched (FR-018, SC-008).
-
-## Internal write contracts (for later slices — specified now, Article IX/XIV)
-
-- **Pricing engine & preview endpoint** (pricing slice) MUST take the requester's **account identity as an input from its first version** — endpoint, debounced preview, cache keyed by configuration — even while it influences nothing today. Affiliation discounts (D-025, R13) plug into that input as data; adding one must never traverse the chain.
-- **Subscription creation** (pricing/checkout slice) MUST, in its creation transaction: require `email` present on the account (FR-006); write `subscriptions.customer_account_id`; set `price_guaranteed_until` (FR-033–034, never recalculated); freeze the **applied discount alongside the price and VAT rate** (D-025b — leaving an affiliation never changes a price mid-cycle); write `customer_accounts.first_subscribed_at` if still NULL (cohort key, FR-032).
-- **Discount stacking** (recorded, not implemented — D-025c): the affiliation discount applies to the plan price; cycle and coupon keep their existing chain; no stacking between affiliation and coupon.
-- **Subscription termination** MUST write `subscriptions.ended_at` once (FR-030).
-- **Wallet redemption** (pricing slice) MUST consume days before dirhams (FR-046), value a day at the beneficiary's active-subscription TTC daily price at that moment (FR-047), and refuse day consumption with no active subscription — a day never converts to money.
+Contract acceptance means fixtures/schema reviewed; it does not waive T013, provider qualification or integrated end-to-end acceptance.

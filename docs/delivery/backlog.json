@@ -1,0 +1,7172 @@
+{
+  "schema_version": 1,
+  "project": "Fitnest",
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "base_commit": "99d5e2ff78db63bbc048890dc17fd2d9d6f132b9",
+  "updated_on": "2026-10-18",
+  "mode": "planning_only",
+  "automatic_dispatch_enabled": false,
+  "global_dispatch_gates": [
+    "G-EXECUTOR",
+    "G-BUDGET"
+  ],
+  "definition_of_done": "Commit-bound tests, independent review and acceptance evidence; contract acceptance is not integrated runtime proof.",
+  "source_register": "docs/delivery/source-register.json",
+  "capabilities": [
+    {
+      "id": "CAP-01",
+      "title": "Public brand site, healthy food/habits promise, FAQ and FR/EN content",
+      "scope": "V1",
+      "lots": [
+        "LOT-06"
+      ]
+    },
+    {
+      "id": "CAP-02",
+      "title": "Public published weekly menu by plan/type with nutrition, no dish sale price",
+      "scope": "V1",
+      "lots": [
+        "LOT-06",
+        "LOT-08"
+      ]
+    },
+    {
+      "id": "CAP-03",
+      "title": "Zone eligibility, full address, instructions and explicit delivery slot",
+      "scope": "V1",
+      "lots": [
+        "LOT-05",
+        "LOT-06"
+      ]
+    },
+    {
+      "id": "CAP-04",
+      "title": "Customer OTP identity, safe sessions and recovery",
+      "scope": "V1",
+      "lots": [
+        "LOT-03",
+        "LOT-12"
+      ]
+    },
+    {
+      "id": "CAP-05",
+      "title": "Manual capped admission, switchable queue, dormancy and notices",
+      "scope": "V1",
+      "lots": [
+        "LOT-03",
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-06",
+      "title": "Immutable referral/partner acquisition by link, QR or code",
+      "scope": "V1",
+      "lots": [
+        "LOT-03",
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-07",
+      "title": "Conditional goal/body/allergy tunnel with nullable indicative target",
+      "scope": "V1",
+      "lots": [
+        "LOT-05",
+        "LOT-06"
+      ]
+    },
+    {
+      "id": "CAP-08",
+      "title": "Dynamic offers, quantities, five-day minimum, floor, cycles and trial",
+      "scope": "V1",
+      "lots": [
+        "LOT-05"
+      ]
+    },
+    {
+      "id": "CAP-09",
+      "title": "Server resumable draft and authoritative VAT-inclusive quote",
+      "scope": "V1",
+      "lots": [
+        "LOT-05",
+        "LOT-06"
+      ]
+    },
+    {
+      "id": "CAP-10",
+      "title": "Coupon eligibility, administration and concurrent redemption limits",
+      "scope": "V1",
+      "lots": [
+        "LOT-05",
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-11",
+      "title": "Initial payment, consent, invoice, activation and reconciliation",
+      "scope": "V1",
+      "lots": [
+        "LOT-07"
+      ]
+    },
+    {
+      "id": "CAP-12",
+      "title": "Web/app handover, lost install link and authenticated help/cancellation rescue",
+      "scope": "V1",
+      "lots": [
+        "LOT-06",
+        "LOT-09"
+      ]
+    },
+    {
+      "id": "CAP-13",
+      "title": "Real iOS/Android FR/EN app, navigation, unsubscribed/offline/update states",
+      "scope": "V1",
+      "lots": [
+        "LOT-09"
+      ]
+    },
+    {
+      "id": "CAP-14",
+      "title": "Skippable/resumable preferences, hard/soft exclusions, favourites, spice and notes",
+      "scope": "V1",
+      "lots": [
+        "LOT-08",
+        "LOT-09"
+      ]
+    },
+    {
+      "id": "CAP-15",
+      "title": "Versioned recipes/components/ingredients, finished nutrition and photos",
+      "scope": "V1",
+      "lots": [
+        "LOT-04"
+      ]
+    },
+    {
+      "id": "CAP-16",
+      "title": "Validated draft import, authorized review and publication",
+      "scope": "V1",
+      "lots": [
+        "LOT-04"
+      ]
+    },
+    {
+      "id": "CAP-17",
+      "title": "Rolling two-week consumption menu by plan/type/rank",
+      "scope": "V1",
+      "lots": [
+        "LOT-08"
+      ]
+    },
+    {
+      "id": "CAP-18",
+      "title": "Own-plan whole-day generation, all quantities, hard filters and blocked diagnostics",
+      "scope": "V1",
+      "lots": [
+        "LOT-08"
+      ]
+    },
+    {
+      "id": "CAP-19",
+      "title": "Subscriber day/calendar, dishes, nutrition, warnings and lifecycle states",
+      "scope": "V1",
+      "lots": [
+        "LOT-09"
+      ]
+    },
+    {
+      "id": "CAP-20",
+      "title": "Explicit safe cross-plan same-day/type swap under cutoff",
+      "scope": "V1",
+      "lots": [
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-21",
+      "title": "Customize/component removal: retained pending precise Fitnest contract",
+      "scope": "unresolved",
+      "lots": [
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-22",
+      "title": "Skip, pause/resume and dated address/slot changes",
+      "scope": "V1",
+      "lots": [
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-23",
+      "title": "Plan/cycle/composition/day/target/preference changes with explicit effects",
+      "scope": "V1",
+      "lots": [
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-24",
+      "title": "Provider payment methods, recurring mandate, renewal and cancellation",
+      "scope": "V1",
+      "lots": [
+        "LOT-07",
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-25",
+      "title": "Day/MAD wallet, immutable history, redemption, credits and compensation",
+      "scope": "V1",
+      "lots": [
+        "LOT-03",
+        "LOT-07",
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-26",
+      "title": "Referral sharing/history and capped reward after first actual delivery",
+      "scope": "V1",
+      "lots": [
+        "LOT-03",
+        "LOT-10",
+        "LOT-11"
+      ]
+    },
+    {
+      "id": "CAP-27",
+      "title": "Subscriber event history with action time distinct from effect date",
+      "scope": "V1",
+      "lots": [
+        "LOT-10"
+      ]
+    },
+    {
+      "id": "CAP-28",
+      "title": "Separate staff identity, five roles, TOTP, recovery and live permissions",
+      "scope": "V1",
+      "lots": [
+        "LOT-02"
+      ]
+    },
+    {
+      "id": "CAP-29",
+      "title": "Freeze/consolidation, recipe versions, picking and labels",
+      "scope": "V1",
+      "lots": [
+        "LOT-11"
+      ]
+    },
+    {
+      "id": "CAP-30",
+      "title": "Amended documents, acknowledgement and post-freeze food incident",
+      "scope": "V1",
+      "lots": [
+        "LOT-11"
+      ]
+    },
+    {
+      "id": "CAP-31",
+      "title": "Assigned delivery rounds, authorized confirmation/failure/correction and reconciliation",
+      "scope": "V1",
+      "lots": [
+        "LOT-11"
+      ]
+    },
+    {
+      "id": "CAP-32",
+      "title": "Prioritized exception queue with owner, deadline and safe resolution",
+      "scope": "V1",
+      "lots": [
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-33",
+      "title": "Transactional WhatsApp/email and opt-in push with failure tracking",
+      "scope": "V1",
+      "lots": [
+        "LOT-12"
+      ]
+    },
+    {
+      "id": "CAP-34",
+      "title": "Staff client/subscription/order-day management and scoped assisted actions",
+      "scope": "V1",
+      "lots": [
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-35",
+      "title": "Typed/bounded/versioned parameters, audit and protected invariants",
+      "scope": "V1",
+      "lots": [
+        "LOT-01",
+        "LOT-02",
+        "LOT-05",
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-36",
+      "title": "Acquisition/cohort/retention/conversion/operational analytics",
+      "scope": "V1",
+      "lots": [
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-37",
+      "title": "Human WhatsApp support and help content; no product LLM chat",
+      "scope": "V1",
+      "lots": [
+        "LOT-06",
+        "LOT-09",
+        "LOT-13"
+      ]
+    },
+    {
+      "id": "CAP-38",
+      "title": "Security/privacy, CI, deploy/restore, observability and load qualification",
+      "scope": "V1",
+      "lots": [
+        "LOT-01",
+        "LOT-14",
+        "LOT-15",
+        "LOT-16"
+      ]
+    }
+  ],
+  "security_ids": [
+    "SEC-01",
+    "SEC-02",
+    "SEC-03",
+    "SEC-04",
+    "SEC-05",
+    "SEC-06",
+    "SEC-07",
+    "SEC-08",
+    "SEC-09",
+    "SEC-10",
+    "SEC-11",
+    "SEC-12",
+    "SEC-13",
+    "SEC-14",
+    "SEC-15",
+    "SEC-16",
+    "SEC-17",
+    "SEC-18",
+    "SEC-19",
+    "SEC-20",
+    "SEC-21",
+    "SEC-22",
+    "SEC-23",
+    "SEC-24",
+    "SEC-25",
+    "SEC-26",
+    "SEC-27",
+    "SEC-28",
+    "SEC-29",
+    "SEC-30",
+    "SEC-31",
+    "SEC-32"
+  ],
+  "lots": [
+    {
+      "id": "LOT-00",
+      "title": "Product baseline and executable planning contract",
+      "owner": "orchestrator/product"
+    },
+    {
+      "id": "LOT-01",
+      "title": "Platform and data foundation",
+      "owner": "architecture/platform"
+    },
+    {
+      "id": "LOT-02",
+      "title": "Staff identity and secure admin (003)",
+      "owner": "security/backend/UX"
+    },
+    {
+      "id": "LOT-03",
+      "title": "Identity/admission/wallet foundation (001)",
+      "owner": "identity/backend/security"
+    },
+    {
+      "id": "LOT-04",
+      "title": "Food data, recipes and controlled import",
+      "owner": "food/backend/data"
+    },
+    {
+      "id": "LOT-05",
+      "title": "Offer, calendar, draft and authoritative pricing",
+      "owner": "product/backend/finance"
+    },
+    {
+      "id": "LOT-06",
+      "title": "Public site and complete acquisition/checkout",
+      "owner": "UX/web/content"
+    },
+    {
+      "id": "LOT-07",
+      "title": "Payment, activation, billing and wallet redemption",
+      "owner": "payments/backend/finance"
+    },
+    {
+      "id": "LOT-08",
+      "title": "Published menus, preferences and generation (002)",
+      "owner": "food/backend/worker"
+    },
+    {
+      "id": "LOT-09",
+      "title": "Native foundation and subscriber consultation (004)",
+      "owner": "mobile/UX/security"
+    },
+    {
+      "id": "LOT-10",
+      "title": "Complete subscriber lifecycle and mutations",
+      "owner": "product/backend/mobile"
+    },
+    {
+      "id": "LOT-11",
+      "title": "Production, preparation, incidents and delivery",
+      "owner": "operations/backend/staff"
+    },
+    {
+      "id": "LOT-12",
+      "title": "Verified email and transactional communications",
+      "owner": "platform/communications"
+    },
+    {
+      "id": "LOT-13",
+      "title": "Staff operations, client management and analytics",
+      "owner": "operations/data/staff"
+    },
+    {
+      "id": "LOT-14",
+      "title": "Full-product acceptance and load qualification",
+      "owner": "QA/security/performance"
+    },
+    {
+      "id": "LOT-15",
+      "title": "Release and commercial opening",
+      "owner": "release/operations/founder"
+    },
+    {
+      "id": "LOT-16",
+      "title": "Operations, scaling and future change",
+      "owner": "SRE/product/QA"
+    },
+    {
+      "id": "LOT-X",
+      "title": "Fitnest executor qualification",
+      "owner": "platform/security/QA"
+    }
+  ],
+  "gates": [
+    {
+      "id": "G-CONSTITUTION",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-SESSION",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-RECOVERY",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-COMMERCIAL",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-PSP",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-MUTATIONS",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-CUSTOMIZE",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-NAV",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-MACROS",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-FOOD",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-ROUND",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-PROVIDERS",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-STORES",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-T013",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-PRIVACY",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-BUDGET",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-EXECUTOR",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "G-RELEASE",
+      "status": "pending",
+      "evidence": []
+    }
+  ],
+  "tasks": [
+    {
+      "id": "BASELINE-ALIGN",
+      "lot": "LOT-00",
+      "title": "Align full V1 source/spec/security/task register",
+      "kind": "contract",
+      "owner": "orchestrator",
+      "status": "review",
+      "outputs": [
+        "docs/delivery/",
+        "specs/001-identity-account-admission/",
+        "specs/002-menu-generation-consolidation/",
+        "specs/003-staff-accounts-admin-shell/",
+        "specs/004-mobile-foundation/"
+      ],
+      "acceptance": [
+        "Validate source collisions, 38 CAP/32 SEC/48 legacy task coverage, DAG and no unearned readiness; review draft PR."
+      ],
+      "source_refs": [
+        "D-001",
+        "D-023",
+        "D-024"
+      ],
+      "security": [],
+      "capabilities": [],
+      "allowed_paths": [
+        "docs/",
+        "specs/",
+        "tooling/delivery-plan/"
+      ],
+      "depends_on": [],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B01-C",
+      "lot": "LOT-01",
+      "title": "Platform and data foundation — design and contracts",
+      "kind": "contract",
+      "owner": "architecture/platform",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Inventory schemas/runtimes and define versioned API/error/event contracts, isolated environments, least privileges, migration/rollback policy and queue/outbox design."
+      ],
+      "source_refs": [
+        "D-017",
+        "D-057",
+        "D-058",
+        "D-059"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-11",
+        "SEC-15",
+        "SEC-29",
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-35",
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "packages/core/",
+        "apps/web/lib/",
+        "supabase/",
+        "tooling/",
+        ".github/"
+      ],
+      "depends_on": [],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B01-I",
+      "lot": "LOT-01",
+      "title": "Platform and data foundation — implementation",
+      "kind": "implementation",
+      "owner": "architecture/platform",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Implement shared boundary validation, versioned settings/audit, Casablanca time utility, isolated CI/database harness, durable worker/outbox and redacted tracing."
+      ],
+      "source_refs": [
+        "D-017",
+        "D-057",
+        "D-058",
+        "D-059"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-11",
+        "SEC-15",
+        "SEC-29",
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-35",
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "packages/core/",
+        "apps/web/lib/",
+        "supabase/",
+        "tooling/",
+        ".github/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-T001",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T002",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T003",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B01-V",
+      "lot": "LOT-01",
+      "title": "Platform and data foundation — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + architecture/platform",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Prove real-role denial, settings concurrency, local migration reproducibility, time transitions and safe worker retry; record pinned runtime/build evidence."
+      ],
+      "source_refs": [
+        "D-017",
+        "D-057",
+        "D-058",
+        "D-059"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-11",
+        "SEC-15",
+        "SEC-29",
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-35",
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "packages/core/",
+        "apps/web/lib/",
+        "supabase/",
+        "tooling/",
+        ".github/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B02-C",
+      "lot": "LOT-02",
+      "title": "Staff identity and secure admin (003) — design and contracts",
+      "kind": "contract",
+      "owner": "security/backend/UX",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify 003 auth/TOTP/recovery bootstrap, permission/resource matrix, host/cookie boundary, navigation/settings and delivery adapter contracts."
+      ],
+      "source_refs": [
+        "D-026",
+        "D-046",
+        "D-050",
+        "D-052",
+        "D-055"
+      ],
+      "security": [
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-11"
+      ],
+      "capabilities": [
+        "CAP-28",
+        "CAP-35"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/003-staff-accounts-admin-shell/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B02-I",
+      "lot": "LOT-02",
+      "title": "Staff identity and secure admin (003) — implementation",
+      "kind": "implementation",
+      "owner": "security/backend/UX",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build separate staff auth/TOTP, invitations/reset/recovery, live permission guards and admin shell/settings; add delivery adapter only against accepted LOT-11 contract."
+      ],
+      "source_refs": [
+        "D-026",
+        "D-046",
+        "D-050",
+        "D-052",
+        "D-055"
+      ],
+      "security": [
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-11"
+      ],
+      "capabilities": [
+        "CAP-28",
+        "CAP-35"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/003-staff-accounts-admin-shell/"
+      ],
+      "depends_on": [
+        {
+          "task": "B02-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B01-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B02-V",
+      "lot": "LOT-02",
+      "title": "Staff identity and secure admin (003) — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + security/backend/UX",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Test five roles, deactivation next request, invitation/reset replay, forbidden role combinations, CSRF and host-cookie scope with actual APIs."
+      ],
+      "source_refs": [
+        "D-026",
+        "D-046",
+        "D-050",
+        "D-052",
+        "D-055"
+      ],
+      "security": [
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-11"
+      ],
+      "capabilities": [
+        "CAP-28",
+        "CAP-35"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/003-staff-accounts-admin-shell/"
+      ],
+      "depends_on": [
+        {
+          "task": "B02-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B04-C",
+      "lot": "LOT-04",
+      "title": "Food data, recipes and controlled import — design and contracts",
+      "kind": "contract",
+      "owner": "food/backend/data",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Map existing food tables to versioned ingredients/components/recipes/portions, purchase yield/cost and validated finished nutrition; define import DTO and DB-M fixtures."
+      ],
+      "source_refs": [
+        "D-038",
+        "D-041",
+        "D-051",
+        "D-064",
+        "D-065",
+        "MC-01",
+        "MC-02",
+        "MC-03",
+        "MC-04",
+        "MC-05",
+        "MC-07"
+      ],
+      "security": [
+        "SEC-13",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-15",
+        "CAP-16"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/food/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B04-I",
+      "lot": "LOT-04",
+      "title": "Food data, recipes and controlled import — implementation",
+      "kind": "implementation",
+      "owner": "food/backend/data",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build draft import, dimensional calculations, versioned recipe composition/cost snapshots, taxonomy mapping and authorized validation/publication with photos."
+      ],
+      "source_refs": [
+        "D-038",
+        "D-041",
+        "D-051",
+        "D-064",
+        "D-065",
+        "MC-01",
+        "MC-02",
+        "MC-03",
+        "MC-04",
+        "MC-05",
+        "MC-07"
+      ],
+      "security": [
+        "SEC-13",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-15",
+        "CAP-16"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/food/"
+      ],
+      "depends_on": [
+        {
+          "task": "B04-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B02-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B01-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B04-V",
+      "lot": "LOT-04",
+      "title": "Food data, recipes and controlled import — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + food/backend/data",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Run DB-M01–10/16/17/18 against database/import; food lead validates pilot finished-product declarations; no spreadsheet formula is treated as certification."
+      ],
+      "source_refs": [
+        "D-038",
+        "D-041",
+        "D-051",
+        "D-064",
+        "D-065",
+        "MC-01",
+        "MC-02",
+        "MC-03",
+        "MC-04",
+        "MC-05",
+        "MC-07"
+      ],
+      "security": [
+        "SEC-13",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-15",
+        "CAP-16"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/food/"
+      ],
+      "depends_on": [
+        {
+          "task": "B04-I",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [
+        "G-FOOD"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B05-C",
+      "lot": "LOT-05",
+      "title": "Offer, calendar, draft and authoritative pricing — design and contracts",
+      "kind": "contract",
+      "owner": "product/backend/finance",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify plans/types/quantities, cycle/grid/floor/zone/slot/calendar, trial eligibility, conditional target, draft/quote versions, coupon and wallet pricing boundaries."
+      ],
+      "source_refs": [
+        "D-003",
+        "D-004",
+        "D-005",
+        "D-006",
+        "D-007",
+        "D-008",
+        "D-009",
+        "D-010",
+        "D-011",
+        "D-012",
+        "D-014",
+        "D-018",
+        "D-021",
+        "D-035"
+      ],
+      "security": [
+        "SEC-23",
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-03",
+        "CAP-07",
+        "CAP-08",
+        "CAP-09",
+        "CAP-10",
+        "CAP-35"
+      ],
+      "allowed_paths": [
+        "packages/core/",
+        "apps/web/app/api/",
+        "supabase/",
+        "specs/pricing/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B05-I",
+      "lot": "LOT-05",
+      "title": "Offer, calendar, draft and authoritative pricing — implementation",
+      "kind": "implementation",
+      "owner": "product/backend/finance",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build server draft, pricing and expiring quote, VAT-centime invoice arithmetic, start/zone/slot validation, trial eligibility and transactional coupon reservations."
+      ],
+      "source_refs": [
+        "D-003",
+        "D-004",
+        "D-005",
+        "D-006",
+        "D-007",
+        "D-008",
+        "D-009",
+        "D-010",
+        "D-011",
+        "D-012",
+        "D-014",
+        "D-018",
+        "D-021",
+        "D-035"
+      ],
+      "security": [
+        "SEC-23",
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-03",
+        "CAP-07",
+        "CAP-08",
+        "CAP-09",
+        "CAP-10",
+        "CAP-35"
+      ],
+      "allowed_paths": [
+        "packages/core/",
+        "apps/web/app/api/",
+        "supabase/",
+        "specs/pricing/"
+      ],
+      "depends_on": [
+        {
+          "task": "B05-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B01-I",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-COMMERCIAL"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B05-V",
+      "lot": "LOT-05",
+      "title": "Offer, calendar, draft and authoritative pricing — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + product/backend/finance",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Test real MAD fixtures, weekly flat premium/monthly base/quarterly percent, no client price authority, five-day floor, duplicate coupon and draft resume across devices."
+      ],
+      "source_refs": [
+        "D-003",
+        "D-004",
+        "D-005",
+        "D-006",
+        "D-007",
+        "D-008",
+        "D-009",
+        "D-010",
+        "D-011",
+        "D-012",
+        "D-014",
+        "D-018",
+        "D-021",
+        "D-035"
+      ],
+      "security": [
+        "SEC-23",
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-03",
+        "CAP-07",
+        "CAP-08",
+        "CAP-09",
+        "CAP-10",
+        "CAP-35"
+      ],
+      "allowed_paths": [
+        "packages/core/",
+        "apps/web/app/api/",
+        "supabase/",
+        "specs/pricing/"
+      ],
+      "depends_on": [
+        {
+          "task": "B05-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B06-C",
+      "lot": "LOT-06",
+      "title": "Public site and complete acquisition/checkout — design and contracts",
+      "kind": "contract",
+      "owner": "UX/web/content",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Map T01–T20/P01/W01–W03 to FR/EN brand/tunnel, published menu, checkout, account-bound relay and narrow help/cancellation rescue; define all empty/pending/error states."
+      ],
+      "source_refs": [
+        "D-033",
+        "D-040",
+        "D-047",
+        "D-056",
+        "D-061"
+      ],
+      "security": [
+        "SEC-08",
+        "SEC-19",
+        "SEC-20"
+      ],
+      "capabilities": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-07",
+        "CAP-09",
+        "CAP-12",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "specs/web/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B06-I",
+      "lot": "LOT-06",
+      "title": "Public site and complete acquisition/checkout — implementation",
+      "kind": "implementation",
+      "owner": "UX/web/content",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Implement brand/public menu and conditional tunnel on shared drafts/quotes, OTP/admission gates, verified-email/payment summary and safe handover/rescue."
+      ],
+      "source_refs": [
+        "D-033",
+        "D-040",
+        "D-047",
+        "D-056",
+        "D-061"
+      ],
+      "security": [
+        "SEC-08",
+        "SEC-19",
+        "SEC-20"
+      ],
+      "capabilities": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-07",
+        "CAP-09",
+        "CAP-12",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "specs/web/"
+      ],
+      "depends_on": [
+        {
+          "task": "B06-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B05-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B07-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B08-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B12-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-T020",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B06-V",
+      "lot": "LOT-06",
+      "title": "Public site and complete acquisition/checkout — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + UX/web/content",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Exercise site journey with eat-healthy null target, resumed draft, unpublished menu, denied zone, lost relay and cancellation parity; confirm no subscriber web meal/wallet portal."
+      ],
+      "source_refs": [
+        "D-033",
+        "D-040",
+        "D-047",
+        "D-056",
+        "D-061"
+      ],
+      "security": [
+        "SEC-08",
+        "SEC-19",
+        "SEC-20"
+      ],
+      "capabilities": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-07",
+        "CAP-09",
+        "CAP-12",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "specs/web/"
+      ],
+      "depends_on": [
+        {
+          "task": "B06-I",
+          "condition": "verified"
+        },
+        {
+          "task": "B07-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B10-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B07-C",
+      "lot": "LOT-07",
+      "title": "Payment, activation, billing and wallet redemption — design and contracts",
+      "kind": "contract",
+      "owner": "payments/backend/finance",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify PSP adapter, recurring consent/mandate, charge/invoice/activation states, quote binding, webhook reconciliation, due-date idempotency and wallet reservation/compensation."
+      ],
+      "source_refs": [
+        "D-003",
+        "D-013",
+        "D-015",
+        "D-027",
+        "D-028",
+        "D-053",
+        "D-062"
+      ],
+      "security": [
+        "SEC-23",
+        "SEC-24",
+        "SEC-25",
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-11",
+        "CAP-24",
+        "CAP-25"
+      ],
+      "allowed_paths": [
+        "apps/web/app/api/",
+        "packages/core/",
+        "supabase/",
+        "specs/payments/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B07-I",
+      "lot": "LOT-07",
+      "title": "Payment, activation, billing and wallet redemption — implementation",
+      "kind": "implementation",
+      "owner": "payments/backend/finance",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Integrate provider test mode, verified activation, cohort/subscription write obligations, invoices, renewal/cancel/retry, payment-method tokenization and atomic day/MAD redemption."
+      ],
+      "source_refs": [
+        "D-003",
+        "D-013",
+        "D-015",
+        "D-027",
+        "D-028",
+        "D-053",
+        "D-062"
+      ],
+      "security": [
+        "SEC-23",
+        "SEC-24",
+        "SEC-25",
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-11",
+        "CAP-24",
+        "CAP-25"
+      ],
+      "allowed_paths": [
+        "apps/web/app/api/",
+        "packages/core/",
+        "supabase/",
+        "specs/payments/"
+      ],
+      "depends_on": [
+        {
+          "task": "B07-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B05-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B12-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-T039",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T043",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-PSP",
+        "G-COMMERCIAL"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B07-V",
+      "lot": "LOT-07",
+      "title": "Payment, activation, billing and wallet redemption — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + payments/backend/finance",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Prove wrong/replayed/late webhooks, browser forgery, crash after charge, cancellation race and concurrent wallet spend; reconcile provider test transactions and invoice cents."
+      ],
+      "source_refs": [
+        "D-003",
+        "D-013",
+        "D-015",
+        "D-027",
+        "D-028",
+        "D-053",
+        "D-062"
+      ],
+      "security": [
+        "SEC-23",
+        "SEC-24",
+        "SEC-25",
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-11",
+        "CAP-24",
+        "CAP-25"
+      ],
+      "allowed_paths": [
+        "apps/web/app/api/",
+        "packages/core/",
+        "supabase/",
+        "specs/payments/"
+      ],
+      "depends_on": [
+        {
+          "task": "B07-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B08-C",
+      "lot": "LOT-08",
+      "title": "Published menus, preferences and generation (002) — design and contracts",
+      "kind": "contract",
+      "owner": "food/backend/worker",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify menu/profile/version/entitlement events, own-plan candidate set, complete-day solver and stale-job/feasibility contract; define publication and regeneration states."
+      ],
+      "source_refs": [
+        "D-037",
+        "D-042",
+        "D-045",
+        "D-048",
+        "D-049",
+        "D-054",
+        "D-064",
+        "D-065"
+      ],
+      "security": [
+        "SEC-12",
+        "SEC-13",
+        "SEC-15",
+        "SEC-17"
+      ],
+      "capabilities": [
+        "CAP-02",
+        "CAP-14",
+        "CAP-17",
+        "CAP-18"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/002-menu-generation-consolidation/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B08-I",
+      "lot": "LOT-08",
+      "title": "Published menus, preferences and generation (002) — implementation",
+      "kind": "implementation",
+      "owner": "food/backend/worker",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build staff menu authoring, rolling publication, preference persistence, durable own-plan generation and reasoned unresolved-day queue with public read DTO."
+      ],
+      "source_refs": [
+        "D-037",
+        "D-042",
+        "D-045",
+        "D-048",
+        "D-049",
+        "D-054",
+        "D-064",
+        "D-065"
+      ],
+      "security": [
+        "SEC-12",
+        "SEC-13",
+        "SEC-15",
+        "SEC-17"
+      ],
+      "capabilities": [
+        "CAP-02",
+        "CAP-14",
+        "CAP-17",
+        "CAP-18"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/002-menu-generation-consolidation/"
+      ],
+      "depends_on": [
+        {
+          "task": "B08-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B04-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B02-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B05-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B07-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B08-V",
+      "lot": "LOT-08",
+      "title": "Published menus, preferences and generation (002) — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + food/backend/worker",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Run whole-day quantity/non-repetition, no safe candidates, payment/publication race, profile/recipe correction and old-job tests; no cross-plan automatic fallback."
+      ],
+      "source_refs": [
+        "D-037",
+        "D-042",
+        "D-045",
+        "D-048",
+        "D-049",
+        "D-054",
+        "D-064",
+        "D-065"
+      ],
+      "security": [
+        "SEC-12",
+        "SEC-13",
+        "SEC-15",
+        "SEC-17"
+      ],
+      "capabilities": [
+        "CAP-02",
+        "CAP-14",
+        "CAP-17",
+        "CAP-18"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/002-menu-generation-consolidation/"
+      ],
+      "depends_on": [
+        {
+          "task": "B08-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B09-C",
+      "lot": "LOT-09",
+      "title": "Native foundation and subscriber consultation (004) — design and contracts",
+      "kind": "contract",
+      "owner": "mobile/UX/security",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify native screen/state contracts, FR/EN navigation, secure auth/cache, relay/installation fallback, push binding and current/old API compatibility."
+      ],
+      "source_refs": [
+        "D-033",
+        "D-040",
+        "D-053",
+        "D-056",
+        "D-059"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-18",
+        "SEC-19",
+        "SEC-20",
+        "SEC-21",
+        "SEC-22",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-12",
+        "CAP-13",
+        "CAP-14",
+        "CAP-19",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "packages/core/",
+        "specs/004-mobile-foundation/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B09-I",
+      "lot": "LOT-09",
+      "title": "Native foundation and subscriber consultation (004) — implementation",
+      "kind": "implementation",
+      "owner": "mobile/UX/security",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build real iOS/Android app, auth/recovery/devices (001 T033), skippable preferences and day/meal/account views with bounded offline cache and honest pending/blocked states."
+      ],
+      "source_refs": [
+        "D-033",
+        "D-040",
+        "D-053",
+        "D-056",
+        "D-059"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-18",
+        "SEC-19",
+        "SEC-20",
+        "SEC-21",
+        "SEC-22",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-12",
+        "CAP-13",
+        "CAP-14",
+        "CAP-19",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "packages/core/",
+        "specs/004-mobile-foundation/"
+      ],
+      "depends_on": [
+        {
+          "task": "B09-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B01-I",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-T031",
+          "condition": "verified"
+        },
+        {
+          "task": "B12-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [
+        "G-SESSION",
+        "G-RECOVERY",
+        "G-NAV"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B09-V",
+      "lot": "LOT-09",
+      "title": "Native foundation and subscriber consultation (004) — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + mobile/UX/security",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Verify both native builds: secrets absent, account switch/cache, revoke/expiry, lost installation link, no-subscription and target-null views, accessibility and FR/EN."
+      ],
+      "source_refs": [
+        "D-033",
+        "D-040",
+        "D-053",
+        "D-056",
+        "D-059"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-18",
+        "SEC-19",
+        "SEC-20",
+        "SEC-21",
+        "SEC-22",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-12",
+        "CAP-13",
+        "CAP-14",
+        "CAP-19",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "packages/core/",
+        "specs/004-mobile-foundation/"
+      ],
+      "depends_on": [
+        {
+          "task": "B09-I",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B12-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B10-C",
+      "lot": "LOT-10",
+      "title": "Complete subscriber lifecycle and mutations — design and contracts",
+      "kind": "contract",
+      "owner": "product/backend/mobile",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify all mutation effects on calendar/production/payment/renewal/wallet and action/effect history; split Customize until explicit decision; define concurrency/preview/commit contracts."
+      ],
+      "source_refs": [
+        "D-015",
+        "D-024",
+        "D-040",
+        "D-043",
+        "D-044",
+        "D-049",
+        "D-055",
+        "D-062"
+      ],
+      "security": [
+        "SEC-16",
+        "SEC-25",
+        "SEC-26",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-20",
+        "CAP-21",
+        "CAP-22",
+        "CAP-23",
+        "CAP-24",
+        "CAP-25",
+        "CAP-26",
+        "CAP-27"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "apps/web/app/api/",
+        "packages/core/",
+        "supabase/",
+        "specs/lifecycle/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B10-I",
+      "lot": "LOT-10",
+      "title": "Complete subscriber lifecycle and mutations — implementation",
+      "kind": "implementation",
+      "owner": "product/backend/mobile",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build swap, skip/pause/resume, address/slot, plan/cycle/quantity/day/target changes, renewal/cancel controls and native wallet/referral/history (001 T038/T045)."
+      ],
+      "source_refs": [
+        "D-015",
+        "D-024",
+        "D-040",
+        "D-043",
+        "D-044",
+        "D-049",
+        "D-055",
+        "D-062"
+      ],
+      "security": [
+        "SEC-16",
+        "SEC-25",
+        "SEC-26",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-20",
+        "CAP-21",
+        "CAP-22",
+        "CAP-23",
+        "CAP-24",
+        "CAP-25",
+        "CAP-26",
+        "CAP-27"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "apps/web/app/api/",
+        "packages/core/",
+        "supabase/",
+        "specs/lifecycle/"
+      ],
+      "depends_on": [
+        {
+          "task": "B10-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B09-I",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B07-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B11-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [
+        "G-MUTATIONS"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B10-V",
+      "lot": "LOT-10",
+      "title": "Complete subscriber lifecycle and mutations — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + product/backend/mobile",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Prove before/at/after cutoff behavior and two-writer conflicts, safe same-day/type cross-plan swap, no repeated dish, financial/date effects and web rescue parity."
+      ],
+      "source_refs": [
+        "D-015",
+        "D-024",
+        "D-040",
+        "D-043",
+        "D-044",
+        "D-049",
+        "D-055",
+        "D-062"
+      ],
+      "security": [
+        "SEC-16",
+        "SEC-25",
+        "SEC-26",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-20",
+        "CAP-21",
+        "CAP-22",
+        "CAP-23",
+        "CAP-24",
+        "CAP-25",
+        "CAP-26",
+        "CAP-27"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "apps/web/app/api/",
+        "packages/core/",
+        "supabase/",
+        "specs/lifecycle/"
+      ],
+      "depends_on": [
+        {
+          "task": "B10-I",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T037",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B11-C",
+      "lot": "LOT-11",
+      "title": "Production, preparation, incidents and delivery — design and contracts",
+      "kind": "contract",
+      "owner": "operations/backend/staff",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify consumption/physical dates, freeze/amendment/acknowledgement, delivery assignment/state/event contracts, food stop and reconciliation with referral/communications."
+      ],
+      "source_refs": [
+        "D-044",
+        "D-049",
+        "D-054",
+        "D-055",
+        "D-058",
+        "D-060"
+      ],
+      "security": [
+        "SEC-09",
+        "SEC-10",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-26",
+        "CAP-29",
+        "CAP-30",
+        "CAP-31"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/operations/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B11-I",
+      "lot": "LOT-11",
+      "title": "Production, preparation, incidents and delivery — implementation",
+      "kind": "implementation",
+      "owner": "operations/backend/staff",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build atomic freeze, numbered consolidation/picking/labels, incident blocking/amendment acknowledgement, assigned rounds and idempotent confirm/fail/correct transitions."
+      ],
+      "source_refs": [
+        "D-044",
+        "D-049",
+        "D-054",
+        "D-055",
+        "D-058",
+        "D-060"
+      ],
+      "security": [
+        "SEC-09",
+        "SEC-10",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-26",
+        "CAP-29",
+        "CAP-30",
+        "CAP-31"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/operations/"
+      ],
+      "depends_on": [
+        {
+          "task": "B11-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B02-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B10-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [
+        "G-ROUND"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B11-V",
+      "lot": "LOT-11",
+      "title": "Production, preparation, incidents and delivery — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + operations/backend/staff",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Run DB-M13–19, stale label refusal, allergy after freeze, actual round ownership, duplicate confirmation/reward and planned/prepared/delivered/failed reconciliation."
+      ],
+      "source_refs": [
+        "D-044",
+        "D-049",
+        "D-054",
+        "D-055",
+        "D-058",
+        "D-060"
+      ],
+      "security": [
+        "SEC-09",
+        "SEC-10",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-26",
+        "CAP-29",
+        "CAP-30",
+        "CAP-31"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/operations/"
+      ],
+      "depends_on": [
+        {
+          "task": "B11-I",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T037",
+          "condition": "verified"
+        },
+        {
+          "task": "B12-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B12-C",
+      "lot": "LOT-12",
+      "title": "Verified email and transactional communications — design and contracts",
+      "kind": "contract",
+      "owner": "platform/communications",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify account/purpose-bound email proof, Send-SMS hook, outbox payload minimization, templates/locale/consent, event-channel-recipient keys and failure budgets."
+      ],
+      "source_refs": [
+        "D-016",
+        "D-033",
+        "D-039",
+        "D-053",
+        "D-056",
+        "D-062"
+      ],
+      "security": [
+        "SEC-02",
+        "SEC-04",
+        "SEC-22",
+        "SEC-28"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-33"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/communications/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B12-I",
+      "lot": "LOT-12",
+      "title": "Verified email and transactional communications — implementation",
+      "kind": "implementation",
+      "owner": "platform/communications",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build verified-email and OTP provider adapters, transactional WhatsApp/email and opt-in push with authenticated callbacks, bounded retry and owner-visible failures."
+      ],
+      "source_refs": [
+        "D-016",
+        "D-033",
+        "D-039",
+        "D-053",
+        "D-056",
+        "D-062"
+      ],
+      "security": [
+        "SEC-02",
+        "SEC-04",
+        "SEC-22",
+        "SEC-28"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-33"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/communications/"
+      ],
+      "depends_on": [
+        {
+          "task": "B12-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B01-I",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T009",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B12-V",
+      "lot": "LOT-12",
+      "title": "Verified email and transactional communications — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + platform/communications",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Test challenge expiry/replay, invalid callback, supplier outage, stale push token, correct renewal wording and zero duplicated financial/delivery effects."
+      ],
+      "source_refs": [
+        "D-016",
+        "D-033",
+        "D-039",
+        "D-053",
+        "D-056",
+        "D-062"
+      ],
+      "security": [
+        "SEC-02",
+        "SEC-04",
+        "SEC-22",
+        "SEC-28"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-33"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/communications/"
+      ],
+      "depends_on": [
+        {
+          "task": "B12-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-PROVIDERS"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B13-C",
+      "lot": "LOT-13",
+      "title": "Staff operations, client management and analytics — design and contracts",
+      "kind": "contract",
+      "owner": "operations/data/staff",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify prioritized exception ownership/deadlines/actions, assisted customer scope, coupons/settings, acquisition/cohort metrics and source-of-truth definitions."
+      ],
+      "source_refs": [
+        "D-024",
+        "D-027",
+        "D-055",
+        "D-057",
+        "D-060"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-09",
+        "SEC-11",
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-05",
+        "CAP-06",
+        "CAP-10",
+        "CAP-32",
+        "CAP-34",
+        "CAP-35",
+        "CAP-36",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "specs/admin/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B13-I",
+      "lot": "LOT-13",
+      "title": "Staff operations, client management and analytics — implementation",
+      "kind": "implementation",
+      "owner": "operations/data/staff",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Build exception-first admin, client/subscription/order history and authorized assisted actions; complete coupon/catalog settings and operational/cohort reports."
+      ],
+      "source_refs": [
+        "D-024",
+        "D-027",
+        "D-055",
+        "D-057",
+        "D-060"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-09",
+        "SEC-11",
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-05",
+        "CAP-06",
+        "CAP-10",
+        "CAP-32",
+        "CAP-34",
+        "CAP-35",
+        "CAP-36",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "specs/admin/"
+      ],
+      "depends_on": [
+        {
+          "task": "B13-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B02-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B05-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B11-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B10-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B13-V",
+      "lot": "LOT-13",
+      "title": "Staff operations, client management and analytics — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + operations/data/staff",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Verify role/export scope, no retry-all bypass, cohort SQL at +4/+8/+12, reconciled operational totals, stale quote/settings history and action/effect timestamps."
+      ],
+      "source_refs": [
+        "D-024",
+        "D-027",
+        "D-055",
+        "D-057",
+        "D-060"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-09",
+        "SEC-11",
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-05",
+        "CAP-06",
+        "CAP-10",
+        "CAP-32",
+        "CAP-34",
+        "CAP-35",
+        "CAP-36",
+        "CAP-37"
+      ],
+      "allowed_paths": [
+        "apps/web/",
+        "packages/core/",
+        "specs/admin/"
+      ],
+      "depends_on": [
+        {
+          "task": "B13-I",
+          "condition": "verified"
+        },
+        {
+          "task": "B11-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B10-V",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T046",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B14-C",
+      "lot": "LOT-14",
+      "title": "Full-product acceptance and load qualification — design and contracts",
+      "kind": "contract",
+      "owner": "QA/security/performance",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Specify full-V1 test matrix, synthetic fixtures, mobile device/network mix, 500 active/5000 subscriber workload, latency/queue/restore targets and pass criteria."
+      ],
+      "source_refs": [
+        "D-024",
+        "D-054",
+        "D-059"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-03",
+        "SEC-04",
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-10",
+        "SEC-11",
+        "SEC-12",
+        "SEC-13",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-18",
+        "SEC-19",
+        "SEC-20",
+        "SEC-21",
+        "SEC-22",
+        "SEC-23",
+        "SEC-24",
+        "SEC-25",
+        "SEC-26",
+        "SEC-27",
+        "SEC-28",
+        "SEC-29",
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "tests/",
+        "tooling/",
+        "specs/qualification/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B14-I",
+      "lot": "LOT-14",
+      "title": "Full-product acceptance and load qualification — implementation",
+      "kind": "implementation",
+      "owner": "QA/security/performance",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Run integrated functional/security/concurrency/load/fault/restore qualification against release candidates; repair with evidence bound to exact commits."
+      ],
+      "source_refs": [
+        "D-024",
+        "D-054",
+        "D-059"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-03",
+        "SEC-04",
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-10",
+        "SEC-11",
+        "SEC-12",
+        "SEC-13",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-18",
+        "SEC-19",
+        "SEC-20",
+        "SEC-21",
+        "SEC-22",
+        "SEC-23",
+        "SEC-24",
+        "SEC-25",
+        "SEC-26",
+        "SEC-27",
+        "SEC-28",
+        "SEC-29",
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "tests/",
+        "tooling/",
+        "specs/qualification/"
+      ],
+      "depends_on": [
+        {
+          "task": "B14-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B02-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B04-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B05-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B06-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B07-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B08-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B09-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B10-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B11-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B12-V",
+          "condition": "verified"
+        },
+        {
+          "task": "B13-V",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T048",
+          "condition": "verified"
+        },
+        {
+          "task": "CUSTOMIZE-DELIVERY",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B14-V",
+      "lot": "LOT-14",
+      "title": "Full-product acceptance and load qualification — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + QA/security/performance",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "All CAP accepted or explicitly resolved, SEC-01–32 and DB-M01–20 evidenced; repeat operational rehearsal and report residual risks without claiming capacity from stack alone."
+      ],
+      "source_refs": [
+        "D-024",
+        "D-054",
+        "D-059"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-03",
+        "SEC-04",
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-09",
+        "SEC-10",
+        "SEC-11",
+        "SEC-12",
+        "SEC-13",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-18",
+        "SEC-19",
+        "SEC-20",
+        "SEC-21",
+        "SEC-22",
+        "SEC-23",
+        "SEC-24",
+        "SEC-25",
+        "SEC-26",
+        "SEC-27",
+        "SEC-28",
+        "SEC-29",
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "tests/",
+        "tooling/",
+        "specs/qualification/"
+      ],
+      "depends_on": [
+        {
+          "task": "B14-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-CUSTOMIZE",
+        "G-MACROS"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B15-C",
+      "lot": "LOT-15",
+      "title": "Release and commercial opening — design and contracts",
+      "kind": "contract",
+      "owner": "release/operations/founder",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Prepare exact artifact/environment matrix, store signing/distribution, secret rotation, migration/backup/rollback plan, support runbooks and go/no-go evidence."
+      ],
+      "source_refs": [
+        "D-040",
+        "D-053",
+        "D-059",
+        "D-061",
+        "D-062"
+      ],
+      "security": [
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "docs/",
+        ".github/",
+        "tooling/release/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B15-I",
+      "lot": "LOT-15",
+      "title": "Release and commercial opening — implementation",
+      "kind": "implementation",
+      "owner": "release/operations/founder",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "After explicit release decision, deploy approved artifacts, apply only approved migrations, submit/release native apps and perform production smoke checks within authorized scope."
+      ],
+      "source_refs": [
+        "D-040",
+        "D-053",
+        "D-059",
+        "D-061",
+        "D-062"
+      ],
+      "security": [
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "docs/",
+        ".github/",
+        "tooling/release/"
+      ],
+      "depends_on": [
+        {
+          "task": "B15-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B14-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-STORES",
+        "G-PRIVACY",
+        "G-RELEASE",
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B15-V",
+      "lot": "LOT-15",
+      "title": "Release and commercial opening — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + release/operations/founder",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Confirm artifact-to-commit trace, store availability, first-payment readiness, rollback/restore and operations owners; record explicit launch decision."
+      ],
+      "source_refs": [
+        "D-040",
+        "D-053",
+        "D-059",
+        "D-061",
+        "D-062"
+      ],
+      "security": [
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "docs/",
+        ".github/",
+        "tooling/release/"
+      ],
+      "depends_on": [
+        {
+          "task": "B15-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B16-C",
+      "lot": "LOT-16",
+      "title": "Operations, scaling and future change — design and contracts",
+      "kind": "contract",
+      "owner": "SRE/product/QA",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Define service objectives, capacity/cost alerts, incident/restore/on-call ownership and change intake → impact → spec → task → regression workflow."
+      ],
+      "source_refs": [
+        "D-057",
+        "D-059",
+        "D-060"
+      ],
+      "security": [
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "docs/",
+        "tooling/",
+        ".github/"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B16-I",
+      "lot": "LOT-16",
+      "title": "Operations, scaling and future change — implementation",
+      "kind": "implementation",
+      "owner": "SRE/product/QA",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Operate configured alerts/runbooks, measure bottlenecks and implement reviewed scaling/maintenance changes; scope each new feature through the same versioned baseline."
+      ],
+      "source_refs": [
+        "D-057",
+        "D-059",
+        "D-060"
+      ],
+      "security": [
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "docs/",
+        "tooling/",
+        ".github/"
+      ],
+      "depends_on": [
+        {
+          "task": "B16-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B15-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "B16-V",
+      "lot": "LOT-16",
+      "title": "Operations, scaling and future change — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + SRE/product/QA",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Evidence restored service, measured capacity/cost trend and safe feature rollout with regressions/rollback; no invisible forever-running agent promise."
+      ],
+      "source_refs": [
+        "D-057",
+        "D-059",
+        "D-060"
+      ],
+      "security": [
+        "SEC-30",
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-38"
+      ],
+      "allowed_paths": [
+        "docs/",
+        "tooling/",
+        ".github/"
+      ],
+      "depends_on": [
+        {
+          "task": "B16-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "BX-C",
+      "lot": "LOT-X",
+      "title": "Fitnest executor qualification — design and contracts",
+      "kind": "contract",
+      "owner": "platform/security/QA",
+      "status": "planned",
+      "outputs": [
+        "versioned plan/API/data contracts",
+        "acceptance fixtures"
+      ],
+      "acceptance": [
+        "Inspect existing Ekwip pilot failure and qualify correct repository/branch mapping, task input/path sandbox, ephemeral credentials, spend metering and bounded recovery."
+      ],
+      "source_refs": [
+        "D-001",
+        "D-019"
+      ],
+      "security": [
+        "SEC-29",
+        "SEC-30",
+        "SEC-32"
+      ],
+      "capabilities": [],
+      "allowed_paths": [
+        "tooling/",
+        "docs/"
+      ],
+      "depends_on": [],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "BX-I",
+      "lot": "LOT-X",
+      "title": "Fitnest executor qualification — implementation",
+      "kind": "implementation",
+      "owner": "platform/security/QA",
+      "status": "planned",
+      "outputs": [
+        "implementation and migration proposals",
+        "tests and PR"
+      ],
+      "acceptance": [
+        "Implement/import task contract and dashboard status/cost evidence adapter for Fitnest, then run one explicitly bounded non-production qualification task."
+      ],
+      "source_refs": [
+        "D-001",
+        "D-019"
+      ],
+      "security": [
+        "SEC-29",
+        "SEC-30",
+        "SEC-32"
+      ],
+      "capabilities": [],
+      "allowed_paths": [
+        "tooling/",
+        "docs/"
+      ],
+      "depends_on": [
+        {
+          "task": "BX-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [
+        "G-BUDGET"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "execution_mode": "supervised_qualification"
+    },
+    {
+      "id": "BX-V",
+      "lot": "LOT-X",
+      "title": "Fitnest executor qualification — integrated acceptance",
+      "kind": "verification",
+      "owner": "QA + platform/security/QA",
+      "status": "planned",
+      "outputs": [
+        "commit-bound test/review evidence",
+        "runbook and residual-risk record"
+      ],
+      "acceptance": [
+        "Prove wrong repo/path denial, failed-check blocking, retry exhaustion, stop at budget, idempotent dispatch and real PR/test evidence; reconcile metering to provider usage."
+      ],
+      "source_refs": [
+        "D-001",
+        "D-019"
+      ],
+      "security": [
+        "SEC-29",
+        "SEC-30",
+        "SEC-32"
+      ],
+      "capabilities": [],
+      "allowed_paths": [
+        "tooling/",
+        "docs/"
+      ],
+      "depends_on": [
+        {
+          "task": "BX-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "S001-T001",
+      "lot": "LOT-03",
+      "title": "Add Vitest (pinned) at workspace root and wire `pnpm test`; replace the broken `packages/core` test script (`node --experimental-s",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T001 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Add Vitest (pinned) at workspace root and wire `pnpm test`; replace the broken `packages/core` test script (`node --experimental-strip-types src/__tests__/run.ts` → `vitest run`) in `packages/core/package.json` (research R7, Article XI)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T001"
+    },
+    {
+      "id": "S001-T002",
+      "lot": "LOT-03",
+      "title": "Add `@supabase/supabase-js` + `@supabase/ssr` (pinned) to `apps/web/package.json`; document `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUB",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T002 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] Add `@supabase/supabase-js` + `@supabase/ssr` (pinned) to `apps/web/package.json`; document `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` entries in `.env.example` (anon key is the only client-visible value — D-059)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-18",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T002"
+    },
+    {
+      "id": "S001-T003",
+      "lot": "LOT-03",
+      "title": "Configure Supabase Auth phone mode with test phone numbers (fixed OTP, zero SMS — research R4) in `supabase/config.toml` for the l",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T003 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] Configure Supabase Auth phone mode with test phone numbers (fixed OTP, zero SMS — research R4) in `supabase/config.toml` for the local stack (create via `supabase init` if absent, preserving `supabase/migrations/`); verify `supabase start` boots"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T003"
+    },
+    {
+      "id": "S001-T004",
+      "lot": "LOT-03",
+      "title": "Draft migration `supabase/migrations/20260908120000_identity_tables.sql`: `customer_accounts` (incl. `email_verified_at`, partial ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T004 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Draft migration `supabase/migrations/20260908120000_identity_tables.sql`: `customer_accounts` (incl. `email_verified_at`, partial UNIQUE index on verified email — D-053), `phone_number_history`, `partners`, `referrals`, `wallet_units`, `wallet_entries`, `admission_notices`, `app_setting_definitions` + `app_settings_versions` (typed, bounded, versioned, append-only — D-057), `staff_actions` exactly per data-model.md (UUID PKs, FKs, CHECK constraints: attribution XOR, self-referral, unique `referred_phone_e164`; all timestamps `timestamptz`, server clock — D-058)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-04",
+        "SEC-26",
+        "SEC-27",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T003",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-SEC-B",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-SEC-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T004"
+    },
+    {
+      "id": "S001-T005",
+      "lot": "LOT-03",
+      "title": "Draft migration `supabase/migrations/20260908120100_identity_triggers.sql`: append-only triggers on `wallet_entries`, `staff_actio",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T005 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Draft migration `supabase/migrations/20260908120100_identity_triggers.sql`: append-only triggers on `wallet_entries`, `staff_actions`, `app_settings_versions` (BEFORE UPDATE OR DELETE raises — research R10, D-057); write-once trigger on `customer_accounts` protected columns (`claimed_at`, `admitted_at`, `first_subscribed_at`, `first_delivery_at`, `acquisition_source`, `referred_by_account_id`, `partner_id` — FR-031); type/bounds validation trigger on `app_settings_versions` against `app_setting_definitions` (D-057)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-11",
+        "SEC-26",
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T003",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-SEC-B",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-SEC-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T005"
+    },
+    {
+      "id": "S001-T006",
+      "lot": "LOT-03",
+      "title": "Draft deny-by-default grants/RLS for every new table and the exposed legacy surfaces inventoried by S001-SEC-B. No client domain w",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T006 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Draft deny-by-default grants/RLS for every new table and the exposed legacy surfaces inventoried by S001-SEC-B. No client domain writes; API-only reads preferred. Every direct-read exception must validate owner, live session and risk clearance. Tests use actual anon/authenticated/runtime roles (SEC-29)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T003",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-SEC-B",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-SEC-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T006"
+    },
+    {
+      "id": "S001-T007",
+      "lot": "LOT-03",
+      "title": "Draft migration `supabase/migrations/20260908120300_identity_seeds_and_subscriptions.sql`: seed `app_setting_definitions` + v1 val",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T007 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Draft migration `supabase/migrations/20260908120300_identity_seeds_and_subscriptions.sql`: seed `app_setting_definitions` + v1 values (`queue_enabled=true`, `weekly_admission_cap=8` bounded ≥0, `referral_reward_cap=5` bounded ≥0, `referral_reward_days_by_cycle`, `admission_dormancy_weeks=4` bounded ≥1) and `wallet_units` (`day`, `mad`); ALTER `subscriptions` ADD nullable `customer_account_id` (FK), `ended_at`, `price_guaranteed_until` (REPO-D-026)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-11",
+        "SEC-15"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T003",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-SEC-B",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-SEC-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T007"
+    },
+    {
+      "id": "S001-T008",
+      "lot": "LOT-03",
+      "title": "Apply T004–T007 to the **local** stack (`supabase db reset`) and smoke-verify constraints (append-only raise, write-once raise, RL",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T008 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Apply T004–T007 to the **local** stack (`supabase db reset`) and smoke-verify constraints (append-only raise, write-once raise, RLS denial, settings bounds rejection) with a throwaway SQL script — do NOT touch production"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-26",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T004",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T005",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T006",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T007",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T001",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T008"
+    },
+    {
+      "id": "S001-T009",
+      "lot": "LOT-03",
+      "title": "Create Supabase clients in `apps/web/lib/supabase/client.ts` (browser, anon key only) and `apps/web/lib/supabase/server.ts` (servi",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T009 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] Create Supabase clients in `apps/web/lib/supabase/client.ts` (browser, anon key only) and `apps/web/lib/supabase/server.ts` (service-role + SSR helpers), activating the intent of the dormant `apps/web/lib/auth-supabase.ts` (research R1, D-059)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-18",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T008",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T002",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T009"
+    },
+    {
+      "id": "S001-T010",
+      "lot": "LOT-03",
+      "title": "Implement the reviewed token + live-session + time-bound + risk-clearance + owner guard from S001-SEC-C. Do not infer immediate re",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T010 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Implement the reviewed token + live-session + time-bound + risk-clearance + owner guard from S001-SEC-C. Do not infer immediate revocation from getUser() alone; test old JWT against API and exposed direct paths (SEC-03/04/29)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-04",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T008",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-SEC-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-SEC-A",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T009",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-SESSION",
+        "G-RECOVERY"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T010"
+    },
+    {
+      "id": "S001-T011",
+      "lot": "LOT-03",
+      "title": "Integrate the 003 staff guard (email/password/TOTP, permission/resource scope) and mandatory staff audit. Do not create require-le",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T011 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Integrate the 003 staff guard (email/password/TOTP, permission/resource scope) and mandatory staff audit. Do not create require-legacy-admin.ts. New staff routes remain unavailable until 003 is verified (D-046/052)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T008",
+          "condition": "verified"
+        },
+        {
+          "task": "B02-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T011"
+    },
+    {
+      "id": "S001-T012",
+      "lot": "LOT-03",
+      "title": "Scaffold `@fitnest/core` domain modules with types treating wallet units as opaque data (FR-053) and a single time utility pinning",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T012 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] Scaffold `@fitnest/core` domain modules with types treating wallet units as opaque data (FR-053) and a single time utility pinning ISO-week computation to Africa/Casablanca (D-058): `packages/core/src/identity/`, `packages/core/src/wallet/`, `packages/core/src/referral/`, `packages/core/src/time/`, exported from `packages/core/src/index.ts`"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-15"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T008",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T012"
+    },
+    {
+      "id": "S001-T013",
+      "lot": "LOT-03",
+      "title": "Present the four draft migrations (T004–T007) to the founder for review and production-apply arbitration — **explicit founder appr",
+      "kind": "gate",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T013 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Present the four draft migrations (T004–T007) to the founder for review and production-apply arbitration — **explicit founder approval required, never assumed**; log the outcome in `docs/decisions-log.md`. No task of phases 3–8 starts before this gate passes."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-31",
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T008",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T009",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T010",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T011",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T012",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T013"
+    },
+    {
+      "id": "S001-T014",
+      "lot": "LOT-03",
+      "title": "[US1] Test queue/state derivation including cap=0 (paused, no date), actual admissions already consumed this week, cap lowered bel",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T014 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US1] Test queue/state derivation including cap=0 (paused, no date), actual admissions already consumed this week, cap lowered below actual count, stable rank tie-break and Casablanca ISO-week boundary (research R8)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-15"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T014"
+    },
+    {
+      "id": "S001-T015",
+      "lot": "LOT-03",
+      "title": "[US1] Integration test for claim idempotency + attribution in `apps/web/__tests__/api/claim.test.ts`: same phone twice → same acco",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T015 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US1] Integration test for claim idempotency + attribution in `apps/web/__tests__/api/claim.test.ts`: same phone twice → same account, no re-attribution (FR-016a); referral code, partner code, invalid/own code → `direct`; queue-disabled claim → immediate `admitted_at` (FR-051); all dates server-clock (D-058)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T015"
+    },
+    {
+      "id": "S001-T016",
+      "lot": "LOT-03",
+      "title": "[US1] Implement queue/state derivations in `packages/core/src/identity/queue.ts` and `packages/core/src/identity/states.ts` (pure ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T016 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US1] Implement queue/state derivations in `packages/core/src/identity/queue.ts` and `packages/core/src/identity/states.ts` (pure functions over rows + settings)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-15"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T016"
+    },
+    {
+      "id": "S001-T017",
+      "lot": "LOT-03",
+      "title": "[US1] Implement attribution resolution in `packages/core/src/referral/attribution.ts`: crockford-base32 code generation (6–8 chars",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T017 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US1] Implement attribution resolution in `packages/core/src/referral/attribution.ts`: crockford-base32 code generation (6–8 chars, no 0/O/1/I), referral-vs-partner resolution, self-referral rejection (R12)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T017"
+    },
+    {
+      "id": "S001-T018",
+      "lot": "LOT-03",
+      "title": "Implement `POST /api/account/claim` in `apps/web/app/api/account/claim/route.ts`: transaction creating `customer_accounts` + first",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T018 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US1] Implement `POST /api/account/claim` in `apps/web/app/api/account/claim/route.ts`: transaction creating `customer_accounts` + first `phone_number_history` row + `referrals` row when referred; idempotent per phone; `admitted_at = now()` when `queue_enabled = false`; never fails on a bad attribution code (contracts § claim)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-04",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T014",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T015",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T016",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T017",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T018"
+    },
+    {
+      "id": "S001-T019",
+      "lot": "LOT-03",
+      "title": "Implement `GET /api/account/me` in `apps/web/app/api/account/me/route.ts`: derived state, queue position + expected week, `queueEn",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T019 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US1] Implement `GET /api/account/me` in `apps/web/app/api/account/me/route.ts`: derived state, queue position + expected week, `queueEnabled`, `canConfigureSubscription`, `referralAvailable` (contracts § me)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-04",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T019"
+    },
+    {
+      "id": "S001-T020",
+      "lot": "LOT-03",
+      "title": "Build web claim flow in `apps/web/app/(auth)/claim/page.tsx` + OTP components: phone entry → `signInWithOtp` → code entry → `verif",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T020 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US1] Build web claim flow in `apps/web/app/(auth)/claim/page.tsx` + OTP components: phone entry → `signInWithOtp` → code entry → `verifyOtp` → claim → queue/admitted view; FR/EN copy (D-033), mobile-first, retry with fresh code without losing state (US1 scenario 3, Article X); route added to middleware `publicRoutes`, **not linked from navbar/homepage until launch (P2 arbitration)**"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T019",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T020"
+    },
+    {
+      "id": "S001-T021",
+      "lot": "LOT-03",
+      "title": "Real-database tests: two concurrent admissions for one remaining place never exceed cap; disable queue vs concurrent claim admits ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T021 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Real-database tests: two concurrent admissions for one remaining place never exceed cap; disable queue vs concurrent claim admits consistently; duplicate retries do not duplicate notices; settings versions/audit remain immutable (SEC-11)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-11",
+        "SEC-15"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T021"
+    },
+    {
+      "id": "S001-T022",
+      "lot": "LOT-03",
+      "title": "Implement `GET /api/admin/queue` in `apps/web/app/api/admin/queue/route.ts`: queued accounts in claim order + current ISO-week (Af",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T022 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Implement `GET /api/admin/queue` in `apps/web/app/api/admin/queue/route.ts`: queued accounts in claim order + current ISO-week (Africa/Casablanca) admission count vs cap (003 staff guard + permission/resource scope + audit)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-09"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T022"
+    },
+    {
+      "id": "S001-T023",
+      "lot": "LOT-03",
+      "title": "Implement `POST /api/admin/admissions` in `apps/web/app/api/admin/admissions/route.ts`: weekly-cap check (D-058 week), write-once ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T023 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Implement `POST /api/admin/admissions` in `apps/web/app/api/admin/admissions/route.ts`: weekly-cap check (D-058 week), write-once `admitted_at`, create `admission_notices` row, `staff_actions` audit — records the person's effective admission, never a slot (FR-042, Article IX)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-11"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T023"
+    },
+    {
+      "id": "S001-T024",
+      "lot": "LOT-03",
+      "title": "[US2] Implement `POST /api/admin/notices/[id]/sent` in `apps/web/app/api/admin/notices/[id]/sent/route.ts` (`sent_at`, `channel`, ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T024 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US2] Implement `POST /api/admin/notices/[id]/sent` in `apps/web/app/api/admin/notices/[id]/sent/route.ts` (`sent_at`, `channel`, audit — FR-015, D-016)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-28"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T024"
+    },
+    {
+      "id": "S001-T025",
+      "lot": "LOT-03",
+      "title": "Implement `PUT /api/admin/settings/queue-mode` in `apps/web/app/api/admin/settings/queue-mode/route.ts`: disable = single transact",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T025 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Implement `PUT /api/admin/settings/queue-mode` in `apps/web/app/api/admin/settings/queue-mode/route.ts`: disable = single transaction admitting every queued account + notice rows + audit (FR-048–051); and generic `PUT /api/admin/settings/[key]` in `apps/web/app/api/admin/settings/[key]/route.ts`: writes a **new validated version row** (type/bounds per `app_setting_definitions`, D-057) — effective next read, FR-010"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-11"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T025"
+    },
+    {
+      "id": "S001-T026",
+      "lot": "LOT-03",
+      "title": "Implement `POST /api/account/reactivate` in `apps/web/app/api/account/reactivate/route.ts`: dormant admission reactivation, no que",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T026 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Implement `POST /api/account/reactivate` in `apps/web/app/api/account/reactivate/route.ts`: dormant admission reactivation, no queue re-entry, no blame copy (FR-036)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T026"
+    },
+    {
+      "id": "S001-T027",
+      "lot": "LOT-03",
+      "title": "Build web queue-status view in `apps/web/app/account/page.tsx`: position + expected week, admitted state, dormant state with react",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T027 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Build web queue-status view in `apps/web/app/account/page.tsx`: position + expected week, admitted state, dormant state with reactivation step — never a rejection, an error shape, or an empty catalogue (FR-014, SC-005); subscription-configuration entry gated by `canConfigureSubscription` (FR-013); FR/EN copy (D-033)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T027"
+    },
+    {
+      "id": "S001-T028",
+      "lot": "LOT-03",
+      "title": "Build admissions/notice/settings screen inside the verified 003 admin shell and permissions, with version conflict/error states. N",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T028 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US2] Build admissions/notice/settings screen inside the verified 003 admin shell and permissions, with version conflict/error states. No temporary legacy-auth screen (D-046/052)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-05",
+        "SEC-06",
+        "SEC-07",
+        "SEC-08",
+        "SEC-11"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T028"
+    },
+    {
+      "id": "S001-T029",
+      "lot": "LOT-03",
+      "title": "Test revoked access against all domain/direct paths, own/other-device scope, bounded expiry/refresh replay, risky recovery and pro",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T029 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US3] Test revoked access against all domain/direct paths, own/other-device scope, bounded expiry/refresh replay, risky recovery and proof-required single/bulk disconnect; no one-by-one bypass (SEC-03/04)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T029"
+    },
+    {
+      "id": "S001-T030",
+      "lot": "LOT-03",
+      "title": "[US3] Implement device-label derivation from `user_agent` in `packages/core/src/identity/device-label.ts` (shared by all surfaces ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T030 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US3] Implement device-label derivation from `user_agent` in `packages/core/src/identity/device-label.ts` (shared by all surfaces — R3)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T030"
+    },
+    {
+      "id": "S001-T031",
+      "lot": "LOT-03",
+      "title": "Implement owner-scoped device list and targeted/bulk revoke using the supported, tested S001-SEC-C design. Same independent proof ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T031 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US3] Implement owner-scoped device list and targeted/bulk revoke using the supported, tested S001-SEC-C design. Same independent proof applies to disconnecting one other device or all. No signOut(session_id) call and no OTP-only risky fallback (SEC-03/04)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T029",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013",
+        "G-SESSION",
+        "G-RECOVERY"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T031"
+    },
+    {
+      "id": "S001-T032",
+      "lot": "LOT-03",
+      "title": "Implement bounded session configuration from the accepted G-SESSION ADR, document deployed/local values and rotation/reuse behavio",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T032 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US3] Implement bounded session configuration from the accepted G-SESSION ADR, document deployed/local values and rotation/reuse behavior. Prove server lifetime enforcement; no unlimited refresh/session assumption (D-053)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-03"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T029",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013",
+        "G-SESSION"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T032"
+    },
+    {
+      "id": "S001-T033",
+      "lot": "LOT-03",
+      "title": "Handoff native devices/recovery UI to 004/LOT-09, using the shared session contract. Keep this ID as a trace obligation and close ",
+      "kind": "handoff",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T033 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US3] Handoff native devices/recovery UI to 004/LOT-09, using the shared session contract. Keep this ID as a trace obligation and close it only with native acceptance evidence; no web subscriber devices page (D-040)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-04",
+        "SEC-18",
+        "SEC-21"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "B09-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T033"
+    },
+    {
+      "id": "S001-T034",
+      "lot": "LOT-03",
+      "title": "[US4] Unit tests for reward eligibility matrix in `packages/core/src/__tests__/referral.test.ts`: cap reached, number already rewa",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T034 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US4] Unit tests for reward eligibility matrix in `packages/core/src/__tests__/referral.test.ts`: cap reached, number already rewarded, referrer inactive at evaluation, reward size by cycle (FR-019–022)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T034"
+    },
+    {
+      "id": "S001-T035",
+      "lot": "LOT-03",
+      "title": "Real-database tests: authoritative first-delivery event is owner/actor scoped, write-once and source-idempotent; duplicate events ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T035 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US4] Real-database tests: authoritative first-delivery event is owner/actor scoped, write-once and source-idempotent; duplicate events and two referrals at cap-minus-one produce at most one allowed reward; correction/replay never reissues (SEC-27)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-10",
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T035"
+    },
+    {
+      "id": "S001-T036",
+      "lot": "LOT-03",
+      "title": "[US4] Implement reward-eligibility rules in `packages/core/src/referral/eligibility.ts` (pure; settings-driven cap and sizes)",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T036 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US4] Implement reward-eligibility rules in `packages/core/src/referral/eligibility.ts` (pure; settings-driven cap and sizes)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T036"
+    },
+    {
+      "id": "S001-T037",
+      "lot": "LOT-03",
+      "title": "Implement internal first-delivery reward handler against the LOT-11 accepted delivery-event contract. Use delivery/subscription/ev",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T037 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US4] Implement internal first-delivery reward handler against the LOT-11 accepted delivery-event contract. Use delivery/subscription/event IDs and authorized transition, not arbitrary account-only success. Record actor, server time, cohort fact and atomic capped reward with outbox/audit; expose no standalone manual backdoor (SEC-10/27)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-10",
+        "SEC-26",
+        "SEC-27",
+        "SEC-28"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "B11-C",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "S001-T035",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T036",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T037"
+    },
+    {
+      "id": "S001-T038",
+      "lot": "LOT-03",
+      "title": "Handoff referral share/history UI to native LOT-10 using the shared contract and active-subscription eligibility; retain this ID u",
+      "kind": "handoff",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T038 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US4] Handoff referral share/history UI to native LOT-10 using the shared contract and active-subscription eligibility; retain this ID until native proof. No web subscriber referral dashboard (D-040)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-27"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "B10-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T038"
+    },
+    {
+      "id": "S001-T039",
+      "lot": "LOT-03",
+      "title": "Implement account email capture/verification integration with LOT-12: account-bound expiring single-use proof, partial uniqueness ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T039 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US5] Implement account email capture/verification integration with LOT-12: account-bound expiring single-use proof, partial uniqueness for verified normalized email, generic collision error. Payment and risky recovery fail closed until required proof (SEC-04)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "B12-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T039"
+    },
+    {
+      "id": "S001-T040",
+      "lot": "LOT-03",
+      "title": "Build verified-email step at the web payment summary, connected to LOT-12; claim still requires no email. No unrelated subscriber ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T040 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US5] Build verified-email step at the web payment summary, connected to LOT-12; claim still requires no email. No unrelated subscriber web management surface (D-013/053)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T039",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T040"
+    },
+    {
+      "id": "S001-T041",
+      "lot": "LOT-03",
+      "title": "[US6] Unit tests for balance derivation per unit + consumption-order rule (days before dirhams — rule shipped for the pricing slic",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T041 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US6] Unit tests for balance derivation per unit + consumption-order rule (days before dirhams — rule shipped for the pricing slice) in `packages/core/src/__tests__/wallet.test.ts` (FR-045–047)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T041"
+    },
+    {
+      "id": "S001-T042",
+      "lot": "LOT-03",
+      "title": "Test ledger privileges and append-only triggers with actual runtime roles (including TRUNCATE denial), idempotent source and compe",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T042 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US6] Test ledger privileges and append-only triggers with actual runtime roles (including TRUNCATE denial), idempotent source and compensation; balance equals sum by unit. Concurrent redemption is additionally owned by LOT-07 (SEC-26)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-26",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T042"
+    },
+    {
+      "id": "S001-T043",
+      "lot": "LOT-03",
+      "title": "[US6] Implement balance derivation + unit-opaque types in `packages/core/src/wallet/balance.ts` (units read from `wallet_units`, n",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T043 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] [US6] Implement balance derivation + unit-opaque types in `packages/core/src/wallet/balance.ts` (units read from `wallet_units`, never enumerated in code — FR-053)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T041",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T042",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T043"
+    },
+    {
+      "id": "S001-T044",
+      "lot": "LOT-03",
+      "title": "Implement `GET /api/wallet` in `apps/web/app/api/wallet/route.ts` (balances per unit + entries with reason/source/acquired_at — re",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T044 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US6] Implement `GET /api/wallet` in `apps/web/app/api/wallet/route.ts` (balances per unit + entries with reason/source/acquired_at — read-only, no consumption endpoint in this slice)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-26",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T044"
+    },
+    {
+      "id": "S001-T045",
+      "lot": "LOT-03",
+      "title": "Handoff native wallet balances/history UI to LOT-10; preserve day and MAD units and this acceptance ID. Do not build apps/web/app/",
+      "kind": "handoff",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T045 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[US6] Handoff native wallet balances/history UI to LOT-10; preserve day and MAD units and this acceptance ID. Do not build apps/web/app/account/wallet (D-040, MC-08)."
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-26"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "B10-V",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-T013"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T045"
+    },
+    {
+      "id": "S001-T046",
+      "lot": "LOT-03",
+      "title": "Document and test the FR-032 cohort-reconstruction SQL (first-subscription week in Africa/Casablanca — D-058, still-active at +4/8",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T046 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "Document and test the FR-032 cohort-reconstruction SQL (first-subscription week in Africa/Casablanca — D-058, still-active at +4/8/12 weeks) as a committed query in `specs/001-identity-account-admission/cohort-query.sql` + a Vitest asserting it against fixtures (SC-004; depends on T007 columns)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T007",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T046"
+    },
+    {
+      "id": "S001-T047",
+      "lot": "LOT-03",
+      "title": "Run the full `quickstart.md` validation pass (all US scenarios + queue-mode switch) against the local stack and record results in ",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T047 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] Run the full `quickstart.md` validation pass (all US scenarios + queue-mode switch) against the local stack and record results in the PR description"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-31"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T015",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T021",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T029",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T035",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T042",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T046",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T047"
+    },
+    {
+      "id": "S001-T048",
+      "lot": "LOT-03",
+      "title": "Verify workspace-wide `tsc --noEmit` strict pass and green `pnpm test`; wire both into CI for the PR, **including Supabase provisi",
+      "kind": "implementation",
+      "owner": "identity/backend + QA",
+      "status": "planned",
+      "outputs": [
+        "T048 implementation/evidence in source task"
+      ],
+      "acceptance": [
+        "[P] Verify workspace-wide `tsc --noEmit` strict pass and green `pnpm test`; wire both into CI for the PR, **including Supabase provisioning in the pipeline** (`supabase start` or equivalent containers) so the integration tests of T015/T021/T029/T035/T042 actually run in CI (Article XI)"
+      ],
+      "source_refs": [
+        "001:FR-001–053",
+        "D-030",
+        "D-053",
+        "D-063"
+      ],
+      "security": [
+        "SEC-32"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "packages/core/",
+        "apps/web/",
+        "supabase/",
+        "tests/",
+        ".github/",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "vitest.config.ts"
+      ],
+      "depends_on": [
+        {
+          "task": "S001-T013",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T018",
+          "condition": "verified"
+        },
+        {
+          "task": "S001-T047",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null,
+      "legacy_id": "T048"
+    },
+    {
+      "id": "S001-SEC-A",
+      "lot": "LOT-03",
+      "title": "OTP abuse/risk/recovery design",
+      "kind": "contract",
+      "owner": "security/backend",
+      "status": "planned",
+      "outputs": [
+        "ADR and isolated acceptance fixtures"
+      ],
+      "acceptance": [
+        "OTP abuse/risk/recovery design; record unresolved choices and no production writes."
+      ],
+      "source_refs": [
+        "D-052",
+        "D-053",
+        "D-057",
+        "D-059"
+      ],
+      "security": [
+        "SEC-01",
+        "SEC-02",
+        "SEC-04"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "docs/",
+        "tests/"
+      ],
+      "depends_on": [],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "S001-SEC-B",
+      "lot": "LOT-03",
+      "title": "Actual schema/exposure and privilege inventory",
+      "kind": "contract",
+      "owner": "security/backend",
+      "status": "planned",
+      "outputs": [
+        "ADR and isolated acceptance fixtures"
+      ],
+      "acceptance": [
+        "Actual schema/exposure and privilege inventory; record unresolved choices and no production writes."
+      ],
+      "source_refs": [
+        "D-052",
+        "D-053",
+        "D-057",
+        "D-059"
+      ],
+      "security": [
+        "SEC-06",
+        "SEC-29",
+        "SEC-30"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "docs/",
+        "tests/"
+      ],
+      "depends_on": [],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "S001-SEC-C",
+      "lot": "LOT-03",
+      "title": "Supported bounded session and revocation proof",
+      "kind": "contract",
+      "owner": "security/backend",
+      "status": "planned",
+      "outputs": [
+        "ADR and isolated acceptance fixtures"
+      ],
+      "acceptance": [
+        "Supported bounded session and revocation proof; record unresolved choices and no production writes."
+      ],
+      "source_refs": [
+        "D-052",
+        "D-053",
+        "D-057",
+        "D-059"
+      ],
+      "security": [
+        "SEC-03",
+        "SEC-04",
+        "SEC-29"
+      ],
+      "capabilities": [
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-25",
+        "CAP-26"
+      ],
+      "allowed_paths": [
+        "specs/001-identity-account-admission/",
+        "docs/",
+        "tests/"
+      ],
+      "depends_on": [],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "CUSTOMIZE-CONTRACT",
+      "lot": "LOT-10",
+      "title": "Resolve Customize and preserve scope trace",
+      "kind": "contract",
+      "owner": "product/food/UX",
+      "status": "planned",
+      "outputs": [
+        "explicit CAP-21 decision and spec amendment"
+      ],
+      "acceptance": [
+        "Decide inclusion and exact component/price/nutrition/production behavior; record founder choice before implementation."
+      ],
+      "source_refs": [
+        "D-024",
+        "MC-03"
+      ],
+      "security": [
+        "SEC-13",
+        "SEC-16"
+      ],
+      "capabilities": [
+        "CAP-20",
+        "CAP-21",
+        "CAP-22",
+        "CAP-23",
+        "CAP-24",
+        "CAP-25",
+        "CAP-26",
+        "CAP-27"
+      ],
+      "allowed_paths": [
+        "specs/lifecycle/",
+        "docs/"
+      ],
+      "depends_on": [
+        {
+          "task": "B10-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "start_gates": [],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    },
+    {
+      "id": "CUSTOMIZE-DELIVERY",
+      "lot": "LOT-10",
+      "title": "Deliver approved Customize behavior or explicit scope resolution",
+      "kind": "implementation",
+      "owner": "mobile/backend/food",
+      "status": "planned",
+      "outputs": [
+        "approved implementation and tests or explicit excluded-scope decision"
+      ],
+      "acceptance": [
+        "No silent omission: if included, test component removal, safe recomputation, price and production; if excluded, retain attributable product decision."
+      ],
+      "source_refs": [
+        "D-024"
+      ],
+      "security": [
+        "SEC-13",
+        "SEC-16"
+      ],
+      "capabilities": [
+        "CAP-20",
+        "CAP-21",
+        "CAP-22",
+        "CAP-23",
+        "CAP-24",
+        "CAP-25",
+        "CAP-26",
+        "CAP-27"
+      ],
+      "allowed_paths": [
+        "apps/mobile/",
+        "apps/web/",
+        "packages/core/",
+        "supabase/"
+      ],
+      "depends_on": [
+        {
+          "task": "CUSTOMIZE-CONTRACT",
+          "condition": "contract_accepted"
+        },
+        {
+          "task": "B10-I",
+          "condition": "verified"
+        }
+      ],
+      "start_gates": [
+        "G-CUSTOMIZE"
+      ],
+      "merge_gates": [
+        "G-CONSTITUTION"
+      ],
+      "evidence": [],
+      "budget_usd": null,
+      "cost_estimate_usd": null,
+      "cost_reconciled_usd": null,
+      "attempts": 0,
+      "max_attempts": null
+    }
+  ]
+}

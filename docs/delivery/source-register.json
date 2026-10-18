@@ -1,0 +1,42 @@
+{
+  "base_commit": "99d5e2ff78db63bbc048890dc17fd2d9d6f132b9",
+  "reviewed_on": "2026-10-18",
+  "original_capability_map": "not_recovered",
+  "sources": [
+    {
+      "name": "decisions-log-3.md",
+      "sha256": "345f2eae931e2ff6554cb1c285626b4f2f2fa4449a6831339451e0430d8982ba",
+      "authority": "founder_supplied_document"
+    },
+    {
+      "name": "catalogue-ecrans-calo-2.md",
+      "sha256": "d3e74c3829512354eefe1b9495ef2c04662ade0faa67b82a65062d4dc4661564",
+      "authority": "founder_supplied_document"
+    },
+    {
+      "name": "slice-02-menu-generation-consolidation.md",
+      "sha256": "164b98602c3a3d727ceeba103ad7cc938aa33c924283b22f87bab935ddfdf560",
+      "authority": "founder_supplied_document"
+    },
+    {
+      "name": "slice-03-staff-accounts-admin-shell-1.md",
+      "sha256": "92e0fba6207200d10dbfb4718e3e6e1bc31f0987f5a8700fe4c13853018fe883",
+      "authority": "founder_supplied_document"
+    },
+    {
+      "name": "slice-04-mobile-foundation-1.md",
+      "sha256": "20865d544cb80c378567e7c63ff6a67dd99b6f2841f3478259720b4c85797ff6",
+      "authority": "founder_supplied_document"
+    },
+    {
+      "name": "fitnest-revue-securite-specs-2026-09-08.md",
+      "sha256": "6f80735092e0a34d6ac5936425d821204d324c1ee0999e8dd6a70399de8b59b2",
+      "authority": "founder_supplied_document"
+    },
+    {
+      "name": "Fitnest/fitnest-base-meals-evolutions.md",
+      "sha256": "af2a0dac45a3db6ca7bde668f3e7031078ca1bd3509fd182182ab03bac5cae5d",
+      "authority": "founder_supplied_document"
+    }
+  ]
+}

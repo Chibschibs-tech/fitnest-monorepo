@@ -1,65 +1,34 @@
-# Quickstart — Validation guide for slice 001
+# Validation runbook — 001
 
-Runnable scenarios proving the feature end-to-end. References: [data-model.md](./data-model.md), [contracts/api.md](./contracts/api.md). No implementation code here — this is the validation script.
+Status: acceptance plan only; no application test execution is claimed by the baseline synchronization. Record exact commit, runtime/dependency versions, local database reset/migration output and test results in the implementation PR. Use synthetic accounts and test providers, never production credentials.
 
-## Prerequisites
+## Before user stories
 
-- `pnpm install` at repo root; Docker running.
-- `supabase start` (local stack) — the proposed migrations of this slice applied **locally only** (production apply is a founder-gated act, Article II).
-- Supabase Auth phone mode with **test phone numbers** configured (fixed OTP, zero SMS — R4). No SMS provider needed.
-- `pnpm --filter my-v0-project dev` for the web app (the package's historical name — renaming is out of this slice's scope). Web-only slice (D-030): cross-surface checks run web ↔ web with a second browser/device.
-- Seed: `app_setting_definitions` + version-1 values (`queue_enabled = true`, `weekly_admission_cap = 8`, `referral_reward_cap = 5`, `admission_dormancy_weeks = 4`, reward sizes — typed/bounded/versioned per D-057), `wallet_units` (`day`, `mad`), one `partners` row with a short code.
+T001–T003 must provision the selected pinned runner and local Supabase. S001-SEC-B inventories existing schema; S001-SEC-C proves session design. T004–T008 draft/apply migrations locally only and verify actual database roles. Present the concrete evidence at T013; no phases 3–8 implementation starts before that gate. Do not mark this runbook passed because a mock returned success.
 
-## Scenario walkthroughs (map 1:1 to the spec's user stories)
+## Acceptance matrix
 
-### US1 — Claim (P1)
-1. With test number A: send OTP, verify, `POST /api/account/claim`. Expect: account exists, `state = "queued"`, position + expected week visible, `claimed_at` and `acquisition_source = "direct"` recorded, **no password, no email asked** (SC-001).
-2. Repeat claim with the same number → same account id, same position (idempotency, edge case 1).
-3. Flip `queue_enabled = false`, claim with fresh number B → `state = "admitted"`, `admitted_at` set immediately, no waiting screen (FR-049/051, scenario 1bis).
+| Scenario | Required result |
+|---|---|
+| OTP concurrent verify, replay, expiry and distributed quota | One valid consumption; no duplicated identity, enumeration or SMS budget bypass |
+| Fresh claim in queue/direct mode; repeated cleared claim | One account, immutable source, correct admission timestamp |
+| Recycled number/risky new device | No historical account disclosure before independent proof |
+| Verified email collision and reused challenge | Generic rejection; no overwrite or disclosure; payment waits for verification |
+| Queue cap zero/lowered/mid-week | Honest paused/conditional estimate with remaining capacity, no division by zero |
+| Two admissions for one remaining weekly place | Exactly one succeeds, cap preserved transactionally |
+| Queue disable concurrent with claim and retry | Every applicable account admitted once with notice and audit |
+| Dormancy four weeks and reactivation | No claim expiry/requeue or blame notification |
+| Revoked access token still cryptographically valid | API plus every exposed direct data/RPC/realtime path denies it |
+| Single/bulk disconnect from risky new device | Same independent-proof rule, no one-by-one bypass |
+| Finite idle/absolute expiry and refresh replay | Matches accepted ADR, including documented provider replay exceptions |
+| Staff deactivation, role change, fake cookie and cross-origin mutation | Existing credentials fail next request when unauthorized |
+| Referral at claim/payment/actual first delivery | Reward only on authoritative completed delivery |
+| Duplicate delivery and simultaneous referrals at cap-minus-one | No duplicate or over-cap reward; no billing-date shift |
+| Correction/reconfirmation | Historical event retained, no second reward, compensation separately traced |
+| Wallet read/immutability/privileges | Own balances by unit; runtime cannot UPDATE/DELETE/TRUNCATE or alter triggers |
+| Day redemption without active subscription | Refused, no day-to-money conversion (integrated billing acceptance) |
+| Cohorts +4/+8/+12 weeks across pause/end/renewal | Reconstructed from first-paid-subscription and historical validity intervals |
+| Web/native scope | Web acquisition/queue/payment/rescue only; native handoff obligations T033/038/045 verified by mobile release |
+| FR/EN and errors | Both locales, honest pending/failure states with recovery action |
 
-> **SC-005 measurement note (founder, 2026-08-30)**: while admission notices are sent manually (FR-015, D-016), the 48-hour response of SC-005 is measured **operationally**, not by software — the system records due/sent, the staff guarantees the delay. The immediate queue-status view (position + expected week) is the software half of the promise.
-
-### US2 — Waiting without rejection (P1)
-1. Queue enabled, account A queued: `GET /api/account/me` shows position and expected week — never an error shape (FR-014, SC-005).
-2. `canConfigureSubscription = false` while queued (FR-013).
-3. Admit A via `POST /api/admin/admissions` → `admitted_at` recorded, notice row due; `GET /api/account/me` → `state = "admitted"`, `canConfigureSubscription = true`.
-4. Change `weekly_admission_cap` via settings route → expected weeks shift on next read, no client release (US2 scenario 4).
-5. Admit up to the cap, then attempt one more → refused: the cap bounds, never admits (FR-042).
-
-### US3 — Return & cross-surface (P2, verified web ↔ web per D-030)
-1. Close and reopen the web app with A's session → still signed in, **zero OTP sent** (SC-002).
-2. Sign in from a second browser/device with the same number (one OTP) → same account id, same queue/wallet history (FR-003, SC-006).
-3. `GET /api/sessions` from either device lists both sessions; `DELETE` the other device's session, then replay a request with its old token → rejected on next request (SC-009, R2).
-
-### US4 — Referral (P2)
-1. From an account with an active subscription (fixture), copy `referralCode`; claim number C with it → `referrals` row `pending`, referrer recorded permanently, **no reward yet** (FR-016/017).
-2. `POST /api/admin/first-delivery` for C → reward `issued`, wallet entry unit `day` on the referrer sized by C's cycle, referrer's billing untouched (FR-018/019, SC-008).
-3. Replay first-delivery for C → no second write (`first_delivery_at` write-once), no second reward (FR-021).
-4. Set `referral_reward_cap = 1` and run a second referred first delivery → `never_eligible` (FR-020).
-5. Self-referral and unknown codes at claim → attribution falls back to `direct`, claim never fails.
-
-### US5 — Email at payment (P2)
-1. Admitted account without email: `GET /api/account/me` shows `email: null`; browsing demands nothing (US5 scenario 2).
-2. `POST /api/account/email` stores it; the account remains phone-anchored (FR-006/007).
-
-### US6 — Wallet (P3)
-1. After US4, `GET /api/wallet` on the referrer: balance in `day` equals the sum of entries; the entry carries reason, source, `acquired_at` (FR-024/025).
-2. Attempt `UPDATE`/`DELETE` on `wallet_entries` directly in SQL (as service role) → trigger raises: append-only holds even for privileged code (R10, SC-007).
-3. Insert a `wallet_units` row `point` → accepted with no migration, no release (FR-053).
-
-### Queue-mode switch (FR-048–051)
-1. With ≥2 accounts queued, `PUT /api/admin/settings/queue-mode {enabled:false}` → all queued become admitted in one transaction, each with `admitted_at` and a notice row (FR-050/051).
-2. Re-enable → previously admitted stay admitted; a fresh claim queues (working rule).
-
-### Cohort reconstruction (FR-032, SC-004)
-Run the documented SQL (data-model § FR-032): for a chosen ISO week, list accounts whose `first_subscribed_at` falls in it and count those with an active subscription at +4/8/12 weeks. With fixture subscriptions, verify counts by hand. Proves computability from day one.
-
-## Automated checks (Article XI)
-
-- `pnpm test` — Vitest: `@fitnest/core` unit tests (queue position/expected week, balance derivation, consumption order, referral eligibility matrix) + API integration tests (claim idempotency, write-once triggers, cap bound, revocation).
-- `pnpm -r exec tsc --noEmit` — strict TypeScript across the workspace.
-- CI green required on the PR (Article XI).
-
-## Expected outcomes summary
-
-Every SC of the spec is exercised: SC-001 (US1), SC-002/003 (US3), SC-004 (cohort SQL), SC-005 (US2), SC-006 (US3), SC-007 (US6), SC-008 (US4), SC-009 (US3 step 3).
+Finish with strict type checking, unit/integration CI against provisioned local database and application build. Full V1 then runs payment→activation→menu→freeze→preparation→delivery→wallet/notifications and load/restore gates in the full backlog. This slice alone cannot authorize launch.
