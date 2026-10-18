@@ -13,6 +13,12 @@ This is the implementation starting point for the full V1 approved in the founde
 
 ## Delivery order
 
+Foundation implementation is now proposed in a separate increment:
+[runtime/test contract](foundation-contract.md), [live schema evidence](schema-exposure-review.md),
+and [executor gap review](executor-gap-review.md). The time prototype has 13 passing
+local cases and strict core typechecking. Auth fixtures and CI are prepared; their
+runtime result is pending. These changes do not activate the paid scheduler.
+
 | Stage | Work | Exit proof |
 |---|---|---|
 | Baseline | Reconcile source/spec/task coverage and contradictions | This draft PR and validated manifest; not application completion |
