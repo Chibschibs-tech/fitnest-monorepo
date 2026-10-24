@@ -52,13 +52,11 @@ export function isRiskSignal(signal) {
 }
 
 export function classifySendResult(dispatch) {
-  if (dispatch.delivered) {
-    return 'sent';
-  }
-  if (dispatch.outcomeUnknown) {
-    return 'ambiguous';
-  }
-  return 'not_sent';
+  if (!dispatch || typeof dispatch !== 'object' || dispatch.outcomeUnknown === true) return 'ambiguous';
+  if (dispatch.outcomeUnknown !== undefined && dispatch.outcomeUnknown !== false) return 'ambiguous';
+  if (dispatch.delivered === true) return 'sent';
+  if (dispatch.delivered === false) return 'not_sent';
+  return 'ambiguous';
 }
 
 export function shouldConsumeReservation(result) {
@@ -118,11 +116,11 @@ export function canUnlockHistory(input) {
 }
 
 export function validationAvailable(check) {
-  return check !== 'unavailable';
+  return check === 'live';
 }
 
 export function validationDeniesWhenUnavailable(input) {
-  if (CRITERION.risk.unavailableValidationDenies && !validationAvailable(input.sessionValidation)) {
+  if (CRITERION.risk.unavailableValidationDenies && !validationAvailable(input?.sessionValidation)) {
     return 'deny';
   }
   return 'allow';
@@ -161,3 +159,4 @@ export function newlyAddedEmailProvesOwnership(email) {
   }
   return false;
 }
+
