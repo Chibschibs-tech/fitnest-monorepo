@@ -329,3 +329,18 @@ test('unknown factors and truthy non-boolean evidence cannot authorize recovery'
  assert.equal(recoveryDecision({bothFactorsLost:true,independentEvidence:{sufficient:'false'}}),'deny_history_and_identity_transfer');
 });
 
+
+
+test('unknown delivery outcomes retain reservation and cannot trigger a retry', () => {
+  for (const value of [undefined, null, {}, {delivered:'false'}, {delivered:true,outcomeUnknown:true}]) {
+    const result = classifySendResult(value);
+    assert.equal(result,'ambiguous');
+    assert.equal(shouldConsumeReservation(result),true);
+    assert.equal(allowRetry(result),false);
+  }
+});
+test('missing or unknown validation status always denies access', () => {
+  for (const value of [undefined,null,{}, {sessionValidation:null}, {sessionValidation:'pending'}, {sessionValidation:'failed'}]) {
+    assert.equal(validationDeniesWhenUnavailable(value),'deny');
+  }
+});
