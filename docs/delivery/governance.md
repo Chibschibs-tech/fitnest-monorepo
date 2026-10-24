@@ -12,7 +12,7 @@ Constitution PR #5 (`constitution-v4.3.0`) is still an integration dependency. T
 | X UX | French and English; native subscriber life plus narrowly scoped web rescue; no web wallet/preferences portal | PR #5; D-033/040/061 |
 | XIV Configuration | Typed/bounded/versioned settings, frozen rule versions, audit and purpose-limited retention; ownership/ledger/food/payment invariants cannot be configured away | PR #5; D-057 |
 
-Status: amendment specification prepared, formal constitution merge not done. Existing `docs/decisions-log.md` entries are preserved and a pointer is appended; product D IDs use the namespace in product-baseline.md.
+Status: an explicit v4.4 consolidation is proposed on `fitnest-governance-alignment-20261024`. It ports the founder-arbitrated PR #5 v4.3 text and aligns the five articles below to the already recorded product decisions. Formal merge and attributable review evidence are still required. This document does not approve G-CONSTITUTION or change any other gate. Existing `docs/decisions-log.md` entries are preserved and a pointer is appended; product D IDs use the namespace in product-baseline.md.
 
 ## Evidence and execution
 
