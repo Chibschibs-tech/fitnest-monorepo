@@ -245,8 +245,8 @@ test('sessions enforce short access token and finite idle/absolute lifetime', ()
 
 test('risk signal plus phone OTP alone never unlocks history', () => {
   assert.equal(canUnlockHistory({ riskSignal: 'new_device', independentProof: null }), false);
-  assert.equal(canUnlockHistory({ riskSignal: 'new_device', independentProof: { accountAndActionBound: true, used: false } }), true);
-  assert.equal(canUnlockHistory({ riskSignal: null, independentProof: null }), true);
+  assert.equal(canUnlockHistory({ riskSignal: 'new_device', independentProof: { accountAndActionBound: true, used: false } }), false);
+  assert.equal(canUnlockHistory({ riskSignal: null, independentProof: null }), false);
 });
 
 test('independent proof must be account/action bound and single-use', () => {
@@ -308,3 +308,24 @@ test('criterion and signal tables are immutable', () => {
   assert.equal(Object.isFrozen(RISK_SIGNALS), true);
   assert.equal(Object.isFrozen(SESSION_LIMITS), true);
 });
+
+// Regression examples are isolated fixtures, not ratified session or risk settings.
+const liveRisk = {accountId:'account-a',action:'view_history',riskSignal:'new_device',now:1000,riskObservedAt:500,sessionValidation:'live'};
+const priorEmail = {accountId:'account-a',action:'view_history',factor:'verified_email',verifiedAt:100,expiresAt:2000,previouslyVerified:true,accountAndActionBound:true,used:false};
+test('malformed quota requests, counters and session facts fail closed',()=>{
+ for(const units of [-1,0,NaN,Infinity,0.5])assert.equal(canReserveBeforeSend({quotaRemaining:1,has:()=>false},{idempotencyKey:'x',units}).allowed,false);
+ for(const count of [-1,NaN,Infinity,0.5,undefined])assert.equal(verifyAttemptAllowed(count),false);
+ for(const session of [{},{accessExpiresAt:NaN,absoluteExpiresAt:1200,lastActivityAt:999},{accessExpiresAt:1100,absoluteExpiresAt:1200,lastActivityAt:1001}])assert.equal(sessionValid(session,1000),false);
+});
+test('actual account, action, prior verification, expiry, unused status and live validation bind independent proof',()=>{
+ assert.equal(canUnlockHistory({...liveRisk,independentProof:priorEmail}),true);
+ for(const patch of [{previouslyVerified:false},{factor:'phone_otp'},{accountId:'account-b'},{action:'replace_phone'},{verifiedAt:750},{expiresAt:999},{used:true},{verifiedAt:NaN},{expiresAt:Infinity}])assert.equal(canUnlockHistory({...liveRisk,independentProof:{...priorEmail,...patch}}),false);
+ assert.equal(canUnlockHistory({...liveRisk,sessionValidation:'unavailable',independentProof:priorEmail}),false);
+ assert.equal(canUnlockHistory({...liveRisk,riskSignal:'unknown_new_signal',independentProof:priorEmail}),false);
+});
+test('unknown factors and truthy non-boolean evidence cannot authorize recovery',()=>{
+ for(const factor of ['unverified_email','new_phone','unknown',undefined])assert.equal(factorReplacementAllowed('phone',factor),false);
+ assert.equal(supportApprovalSufficient({independentEvidence:{sufficient:'false'}}),false);
+ assert.equal(recoveryDecision({bothFactorsLost:true,independentEvidence:{sufficient:'false'}}),'deny_history_and_identity_transfer');
+});
+
