@@ -1,5 +1,18 @@
 # S001-SEC-B - current evidence and execution contract
 
+## Contract-scope clarification
+
+The proposed v2 contract and [ADR](adr-sec-b.md) preserve the source task as a
+contract/design deliverable. Migration replay, cross-account runtime behavior
+and revocation are separately assigned downstream; they are not implementation
+work silently added to SEC-B. Deployed Data API configuration has now been observed read-only by root; HTTP
+behavior remains untested. Configured application postgres identity is inferred,
+while live application/migration identity remains unobserved. All 108 API routes
+are mapped at the bound source SHA; non-API actions and deployed SHA remain
+partial factual inventory, not business choices. Their resolution or explicit independent review
+disposition is required before claiming full inventory coverage. No acceptance
+receipt is created by these local fixtures.
+
 ## What changed
 
 Refreshed the actual `fitnest-db` metadata on 2026-10-26 at 18:27:55 UTC
@@ -45,8 +58,8 @@ its secret. Inspect it from the application connection without printing secrets.
   the actual deployed control plane separately.
 - Evidence: `docs/delivery/evidence/schema-inventory-2026-10-26.json`.
 - Offline analysis: `node tests/security/sec-b-inventory.mjs docs/delivery/evidence/schema-inventory-2026-10-26.json`.
-- Regression suite: `node --test tests/security/sec-b-inventory.test.mjs`.
-  12/12 passed locally on Node v24.11.1. Cases include unknown privileges,
+- Regression suite: `node --test tests/security/sec-b-inventory.test.mjs tests/security/sec-b-contract.test.mjs`.
+  19/19 passed locally on Node v24.11.1 after adding contract-boundary and snapshot-coherence fixtures. Cases include unknown privileges,
   missing/duplicate objects, wrong project, RLS/table/column regressions,
   callable definer and invoker functions, client BYPASSRLS, views, public
   buckets, publications and absent API configuration.
@@ -64,9 +77,12 @@ Register test/source blob pins in the platform's protected verifier separately;
 this product PR does not change qualification or acceptance policy. Do not use
 SEC-A's protected check for SEC-B.
 
-Remaining evidence: deployed Data API exposure, actual application/migration
-roles, exhaustive application interface mapping, reviewed baseline diff,
-disposable integration tests and independent acceptance. Missing SQL
+Remaining contract follow-up: live application/migration roles, non-API actions,
+deployment SHA binding and independent review/integration/acceptance. Root has
+recorded Data API configuration and configured role identity; 108 source API
+routes and five export routes are now enumerated.
+Disposable migration and behavioral integration tests remain downstream verification
+for T004-T008/T006 and SEC-C/T010; this contract does not claim them complete. Missing SQL
 `pgrst.db_schemas` remains UNKNOWN. Existing public table denial must not be
 "repaired" with broad grants. Storage and Realtime managed objects require their
 own review; do not blindly revoke their platform permissions.
@@ -154,3 +170,13 @@ reviewed as such, not silently added to the registered executor's task allowlist
 It exercises only offline analysis on the exact checked-out commit. It does not
 register a protected Ekwip verifier or claim full SEC-B acceptance.
 
+
+## Additional evidence from root and bound source reads
+
+- data-api-settings-20261026.json: authenticated deployed settings read by root, approximate observation minute retained.
+- runtime-role-config.json: configured postgres pooler username, not a live connection proof; no secret retained.
+- source-channel-inventory-20261026.json: 120 API directories and complete content reads of 108 route files at b8911d6; lexical signals, not authorization verdicts.
+- baseline-migration-review-20261026.json: source blob comparison of 24 public relation names and unapplied nullable-plan delta.
+- S001-SEC-B-obligations.json: eight exact design obligations with ADR headings; independent manifest checker passed 8/8 plus six negative mutations.
+
+Independent capture checker passed the original pinned snapshot plus three tamper mutations. No acceptance receipt or production write was generated.
