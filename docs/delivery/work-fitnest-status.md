@@ -1,3 +1,22 @@
+# Livraison SEC-B/C actualisée — 26 octobre 2026
+
+SEC-A acceptée préservée sur b8911d6c2d3a1343a22ba2aca462608ab0c9ec12.
+
+- SEC-B PR137 : c43e1da80abe79536441c8d5dca4c73c225a4e3d. 19/19 tests produit, 8/8 checks hébergés. Revue indépendante : 8 obligations contractuelles PASS, limites d'inventaire déclarées.
+- SEC-C PR138 : 0c17b4a4f8f335c1057bcd025b66ec83849ce9a9. 51/51 tests produit, 8/8 checks hébergés. Revue indépendante : 10 obligations PASS + 50 assertions externes.
+- Ekwip PR45 : dossier indépendant publié au commit 1409aabc41e9464c1ebd55208ba61e11e871a23a ; instructions finales 9c233f3afc64ec3b40b56b4b7a548538e697bdd1. Chemin docs/handoffs/fitnest-qualification-20261026/. Composites exécutés avec succès par auteur de revue et root ; blobs candidats liés SHA256.
+- SEC-B CI : regression https://github.com/Chibschibs-tech/fitnest-monorepo/actions/runs/40387899835/job/121800914579 ; build40387899711/job121800913737 ; plan40387899995/job121800936811.
+- SEC-C CI : reference https://github.com/Chibschibs-tech/fitnest-monorepo/actions/runs/40387706411/job/121800284654 ; build40387706584/job121800285569 ; plan40387706420/job121800306757.
+- Previews READY et GET /200 au SHA exact : SEC-B https://fitnest-monorepo-i306gk7qd-chihab-ekwipmas-projects.vercel.app ; SEC-C https://fitnest-monorepo-2yepbrqca-chihab-ekwipmas-projects.vercel.app . Ce sont des vitrines inchangées, pas la qualification des futures fonctions runtime.
+
+État exact : contrats de conception livrés et revus, reçus Ekwip non encore obtenus. Le registre protégé Ekwip doit adopter ces contrôles, qualifier le worker et reprendre l'adoption tracée PR46 avant intégration/reçu. Aucune acceptation manuelle ni fusion extérieure au protocole. SEC-B conserve non-API/actions et parité de déploiement comme limites explicitement soumises à la revue Ekwip. Les tests runtime T006/T008/T010 ne sont pas des prérequis ajoutés à ces contrats.
+
+Fondations PR136 restent au SHA3a5ac6cd4d2bb163b46277f89b9ad674425fe5a0, CI9/9 dont Supabase Auth Docker réel.
+
+---
+
+## Historique (candidats précédents remplacés par les SHA ci-dessus)
+
 # Work FITNEST — journal de livraison
 Mis à jour le 26 octobre 2026, 20:03 Africa/Casablanca.
 
