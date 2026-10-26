@@ -57,7 +57,7 @@ test('missing exposure and role facts cannot become business choices or runtime 
 
 test('published collector remains metadata SELECTs and design outputs stay scoped',async()=>{
  const sql=(await readFile(new URL('tests/security/sec-b-inventory.sql',root),'utf8')).replace(/--[^\n]*/g,'');
- assert.ok(!/\b(insert|update|delete|truncate|grant|revoke|create|alter|drop|copy|call|do)\b\s+(?:into|on|table|schema|role|function|policy|all|public\.)/i.test(sql));
+ assert.equal(forbiddenCollectorSql(sql),false);
  assert.ok(sql.includes('pg_class'));assert.ok(sql.includes('has_table_privilege'));
  assert.ok(!/from\s+(?:public\.)?(users|sessions|orders|customers)\b/i.test(sql));
  for(const path of contract.allowed_paths)assert.ok(/^(docs|tests|specs)\//.test(path));
@@ -101,3 +101,27 @@ test('source API inventory and baseline comparison bind exact source identities'
  assert.ok(!baseline.observedMigrations.some(m=>m.version==='20260829160000'));
 });
 
+
+// Conservative source guard, not a SQL parser or database execution boundary.
+const forbiddenCollectorSql=sql=>/\b(?:grant|revoke)\b/i.test(sql)||/\b(insert|update|delete|truncate|create|alter|drop|copy|call|do)\b\s+(?:into|on|table|schema|role|function|policy|all|public\.)/i.test(sql);
+for(const sql of [
+ 'GRANT SELECT ON public.sessions TO authenticated;',
+ 'REVOKE SELECT ON public.users FROM anon;',
+ 'GRANT UPDATE ON public.users TO anon;',
+ 'REVOKE UPDATE ON public.users FROM authenticated;',
+ 'GRANT EXECUTE ON FUNCTION public.example() TO authenticated;',
+ 'REVOKE EXECUTE ON FUNCTION public.example() FROM anon;',
+ 'GRANT app_reader TO authenticated;',
+ 'REVOKE app_reader FROM authenticated;',
+ 'GRANT USAGE ON SCHEMA public TO anon;',
+ 'REVOKE USAGE ON SCHEMA public FROM anon;',
+ 'gRaNt\nSELECT ON public.users TO anon;',
+ 'rEvOkE\tSELECT ON public.users FROM anon;',
+ 'GRANT/* gap */SELECT ON public.users TO anon;',
+ 'REVOKE/* gap */app_reader FROM authenticated;',
+])test('collector source guard rejects '+sql,()=>{
+ assert.equal(forbiddenCollectorSql(sql),true);
+});
+test('collector source guard permits privilege inspection names',()=>{
+ assert.equal(forbiddenCollectorSql("SELECT has_table_privilege('anon', 'public.users', 'SELECT'), grantor FROM pg_roles;"),false);
+});
