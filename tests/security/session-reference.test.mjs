@@ -14,7 +14,7 @@ const records = () => [fixture().session,
 const request = (scope='one',targetId='s2') => ({
   scope,targetId,operationId:'op1',proof:{factor:'verified_email',previouslyVerified:true,used:false,
   accountId:'a1',action:scope==='all'?'revoke:all':'revoke:one:'+targetId,operationId:'op1',
-  verifiedAt:1,challengeIssuedAt:95,challengeVerifiedAt:98,expiresAt:110}
+  verifiedAt:1,riskObservedAt:80,challengeIssuedAt:95,challengeVerifiedAt:98,expiresAt:110}
 });
 test('live matching owner passes; no production policy defaults',()=>{
   assert.equal(authorize(fixture()),true);
@@ -49,6 +49,9 @@ test('one and all have same successful step-up and scope to owner',()=>{
 });
 for(const [name,mutate] of [
   ['not completed',p=>delete p.challengeVerifiedAt],
+  ['missing risk time',p=>delete p.riskObservedAt],
+  ['email added after risk',p=>p.verifiedAt=85],
+  ['risk after challenge',p=>p.riskObservedAt=96],
   ['future completion',p=>p.challengeVerifiedAt=101],
   ['completion before issue',p=>p.challengeVerifiedAt=94],
   ['email established after challenge',p=>p.verifiedAt=96],
@@ -77,4 +80,5 @@ test('refresh exceptions only request full authorization recheck; unknown denies
   for(const x of [null,{}, {verified:false,kind:'rotated'}, {verified:true,kind:'unknown'}])
     assert.equal(refreshOutcome(x),'deny');
 });
+
 
