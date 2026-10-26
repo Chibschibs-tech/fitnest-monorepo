@@ -82,3 +82,63 @@ test('refresh exceptions only request full authorization recheck; unknown denies
 });
 
 
+
+// Acceptance scenarios compose the design operations over synthetic records.
+// This harness applies the planned state change; it is NOT a production transaction.
+test('SEC-C-04 scenario: targeted revoke denies old/refreshed JWT, preserves other owner devices',()=>{
+  const before=records(), r=request();
+  const plan=revokePlan(fixture(),before,r);
+  assert.deepEqual(plan.targetIds,['s2']);
+  const after=before.map(s=>({...s,revoked:plan.targetIds.includes(s.id)||s.revoked}));
+  r.proof.used=true;
+  assert.equal(revokePlan(fixture(),after,r),null,'consumed proof cannot plan a second operation');
+  const target={...fixture(),token:{...fixture().token,sessionId:'s2'},
+    providerSession:{...fixture().providerSession,id:'s2'},session:after[1]};
+  for(const path of ['api','rest','rpc','graphql','realtime','storage']) {
+    assert.equal(authorize({...target,path}),false,'old JWT: '+path);
+    assert.equal(authorize({...target,path,token:{...target.token,issuedAt:99,expiresAt:159}}),false,'refreshed JWT: '+path);
+  }
+  assert.equal(authorize({...fixture(),session:after[0]}),true);
+  assert.equal(after[2].revoked,false,'another account unchanged');
+  assert.deepEqual(before,records(),'preflight does not mutate input');
+});
+test('SEC-C-05 scenario: bulk revoke denies each owned session, no one-at-a-time proof bypass',()=>{
+  const before=records(), plan=revokePlan(fixture(),before,request('all'));
+  assert.deepEqual(plan.targetIds,['s1','s2']);
+  for(const session of before.filter(s=>s.accountId==='a1')) {
+    const after={...fixture(),session:{...session,revoked:true},
+      token:{...fixture().token,sessionId:session.id},providerSession:{lookup:'live',id:session.id,subject:'u1'}};
+    assert.equal(authorize(after),false);
+  }
+  const noProof=request(); delete noProof.proof;
+  for(const targetId of ['s1','s2']) assert.equal(revokePlan(fixture(),before,{...noProof,targetId}),null);
+});
+test('SEC-C-02 scenario: refresh and recent activity never reset absolute session birth',()=>{
+  const x=fixture();x.now=199;x.token={...x.token,issuedAt:190,expiresAt:250};x.session.lastActivityAt=199;
+  assert.equal(authorize(x),true);
+  x.now=200;
+  assert.equal(authorize(x),false);
+  assert.equal(x.session.createdAt,0);
+});
+test('SEC-C-06 scenario: allowed refresh exception cannot clear risk or resurrect revoked session',()=>{
+  for(const kind of ['rotated','reuse_interval','active_parent']){
+    assert.equal(refreshOutcome({verified:true,kind}),'recheck_authorization');
+    const x=fixture();x.session.riskClearance='pending';
+    assert.equal(authorize(x),false);
+    x.session.riskClearance='cleared';x.session.revoked=true;
+    assert.equal(authorize(x),false);
+  }
+});
+test('SEC-C-06 scenario: rejected replay closes application access even if provider observation is stale',()=>{
+  const x=fixture();
+  assert.equal(refreshOutcome({verified:true,kind:'replay_rejected'}),'revoke_app_session');
+  x.session.revoked=true; // expected adapter effect, not a provider behavior claim
+  assert.equal(authorize(x),false);
+});
+test('SEC-C-03 scenario: other-account session ID cannot be used to list or revoke',()=>{
+  const x=fixture();x.token.sessionId='s3';x.providerSession={lookup:'live',id:'s3',subject:'u2'};
+  assert.equal(authorize(x),false);
+  assert.deepEqual(listDevices(x,records()),[]);
+  assert.equal(revokePlan(x,records(),request('one','s3')),null);
+});
+
