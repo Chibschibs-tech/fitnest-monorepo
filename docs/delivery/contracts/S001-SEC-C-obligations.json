@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "S001-SEC-C",
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "criterion": "Supported bounded session and revocation proof; record unresolved choices and no production writes.",
+  "status": "proposal",
+  "designDocument": "docs/delivery/adr-sec-c.md",
+  "obligations": [
+    {
+      "id": "bounded_sessions",
+      "sourceRefs": [
+        "SEC-03"
+      ],
+      "designSection": "## Decision proposed",
+      "verification": [
+        "Fixture: policyValid/authorize reject missing, nonfinite, zero and excessive policy bounds and exact access/idle/absolute expiry; SEC-C-02 scenario proves refresh and recent activity do not reset original creation time.",
+        "Independent review: verify finite server-time bounds and no configured production defaults; exact G-SESSION values remain unratified.",
+        "Runtime follow-up T010/T032: real server requests enforce bounds without waiting for provider cleanup."
+      ]
+    },
+    {
+      "id": "refresh_rotation_replay",
+      "sourceRefs": [
+        "SEC-03"
+      ],
+      "designSection": "## Provider evidence and limits",
+      "verification": [
+        "Fixture: refreshOutcome distinguishes rotation, reuse_interval, active_parent, replay_rejected and unknown; SEC-C-06 scenarios require authorization recheck and never restore revoked/risky access.",
+        "Independent review: compare documented provider reuse exceptions with the ADR; model observations are authoritative synthetic facts, not provider evidence.",
+        "Runtime follow-up T029/T032: pinned disposable Auth proves rotation, both reuse exceptions and rejected non-parent replay."
+      ]
+    },
+    {
+      "id": "live_session_owner_guard",
+      "sourceRefs": [
+        "SEC-29"
+      ],
+      "designSection": "## Decision proposed",
+      "verification": [
+        "Fixture: authorize rejects token/provider/application session-ID and subject mismatches, wrong account, missing provider and unavailable lookup.",
+        "Independent review: verify provider and app existence plus resource ownership are all mandatory and client assertions cannot create authoritative records.",
+        "Runtime follow-up T010: verified issuer/audience/signature plus actual lookup and owner checks across implemented routes."
+      ]
+    },
+    {
+      "id": "immediate_revocation",
+      "sourceRefs": [
+        "SEC-03"
+      ],
+      "designSection": "## Supported targeted revocation boundary",
+      "verification": [
+        "Fixture: SEC-C-04 scenario applies a targeted revocation plan to synthetic state; old and refreshed JWT are denied and unrelated sessions stay unchanged.",
+        "Independent review: verify app-side revocation is distinguished from provider sign-out scopes; no signOut(session_id) or provider-owned table writes.",
+        "Runtime follow-up T010/T029/T031: prove next-request denial after transaction commit with actual tokens and provider sessions."
+      ]
+    },
+    {
+      "id": "risk_and_prior_proof",
+      "sourceRefs": [
+        "SEC-04",
+        "D-053"
+      ],
+      "designSection": "## Supported targeted revocation boundary",
+      "verification": [
+        "Fixture: cleared risk required; revoke rejects missing/future/uncompleted challenge, email established after risk, expired/consumed proof and wrong account/action/operation.",
+        "Independent review: verify historical email verification precedes server-recorded risk, challengeVerifiedAt proves fresh completion, and phone OTP alone never suffices; preserve accepted SEC-A canUnlockHistory invariant.",
+        "Runtime follow-up T029/T031: authoritative proof consumption and independent verification against real records; G-RECOVERY decisions remain open."
+      ]
+    },
+    {
+      "id": "device_single_bulk",
+      "sourceRefs": [
+        "SEC-03",
+        "SEC-04"
+      ],
+      "designSection": "## Supported targeted revocation boundary",
+      "verification": [
+        "Fixture: owner-only device projection excludes token fields; single and bulk require same proof; malformed/duplicate records fail the whole plan; SEC-C-05 scenario prevents one-at-a-time proof bypass.",
+        "Independent review: inspect target/account scope and proof action binding; G-SESSION single versus multi-device UX is not silently ratified.",
+        "Runtime follow-up T031: actual owner-scoped listing, targeted/bulk revoke and concurrency behavior."
+      ]
+    },
+    {
+      "id": "atomic_audit_notification",
+      "sourceRefs": [
+        "SEC-04",
+        "SEC-30"
+      ],
+      "designSection": "## Atomic audit and notification transaction",
+      "verification": [
+        "Design proof: explicit proposed transaction ordering, linearization with new sessions, minimal audit and notification outbox schema, idempotency and fail-closed behavior in the ADR.",
+        "Fixture: revokePlan emits consumeProof and atomicAuditRequired; composed scenarios illustrate consumed-proof rejection but do not prove database atomicity.",
+        "Independent review: verify state/proof/audit/outbox commit together and no provider send occurs inside the transaction.",
+        "Runtime follow-up T029/T031: concurrent proof reuse, rollback/failure injection, session enrollment race and outbox deduplication on real database."
+      ]
+    },
+    {
+      "id": "direct_channels",
+      "sourceRefs": [
+        "SEC-29"
+      ],
+      "designSection": "## Direct exposure",
+      "verification": [
+        "Fixture: REST/RPC/GraphQL/Storage/Realtime and unknown paths deny; SEC-C-04 scenario includes old/refreshed JWT across modeled paths.",
+        "Independent review: cross-reference SEC-B actual metadata/source-channel inventory and default-deny contract; unknown deployed exposure is never represented as verified.",
+        "Runtime follow-up T006/T010: actual anon/authenticated/runtime-role requests, socket subscriptions, downloads and cached-data invalidation."
+      ]
+    },
+    {
+      "id": "unresolved_choices",
+      "sourceRefs": [
+        "D-053"
+      ],
+      "designSection": "## Unresolved decisions and acceptance split",
+      "verification": [
+        "Design proof: G-SESSION durations, risk thresholds, concurrency, device cap/eviction and G-RECOVERY evidence/review/retention remain explicitly unresolved.",
+        "Fixture: finite policy is mandatory, test values are synthetic and no production defaults are exported.",
+        "Independent review: confirm contract acceptance is not runtime acceptance or gate approval and consumers retain their own gates."
+      ]
+    },
+    {
+      "id": "no_production_writes",
+      "sourceRefs": [
+        "S001-SEC-C"
+      ],
+      "designSection": "## No production writes",
+      "verification": [
+        "Scope proof: exact contract task patch is limited to docs/tests (and specs if needed); supplementary CI workflow is outside executor candidate allowedFiles.",
+        "Fixture: model uses only pure input records; no provider, network, database or production mutation; providerMutation=false in revokePlan.",
+        "Independent review: inspect exact patch, command and environment; verify SEC-A and provider-owned tables remain unchanged; receipt is issued only by normal Ekwip acceptance."
+      ]
+    }
+  ],
+  "unresolvedGateIds": [
+    "G-SESSION",
+    "G-RECOVERY"
+  ],
+  "runtimeAcceptance": false
+}
