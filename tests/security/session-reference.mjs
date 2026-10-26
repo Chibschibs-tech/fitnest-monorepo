@@ -44,8 +44,8 @@ export function revokePlan(input, records, request) {
   if (!p || p.factor !== 'verified_email' || p.previouslyVerified !== true ||
       p.used !== false || p.accountId !== input.ownerId || p.action !== action ||
       p.operationId !== request.operationId || !time(p.verifiedAt) ||
-      !time(p.challengeIssuedAt) || !time(p.challengeVerifiedAt) || !time(p.expiresAt) ||
-      p.verifiedAt >= p.challengeIssuedAt || p.challengeVerifiedAt < p.challengeIssuedAt || p.challengeVerifiedAt > input.now ||
+      !time(p.riskObservedAt) || !time(p.challengeIssuedAt) || !time(p.challengeVerifiedAt) || !time(p.expiresAt) ||
+      p.verifiedAt >= p.riskObservedAt || p.riskObservedAt > p.challengeIssuedAt || p.challengeVerifiedAt < p.challengeIssuedAt || p.challengeVerifiedAt > input.now ||
       input.now >= p.expiresAt) return null;
   // Fail the entire batch on malformed/duplicate records; never silently partially revoke.
   if (records.some(s => !s || !id(s.id) || !id(s.accountId) || !id(s.subject) ||
@@ -66,5 +66,6 @@ export function refreshOutcome(observation) {
   if (observation.kind === 'replay_rejected') return 'revoke_app_session';
   return 'deny';
 }
+
 
 
