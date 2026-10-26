@@ -39,7 +39,7 @@
   ],
   "verification": {
     "command": "node --test tests/security/session-reference.test.mjs",
-    "referenceTests": 42,
+    "referenceTests": 45,
     "referenceModelOnly": true,
     "providerBehaviorProven": false,
     "actualDirectRoleDenialsProven": false,
@@ -65,3 +65,4 @@
     "productJournal": "https://github.com/Chibschibs-tech/fitnest-monorepo/pull/135"
   }
 }
+
