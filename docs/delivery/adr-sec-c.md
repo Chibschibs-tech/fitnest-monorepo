@@ -33,7 +33,7 @@ Fitnest revocation guarantee. A target's still-valid or refreshed provider token
 continues to fail the application gate.
 
 For single and bulk revoke, require a completed independent step-up against an
-email established before the challenge. verifiedAt means historical email
+email established before the server-recorded risk event, itself no later than the challenge. verifiedAt means historical email
 verification; challengeVerifiedAt means successful completion of this fresh proof,
 not merely dispatch. Bind proof to account, exact action/target and operation ID.
 Reject absent, future, expired, consumed or wrong-action evidence. Phone OTP is
@@ -81,7 +81,7 @@ recovery evidence, review and retention decisions. G-CONSTITUTION and T013 remai
 unchanged. This design does not implement T010/T031/T032 or activate any public route.
 
 Design acceptance needs independent review of this ADR, contract, exact diff and
-42 tests. Runtime qualification additionally needs a disposable pinned Auth stack:
+45 tests. Runtime qualification additionally needs a disposable pinned Auth stack:
 two accounts/devices, old and refreshed JWT after targeted and bulk revocation,
 idle/absolute exact boundaries without refresh, rotation plus both provider reuse
 exceptions and non-parent replay, actual exposed paths/roles, concurrent proof
@@ -98,4 +98,5 @@ their blobs as protected checks before adopting evidence. Contract status remain
 proposal; no acceptance receipt is inserted or implied. Blocked existing dispatch
 40243859069 is owned by Work Ekwip; no new dispatch is requested here.
 Coordination: Ekwip PR45 and Fitnest work journal PR135.
+
 
