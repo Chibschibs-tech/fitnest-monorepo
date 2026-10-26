@@ -30,9 +30,15 @@ Action Ekwip : diagnostiquer ce dispatch et reprendre ce travail existant de man
 ## Couverture et écarts de profils
 Aperçu observé : 3 profils pour 102 tâches, 1 reçu, 99 occurrences « Exécuteur Fitnest à qualifier » et « task_retry_bound_missing_or_exhausted », six travaux en revue. Les compteurs se chevauchent.
 Les contrats par chantier préciseront commandes, chemins exacts, preuves complètes et limites. Le Work Ekwip doit qualifier/enregistrer ces contrats sans confondre un test statique ou un modèle de référence avec l'intégration complète.
-La lecture du journal Ekwip proposé `docs/handoffs/work-ekwip-status.md` sur `ekwip-platform-finalization` retourne 404 ; aucune synchronisation entre conversations n'est présumée.
+Le journal Work Ekwip a été retrouvé sur [work-ekwip-consolidation-20261026](https://github.com/chihabJekwip/ekwip-delivery-platform/blob/work-ekwip-consolidation-20261026/docs/handoffs/work-ekwip-status.md), associé à la [PR44](https://github.com/chihabJekwip/ekwip-delivery-platform/pull/44).
+La demande de coordination est publiée dans le dépôt Ekwip via [PR45](https://github.com/chihabJekwip/ekwip-delivery-platform/pull/45), commit 65018d8522ab285fc25845217f24c2f180793d8b. Elle demande profils protégés, reprise du run SEC-C existant et adoption contrôlée du patch exact.
+Blocage confirmé par lecture du code Ekwip : les PR externes work-fitnest-* ne satisfont pas validExecutorBranch ni la chaîne run/revue/publication/dispatch qualifié. L'intégration opérateur CI/constitution ne vaut pas acceptation produit. Ne pas fusionner ces PR hors chaîne ni renommer artificiellement une branche executor/*. Le Work Ekwip reste responsable de résoudre cette adoption.
 
 ## Définition d'une livraison
 PR et SHA exact → contrôles requis + revue indépendante → intégration → reçu lié au commit intégré → résultat testable correspondant.
-À ce relevé, aucune version testable vérifiée n'est enregistrée dans Ekwip. Aucun nouveau jalon n'est déclaré accepté.
+Aucun nouveau jalon n'est déclaré accepté.
+Un aperçu web Vercel existant a été vérifié READY et HTTP 200 sur le commit accepté SEC-A exact b8911d6c2d3a1343a22ba2aca462608ab0c9ec12 :
+[ouvrir la version de base](https://fitnest-monorepo-dofd844ih-chihab-ekwipmas-projects.vercel.app), déploiement dpl_DXp6SspPetTwUz3gVSBXQf9FYDEv.
+L'aperçu admin dpl_BKNTvaDTGjpjz56cYFNqdtC9j7S2 répond aussi 200, mais / affiche la même vitrine : cela ne valide pas l'administration.
+Ces contrôles portent sur la disponibilité de la vitrine existante, pas les parcours V1 auth/révocation. Aucune version testable nouvellement acceptée n'est enregistrée dans Ekwip.
 T010 reste dépendante de T008, SEC-C, SEC-A, T009 et des décisions G-SESSION/G-RECOVERY. L'acceptation de SEC-A seule ne la débloque pas.
