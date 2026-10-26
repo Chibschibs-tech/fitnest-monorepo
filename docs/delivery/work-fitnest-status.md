@@ -15,9 +15,9 @@ La passation rapporte le reçu du 26/10 à 17:48:12 UTC. L'aperçu vivant montre
 ## Travaux parallèles, responsables et isolation
 | Chantier | Branche produit | Travail | Situation |
 |---|---|---|---|
-| SEC-B | work-fitnest-sec-b-20261026 | Inventaire réel, privilèges/exposition, collecteur et tests des preuves | En préparation |
+| SEC-B | work-fitnest-sec-b-20261026 | Inventaire réel, privilèges/exposition, collecteur et tests des preuves | [PR137](https://github.com/Chibschibs-tech/fitnest-monorepo/pull/137), c7b6c2b2d42092da8671bab90118b2e5633cb2bb ; 12/12 locaux |
 | SEC-C | work-fitnest-sec-c-20261026 | Conception sessions bornées/révocation, modèle paramétré, tests et contrat | En préparation |
-| B01-C/T001/T002/T003/BX-C | work-fitnest-foundations-20261026 | Vérifier propositions existantes, corriger qualification CI et préciser couverture | En préparation |
+| B01-C/T001/T002/T003/BX-C | work-fitnest-foundations-20261026 | Vérifier propositions existantes, corriger qualification CI et préciser couverture | [PR136](https://github.com/Chibschibs-tech/fitnest-monorepo/pull/136), 3a5ac6cd4d2bb163b46277f89b9ad674425fe5a0 ; 13/13 locaux |
 | Coordination | work-fitnest-delivery-20261026 | Journal, références et suivi d'intégration | Actif |
 
 Les tests de référence ne valent pas preuve runtime. Les hypothèses de fixtures ne choisissent aucune durée de production. G-SESSION, G-RECOVERY et G-T013 restent selon le registre. Aucun changement de base produit ni service Ekwip n'est autorisé par ce journal.
@@ -42,3 +42,8 @@ Un aperçu web Vercel existant a été vérifié READY et HTTP 200 sur le commit
 L'aperçu admin dpl_BKNTvaDTGjpjz56cYFNqdtC9j7S2 répond aussi 200, mais / affiche la même vitrine : cela ne valide pas l'administration.
 Ces contrôles portent sur la disponibilité de la vitrine existante, pas les parcours V1 auth/révocation. Aucune version testable nouvellement acceptée n'est enregistrée dans Ekwip.
 T010 reste dépendante de T008, SEC-C, SEC-A, T009 et des décisions G-SESSION/G-RECOVERY. L'acceptation de SEC-A seule ne la débloque pas.
+
+## Preuves et revue des propositions
+Fondations : parseur env corrigé après finding indépendant whitespace/export, quatre régressions ajoutées ; 13/13 tests recontrôlés par le coordinateur. Workflow Identity foundation couvre désormais SDK/env et conserve core + Auth Docker. Aperçu Vercel web READY au SHA 3a5ac6cd4d2bb163b46277f89b9ad674425fe5a0, HTTP200 : https://fitnest-monorepo-ag4mxzhkx-chihab-ekwipmas-projects.vercel.app . Ce contrôle ne valide pas les parcours Auth.
+SEC-B : 24 tables publiques fermées et 23 séquences à revoir ; refus SQL 42501 réels sur users LIMIT0 pour anon/authenticated. 12/12 tests locaux. La revue a demandé une procédure reproductible d'assemblage des deux résultats SQL et des migrations : ajoutée. Métadonnées seulement ; exposition HTTP, rôle applicatif effectif et replay restent ouverts.
+Les workflows candidats restent des propositions ; Ekwip doit protéger les tests et enregistrer les profils. CI distante complète et reçu d'intégration restent à vérifier. Les branches produit ont été créées depuis l'exact commit SEC-A accepté.
