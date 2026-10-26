@@ -1,5 +1,5 @@
 # Work FITNEST — journal de livraison
-Mis à jour le 26 octobre 2026, 19:35 Africa/Casablanca.
+Mis à jour le 26 octobre 2026, 20:03 Africa/Casablanca.
 
 ## Référence et périmètre
 Source sémantique inchangée : `2854038dfe653289c326dd33650a311918f630ad`.
@@ -16,7 +16,7 @@ La passation rapporte le reçu du 26/10 à 17:48:12 UTC. L'aperçu vivant montre
 | Chantier | Branche produit | Travail | Situation |
 |---|---|---|---|
 | SEC-B | work-fitnest-sec-b-20261026 | Inventaire réel, privilèges/exposition, collecteur et tests des preuves | [PR137](https://github.com/Chibschibs-tech/fitnest-monorepo/pull/137), c7b6c2b2d42092da8671bab90118b2e5633cb2bb ; 12/12 locaux |
-| SEC-C | work-fitnest-sec-c-20261026 | Conception sessions bornées/révocation, modèle paramétré, tests et contrat | En préparation |
+| SEC-C | work-fitnest-sec-c-20261026 | Conception sessions bornées/révocation, modèle paramétré, tests et contrat | [PR138](https://github.com/Chibschibs-tech/fitnest-monorepo/pull/138), 76bd0c44667c99adea5f94503f58e15009534b1b ; 45/45 locaux |
 | B01-C/T001/T002/T003/BX-C | work-fitnest-foundations-20261026 | Vérifier propositions existantes, corriger qualification CI et préciser couverture | [PR136](https://github.com/Chibschibs-tech/fitnest-monorepo/pull/136), 3a5ac6cd4d2bb163b46277f89b9ad674425fe5a0 ; 13/13 locaux |
 | Coordination | work-fitnest-delivery-20261026 | Journal, références et suivi d'intégration | Actif |
 
@@ -47,3 +47,12 @@ T010 reste dépendante de T008, SEC-C, SEC-A, T009 et des décisions G-SESSION/G
 Fondations : parseur env corrigé après finding indépendant whitespace/export, quatre régressions ajoutées ; 13/13 tests recontrôlés par le coordinateur. Workflow Identity foundation couvre désormais SDK/env et conserve core + Auth Docker. Aperçu Vercel web READY au SHA 3a5ac6cd4d2bb163b46277f89b9ad674425fe5a0, HTTP200 : https://fitnest-monorepo-ag4mxzhkx-chihab-ekwipmas-projects.vercel.app . Ce contrôle ne valide pas les parcours Auth.
 SEC-B : 24 tables publiques fermées et 23 séquences à revoir ; refus SQL 42501 réels sur users LIMIT0 pour anon/authenticated. 12/12 tests locaux. La revue a demandé une procédure reproductible d'assemblage des deux résultats SQL et des migrations : ajoutée. Métadonnées seulement ; exposition HTTP, rôle applicatif effectif et replay restent ouverts.
 Les workflows candidats restent des propositions ; Ekwip doit protéger les tests et enregistrer les profils. CI distante complète et reçu d'intégration restent à vérifier. Les branches produit ont été créées depuis l'exact commit SEC-A accepté.
+
+## Vérification finale des incréments (26 octobre)
+- Fondations au SHA 3a5ac6cd4d2bb163b46277f89b9ad674425fe5a0 : 9/9 checks verts, dont [Identity foundation](https://github.com/Chibschibs-tech/fitnest-monorepo/actions/runs/40381871045) (core, local-auth Docker, setup-contract). Ceci apporte une preuve Auth réelle sur fixture isolée, sans constituer le reçu des tâches.
+- SEC-B au SHA c7b6c2b2d42092da8671bab90118b2e5633cb2bb : 8/8 checks verts, dont [inventaire PR](https://github.com/Chibschibs-tech/fitnest-monorepo/actions/runs/40382025313). [Aperçu candidat](https://fitnest-monorepo-jdqezqnkj-chihab-ekwipmas-projects.vercel.app) READY, HTTP200.
+- SEC-C au SHA 76bd0c44667c99adea5f94503f58e15009534b1b : 45 tests locaux passés, [modèle CI PR](https://github.com/Chibschibs-tech/fitnest-monorepo/actions/runs/40382746976) et push verts. Dernier build général PR encore en cours au relevé. [Aperçu candidat](https://fitnest-monorepo-g97x9n4bm-chihab-ekwipmas-projects.vercel.app) READY, HTTP200.
+- Revue indépendante locale : tous les findings résolus — parseur env, recapture composite, challenge effectivement complété et email vérifié avant risque conformément à SEC-A. Cette revue n'est pas une revue enregistrée par Ekwip.
+
+## Prochaine reprise requise
+Work Ekwip dispose des trois PR/SHA/contrats via PR45 (mise à jour d24cd374197ad7e75b6af112941683781ac36c8a). Qualifier les tests protégés et réconcilier périmètres/CI, adopter le patch exact dans les runs existants, exécuter la revue liée, intégrer, vérifier le SHA intégré puis émettre le reçu. Les nouvelles PR restent proposées, non fusionnées, non acceptées. SEC-B conserve ses preuves runtime manquantes ; SEC-C ses essais provider/canaux/concurrence manquants. Les trois aperçus sont des versions candidates consultables de la vitrine, pas des parcours sécurité V1 livrés.
