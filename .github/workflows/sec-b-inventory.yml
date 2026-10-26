@@ -3,7 +3,9 @@ on:
   pull_request:
     paths:
       - 'tests/security/sec-b-inventory*'
-      - 'docs/delivery/evidence/schema-inventory-2026-10-26.json'
+      - 'tests/security/sec-b-contract.test.mjs'
+      - 'docs/delivery/contracts/S001-SEC-B*.json'
+      - 'docs/delivery/evidence/**'
       - '.github/workflows/sec-b-inventory.yml'
   push:
     branches:
@@ -11,7 +13,9 @@ on:
       - work-fitnest-sec-b-20261026
     paths:
       - 'tests/security/sec-b-inventory*'
-      - 'docs/delivery/evidence/schema-inventory-2026-10-26.json'
+      - 'tests/security/sec-b-contract.test.mjs'
+      - 'docs/delivery/contracts/S001-SEC-B*.json'
+      - 'docs/delivery/evidence/**'
       - '.github/workflows/sec-b-inventory.yml'
   workflow_dispatch:
 permissions:
@@ -26,5 +30,6 @@ jobs:
         with:
           node-version: '24'
       - name: Verify offline inventory regressions
-        run: node --test tests/security/sec-b-inventory.test.mjs
+        run: node --test tests/security/sec-b-inventory.test.mjs tests/security/sec-b-contract.test.mjs
+
 
