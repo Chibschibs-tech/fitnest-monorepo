@@ -1,3 +1,19 @@
+# Correction SEC-B suite au retour Ekwip — 26 octobre 2026
+
+SEC-C acceptée confirmée par journal opérateur Ekwip : integration0bed3d9643416f92eca9779a4520cdb55e90609c, evidence e2ca4a55c10aad5bf857f27642499721a41fb9d7029903b3cbb0abaef955c0bc. SEC-A préservée.
+
+SEC-B : correctif ciblé publié PR137 au commit fc6dca9c0f95e0f9cbd55f09e839b13c994292ad. Un seul fichier changé : tests/security/sec-b-contract.test.mjs. Le guard interdit désormais GRANT/REVOKE sans dépendre du mot suivant. 34/34 tests passent, dont14 cas négatifs et1 contrôle positif. Revue indépendante confirme12/14 contournements de l'ancien guard fermés ; tous14 rejetés maintenant.
+
+SHA256 corrigé ad83ec0d35d9701730a66fea09fef051193375f5b916617b43f3ce28f81cfff2 ; blob Git eb71f1542f338e96fcaef5f2ded000531dfcc112, relu identique sur GitHub.
+Revue et provenance du checker externe remis dans Ekwip PR45 : rapport3e33aa009855f5b6a18f212288e1958386b4269e, handoff0a39d8382e1f3b6480764b490f5162812a2af242.
+Ne pas chercher sec-b-independent.mjs dans le scope produit : source protégée Ekwip1409aabc41e9464c1ebd55208ba61e11e871a23a, copie qualifiée d343965e5defcd7e9235cbf4a322ca55d123a316/packages/executor/acceptance/sec-bc/sec-b-independent.mjs.
+
+Le reçu SEC-B n'est pas encore acquis. Ekwip doit réviser l'empreinte protégée après re-revue explicite, adopter le delta sur la base acceptée et reprendre le même run. Aucun contrôle plateforme, digest protégé ou reçu modifié par Work Fitnest. Le blocage SEC-B n'empêche pas les travaux plateforme indépendants.
+
+---
+
+## Historique
+
 # Livraison SEC-B/C actualisée — 26 octobre 2026
 
 SEC-A acceptée préservée sur b8911d6c2d3a1343a22ba2aca462608ab0c9ec12.
