@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "S001-SEC-C",
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "status": "proposal",
+  "criterion": "Supported bounded session and revocation proof; record unresolved choices and no production writes.",
+  "authority": {
+    "taskAccepted": false,
+    "productionWritesAuthorized": false,
+    "gatesApproved": false
+  },
+  "design": {
+    "provider": "Supabase Auth",
+    "revocation": "server-owned application session_id record",
+    "tokenAloneSufficient": false,
+    "liveProviderSessionRequired": true,
+    "serverLifetimeEnforced": true,
+    "riskClearanceRequired": true,
+    "ownerRequired": true,
+    "directPathsDefaultDeny": true,
+    "singleAndBulkSameIndependentProof": true,
+    "proofRequiresCompletedChallenge": true,
+    "proofBoundToAccountActionOperation": true,
+    "atomicConsumptionRequired": true,
+    "providerAuthTableWrites": false
+  },
+  "unresolvedGates": [
+    "G-SESSION",
+    "G-RECOVERY",
+    "G-CONSTITUTION",
+    "G-T013"
+  ],
+  "allowedPaths": [
+    "docs/delivery/adr-sec-c.md",
+    "docs/delivery/contracts/S001-SEC-C.json",
+    "tests/security/session-reference.mjs",
+    "tests/security/session-reference.test.mjs",
+    ".github/workflows/sec-c-reference.yml"
+  ],
+  "verification": {
+    "command": "node --test tests/security/session-reference.test.mjs",
+    "referenceTests": 42,
+    "referenceModelOnly": true,
+    "providerBehaviorProven": false,
+    "actualDirectRoleDenialsProven": false,
+    "distributedAtomicityProven": false,
+    "independentReviewRequired": true,
+    "protectedCheckRegistrationRequired": true,
+    "fullAcceptanceClaimed": false
+  },
+  "runtimeQualification": [
+    "pinned disposable Auth and DB versions",
+    "two accounts and devices owner isolation",
+    "old and refreshed JWT after targeted and bulk revocation",
+    "idle and absolute boundary without refresh",
+    "rotation, reuse interval, active-parent exception, non-parent replay",
+    "actual anon/authenticated/runtime roles over every inventoried direct path",
+    "concurrent single-use proof consumption and atomic audit/outbox",
+    "socket/download/cache invalidation",
+    "lookup failure and secret-free logs"
+  ],
+  "coordination": {
+    "blockedWorkflow": "https://github.com/chihabJekwip/ekwip-delivery-platform/actions/runs/40243859069",
+    "ekwipHandoff": "https://github.com/chihabJekwip/ekwip-delivery-platform/pull/45",
+    "productJournal": "https://github.com/Chibschibs-tech/fitnest-monorepo/pull/135"
+  }
+}
