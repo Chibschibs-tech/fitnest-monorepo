@@ -1,0 +1,35 @@
+name: SEC-B inventory regression
+on:
+  pull_request:
+    paths:
+      - 'tests/security/sec-b-inventory*'
+      - 'tests/security/sec-b-contract.test.mjs'
+      - 'docs/delivery/contracts/S001-SEC-B*.json'
+      - 'docs/delivery/evidence/**'
+      - '.github/workflows/sec-b-inventory.yml'
+  push:
+    branches:
+      - fitnest-foundation-runtime
+      - work-fitnest-sec-b-20261026
+    paths:
+      - 'tests/security/sec-b-inventory*'
+      - 'tests/security/sec-b-contract.test.mjs'
+      - 'docs/delivery/contracts/S001-SEC-B*.json'
+      - 'docs/delivery/evidence/**'
+      - '.github/workflows/sec-b-inventory.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sec-b-inventory-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Verify offline inventory regressions
+        run: node --test tests/security/sec-b-inventory.test.mjs tests/security/sec-b-contract.test.mjs
+
+
