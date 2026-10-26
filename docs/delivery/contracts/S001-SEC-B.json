@@ -1,9 +1,9 @@
 {
   "task_id": "S001-SEC-B",
-  "version": 1,
+  "version": 2,
   "source_plan_commit": "2854038dfe653289c326dd33650a311918f630ad",
   "preserved_sec_a_commit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12",
-  "kind": "contract_evidence_preparation",
+  "kind": "contract",
   "acceptance_claimed": false,
   "source_refs": [
     "docs/delivery/backlog.json:S001-SEC-B",
@@ -16,7 +16,14 @@
     "docs/delivery/sec-b-review-20261026.md",
     "tests/security/sec-b-inventory.sql",
     "tests/security/sec-b-inventory.mjs",
-    "tests/security/sec-b-inventory.test.mjs"
+    "tests/security/sec-b-inventory.test.mjs",
+    "docs/delivery/adr-sec-b.md",
+    "tests/security/sec-b-contract.test.mjs",
+    "docs/delivery/contracts/S001-SEC-B-obligations.json",
+    "docs/delivery/evidence/data-api-settings-20261026.json",
+    "docs/delivery/evidence/runtime-role-config.json",
+    "docs/delivery/evidence/source-channel-inventory-20261026.json",
+    "docs/delivery/evidence/baseline-migration-review-20261026.json"
   ],
   "depends_on": [],
   "merge_gates": [
@@ -24,8 +31,8 @@
   ],
   "commands": [
     {
-      "command": "node --test tests/security/sec-b-inventory.test.mjs",
-      "scope": "offline inventory analysis regressions",
+      "command": "node --test tests/security/sec-b-inventory.test.mjs tests/security/sec-b-contract.test.mjs",
+      "scope": "isolated inventory and contract-evidence fixtures; not deployed runtime verification",
       "satisfies_full_task": false
     }
   ],
@@ -39,20 +46,14 @@
     }
   ],
   "completion_requirements": [
-    "Independently review captured metadata, source inventory and explicit unresolved choices against task acceptance.",
-    "Record deployed Data API enabled/exposed-schema configuration; absent SQL setting is UNKNOWN.",
-    "Observe actual application runtime/migration roles without credentials and inspect inheritance and effective grants.",
-    "Bind inventory to reviewed migration/source diff, including legacy interfaces and custom exposed schemas.",
-    "Replay reviewed migrations in a disposable matching stack and record real-role route/SQL access tests before claiming T006/runtime closure.",
-    "Register independent Ekwip verifier using immutable source/test blob pins; candidate cannot approve its own metadata assertions.",
-    "Keep SEC-C/T010 revocation and T013 production authorization separate."
+    "Review ADR, captured actual metadata, exposure inventory, privileges and explicitly unresolved facts/choices against source task acceptance.",
+    "Resolve or explicitly adjudicate factual inventory gaps through independent review; never infer deployed API exposure or runtime role from absence of settings.",
+    "Verify immutable source/test blobs and no production writes, integrate commit and collect independent Ekwip acceptance.",
+    "Preserve G-CONSTITUTION and SEC-A; do not transfer downstream runtime delivery claims into this contract."
   ],
   "outstanding": [
-    "Data API configuration",
-    "actual deployed application role",
-    "exhaustive route/action/export/GraphQL map",
-    "disposable database integration tests",
-    "independent review and Ekwip acceptance"
+    "factual inventory gaps listed above",
+    "independent review, integration and Ekwip acceptance"
   ],
   "forbidden": [
     "production writes",
@@ -61,6 +62,57 @@
     "SEC-A re-execution",
     "manual acceptance receipt",
     "changing execution/qualification policy"
-  ]
+  ],
+  "source_task": {
+    "id": "S001-SEC-B",
+    "kind": "contract",
+    "outputs": [
+      "ADR and isolated acceptance fixtures"
+    ],
+    "acceptance": [
+      "Actual schema/exposure and privilege inventory; record unresolved choices and no production writes."
+    ],
+    "review_scope": "Live metadata and effective privileges captured read-only. Data API exposure/runtime role and integration tests remain open."
+  },
+  "contract_factual_gaps": [
+    {
+      "id": "B-API-CONFIG",
+      "fact": "deployed Data API enabled/exposed schemas",
+      "state": "observed_configuration_only",
+      "evidence_needed": "Configuration now recorded in data-api-settings-20261026.json; actual HTTP behavior belongs to downstream real-role tests.",
+      "not_a_business_choice": true
+    },
+    {
+      "id": "B-RUNTIME-ROLE",
+      "fact": "actual application and migration connection role/membership",
+      "state": "partial",
+      "evidence_needed": "runtime-role-config.json records inferred configured postgres pooler identity; observe current application connection and migration role without secrets.",
+      "not_a_business_choice": true
+    },
+    {
+      "id": "B-INTERFACES",
+      "fact": "complete deployed source route/action/export/GraphQL map",
+      "state": "partial",
+      "evidence_needed": "108 API routes enumerated at bound source SHA; close non-API actions/alternative exports and confirm deployed SHA.",
+      "not_a_business_choice": true
+    }
+  ],
+  "downstream_runtime_verification": [
+    {
+      "owner": "S001-T004..T008/T006",
+      "requirement": "replay reviewed migrations and test actual anon/authenticated/runtime roles in a disposable matching stack",
+      "completed": false
+    },
+    {
+      "owner": "S001-SEC-C/T010",
+      "requirement": "bounded sessions and old-token denial across every supported path",
+      "completed": false
+    },
+    {
+      "owner": "G-T013",
+      "requirement": "separate explicit production migration application decision",
+      "completed": false
+    }
+  ],
+  "supplemental_obligations": "docs/delivery/contracts/S001-SEC-B-obligations.json"
 }
-
