@@ -81,22 +81,93 @@ recovery evidence, review and retention decisions. G-CONSTITUTION and T013 remai
 unchanged. This design does not implement T010/T031/T032 or activate any public route.
 
 Design acceptance needs independent review of this ADR, contract, exact diff and
-45 tests. Runtime qualification additionally needs a disposable pinned Auth stack:
+51 tests. Runtime qualification additionally needs a disposable pinned Auth stack:
 two accounts/devices, old and refreshed JWT after targeted and bulk revocation,
 idle/absolute exact boundaries without refresh, rotation plus both provider reuse
 exceptions and non-parent replay, actual exposed paths/roles, concurrent proof
 consumption, failed lookup, audit/outbox atomicity and absence of token/PII logs.
 Record commit, versions, commands, observed denials and protected CI artifact hashes.
-Do not mark full S001-SEC-C accepted from reference-model CI alone.
+S001-SEC-C is a contract task: its source outputs are ADR and isolated acceptance
+fixtures. Its design contract can be accepted after attributable independent review,
+protected fixture CI at the exact commit, scope review and a registered contract receipt.
+Reference CI alone is insufficient because it supplies neither independent review nor
+integration/acceptance. Provider-backed runtime certification belongs to T006/T010/
+T029/T031/T032; absence of those later runtime proofs does not silently redefine
+SEC-C as an implementation task. Design acceptance never certifies runtime or clears
+G-SESSION/G-RECOVERY/T013. See contract.acceptanceScope and designObligations.
 
 ## Execution profile handoff
 
 Run: node --test tests/security/session-reference.test.mjs.
-Allowed change paths are the four SEC-C design/fixture files plus its dedicated CI
-workflow only. Tests are product assertions; Ekwip must independently review and pin
+Executor allowedFiles are the five SEC-C docs/tests files, including the supplemental
+obligations manifest. The dedicated CI workflow is separate supporting infrastructure,
+not a task output or executor-allowed change. Tests are product assertions; Ekwip must independently review and pin
 their blobs as protected checks before adopting evidence. Contract status remains
 proposal; no acceptance receipt is inserted or implied. Blocked existing dispatch
 40243859069 is owned by Work Ekwip; no new dispatch is requested here.
 Coordination: Ekwip PR45 and Fitnest work journal PR135.
 
+
+
+## Source-to-proof coverage
+
+The contract maps SEC-C-01 through SEC-C-08 to SEC-03/04/29, accepted SEC-A,
+the clarification gates and consuming task IDs. The six composed synthetic scenarios
+exercise targeted/bulk plans, old and refreshed credentials, unchanged unrelated devices,
+absolute expiry despite refreshed credentials, refresh exceptions with revoked/risky
+application records, replay denial and foreign session identifiers. The harness changes
+synthetic records explicitly; it does not substitute for a real database transaction.
+
+For contract acceptance, the independent reviewer must review requirement coverage
+and the fixtures themselves, not just the test count. Ekwip pins the reviewed test/model
+blobs before adopting the exact CI result, records the review and integration links,
+then writes the attributable contract receipt through its normal acceptance mechanism.
+The profileHandoff is a proposal, never a self-registered policy or self-issued receipt.
+
+## Atomic audit and notification transaction
+
+Proposed server transaction for T029/T031, not implemented by this design fixture:
+lock the owning account/session enrollment boundary; reread token-linked provider
+and application state, owner, time bounds and risk; validate the completed proof;
+atomically claim its unique proof/operation ID; choose and lock scoped targets;
+mark targets revoked; append the audit record and generic notification outbox intent;
+commit. A failed prerequisite or database error rolls back every effect. Return
+success only after commit. Same operation retry returns its committed outcome;
+reuse of the proof for a different operation is denied.
+
+Use a consistent account-before-session lock order. Bulk revocation linearizes at
+the locked target selection and commit. Enrollment competes on that same account
+boundary; a subsequently enrolled session begins without inherited risk clearance.
+Absolute lifetime always retains its original server creation time. No preflight
+result can be applied later without repeating these checks inside the transaction.
+
+Audit fields proposed: operation ID, stable account/actor ID, action, target session
+IDs, proof reference (not proof contents), server timestamp and result. Notification
+outbox carries a generic account-security event to a previously trusted channel,
+keyed by operation/account/channel for deduplication. Neither audit nor outbox stores
+raw tokens, OTP, email, phone, health or delivery history. Restrict audit reads to
+authorized staff scope; never expose it through client direct access. Provider send
+runs after commit with deduplication and bounded retries; delivery failure cannot
+undo revocation or silently discard the pending intent.
+
+The fixture emits required-effect flags and simulates subsequent authorization.
+It does not prove concurrent consumption, transaction isolation, audit/outbox
+durability or notification delivery. T029/T031 qualify those runtime guarantees
+using actual database roles and failure/race injection; their absence is not a
+hidden claim of runtime success in this prerequisite design contract.
+
+## No production writes
+
+This task proposes design and executes isolated in-memory fixtures only. It changes
+no provider-owned auth table, deployed application route, production policy, schema,
+service or acceptance receipt. SEC-A accepted code and receipt remain untouched.
+The executor candidate scope is exact docs/tests deltas including both SEC-C JSON
+contracts and ADR/model/tests; any specs delta would require explicit scope review.
+The dedicated CI workflow is supporting infrastructure, excluded from executor
+candidate allowedFiles and reviewed separately.
+
+The independent reviewer must inspect the exact patch and command environment,
+rather than treating this statement or JSON flags as an attestation. No new budget,
+gate approval or production authorization follows from a contract receipt. Runtime
+integration and any production operation retain the consuming task's controls.
 
