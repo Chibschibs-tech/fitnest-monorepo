@@ -6,6 +6,9 @@ on:
     paths:
       - 'packages/core/**'
       - 'tooling/auth/**'
+      - 'tooling/foundation/**'
+      - 'apps/web/package.json'
+      - '.env.example'
       - 'supabase/config.toml'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -17,6 +20,18 @@ concurrency:
   group: identity-foundation-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
+  setup-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+      - run: node tooling/foundation/check-setup.mjs
+      - run: node --test tooling/foundation/check-setup.test.mjs
   core:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -65,3 +80,4 @@ jobs:
           npx --yes supabase@2.121.0 stop --workdir "$RUNNER_TEMP/fitnest-auth" --no-backup
           rm -f "$RUNNER_TEMP/fitnest-auth-status.json"
           rm -f "$RUNNER_TEMP/fitnest-auth-start.log"
+
