@@ -1,0 +1,66 @@
+{
+  "task_id": "S001-SEC-B",
+  "version": 1,
+  "source_plan_commit": "2854038dfe653289c326dd33650a311918f630ad",
+  "preserved_sec_a_commit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12",
+  "kind": "contract_evidence_preparation",
+  "acceptance_claimed": false,
+  "source_refs": [
+    "docs/delivery/backlog.json:S001-SEC-B",
+    "docs/delivery/security-requirements.md:SEC-06,SEC-29,SEC-30",
+    "docs/delivery/product-baseline.md:D-052,D-053,D-057,D-059,D-063"
+  ],
+  "allowed_paths": [
+    "docs/delivery/contracts/S001-SEC-B.json",
+    "docs/delivery/evidence/schema-inventory-2026-10-26.json",
+    "docs/delivery/sec-b-review-20261026.md",
+    "tests/security/sec-b-inventory.sql",
+    "tests/security/sec-b-inventory.mjs",
+    "tests/security/sec-b-inventory.test.mjs"
+  ],
+  "depends_on": [],
+  "merge_gates": [
+    "G-CONSTITUTION"
+  ],
+  "commands": [
+    {
+      "command": "node --test tests/security/sec-b-inventory.test.mjs",
+      "scope": "offline inventory analysis regressions",
+      "satisfies_full_task": false
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/delivery/evidence/schema-inventory-2026-10-26.json",
+      "kind": "read_only_database_metadata",
+      "captured_at": "2026-10-26T18:27:55.491238+00:00",
+      "project_ref": "blboseqvdmpdrthipxdk",
+      "claims": "metadata plus two read-only SQL-role SELECT denial probes; no API reachability claim"
+    }
+  ],
+  "completion_requirements": [
+    "Independently review captured metadata, source inventory and explicit unresolved choices against task acceptance.",
+    "Record deployed Data API enabled/exposed-schema configuration; absent SQL setting is UNKNOWN.",
+    "Observe actual application runtime/migration roles without credentials and inspect inheritance and effective grants.",
+    "Bind inventory to reviewed migration/source diff, including legacy interfaces and custom exposed schemas.",
+    "Replay reviewed migrations in a disposable matching stack and record real-role route/SQL access tests before claiming T006/runtime closure.",
+    "Register independent Ekwip verifier using immutable source/test blob pins; candidate cannot approve its own metadata assertions.",
+    "Keep SEC-C/T010 revocation and T013 production authorization separate."
+  ],
+  "outstanding": [
+    "Data API configuration",
+    "actual deployed application role",
+    "exhaustive route/action/export/GraphQL map",
+    "disposable database integration tests",
+    "independent review and Ekwip acceptance"
+  ],
+  "forbidden": [
+    "production writes",
+    "grant changes",
+    "migration apply",
+    "SEC-A re-execution",
+    "manual acceptance receipt",
+    "changing execution/qualification policy"
+  ]
+}
+
