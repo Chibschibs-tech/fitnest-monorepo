@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "S001-SEC-A",
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "criterion": "OTP abuse/risk/recovery design; record unresolved choices and no production writes.",
+  "status": "proposal",
+  "authority": {
+    "productionWritesAuthorized": false,
+    "gatesApproved": false,
+    "budgetApproved": false,
+    "taskAccepted": false
+  },
+  "otp": {
+    "quotaBeforeSend": true,
+    "sharedAtomicAccountingRequired": true,
+    "idempotencyRequired": true,
+    "ambiguousSendConsumesReservation": true,
+    "blindRetryAllowed": false,
+    "verificationAttemptsBounded": true,
+    "accountEnumerationAllowed": false,
+    "providerQualified": false
+  },
+  "risk": {
+    "stableInternalIdentity": true,
+    "phoneOtpAloneUnlocksHistory": false,
+    "independentPreviouslyVerifiedProofRequired": true,
+    "proofAccountAndActionBound": true,
+    "proofSingleUse": true,
+    "singleAndBulkRevokeSameProof": true,
+    "unavailableValidationDenies": true
+  },
+  "recovery": {
+    "deliveryFactsSufficient": false,
+    "newlyAddedEmailSufficient": false,
+    "replaceFactorUsingSameFactor": false,
+    "bothFactorsLost": "audited_assistance_without_automatic_unlock",
+    "missingIndependentEvidence": "deny_history_and_identity_transfer",
+    "supportApprovalAloneSufficient": false
+  },
+  "unresolved": [
+    {
+      "id": "session_durations",
+      "gate": "G-SESSION",
+      "status": "unratified",
+      "proposal": "Bounded sessions per FR-038 and D-053: a short-lived access token (illustrative 600 seconds), rotating refresh with reuse detection, and finite idle/absolute lifetime (illustrative 30 days idle, 90 days absolute), with silent rotating refresh inside those bounds to satisfy FR-004/FR-005 and SEC-02 without weakening the R2 revocation boundary. Lifetime is enforced server-side, never client-controlled. Long-inactive or risky access is not refreshed silently; it requires independent previously verified email (FR-038/D-053) and fails closed into assisted recovery when proof is absent. Illustrative limits are marked unratified and never deployed as defaults.",
+      "remainingEvidence": "Exact access/idle/absolute durations, refresh reuse-detection grace and rotation behavior are not yet ratified against native (004) client behavior and the 500-active-user target. Future ratification/evidence owner: Security + product (G-SESSION). Evidence needed: a completed G-SESSION ADR approved by Security + product, isolated fixtures proving server lifetime enforcement against the real Supabase session model (R2), and a decision on whether refresh rotation preserves or invalidates other device sessions before T032."
+    },
+    {
+      "id": "device_concurrency",
+      "gate": "G-SESSION",
+      "status": "unratified",
+      "proposal": "Reconcile the 001 device list with 004 single-active-session per G-SESSION: multiple revocable devices per account, each a bounded session, with owner-scoped server-only listing (FR-040, R3). Targeted and bulk revoke share the same independent proof (FR-040; risk.singleAndBulkRevokeSameProof). Use an app-level revocation record consulted on every authorization and renewed-token path, never signOut(session_id) and never an OTP-only risky fallback (R3). The device-count UX conflict with 004 remains explicitly unratified (spec.md).",
+      "remainingEvidence": "Reconciliation of 001 multiple revocable devices versus 004 single active session, plus the maximum concurrent device count and oldest-session eviction policy, are unratified. Future ratification/evidence owner: Security + product (G-SESSION). Evidence needed: a tested supported targeted-revocation mechanism with isolated tests proving an old JWT is denied on every domain and direct path before T031, and a UX decision on device-count limits."
+    },
+    {
+      "id": "risk_signals",
+      "gate": "G-SESSION",
+      "status": "unratified",
+      "proposal": "Define concrete risk signals per D-053, FR-001 and FR-005: new device, changed number, missing/expired session, long inactivity beyond the idle limit, repeated failed OTP verification and device/session anomaly. On any signal, phone OTP alone never unlocks historical data (risk.phoneOtpAloneUnlocksHistory=false); the account must supply independent previously verified email proof that is account-and-action bound and single-use (FR-038/D-053), otherwise fail closed into assisted recovery. Normal same-device returns avoid SMS (FR-005/SEC-02) without re-triggering risk.",
+      "remainingEvidence": "Precise risk-signal taxonomy, thresholds (inactivity duration, failed-attempt count, anomaly heuristics) and which signals are sticky versus transient are unratified. Future ratification/evidence owner: Security + product (G-SESSION). Evidence needed: Security + product approval and isolated fixtures showing a newly verified risky device cannot read prior history without independent proof, and that unavailable validation denies (risk.unavailableValidationDenies)."
+    },
+    {
+      "id": "assisted_recovery_evidence",
+      "gate": "G-RECOVERY",
+      "status": "unratified",
+      "proposal": "When both factors are lost, recovery resolves to audited assistance without automatic unlock per FR-041/D-053: a staff-assisted, audit-recorded procedure that does not auto-unlock history or transfer identity. It must collect independent evidence (identity document plus ownership corroboration) recorded in staff actions, never delivery facts, address, plan or last delivery (spec Recovery and ownership; D-053). Support approval alone is insufficient (recovery.supportApprovalAloneSufficient=false); no identity factor may be substituted using only that same factor. Completed assisted recovery triggers the mandatory SEC-04 security notification.",
+      "remainingEvidence": "Concrete assisted-recovery evidence checklist (which identity/ownership documents, verification steps, mandatory second reviewer or founder sign-off, retention duration) and its pass/fail criteria are unratified. Future ratification/evidence owner: Security + support (G-RECOVERY). Evidence needed: a G-RECOVERY ADR approved by Security + support defining evidence thresholds, audit fields and proof that support approval alone never unlocks history, before risky-history access launches."
+    },
+    {
+      "id": "live_provider_and_budget",
+      "gate": "G-PROVIDERS",
+      "status": "unratified",
+      "proposal": "Live OTP/WhatsApp/email suppliers, secret-manager credentials, templates, consent and failure runbooks are unresolved per G-PROVIDERS. Server-side Send-SMS hook worker credentials, supplier deliverability/cost, hook timeout/error behavior and cross-instance spend/quota protection require qualification (R4). Quota is checked before send with shared atomic reservation, idempotency, no blind retry and bounded verification attempts (otp.*). Provider selection is not a configuration-only change; providerQualified stays false until live qualification. OTP financial approval and billing reconciliation are owned by G-BUDGET.",
+      "remainingEvidence": "Supplier selection, credentials in a secret manager, template/consent wording and failure runbooks are unratified. Future ratification/evidence owner: Operations + engineering (G-PROVIDERS); OTP spend ceiling and billing reconciliation owner: Founder + orchestrator (G-BUDGET). Evidence needed: a live non-production qualification proving quota-before-send, atomic accounting, idempotency and cost metering against the chosen provider, plus an approved per-task/project OTP spend ceiling, before any production send is authorized."
+    }
+  ],
+  "verification": {
+    "referenceModelOnly": true,
+    "distributedAtomicityProven": false,
+    "providerBehaviorProven": false,
+    "noProductionWritesAttested": false,
+    "independentReviewRequired": true,
+    "fullAcceptanceClaimed": false
+  }
+}
