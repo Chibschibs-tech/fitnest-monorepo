@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "taskKey": "B01-C",
+  "status": "proposal",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "obligations": [
+    {
+      "id": "inventory",
+      "sourceRefs": ["SEC-29"],
+      "section": "## Obligation inventory",
+      "verification": "Verify that the five SEC-B evidence files at docs/delivery/evidence/ match the exact SHA-256 entries recorded in sec-bc/reviewed-bindings.json: baseline-migration-review-20261026.json (6a34394b...), data-api-settings-20261026.json (85e25aa3...), runtime-role-config.json (629620ec...), schema-inventory-2026-10-26.json (a6735a85...) and source-channel-inventory-20261026.json (4f398dae...). Cross-check schema-inventory for structural coherence (24 public relations, 261 columns, 23 sequences, no client table privileges, postgres and service_role BYPASSRLS flagged), data-api-settings for configured exposure (public and graphql_public schemas, automatic new-table exposure, zero public functions), runtime-role-config for unresolved role inference (configured postgres pooler username, no live current_user observation, no credentials retained), source-channel-inventory for bound route identities (108 routes at reviewed SHA b8911d6c...), and baseline-migration-review for reconciled public table list and observed plan_name nullable mismatch. Verify the runtime manifest entries recompute the workspace-byte SHA-256 of package.json (18db7ad3...), apps/web/package.json (cf57b889...) and packages/core/package.json (d5abfda8...) and carry the full engines/dependencies/devDependencies objects; absent manifest sections are empty objects, never fabricated. Reject any rewritten, truncated or hash-mismatched evidence."
+    },
+    {
+      "id": "api_errors",
+      "sourceRefs": ["SEC-06", "SEC-32"],
+      "section": "## Obligation api_errors",
+      "verification": "Exercise the foundation-reference.mjs apiError fixture across requestId values, the four allowed codes (DENIED, CONFLICT, INVALID, UNAVAILABLE) and unknown codes, and confirm it returns only {version:1, requestId, code} with unknown codes normalized to UNAVAILABLE. Confirm that internal error payloads containing sql, token, phone or health fields are never reflected. Verify that every API route in source-channel-inventory returns stable machine error codes and request IDs, never raw SQL state, provider errors or stack traces. Confirm old-client compatibility rules: versioned DTOs, server authorization every channel and oldClientCannotBypassRules=true; test that a stale or forged client assertion cannot bypass server-side validation."
+    },
+    {
+      "id": "settings",
+      "sourceRefs": ["SEC-11"],
+      "section": "## Obligation settings",
+      "verification": "Confirm that settings are typed, bounded, versioned and audited; that secrets are kept outside business tables; that no setting can disable an invariant or reopen a frozen day; and that sensitive setting changes require reauthentication. Verify against data-api-settings and schema-inventory that no business table stores service-role or provider secrets. Exercise invalid value rejection, old-rule-version recovery and concurrent-edit conflict behavior. Confirm that the settings fixture rejects any attempt to configure away ledger immutability, ownership checks or outbox persistence."
+    },
+    {
+      "id": "events_outbox",
+      "sourceRefs": ["B01-C/AC-01"],
+      "section": "## Obligation events_outbox",
+      "verification": "Verify the outbox fixture in foundation-reference.mjs against the representative and boundary inputs: business commit and outbox persistence must be true and in the same transaction; invalid eventId or eventVersion must be rejected; an existing consumer receipt must cause skip; and an ambiguous or unknown external outcome must cause reconcile, never a blind duplicate delivery. Confirm the common event schema carries eventId, eventType, eventVersion, aggregateId, aggregateVersion, occurredAt, correlationId and payload. Validate delivery semantics as at-least-once with unique consumer receipts, and ensure unknown provider outcomes are reconciled before any repeat effect."
+    },
+    {
+      "id": "idempotency_lock_order",
+      "sourceRefs": ["B01-C/AC-01"],
+      "section": "## Obligation idempotency_lock_order",
+      "verification": "Verify the idempotency fixture binds tenant, actor, operation, key and payloadHash; returns create for a fresh request, replay for an existing record with state complete, wait for state pending, reconcile for state unknown, conflict for a reused key whose any binding field (tenant, actor, operation, key or payloadHash) differs, and reject for malformed input. Confirm that unknown provider outcomes never permit a duplicate effect. Verify lockOrder enforces one tenant, nonempty resource IDs, nonnegative integer ranks and returns unique [rank,id] tuples sorted ascending by rank then id, or null for cross-tenant or invalid locks. Test duplicate ranks, duplicate ids across ranks, malformed tenants and negative ranks."
+    },
+    {
+      "id": "environments",
+      "sourceRefs": ["SEC-31"],
+      "section": "## Obligation environments",
+      "verification": "Verify the environment fixture accepts only disposable local or CI environments (exactly local and ci) when syntheticData is true, providerMode is sandbox and credentialsEnvironment matches the named environment; confirm production and any other environment name is rejected. Validate that NEXT_PUBLIC_ variables contain only public configuration, that service-role secrets are server-only, and that .env.example contains placeholders rather than functional credentials. Confirm no live provider credentials or production tokens are present in the candidate baseline, and that staging uses separate sandbox credentials and deployment configuration."
+    },
+    {
+      "id": "privileges",
+      "sourceRefs": ["SEC-29"],
+      "section": "## Obligation privileges",
+      "verification": "Confirm application and migration database privileges are separated in design: the runtime role must not own schema objects or hold BYPASSRLS, and the migration role must not be exposed to the application. Cross-check runtime-role-config (inferred postgres, liveConnectionRoleObserved=false, migrationConnectionRoleObserved=false, credentialsRetained=false) and schema-inventory (postgres/service_role BYPASSRLS, anon/authenticated no BYPASSRLS, no client table privileges). Verify no privileged client keys are allowed in bundles, public environment or logs. Keep liveRuntimeRoleConfirmed=false until T006 observes actual current_user and role memberships through a real application connection."
+    },
+    {
+      "id": "migration_restore",
+      "sourceRefs": ["B01-C/AC-01", "SEC-31"],
+      "section": "## Obligation migration_restore",
+      "verification": "Verify the migration fixture returns eligible only when history is reconciled, isolated restore is tested, erasure replay is planned and the change is backward compatible; it must return blocked for destructive changes and for production changes without recorded founder approval. Cross-check baseline-migration-review-20261026.json: productionReplayPerformed is false, observedMigrations lacks the nullable-plan migration, and observedPlanNameNullable is NO, so T004-T008 must reconcile history in isolation before any production apply. Confirm supabase/migrations/ is the canon, legacy Drizzle scripts are treated as legacy requiring reconciliation, additive nullable bridges and backfill verification are required, and destructive or relabeling changes are blocked by this fixture. Keep productionGate G-T013 open until founder arbitration with a concrete diff, privilege plan, data impact and restore procedure."
+    },
+    {
+      "id": "time",
+      "sourceRefs": ["D-058", "SEC-15"],
+      "section": "## Obligation time",
+      "verification": "Confirm server time authority, Africa/Casablanca business timezone, timestamptz instant storage, half-open intervals [start,end), one anchor per transaction and distinct consumption/delivery/production dates. Verify the D-058 time prototype receives an explicit Date from the caller and returns Casablanca business date and ISO-week boundaries without adding seven 24-hour periods, so Ramadan and transition weeks produce 167/169-hour boundaries. Test before/at/after cutoff, midnight, phone timezone offset and local-time transitions. Confirm native rendering and device timezone remain separate qualification concerns."
+    },
+    {
+      "id": "audit",
+      "sourceRefs": ["SEC-30"],
+      "section": "## Obligation audit",
+      "verification": "Verify business audit is restricted, technical IDs are pseudonymized, and health, OTP, phone and token fields are redacted. Confirm audit exports require an actor and carry evidence of the actor's permission and resource scope. Cross-check apiError never leaks tokens, OTP, phone or SQL; securityNotificationIntent carries no telephone, email, OTP, session token or history; and notification payloads contain no health data. Test that support reads are scoped and that failure samples contain no secrets."
+    },
+    {
+      "id": "compatibility",
+      "sourceRefs": ["SEC-32"],
+      "section": "## Obligation compatibility",
+      "verification": "Confirm API contractVersion is 1, error responses are versioned, the actor authority is server-side and old clients cannot bypass server rules. Verify source-channel-inventory binds 108 route identities to a reviewed source SHA and that route methods and imports are recorded. Confirm rawErrorsAllowed=false, dependencies are locked, CI is mandatory, artifacts trace to commit and rollback is demonstrated. Test that a forged or stale client request is denied by the server authorization fixture regardless of client version."
+    }
+  ],
+  "preservedGates": ["G-CONSTITUTION", "G-RECOVERY", "G-SESSION", "G-T013"],
+  "time": {
+    "authority": "server",
+    "timezone": "Africa/Casablanca",
+    "instantStorage": "timestamptz",
+    "interval": "half-open",
+    "oneAnchorPerTransaction": true,
+    "distinctDates": ["consumption", "delivery", "production"]
+  },
+  "migrations": {
+    "canon": "supabase/migrations/",
+    "productionGate": "G-T013",
+    "legacyHistoryRequiresReconciliation": true,
+    "restoreInIsolation": true,
+    "reapplyErasureRequests": true
+  },
+  "privileges": {
+    "applicationMigrationSeparated": true,
+    "liveRuntimeRoleConfirmed": false,
+    "clientPrivilegedKeysAllowed": false
+  },
+  "api": {
+    "contractVersion": 1,
+    "actorAuthority": "server",
+    "errorFields": ["version", "requestId", "code"],
+    "versioned": true,
+    "serverAuthorizationEveryChannel": true,
+    "oldClientCannotBypassRules": true,
+    "rawErrorsAllowed": false
+  },
+  "settings": {
+    "typed": true,
+    "bounded": true,
+    "versioned": true,
+    "audited": true,
+    "canDisableInvariant": false,
+    "secretsInBusinessTables": false
+  },
+  "outbox": {
+    "eventFields": ["eventId", "eventType", "eventVersion", "aggregateId", "aggregateVersion", "occurredAt", "correlationId", "payload"],
+    "lockOrder": "tenant-rank-resource",
+    "sameTransaction": true,
+    "delivery": "at-least-once",
+    "consumerReceiptsUnique": true,
+    "unknownExternalOutcome": "reconcile"
+  },
+  "audit": {
+    "restricted": true,
+    "exportActorRequired": true,
+    "technicalIds": "pseudonymized",
+    "redact": ["health", "otp", "phone", "token"]
+  },
+  "inventory": {
+    "evidence": [
+      {"path": "docs/delivery/evidence/baseline-migration-review-20261026.json", "sha256": "6a34394b983d5b69d8a5680af92f9c3051be5d132eb2764fdcabb7b50cf10580"},
+      {"path": "docs/delivery/evidence/data-api-settings-20261026.json", "sha256": "85e25aa3a603de53c3eb62a5c5fe8bfa7b30c5321b95848b5657d2881638bef6"},
+      {"path": "docs/delivery/evidence/runtime-role-config.json", "sha256": "629620ec08edea6a57818a57e74ee81305c299814d1102d1741cdf097577011d"},
+      {"path": "docs/delivery/evidence/schema-inventory-2026-10-26.json", "sha256": "a6735a85aceff1e317ea18d99a34c2f3ed5907389f47acd9c57187e2d3822f7c"},
+      {"path": "docs/delivery/evidence/source-channel-inventory-20261026.json", "sha256": "4f398daedc6d23761c6979e81ce011b54c3e092b913022e282e4771fddcf72ac"}
+    ],
+    "liveDeploymentConfirmed": false,
+    "runtimes": [
+      {
+        "path": "package.json",
+        "sha256": "18db7ad3d07b67223ebf59e24c320a5b48217b2520e28b217661e80806e41f05",
+        "versions": {
+          "engines": {},
+          "dependencies": {},
+          "devDependencies": {
+            "npm-run-all": "^4.1.5",
+            "vitest": "5.0.5",
+            "typescript": "5.9.3",
+            "@types/node": "24.19.2"
+          }
+        }
+      },
+      {
+        "path": "apps/web/package.json",
+        "sha256": "cf57b8894f31db9ff8c6f7a3a80883b346fae69d5ca9615529866ec27879b80e",
+        "versions": {
+          "engines": {},
+          "dependencies": {
+            "@supabase/supabase-js": "2.110.7",
+            "@supabase/ssr": "0.5.2",
+            "@fitnest/core": "workspace:*",
+            "@auth/core": "latest",
+            "@aws-sdk/client-rds-data": "latest",
+            "@cloudflare/workers-types": "latest",
+            "@electric-sql/pglite": "latest",
+            "@hookform/resolvers": "^3.9.1",
+            "@libsql/client": "latest",
+            "@libsql/client-wasm": "latest",
+            "@neondatabase/serverless": "latest",
+            "@op-engineering/op-sqlite": "latest",
+            "@opentelemetry/api": "latest",
+            "@planetscale/database": "latest",
+            "@prisma/client": "latest",
+            "@radix-ui/react-accordion": "1.2.2",
+            "@radix-ui/react-alert-dialog": "1.1.4",
+            "@radix-ui/react-aspect-ratio": "1.1.1",
+            "@radix-ui/react-avatar": "1.1.2",
+            "@radix-ui/react-checkbox": "latest",
+            "@radix-ui/react-collapsible": "1.1.2",
+            "@radix-ui/react-context-menu": "2.2.4",
+            "@radix-ui/react-dialog": "latest",
+            "@radix-ui/react-dropdown-menu": "2.1.4",
+            "@radix-ui/react-hover-card": "1.1.4",
+            "@radix-ui/react-label": "latest",
+            "@radix-ui/react-menubar": "1.1.4",
+            "@radix-ui/react-navigation-menu": "1.2.3",
+            "@radix-ui/react-popover": "1.1.4",
+            "@radix-ui/react-progress": "latest",
+            "@radix-ui/react-radio-group": "latest",
+            "@radix-ui/react-scroll-area": "latest",
+            "@radix-ui/react-select": "latest",
+            "@radix-ui/react-separator": "1.1.1",
+            "@radix-ui/react-slider": "latest",
+            "@radix-ui/react-slot": "latest",
+            "@radix-ui/react-switch": "1.1.2",
+            "@radix-ui/react-tabs": "latest",
+            "@radix-ui/react-toast": "1.2.4",
+            "@radix-ui/react-toggle": "1.1.1",
+            "@radix-ui/react-toggle-group": "1.1.1",
+            "@radix-ui/react-tooltip": "latest",
+            "@stripe/stripe-js": "^8.2.0",
+            "@tidbcloud/serverless": "latest",
+            "@types/better-sqlite3": "latest",
+            "@types/nodemailer": "^7.0.3",
+            "@types/pg": "latest",
+            "@types/sql.js": "latest",
+            "@upstash/redis": "latest",
+            "@vercel/blob": "latest",
+            "@vercel/postgres": "latest",
+            "@xata.io/client": "latest",
+            "autoprefixer": "^10.4.20",
+            "better-sqlite3": "latest",
+            "bun-types": "latest",
+            "child_process": "latest",
+            "class-variance-authority": "^0.7.1",
+            "clsx": "^2.1.1",
+            "cmdk": "1.0.4",
+            "crypto": "latest",
+            "date-fns": "latest",
+            "drizzle-orm": "latest",
+            "embla-carousel-react": "8.5.1",
+            "expo-sqlite": "latest",
+            "fs": "latest",
+            "geist": "^1.3.1",
+            "gel": "latest",
+            "input-otp": "1.4.1",
+            "knex": "latest",
+            "kysely": "latest",
+            "lucide-react": "^0.454.0",
+            "mysql2": "latest",
+            "next": "14.2.16",
+            "next-auth": "latest",
+            "next-themes": "^0.4.4",
+            "nodemailer": "latest",
+            "pg": "latest",
+            "postgres": "latest",
+            "react": "^18",
+            "react-day-picker": "latest",
+            "react-dom": "^18",
+            "react-hook-form": "^7.54.1",
+            "react-resizable-panels": "^2.1.7",
+            "recharts": "2.15.0",
+            "sonner": "^1.7.1",
+            "sql.js": "latest",
+            "sqlite3": "latest",
+            "stripe": "^19.1.0",
+            "tailwind-merge": "^2.5.5",
+            "tailwindcss-animate": "^1.0.7",
+            "uuid": "latest",
+            "vaul": "^0.9.6",
+            "xlsx": "^0.18.5",
+            "zod": "^3.24.1"
+          },
+          "devDependencies": {
+            "@types/bcryptjs": "^3.0.0",
+            "@types/node": "^22",
+            "@types/react": "^18",
+            "@types/react-dom": "^18",
+            "eslint": "^8.57.1",
+            "eslint-config-next": "16.0.7",
+            "postcss": "^8.5",
+            "tailwindcss": "^3.4.17",
+            "typescript": "^5"
+          }
+        }
+      },
+      {
+        "path": "packages/core/package.json",
+        "sha256": "d5abfda8f00898c94fdeb31b07c94e208b7974217e3f11e9a095522e197229e9",
+        "versions": {
+          "engines": {},
+          "dependencies": {},
+          "devDependencies": {}
+        }
+      }
+    ]
+  }
+}
