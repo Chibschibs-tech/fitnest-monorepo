@@ -1,0 +1,413 @@
+{
+  "schemaVersion": 1,
+  "status": "preparation_only",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "source": {
+    "repository": "Chibschibs-tech/fitnest-monorepo",
+    "semanticPlanSha": "2854038dfe653289c326dd33650a311918f630ad",
+    "baseSha": "46599153870b62421ff20568b0dd8679222a297b",
+    "backlogBlob": "30f920979a313672728a0cd24448de0da97a4276",
+    "baselineBlob": "3b7916574c1a640b4d29c16d1c32475a35880d15",
+    "clarificationsBlob": "977ae5ee5a7e043e7e26053b9436e5525a149621"
+  },
+  "selectionRule": "These three design tasks each depend only on B01-C contract_accepted in the pinned graph. Preparability is not proof of operational admission, absence of another active run, semantic acceptance or runtime completion. Ekwip must deduplicate on task/source/candidate before execution.",
+  "tasks": [
+    {
+      "taskKey": "B04-C",
+      "title": "Food data, recipes and controlled import - design and contracts",
+      "dependsOn": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "startGates": [],
+      "mergeGates": [
+        "G-CONSTITUTION"
+      ],
+      "allowedPaths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/food/"
+      ],
+      "sourceRefs": [
+        "D-038",
+        "D-041",
+        "D-051",
+        "D-064",
+        "D-065",
+        "MC-01",
+        "MC-02",
+        "MC-03",
+        "MC-04",
+        "MC-05",
+        "MC-07"
+      ],
+      "securityRefs": [
+        "SEC-13",
+        "SEC-29"
+      ],
+      "priorityReason": "Defines food/version/measurement contracts before menu generation; independent of unfinished B02-C and T001-3 in the pinned DAG.",
+      "deliverables": [
+        "Existing food schema to ingredient/component/recipe/portion version map, with evidence of absent/legacy fields.",
+        "Versioned import request/result DTOs: source row identity, units, raw quantity, purchase yield, finished weight, nutrition evidence state and publication review.",
+        "Executable DB-M fixtures showing draft-only import, critical-unknown rejection and immutable recipe/cost versions."
+      ],
+      "cases": [
+        {
+          "id": "F01",
+          "exercise": "Import nutrition field omitted or marked unknown",
+          "expected": "Keep unknown; never normalize to zero; block critical unresolved publication",
+          "sourceRefs": [
+            "MC-02",
+            "D-041"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "F02",
+          "exercise": "Raw net ingredient weight and purchase yield differ from measured finished weight",
+          "expected": "Preserve three distinct quantities and basis; no generic raw-to-finished declaration",
+          "sourceRefs": [
+            "MC-03",
+            "D-038"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "F03",
+          "exercise": "Update ingredient/component after recipe version is published",
+          "expected": "Create new versions and impact analysis; old recipe and cost evidence unchanged",
+          "sourceRefs": [
+            "MC-04"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "F04",
+          "exercise": "Import worksheet with publish flag/formula pretending validation passed",
+          "expected": "Create draft, server validates/recalculates; only authorized review publishes",
+          "sourceRefs": [
+            "MC-07"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "F05",
+          "exercise": "Allergen taxonomy includes wheat/gluten and crustaceans/molluscs",
+          "expected": "Maintain separate relationships and cross-contact/evidence states; no9chip restriction",
+          "sourceRefs": [
+            "MC-01"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "F06",
+          "exercise": "One recipe is assigned to two current plans using normalized midpoint macros",
+          "expected": "Reject invalid membership; preserve stored bands and whole-day feasibility",
+          "sourceRefs": [
+            "D-064",
+            "D-065",
+            "MC-05"
+          ],
+          "status": "not_run"
+        }
+      ],
+      "missingDecisions": [
+        {
+          "gate": "G-FOOD",
+          "owner": "Food lead",
+          "needed": "Pilot recipe/portion/nutrition/allergen evidence, costing, shelf life and packaging. Synthetic contracts can proceed; food data cannot be certified."
+        },
+        {
+          "gate": "G-MACROS",
+          "owner": "Product + food lead",
+          "needed": "Midpoint/display rounding convention only. Do not normalize ratified D-065 bands or block all data-model preparation."
+        }
+      ],
+      "interfaces": [
+        "B08-C consumes immutable recipe/portion versions and validated nutrition/evidence; no runtime dependency added to backlog.",
+        "B01-I supplies audit/version/error/transaction primitives."
+      ],
+      "acceptanceEvidence": [
+        "Versioned contract files and source traceability",
+        "Executable positive/negative fixtures with exact candidate SHA and reports",
+        "Independent semantic review and unresolved decisions",
+        "External acceptance receipt; structural checker alone is insufficient"
+      ]
+    },
+    {
+      "taskKey": "B11-C",
+      "title": "Production, preparation, incidents and delivery - design and contracts",
+      "dependsOn": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "startGates": [],
+      "mergeGates": [
+        "G-CONSTITUTION"
+      ],
+      "allowedPaths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/operations/"
+      ],
+      "sourceRefs": [
+        "D-044",
+        "D-049",
+        "D-054",
+        "D-055",
+        "D-058",
+        "D-060"
+      ],
+      "securityRefs": [
+        "SEC-09",
+        "SEC-10",
+        "SEC-14",
+        "SEC-15",
+        "SEC-16",
+        "SEC-17",
+        "SEC-27"
+      ],
+      "priorityReason": "Supplies the delivery adapter and operations contracts explicitly missing from B02-C; contract preparation depends only on B01-C.",
+      "deliverables": [
+        "Versioned production/amendment/acknowledgement and delivery state/event DTOs.",
+        "Explicit list/confirm/fail/correct/reconcile interface with assigned-resource scope, minimum fields and event identity.",
+        "Freeze/safety incident and at-least-once consumer fixture matrix; G-ROUND decision packet with bounded alternatives, no invented default."
+      ],
+      "cases": [
+        {
+          "id": "D01",
+          "exercise": "Consumption J with18-22slot and last-call rule",
+          "expected": "Window begins23:00J-2 and ends05:00J-1; production/delivery/consumption dates distinct",
+          "sourceRefs": [
+            "D-044",
+            "D-058"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "D02",
+          "exercise": "Unsafe recipe/profile change arrives after freeze",
+          "expected": "Create blocking incident; stop preparation/handover; never silently regenerate or override safety",
+          "sourceRefs": [
+            "D-054"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "D03",
+          "exercise": "Administrator attempts post-cutoff logistics without dedicated scoped grant",
+          "expected": "Deny; when allowed require reason, audit, amended production version and acknowledgement",
+          "sourceRefs": [
+            "D-055",
+            "D-060"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "D04",
+          "exercise": "Driver requests other round delivery or outside visibility window",
+          "expected": "Deny; same checks apply direct APIs and exports",
+          "sourceRefs": [
+            "SEC-09"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "D05",
+          "exercise": "Concurrent confirm and retry after unknown external outcome",
+          "expected": "Single authoritative transition/event, unique consumers, reconcile ambiguity; no duplicate reward/notice",
+          "sourceRefs": [
+            "SEC-10",
+            "SEC-27"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "D06",
+          "exercise": "Correction changes a prior delivered record",
+          "expected": "Append correction with dedicated permission/reason; preserve original event and totals reconciliation",
+          "sourceRefs": [
+            "D-060",
+            "SEC-10"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "D07",
+          "exercise": "Reconcile planned120/prepared118/delivered115/failed3",
+          "expected": "Keep planned-minus-prepared2 visible; define denominator and missing-state counts rather than report unaccounted0 ambiguously",
+          "sourceRefs": [
+            "D-060"
+          ],
+          "status": "not_run"
+        }
+      ],
+      "missingDecisions": [
+        {
+          "gate": "G-ROUND",
+          "owner": "Operations",
+          "needed": "Who assigns/reassigns rounds; exact useful visibility interval and minimum contact/bag/notes fields; correction ownership. Deny unspecified access until resolved."
+        },
+        {
+          "gate": "G-MUTATIONS",
+          "owner": "Product + finance + operations",
+          "needed": "Compensation/credit effects, if any, follow accepted lifecycle rules. Delivery failure cannot invent credit/refund."
+        }
+      ],
+      "interfaces": [
+        "B02-C consumes exact adapter version and permissions once reviewed, without giving all drivers global access.",
+        "B12-C and referral consumers receive one authoritative delivery event; consumer effects are idempotent."
+      ],
+      "acceptanceEvidence": [
+        "Versioned contract files and source traceability",
+        "Executable positive/negative fixtures with exact candidate SHA and reports",
+        "Independent semantic review and unresolved decisions",
+        "External acceptance receipt; structural checker alone is insufficient"
+      ]
+    },
+    {
+      "taskKey": "B12-C",
+      "title": "Verified email and transactional communications - design and contracts",
+      "dependsOn": [
+        {
+          "task": "B01-C",
+          "condition": "contract_accepted"
+        }
+      ],
+      "startGates": [],
+      "mergeGates": [
+        "G-CONSTITUTION"
+      ],
+      "allowedPaths": [
+        "apps/web/",
+        "packages/core/",
+        "supabase/",
+        "specs/communications/"
+      ],
+      "sourceRefs": [
+        "D-016",
+        "D-033",
+        "D-039",
+        "D-053",
+        "D-056",
+        "D-062"
+      ],
+      "securityRefs": [
+        "SEC-02",
+        "SEC-04",
+        "SEC-22",
+        "SEC-28"
+      ],
+      "priorityReason": "Prepares communication proof/outbox contracts independently of provider onboarding and staff contract correction.",
+      "deliverables": [
+        "Versioned account/purpose/operation-bound verification proof contract and Send-SMS hook boundary.",
+        "Minimal transaction notification DTO with event-channel-recipient idempotency, locale/template version, consent requirement and provider outcome states.",
+        "Negative fixtures for replay, stale renewal state, recipient mismatch, push opt-in and ambiguous sends; no real message sends."
+      ],
+      "cases": [
+        {
+          "id": "N01",
+          "exercise": "Email proof replay, cross-account or cross-purpose use",
+          "expected": "Deny; atomic single-use consumption bound to account/purpose/operation",
+          "sourceRefs": [
+            "SEC-04",
+            "D-053"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "N02",
+          "exercise": "OTP hook invoked without trusted signature or for unknown purpose",
+          "expected": "Reject before provider send; rate/abuse policy preserved",
+          "sourceRefs": [
+            "SEC-02"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "N03",
+          "exercise": "Two workers process same event-recipient-channel tuple",
+          "expected": "One consumer effect; different recipient/channel is separate; ambiguous result reconciled before repeat",
+          "sourceRefs": [
+            "SEC-28",
+            "D-039"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "N04",
+          "exercise": "Push recipient has no current opt-in or revoked device association",
+          "expected": "No push; no inference from WhatsApp/email consent",
+          "sourceRefs": [
+            "SEC-22",
+            "D-039"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "N05",
+          "exercise": "Delayed renewal notification after cancellation/trial/no valid mandate",
+          "expected": "Read actual authoritative state; no misleading renewal claim and no trial auto-renew",
+          "sourceRefs": [
+            "D-062"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "N06",
+          "exercise": "Automatic dispatcher encounters admission notice",
+          "expected": "Preserve manual launch admission notices; do not generalize transactional automation",
+          "sourceRefs": [
+            "D-016",
+            "D-039"
+          ],
+          "status": "not_run"
+        },
+        {
+          "id": "N07",
+          "exercise": "Notification payload contains phone/token/health/history or wrong locale fallback",
+          "expected": "Reject/redact forbidden fields; render reviewed FR/EN template with no invented content",
+          "sourceRefs": [
+            "D-033",
+            "D-056"
+          ],
+          "status": "not_run"
+        }
+      ],
+      "missingDecisions": [
+        {
+          "gate": "G-PROVIDERS",
+          "owner": "Operations + engineering",
+          "needed": "OTP/WhatsApp/email suppliers, approved templates, secret-manager references, sender domains and failure runbooks. Contract adapters remain synthetic."
+        },
+        {
+          "gate": "G-RECOVERY",
+          "owner": "Security + support",
+          "needed": "Assisted recovery evidence when factors lost. This contract cannot approve delivery-knowledge shortcut."
+        },
+        {
+          "gate": "G-PRIVACY",
+          "owner": "Responsible legal owner",
+          "needed": "Purpose/retention/processor locations and consent rules for release; no blanket permission to send."
+        }
+      ],
+      "interfaces": [
+        "Preserve accepted SEC-A/SEC-C proof and revocation invariants; do not rewrite their fixtures.",
+        "Consume B01-I outbox and B11 authoritative events; no duplicate orchestration engine."
+      ],
+      "acceptanceEvidence": [
+        "Versioned contract files and source traceability",
+        "Executable positive/negative fixtures with exact candidate SHA and reports",
+        "Independent semantic review and unresolved decisions",
+        "External acceptance receipt; structural checker alone is insufficient"
+      ]
+    }
+  ]
+}
