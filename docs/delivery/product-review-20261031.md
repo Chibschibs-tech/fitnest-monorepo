@@ -23,7 +23,7 @@ Commands reproduced:
 | File under specs/003-staff-accounts-admin-shell/contracts/ | SHA-256 |
 |---|---|
 | B02-C.json | ab07f030fc44266b5bab9fc390beaf36a10cae02d15f11b2bee56de17d60a3cd |
-| staff-design.md | f91f896ddef2ac08e46812712d81b70a5531305b80af0e65023a7e05421c50c2 |
+| staff-design.md | 05d9f7d92ffbafcca34b7cf918660ae2a5436a3e6dd851f270ac30b5a3a30ef8 |
 | staff-reference.mjs | 7f8a4db222676f7d802421d72dbab1ed77efc6f3edcb4e35e79cf7a805d1579c |
 | staff-reference.test.mjs | e4634cb4d813dd71747c40931f2cf48403938ffb2578e4d8dc71dc2df179aad7 |
 
