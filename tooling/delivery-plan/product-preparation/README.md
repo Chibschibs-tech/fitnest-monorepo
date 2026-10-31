@@ -1,4 +1,4 @@
-# Product preparation - B01-I and independent contracts
+# Product preparation — B01-I and independent contracts
 Date: 2026-10-31. Status: preparation only.
 
 This bundle belongs to Work Fitnest. It defines product acceptance and source-bound test cases; it does not register an execution profile, dispatch work, accept a task or change the semantic backlog.
