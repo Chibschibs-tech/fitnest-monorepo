@@ -5,6 +5,8 @@ on:
   pull_request:
     paths:
       - 'packages/core/**'
+      - 'apps/web/**'
+      - 'pnpm-workspace.yaml'
       - 'tooling/auth/**'
       - 'supabase/config.toml'
       - 'package.json'
@@ -31,7 +33,12 @@ jobs:
         with:
           node-version: 24.19.0
           cache: pnpm
-      - run: pnpm install --frozen-lockfile --ignore-scripts --filter fitnest-monorepo --filter @fitnest/core
+      - run: pnpm install --frozen-lockfile --ignore-scripts --filter fitnest-monorepo --filter @fitnest/core --filter my-v0-project
+      - name: Qualify the workspace root test command
+        run: pnpm test
+      - name: Qualify the core package test command from its own directory
+        working-directory: packages/core
+        run: pnpm test
       - run: pnpm test:core
       - run: pnpm typecheck:core
   local-auth:
