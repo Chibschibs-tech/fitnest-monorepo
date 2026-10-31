@@ -1,4 +1,4 @@
-# B02-C Staff Identity and Secure Administration â€” Design Proposal
+# B02-C Staff Identity and Secure Administration — Design Proposal
 
 Status: **proposal** (not accepted). Task key: **B02-C**. Source SHA: `2854038dfe653289c326dd33650a311918f630ad`.
 `runtimeAcceptance`: false. `productionReady`: false.
@@ -13,10 +13,10 @@ This proposal is a **design contract**. The structural protected check and the m
 
 ## 2. Source basis (exact references)
 
-- Spec: `specs/003-staff-accounts-admin-shell/spec.md` â€” FR-S1â€“S4, FR-R1â€“R4, FR-A1â€“A4, FR-L1â€“L3.
-- Product baseline: `docs/delivery/product-baseline.md` â€” D-026, D-046, D-050, D-052, D-055, D-057, D-058, D-060, D-063.
-- Security requirements: `docs/delivery/security-requirements.md` â€” SEC-05, SEC-06, SEC-07, SEC-08, SEC-09, SEC-10, SEC-11, SEC-15, SEC-27, SEC-29, SEC-30, SEC-32.
-- Accepted foundation (B01-C): `packages/core/contracts/foundation-design.md` â€” API/error envelope, event and outbox schema, idempotency + lock order, server-time authority (`Africa/Casablanca`, `timestamptz`, half-open intervals), settings invariants, audit redaction, privilege separation.
+- Spec: `specs/003-staff-accounts-admin-shell/spec.md` — FR-S1–S4, FR-R1–R4, FR-A1–A4, FR-L1–L3.
+- Product baseline: `docs/delivery/product-baseline.md` — D-026, D-046, D-050, D-052, D-055, D-057, D-058, D-060, D-063.
+- Security requirements: `docs/delivery/security-requirements.md` — SEC-05, SEC-06, SEC-07, SEC-08, SEC-09, SEC-10, SEC-11, SEC-15, SEC-27, SEC-29, SEC-30, SEC-32.
+- Accepted foundation (B01-C): `packages/core/contracts/foundation-design.md` — API/error envelope, event and outbox schema, idempotency + lock order, server-time authority (`Africa/Casablanca`, `timestamptz`, half-open intervals), settings invariants, audit redaction, privilege separation.
 - Accepted SEC baseline: SEC-A (`tests/security/identity-reference.mjs`, accepted at `b8911d6c2d3a1343a22ba2aca462608ab0c9ec12`), SEC-B evidence (`docs/delivery/evidence/*.json`), SEC-C (`tests/security/session-reference.mjs`).
 
 ## 3. Preserved upstream decisions
@@ -57,17 +57,17 @@ Key boundary rules:
 - Reset/recovery uses a **single-use, expiring proof**. Completing a reset revokes all affected sessions and emits an audit entry plus a security notification.
 - Password reset alone must not silently bypass TOTP: after reset, sign-in still requires the enrolled TOTP (or the defined MFA recovery path).
 - Reset-request responses are non-enumerating (a generic response regardless of whether the account exists), consistent with SEC-A's non-enumeration invariant.
-- The versioned reset request, reset-proof exchange, completion response and the security-notification/audit events are specified in Â§13.10â€“13.12 so that single-use, expiry, session revocation and TOTP preservation can be type-checked and independently tested.
+- The versioned reset request, reset-proof exchange, completion response and the security-notification/audit events are specified in §13.10–13.12 so that single-use, expiry, session revocation and TOTP preservation can be type-checked and independently tested.
 
 ### 5.4 Bootstrap (FR-S2, D-052, SEC-05)
 
-- Two named administrators are bootstrapped through the one-time state machine in Â§21. There is no permanent backdoor and no SMS second factor. Recovery follows Â§20 without a hidden account.
+- Two named administrators are bootstrapped through the one-time state machine in §21. There is no permanent backdoor and no SMS second factor. Recovery follows §20 without a hidden account.
 
 ## 6. Roles and permission matrix
 
 Roles and permissions are **rows** (configuration), not code (FR-R1). Five launch roles exist (D-050). Screens and actions check permissions, never role names.
 
-Permission keys are namespaced `<domain>.<resource>.<action>`. The three spec examples â€” `menu.publish`, `delivery.confirm`, `subscriber.pause_for` â€” are literal; the remaining keys below are a **proposed** enumeration consistent with FR-R2 and are subject to ratification (see section 18). A permission is a capability row; adding a role is configuration, not development.
+Permission keys are namespaced `<domain>.<resource>.<action>`. The three spec examples — `menu.publish`, `delivery.confirm`, `subscriber.pause_for` — are literal; the remaining keys below are a **proposed** enumeration consistent with FR-R2 and are subject to ratification (see section 18). A permission is a capability row; adding a role is configuration, not development.
 
 | Role | Permissions (proposed) | Notes |
 |---|---|---|
@@ -77,7 +77,7 @@ Permission keys are namespaced `<domain>.<resource>.<action>`. The three spec ex
 | Support | `subscriber.read`, `subscriber.history.read`, `subscriber.pause_for`, `subscriber.act.skip`, `subscriber.act.address`, `subscriber.act.slot`, `event.ledger.read` | Read subscriber account/history, act within the same rules as the subscriber, read the event ledger. |
 | Preparation | `preparation.picking.read`, `preparation.labels.read` | Picking lists and labels, read-only. |
 
-Dedicated default-deny logistics permission (D-055): `logistics.post_cutoff` â€” granted only through an explicit, scoped grant; never implied by Administrator. No role overrides hard safety filters.
+Dedicated default-deny logistics permission (D-055): `logistics.post_cutoff` — granted only through an explicit, scoped grant; never implied by Administrator. No role overrides hard safety filters.
 
 Forbidden combinations (FR-R3, D-050): Kitchen may combine with Preparation; Delivery and Support are never combined with Administrator on one account.
 
@@ -87,7 +87,7 @@ A permission grants a capability; the server additionally enforces **resource sc
 
 | Role | Capability scope | Enforced resource scope |
 |---|---|---|
-| Delivery | delivery actions on assigned round | `roundId` assigned to the staff account; useful time window; minimum necessary fields only (G-ROUND defines assignment ownership â€” unresolved). |
+| Delivery | delivery actions on assigned round | `roundId` assigned to the staff account; useful time window; minimum necessary fields only (G-ROUND defines assignment ownership — unresolved). |
 | Support | subscriber reads and actions | a specific subscriber account, subject to the same rules the subscriber would face; staff actor recorded distinctly. |
 | Preparation | picking/labels | read-only; no write permission exists. |
 | Kitchen | menu/nutrition | menu/nutrition domain only; no settings/staff/subscriber write. |
@@ -118,11 +118,11 @@ Staff events are append-only and restricted (FR-A4, SEC-30). Each row carries `{
 
 Delivery confirmation is the one action built here.
 
-- A driver lists only deliveries assigned to their round in the useful window (FR-L1). Consumption date J, production Jâˆ’1 daytime, and delivery Jâˆ’1 evening are distinct, using server `Africa/Casablanca` time (D-058).
+- A driver lists only deliveries assigned to their round in the useful window (FR-L1). Consumption date J, production J−1 daytime, and delivery J−1 evening are distinct, using server `Africa/Casablanca` time (D-058).
 - Confirmation uses an authorized resource scope, a server timestamp, a stable idempotency key and an atomic transition + outbox (FR-L2, SEC-10). The authoritative `delivery.confirmed` event drives both the first-delivery reward and the notification (SEC-27/28). Corrections require a separate permission and reason, append events, and never delete or double-credit.
 - Failure records an authorized reason and exception owner; retry/compensation follow the accepted policy, not an invented credit; planned/prepared/delivered/failed are reconciled (FR-L3, D-060).
 
-The delivery model/state and assignment are supplied through **LOT-11** as a versioned adapter interface. Fixture contracts may precede LOT-11 runtime, but FR-L1â€“3 cannot be marked delivered before real integration. The proposed versioned request/response/event DTOs for `listByRound`, `fail`, `correct` and `reconcile` are specified in Â§13.13â€“13.16 and are marked as **fixtures pending LOT-11 ratification**; `confirm` is Â§13.5.
+The delivery model/state and assignment are supplied through **LOT-11** as a versioned adapter interface. Fixture contracts may precede LOT-11 runtime, but FR-L1–3 cannot be marked delivered before real integration. The proposed versioned request/response/event DTOs for `listByRound`, `fail`, `correct` and `reconcile` are specified in §13.13–13.16 and are marked as **fixtures pending LOT-11 ratification**; `confirm` is §13.5.
 
 ## 13. Concrete versioned schemas
 
@@ -231,7 +231,7 @@ Request:
 { "version": 1, "email": "lead@fitnest.example", "operationId": "op_..." }
 ```
 
-Response (non-enumerating generic â€” the same shape whether or not the account exists, per SEC-A):
+Response (non-enumerating generic — the same shape whether or not the account exists, per SEC-A):
 
 ```json
 { "version": 1, "requestId": "req_...", "code": "OK" }
@@ -247,7 +247,7 @@ Request (the `resetProof` is single-use and expiring; `totpCode` is required so 
 { "version": 1, "email": "lead@fitnest.example", "resetProof": "<opaque single-use>", "newPassword": "<secret>", "totpCode": "123456", "operationId": "op_..." }
 ```
 
-Response (on success â€” session revocation, audit row and notification intent are committed in the same transaction as the proof consumption):
+Response (on success — session revocation, audit row and notification intent are committed in the same transaction as the proof consumption):
 
 ```json
 { "version": 1, "requestId": "req_...", "code": "OK", "data": { "staffAccountId": "sacc_...", "sessionsRevoked": 3, "resetAt": "2026-10-31T19:05:00Z" } }
@@ -257,7 +257,7 @@ Expired, replayed or cross-account proof yields a generic `{ "version": 1, "requ
 
 ### 13.12 Reset security-notification and audit events
 
-Security notification intent (SEC-A/SEC-C shape â€” carries no phone, email, OTP, token, TOTP secret or password):
+Security notification intent (SEC-A/SEC-C shape — carries no phone, email, OTP, token, TOTP secret or password):
 
 ```json
 { "eventId": "evt_...", "eventType": "staff.security_change", "eventVersion": 1,
@@ -273,9 +273,9 @@ Audit event (append-only, redacted, minimal payload):
   "correlationId": "op_...", "payload": { "action": "password_reset", "target": {"type": "staff_account", "id": "sacc_..."}, "sessionsRevoked": 3, "reason": "forgotten_password", "actorId": "sacc_..." } }
 ```
 
-The MFA recovery protocol is specified in Â§20, separately from password reset. Recovery-code count, format and expiry parameters remain unresolved (Â§18); no default is silently enabled.
+The MFA recovery protocol is specified in §20, separately from password reset. Recovery-code count, format and expiry parameters remain unresolved (§18); no default is silently enabled.
 
-### 13.13 Delivery adapter `listByRound` â€” fixture, pending LOT-11
+### 13.13 Delivery adapter `listByRound` — fixture, pending LOT-11
 
 Request:
 
@@ -291,7 +291,7 @@ Response (minimum-necessary projection: contact/address/slot/bag/notes only, no 
 ] } }
 ```
 
-### 13.14 Delivery adapter `fail` â€” fixture, pending LOT-11
+### 13.14 Delivery adapter `fail` — fixture, pending LOT-11
 
 Request:
 
@@ -313,7 +313,7 @@ Event:
   "correlationId": "ik_...", "payload": { "deliveryId": "del_...", "reason": "customer_absent", "failedBy": "sacc_...", "exceptionOwnerId": "exc_..." } }
 ```
 
-### 13.15 Delivery adapter `correct` â€” fixture, pending LOT-11
+### 13.15 Delivery adapter `correct` — fixture, pending LOT-11
 
 Request:
 
@@ -327,7 +327,7 @@ Response:
 { "version": 1, "requestId": "req_...", "code": "OK", "data": { "deliveryId": "del_...", "status": "delivered", "correctedAt": "2026-10-31T19:10:00+01:00" } }
 ```
 
-Event (append-only â€” the original event is never deleted or rewritten):
+Event (append-only — the original event is never deleted or rewritten):
 
 ```json
 { "eventId": "evt_...", "eventType": "delivery.corrected", "eventVersion": 1,
@@ -335,7 +335,7 @@ Event (append-only â€” the original event is never deleted or rewritten):
   "correlationId": "ik_...", "payload": { "deliveryId": "del_...", "reason": "wrong_subscriber_marked", "previousStatus": "delivered", "newStatus": "delivered", "correctedBy": "sacc_...", "correctedAt": "2026-10-31T19:10:00+01:00" } }
 ```
 
-### 13.16 Delivery adapter `reconcile` â€” fixture, pending LOT-11
+### 13.16 Delivery adapter `reconcile` — fixture, pending LOT-11
 
 Request:
 
@@ -393,17 +393,17 @@ Every channel enforces the same predicate: live identity + known granted permiss
 
 | Source ID | Requirement (source-grounded) | Design reference | Independent test | Negative cases |
 |---|---|---|---|---|
-| SEC-05 | all-staff TOTP; single-use expiring invitations/reset; protected secrets; two named administrators | Â§5, reqs `totp_mandatory_all_roles`, `invitation_single_use_expiry`, `reset_recovery_single_use` | enrollment/secret-never-read; invitation replay/concurrency; reset replay; bootstrap review | missing/reused TOTP; SMS factor; hidden account |
-| SEC-06 | validate identity/permission/resource scope on every channel; unknown permission denies | Â§6â€“7, Â§14, reqs `every_channel_authorization`, `permission_not_role_names` | five-role Ã— resource matrix over REST/action/export/RPC/realtime with forged cookies | anonymous/customer/other-staff; unknown permission key |
-| SEC-07 | role change/deactivation at next request; prevent self-escalation and forbidden combinations | Â§8, reqs `self_escalation_and_combination`, `deactivation_next_request` | pre-change token loses removed right; combination rejection | self-escalate; Delivery/Support+Administrator |
-| SEC-08 | staff origin isolation; host-scoped Secure/HttpOnly cookies; CSRF/Origin; restrictive CORS; GET no side effect | Â§8, req `admin_origin_cookie_session` | cookie attribute + cross-origin replay; CSRF POST; GET-mutation | third-party origin; legacy session on new route |
-| SEC-09 | drivers to rounds, preparation to picking/labels, support to necessary data | Â§7, reqs `delivery_round_scoping`, `support_scope_and_exports` | out-of-round ID and oversized export via direct download | other round; Preparation write; support out-of-scope |
-| SEC-11 | type/bound/version/audit settings; reauthenticate sensitive; no secret in business tables; cannot reopen frozen days/disable invariant | Â§10, req `typed_audited_settings` | invalid/stale value rejection; old-version recovery; frozen-day reopen | invariant disable; secret in settings |
-| D-026 | staff accounts separate from customers; email/password | Â§4, req `staff_identity_separation` | email collision independence; cross-table non-linkage | customer OTP to staff session |
+| SEC-05 | all-staff TOTP; single-use expiring invitations/reset; protected secrets; two named administrators | §5, reqs `totp_mandatory_all_roles`, `invitation_single_use_expiry`, `reset_recovery_single_use` | enrollment/secret-never-read; invitation replay/concurrency; reset replay; bootstrap review | missing/reused TOTP; SMS factor; hidden account |
+| SEC-06 | validate identity/permission/resource scope on every channel; unknown permission denies | §6–7, §14, reqs `every_channel_authorization`, `permission_not_role_names` | five-role × resource matrix over REST/action/export/RPC/realtime with forged cookies | anonymous/customer/other-staff; unknown permission key |
+| SEC-07 | role change/deactivation at next request; prevent self-escalation and forbidden combinations | §8, reqs `self_escalation_and_combination`, `deactivation_next_request` | pre-change token loses removed right; combination rejection | self-escalate; Delivery/Support+Administrator |
+| SEC-08 | staff origin isolation; host-scoped Secure/HttpOnly cookies; CSRF/Origin; restrictive CORS; GET no side effect | §8, req `admin_origin_cookie_session` | cookie attribute + cross-origin replay; CSRF POST; GET-mutation | third-party origin; legacy session on new route |
+| SEC-09 | drivers to rounds, preparation to picking/labels, support to necessary data | §7, reqs `delivery_round_scoping`, `support_scope_and_exports` | out-of-round ID and oversized export via direct download | other round; Preparation write; support out-of-scope |
+| SEC-11 | type/bound/version/audit settings; reauthenticate sensitive; no secret in business tables; cannot reopen frozen days/disable invariant | §10, req `typed_audited_settings` | invalid/stale value rejection; old-version recovery; frozen-day reopen | invariant disable; secret in settings |
+| D-026 | staff accounts separate from customers; email/password | §4, req `staff_identity_separation` | email collision independence; cross-table non-linkage | customer OTP to staff session |
 | D-046 | all staff account types and permissions precede menu operations; no temporary/legacy access | req `no_legacy_temporary_access` | every new route enforces real staff identity | founder/legacy fallback |
-| D-050 | five launch roles; Kitchen+Preparation allowed; Delivery/Support never +Administrator | Â§6, req `role_permission_matrix` | matrix-driven role-permission check; combination rules | forbidden combinations |
-| D-052 | all-staff TOTP; recovery; two named admins; no SMS; no hidden bypass | Â§5, reqs `totp_mandatory_all_roles`, `invitation_single_use_expiry` | mandatory TOTP; bootstrap naming; recovery without hidden account | SMS/hidden bypass |
-| D-055 | post-cutoff logistics dedicated default-deny permission; no role overrides hard filters | Â§11, req `staff_action_audit` | logistics permission requirement; hard-filter override denial | Administrator bypass |
+| D-050 | five launch roles; Kitchen+Preparation allowed; Delivery/Support never +Administrator | §6, req `role_permission_matrix` | matrix-driven role-permission check; combination rules | forbidden combinations |
+| D-052 | all-staff TOTP; recovery; two named admins; no SMS; no hidden bypass | §5, reqs `totp_mandatory_all_roles`, `invitation_single_use_expiry` | mandatory TOTP; bootstrap naming; recovery without hidden account | SMS/hidden bypass |
+| D-055 | post-cutoff logistics dedicated default-deny permission; no role overrides hard filters | §11, req `staff_action_audit` | logistics permission requirement; hard-filter override denial | Administrator bypass |
 
 ## 17. Independent test plans by concern
 
@@ -428,9 +428,9 @@ Request another round's delivery IDs, an out-of-window list, and a confirm on an
 These choices are explicitly **not decided** by this proposal:
 
 1. **G-ROUND** (assignment ownership): unresolved. This design does not assume all drivers see all daily deliveries; the `roundId` scope is a placeholder pending the G-ROUND decision (spec NC-1).
-2. **LOT-11 delivery adapter**: the delivery model/state and assignment contract is not yet accepted. The adapter interface in Â§12 is a fixture; FR-L1â€“3 cannot be marked delivered before real integration.
+2. **LOT-11 delivery adapter**: the delivery model/state and assignment contract is not yet accepted. The adapter interface in §12 is a fixture; FR-L1–3 cannot be marked delivered before real integration.
 3. **Exact staff origin hostname** and cookie `Domain`/`SameSite` policy value: unresolved configuration, not a design decision.
-4. **Exact permission-key enumeration** beyond the three spec examples (`menu.publish`, `delivery.confirm`, `subscriber.pause_for`): the Â§6 keys are a proposal pending ratification.
+4. **Exact permission-key enumeration** beyond the three spec examples (`menu.publish`, `delivery.confirm`, `subscriber.pause_for`): the §6 keys are a proposal pending ratification.
 5. **Session durations / device policy**: remain downstream of G-SESSION (SEC-C); not decided here.
 6. **Invitation/reset expiry durations, TOTP issuer/label, recovery-code count and retention duration for staff events**: illustrative/unspecified; the exact values need founder/product ratification (D-057 requires retention to have a purpose and duration).
 7. **Delivery correction permission key name** (`delivery.correct`) and the logistics permission key name (`logistics.post_cutoff`): proposed, pending ratification.
@@ -477,7 +477,7 @@ Database/provisioner integration tests must inject crashes before/after the seal
 
 ## 22. Canonical permission keys and executable evidence
 
-The Â§6 matrix uses exactly menu.publish and subscriber.pause_for, matching the literal spec examples. menu.weekly.publish and subscriber.act.pause are NOT implicit aliases; requests/grants containing them fail unknown-permission validation. Renaming display labels does not change stable permission keys. Other proposed keys remain proposal data awaiting review; this does not reopen the five ratified launch roles or their prohibited combinations.
+The §6 matrix uses exactly menu.publish and subscriber.pause_for, matching the literal spec examples. menu.weekly.publish and subscriber.act.pause are NOT implicit aliases; requests/grants containing them fail unknown-permission validation. Renaming display labels does not change stable permission keys. Other proposed keys remain proposal data awaiting review; this does not reopen the five ratified launch roles or their prohibited combinations.
 
 Administrator is not a runtime wildcard. Materialize its ordinary known grants; logistics.post_cutoff is never derived from role membership. Every request checks an explicit scoped logistics grant in addition to normal permission, live identity, resource scope, audit reason and hard safety constraints. The reference requires trusted riskCleared and lifetimeValid facts as well as a live session; deriving these facts from current server/provider state remains an integration obligation. The reference checks the core predicate only; all-channel, database and actual browser-origin enforcement remain B02-I integration obligations.
 
