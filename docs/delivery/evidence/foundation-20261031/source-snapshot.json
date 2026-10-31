@@ -1,0 +1,258 @@
+{
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "commit": "46599153870b62421ff20568b0dd8679222a297b",
+  "files": {
+    "package.json": {
+      "path": "package.json",
+      "sha": "4166e7bcf17e8bb2db53537a8c7a23ded65e32b5",
+      "content": "{\n  \"name\": \"fitnest-monorepo\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"packageManager\": \"pnpm@9.15.9\",\n  \"scripts\": {\n    \"test\": \"vitest run\",\n    \"test:core\": \"vitest run packages/core\",\n    \"typecheck:core\": \"tsc --noEmit -p packages/core/tsconfig.json\",\n    \"build\": \"pnpm --filter my-v0-project build\",\n    \"dev:web\": \"pnpm -C apps/web dev -p 3002\",\n    \"dev\": \"pnpm -C apps/web dev -p 3002\",\n    \"docs:generate\": \"node scripts/generate-docs.js\",\n    \"docs:watch\": \"nodemon --watch apps/web/app/api --watch packages/db/src --exec 'npm run docs:generate'\",\n    \"postinstall\": \"npm run docs:generate\"\n  },\n  \"devDependencies\": {\n    \"npm-run-all\": \"^4.1.5\",\n    \"vitest\": \"5.0.5\",\n    \"typescript\": \"5.9.3\",\n    \"@types/node\": \"24.19.2\"\n  }\n}\n\n"
+    },
+    "packages/core/package.json": {
+      "path": "packages/core/package.json",
+      "sha": "b77cd3f97c8439e8a09cc1742f4e416457a86ceb",
+      "content": "{\n  \"name\": \"@fitnest/core\",\n  \"version\": \"0.0.1\",\n  \"type\": \"module\",\n  \"main\": \"src/index.ts\",\n  \"types\": \"src/index.ts\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./time\": \"./src/time/index.ts\"\n  },\n  \"scripts\": {\n    \"test\": \"vitest run --config ../../vitest.config.ts packages/core\"\n  }\n}\n"
+    },
+    "apps/web/package.json": {
+      "path": "apps/web/package.json",
+      "sha": "a0ca9f22891d9ccead5d2dd4977f4eea841b24b6",
+      "content": "{\n  \"name\": \"my-v0-project\",\n  \"version\": \"0.1.0\",\n  \"private\": true,\n  \"scripts\": {\n    \"build\": \"next build\",\n    \"dev\": \"next dev\",\n    \"lint\": \"next lint\",\n    \"start\": \"next start\"\n  },\n  \"dependencies\": {\n    \"@supabase/supabase-js\": \"2.110.7\",\n    \"@supabase/ssr\": \"0.5.2\",\n    \"@fitnest/core\": \"workspace:*\",\n    \"@auth/core\": \"latest\",\n    \"@aws-sdk/client-rds-data\": \"latest\",\n    \"@cloudflare/workers-types\": \"latest\",\n    \"@electric-sql/pglite\": \"latest\",\n    \"@hookform/resolvers\": \"^3.9.1\",\n    \"@libsql/client\": \"latest\",\n    \"@libsql/client-wasm\": \"latest\",\n    \"@neondatabase/serverless\": \"latest\",\n    \"@op-engineering/op-sqlite\": \"latest\",\n    \"@opentelemetry/api\": \"latest\",\n    \"@planetscale/database\": \"latest\",\n    \"@prisma/client\": \"latest\",\n    \"@radix-ui/react-accordion\": \"1.2.2\",\n    \"@radix-ui/react-alert-dialog\": \"1.1.4\",\n    \"@radix-ui/react-aspect-ratio\": \"1.1.1\",\n    \"@radix-ui/react-avatar\": \"1.1.2\",\n    \"@radix-ui/react-checkbox\": \"latest\",\n    \"@radix-ui/react-collapsible\": \"1.1.2\",\n    \"@radix-ui/react-context-menu\": \"2.2.4\",\n    \"@radix-ui/react-dialog\": \"latest\",\n    \"@radix-ui/react-dropdown-menu\": \"2.1.4\",\n    \"@radix-ui/react-hover-card\": \"1.1.4\",\n    \"@radix-ui/react-label\": \"latest\",\n    \"@radix-ui/react-menubar\": \"1.1.4\",\n    \"@radix-ui/react-navigation-menu\": \"1.2.3\",\n    \"@radix-ui/react-popover\": \"1.1.4\",\n    \"@radix-ui/react-progress\": \"latest\",\n    \"@radix-ui/react-radio-group\": \"latest\",\n    \"@radix-ui/react-scroll-area\": \"latest\",\n    \"@radix-ui/react-select\": \"latest\",\n    \"@radix-ui/react-separator\": \"1.1.1\",\n    \"@radix-ui/react-slider\": \"latest\",\n    \"@radix-ui/react-slot\": \"latest\",\n    \"@radix-ui/react-switch\": \"1.1.2\",\n    \"@radix-ui/react-tabs\": \"latest\",\n    \"@radix-ui/react-toast\": \"1.2.4\",\n    \"@radix-ui/react-toggle\": \"1.1.1\",\n    \"@radix-ui/react-toggle-group\": \"1.1.1\",\n    \"@radix-ui/react-tooltip\": \"latest\",\n    \"@stripe/stripe-js\": \"^8.2.0\",\n    \"@tidbcloud/serverless\": \"latest\",\n    \"@types/better-sqlite3\": \"latest\",\n    \"@types/nodemailer\": \"^7.0.3\",\n    \"@types/pg\": \"latest\",\n    \"@types/sql.js\": \"latest\",\n    \"@upstash/redis\": \"latest\",\n    \"@vercel/blob\": \"latest\",\n    \"@vercel/postgres\": \"latest\",\n    \"@xata.io/client\": \"latest\",\n    \"autoprefixer\": \"^10.4.20\",\n    \"better-sqlite3\": \"latest\",\n    \"bun-types\": \"latest\",\n    \"child_process\": \"latest\",\n    \"class-variance-authority\": \"^0.7.1\",\n    \"clsx\": \"^2.1.1\",\n    \"cmdk\": \"1.0.4\",\n    \"crypto\": \"latest\",\n    \"date-fns\": \"latest\",\n    \"drizzle-orm\": \"latest\",\n    \"embla-carousel-react\": \"8.5.1\",\n    \"expo-sqlite\": \"latest\",\n    \"fs\": \"latest\",\n    \"geist\": \"^1.3.1\",\n    \"gel\": \"latest\",\n    \"input-otp\": \"1.4.1\",\n    \"knex\": \"latest\",\n    \"kysely\": \"latest\",\n    \"lucide-react\": \"^0.454.0\",\n    \"mysql2\": \"latest\",\n    \"next\": \"14.2.16\",\n    \"next-auth\": \"latest\",\n    \"next-themes\": \"^0.4.4\",\n    \"nodemailer\": \"latest\",\n    \"pg\": \"latest\",\n    \"postgres\": \"latest\",\n    \"react\": \"^18\",\n    \"react-day-picker\": \"latest\",\n    \"react-dom\": \"^18\",\n    \"react-hook-form\": \"^7.54.1\",\n    \"react-resizable-panels\": \"^2.1.7\",\n    \"recharts\": \"2.15.0\",\n    \"sonner\": \"^1.7.1\",\n    \"sql.js\": \"latest\",\n    \"sqlite3\": \"latest\",\n    \"stripe\": \"^19.1.0\",\n    \"tailwind-merge\": \"^2.5.5\",\n    \"tailwindcss-animate\": \"^1.0.7\",\n    \"uuid\": \"latest\",\n    \"vaul\": \"^0.9.6\",\n    \"xlsx\": \"^0.18.5\",\n    \"zod\": \"^3.24.1\"\n  },\n  \"devDependencies\": {\n    \"@types/bcryptjs\": \"^3.0.0\",\n    \"@types/node\": \"^22\",\n    \"@types/react\": \"^18\",\n    \"@types/react-dom\": \"^18\",\n    \"eslint\": \"^8.57.1\",\n    \"eslint-config-next\": \"16.0.7\",\n    \"postcss\": \"^8.5\",\n    \"tailwindcss\": \"^3.4.17\",\n    \"typescript\": \"^5\"\n  }\n}\n\n"
+    },
+    ".env.example": {
+      "path": ".env.example",
+      "sha": "41cef03da2662611e6a0880cec80dfbcd6b94a50",
+      "content": "DATABASE_URL=postgres://postgres:password@db.PROJECT_REF.supabase.co:5432/postgres?sslmode=require\nAUTH_SECRET=replace_me\nAUTH_EMAIL_SERVER=smtp://user:pass@smtp.example.com:587\nAUTH_EMAIL_FROM=Fitnest <no-reply@fitnest.ma>\nNEXT_PUBLIC_APP_URL=http://localhost:3002\n\n# Local Supabase only: copy values printed by `supabase status`.\n# The project URL and anon key are public identifiers, never server secrets.\nNEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321\nNEXT_PUBLIC_SUPABASE_ANON_KEY=replace_with_local_anon_key\n# Server only. Never prefix with NEXT_PUBLIC_, send to a client, or commit a value.\nSUPABASE_SERVICE_ROLE_KEY=replace_with_local_service_role_key\n# DATABASE_URL above is a placeholder. Use the local database for development/tests.\n# Do not reuse production credentials in CI, fixtures, or preview deployments.\n\n"
+    },
+    "supabase/config.toml": {
+      "path": "supabase/config.toml",
+      "sha": "7a6e7b38cd170b0f2747560286ffc803bed197fd",
+      "content": "# For detailed configuration reference documentation, visit:\n# https://supabase.com/docs/guides/local-development/cli/config\n# A string used to distinguish different Supabase projects on the same host. Defaults to the\n# working directory name when running `supabase init`.\nproject_id = \"fitnest-local\"\n\n[api]\nenabled = true\n# Port to use for the API URL.\nport = 54321\n# Schemas to expose in your API. Tables, views and stored procedures in this schema will get API\n# endpoints. `public` and `graphql_public` schemas are included by default.\nschemas = [\"public\", \"graphql_public\"]\n# Extra schemas to add to the search_path of every request.\nextra_search_path = [\"public\", \"extensions\"]\n# The maximum number of rows returns from a view, table, or stored procedure. Limits payload size\n# for accidental or malicious requests.\nmax_rows = 1000\n# Controls whether new tables, views, sequences and functions created in the `public` schema by\n# `postgres` are reachable through the Data API roles (`anon`, `authenticated`, `service_role`)\n# without explicit GRANTs, matching the cloud default. Set to `false` to require explicit GRANTs\n# instead. Left unset, a fresh project falls back to `true`.\n# auto_expose_new_tables = true\nauto_expose_new_tables = false\n\n[api.tls]\n# Enable HTTPS endpoints locally using a self-signed certificate.\nenabled = false\n# Paths to self-signed certificate pair.\n# cert_path = \"../certs/my-cert.pem\"\n# key_path = \"../certs/my-key.pem\"\n\n[db]\n# Port to use for the local database URL.\nport = 54322\n# Port used by db diff command to initialize the shadow database.\nshadow_port = 54320\n# Maximum amount of time to wait for health check when starting the local database.\nhealth_timeout = \"2m\"\n# The database major version to use. This has to be the same as your remote database's. Run `SHOW\n# server_version;` on the remote database to check.\nmajor_version = 17\n# OrioleDB version to use as the Postgres storage engine. Leave empty to use the default engine.\norioledb_version = \"\"\n\n[db.pooler]\nenabled = false\n# Port to use for the local connection pooler.\nport = 54329\n# Specifies when a server connection can be reused by other clients.\n# Configure one of the supported pooler modes: `transaction`, `session`.\npool_mode = \"transaction\"\n# How many server connections to allow per user/database pair.\ndefault_pool_size = 20\n# Maximum number of client connections allowed.\nmax_client_conn = 100\n\n# [db.vault]\n# secret_key = \"env(SECRET_VALUE)\"\n\n[db.migrations]\n# If disabled, migrations will be skipped during a db push or reset.\nenabled = true\n# Specifies an ordered list of schema files, directories, or glob patterns that describe your database.\n# Supports paths relative to supabase directory: \"./schemas/*.sql\", \"./database\".\nschema_paths = []\n\n[db.seed]\n# If enabled, seeds the database after migrations during a db reset.\nenabled = false\n# Specifies an ordered list of seed files to load during db reset.\n# Supports glob patterns relative to supabase directory: \"./seeds/*.sql\"\nsql_paths = [\"./seed.sql\"]\n\n[db.network_restrictions]\n# Enable management of network restrictions.\nenabled = false\n# List of IPv4 CIDR blocks allowed to connect to the database.\n# Defaults to allow all IPv4 connections. Set empty array to block all IPs.\nallowed_cidrs = [\"0.0.0.0/0\"]\n# List of IPv6 CIDR blocks allowed to connect to the database.\n# Defaults to allow all IPv6 connections. Set empty array to block all IPs.\nallowed_cidrs_v6 = [\"::/0\"]\n\n# Uncomment to reject non-secure connections to the database.\n# [db.ssl_enforcement]\n# enabled = true\n\n[realtime]\nenabled = true\n# Bind realtime via either IPv4 or IPv6. (default: IPv4)\n# ip_version = \"IPv6\"\n# The maximum length in bytes of HTTP request headers. (default: 4096)\n# max_header_length = 4096\n\n[studio]\nenabled = true\n# Port to use for Supabase Studio.\nport = 54323\n# External URL of the API server that frontend connects to.\napi_url = \"http://127.0.0.1\"\n# OpenAI API Key to use for Supabase AI in the Supabase Studio.\nopenai_api_key = \"env(OPENAI_API_KEY)\"\n\n# Email testing server. Emails sent with the local dev setup are not actually sent - rather, they\n# are monitored, and you can view the emails that would have been sent from the web interface.\n[local_smtp]\nenabled = true\n# Port to use for the email testing server web interface.\nport = 54324\n# Uncomment to expose additional ports for testing user applications that send emails.\n# smtp_port = 54325\n# pop3_port = 54326\n# admin_email = \"admin@email.com\"\n# sender_name = \"Admin\"\n\n[storage]\nenabled = true\n# The maximum file size allowed (e.g. \"5MB\", \"500KB\").\nfile_size_limit = \"50MiB\"\n\n# Uncomment to configure local storage buckets\n# [storage.buckets.images]\n# public = false\n# file_size_limit = \"50MiB\"\n# allowed_mime_types = [\"image/png\", \"image/jpeg\"]\n# objects_path = \"./images\"\n\n# Allow connections via S3 compatible clients\n[storage.s3_protocol]\nenabled = true\n\n# Image transformation API is available to Supabase Pro plan.\n# [storage.image_transformation]\n# enabled = true\n\n# Store analytical data in S3 for running ETL jobs over Iceberg Catalog\n# This feature is only available on the hosted platform.\n[storage.analytics]\nenabled = false\nmax_namespaces = 5\nmax_tables = 10\nmax_catalogs = 2\n\n# Analytics Buckets is available to Supabase Pro plan.\n# [storage.analytics.buckets.my-warehouse]\n\n# Store vector embeddings in S3 for large and durable datasets\n[storage.vector]\nenabled = true\nmax_buckets = 10\nmax_indexes = 5\n\n# Vector Buckets is available to Supabase Pro plan.\n# [storage.vector.buckets.documents-openai]\n\n[auth]\nenabled = true\n# The base URL of your website. Used as an allow-list for redirects and for constructing URLs used\n# in emails.\nsite_url = \"http://localhost:3002\"\n# The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.\n# external_url = \"\"\n# A list of *exact* URLs that auth providers are permitted to redirect to post authentication.\nadditional_redirect_urls = [\"http://127.0.0.1:3002\"]\n# How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).\njwt_expiry = 3600\n# JWT issuer URL. If not set, defaults to auth.external_url.\n# jwt_issuer = \"\"\n# Path to JWT signing key. DO NOT commit your signing keys file to git.\n# signing_keys_path = \"./signing_keys.json\"\n# If disabled, the refresh token will never expire.\nenable_refresh_token_rotation = true\n# Allows refresh tokens to be reused after expiry, up to the specified interval in seconds.\n# Requires enable_refresh_token_rotation = true.\nrefresh_token_reuse_interval = 10\n# Allow/disallow new user signups to your project.\nenable_signup = true\n# Allow/disallow anonymous sign-ins to your project.\nenable_anonymous_sign_ins = false\n# Allow/disallow testing manual linking of accounts\nenable_manual_linking = false\n# Passwords shorter than this value will be rejected as weak. Minimum 6, recommended 8 or more.\nminimum_password_length = 6\n# Passwords that do not meet the following requirements will be rejected as weak. Supported values\n# are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`\npassword_requirements = \"\"\n\n# Configure passkey sign-ins.\n# [auth.passkey]\n# enabled = false\n\n# Configure WebAuthn relying party settings (required when passkey is enabled).\n# [auth.webauthn]\n# rp_display_name = \"Supabase\"\n# rp_id = \"localhost\"\n# rp_origins = [\"http://127.0.0.1:3000\"]\n\n[auth.rate_limit]\n# Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.\nemail_sent = 2\n# Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.\nsms_sent = 30\n# Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.\nanonymous_users = 30\n# Number of sessions that can be refreshed in a 5 minute interval per IP address.\ntoken_refresh = 150\n# Number of sign up and sign-in requests that can be made in a 5 minute interval per IP address (excludes anonymous users).\nsign_in_sign_ups = 30\n# Number of OTP / Magic link verifications that can be made in a 5 minute interval per IP address.\ntoken_verifications = 30\n# Number of Web3 logins that can be made in a 5 minute interval per IP address.\nweb3 = 30\n\n# Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.\n# [auth.captcha]\n# enabled = true\n# provider = \"hcaptcha\"\n# secret = \"\"\n\n[auth.email]\n# Allow/disallow new user signups via email to your project.\nenable_signup = true\n# If enabled, a user will be required to confirm any email change on both the old, and new email\n# addresses. If disabled, only the new email is required to confirm.\ndouble_confirm_changes = true\n# If enabled, users need to confirm their email address before signing in.\nenable_confirmations = false\n# If enabled, users will need to reauthenticate or have logged in recently to change their password.\nsecure_password_change = false\n# Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.\nmax_frequency = \"1s\"\n# Number of characters used in the email OTP.\notp_length = 6\n# Number of seconds before the email OTP expires (defaults to 1 hour).\notp_expiry = 3600\n\n# Use a production-ready SMTP server\n# [auth.email.smtp]\n# enabled = true\n# host = \"smtp.sendgrid.net\"\n# port = 587\n# user = \"apikey\"\n# pass = \"env(SENDGRID_API_KEY)\"\n# admin_email = \"admin@email.com\"\n# sender_name = \"Admin\"\n\n# Uncomment to customize email template\n# [auth.email.template.invite]\n# subject = \"You have been invited\"\n# content_path = \"./supabase/templates/invite.html\"\n\n# Uncomment to customize notification email template\n# [auth.email.notification.password_changed]\n# enabled = true\n# subject = \"Your password has been changed\"\n# content_path = \"./supabase/templates/password_changed_notification.html\"\n\n[auth.sms]\n# Allow/disallow new user signups via SMS to your project.\nenable_signup = true\n# If enabled, users need to confirm their phone number before signing in.\nenable_confirmations = true\n# Template for sending OTP to users\ntemplate = \"Your code is {{ .Code }}\"\n# Controls the minimum amount of time that must pass before sending another sms otp.\nmax_frequency = \"5s\"\n\n# Use pre-defined map of phone number to OTP for testing.\n# LOCAL FIXTURES ONLY. Fixed OTPs bypass the dummy provider. Never deploy remotely.\n[auth.sms.test_otp]\n212600000001 = \"123456\"\n212600000002 = \"234567\"\n\n# Configure logged in session timeouts.\n# [auth.sessions]\n# Force log out after the specified duration.\n# timebox = \"24h\"\n# Force log out if the user has been inactive longer than the specified duration.\n# inactivity_timeout = \"8h\"\n\n# This hook runs before a new user is created and allows developers to reject the request based on the incoming user object.\n# [auth.hook.before_user_created]\n# enabled = true\n# uri = \"pg-functions://postgres/auth/before-user-created-hook\"\n\n# This hook runs before a token is issued and allows you to add additional claims based on the authentication method used.\n# [auth.hook.custom_access_token]\n# enabled = true\n# uri = \"pg-functions://<database>/<schema>/<hook_name>\"\n\n# Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.\n[auth.sms.twilio]\n# The CLI disables phone auth without an enabled provider, even with test_otp.\n# These are inert placeholders, not credentials. Only the mapped phones are tested.\nenabled = true\naccount_sid = \"AC00000000000000000000000000000000\"\nmessage_service_sid = \"MG00000000000000000000000000000000\"\nauth_token = \"local-fixture-not-a-secret\"\n\n# Multi-factor-authentication is available to Supabase Pro plan.\n[auth.mfa]\n# Control how many MFA factors can be enrolled at once per user.\nmax_enrolled_factors = 10\n\n# Control MFA via App Authenticator (TOTP)\n[auth.mfa.totp]\nenroll_enabled = false\nverify_enabled = false\n\n# Configure MFA via Phone Messaging\n[auth.mfa.phone]\nenroll_enabled = false\nverify_enabled = false\notp_length = 6\ntemplate = \"Your code is {{ .Code }}\"\nmax_frequency = \"5s\"\n\n# Configure MFA via WebAuthn\n# [auth.mfa.web_authn]\n# enroll_enabled = true\n# verify_enabled = true\n\n# Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,\n# `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,\n# `twitter`, `x`, `slack`, `spotify`, `workos`, `zoom`.\n[auth.external.apple]\nenabled = false\nclient_id = \"\"\n# DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:\nsecret = \"env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)\"\n# Overrides the default auth callback URL derived from auth.external_url.\nredirect_uri = \"\"\n# Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,\n# or any other third-party OIDC providers.\nurl = \"\"\n# If enabled, the nonce check will be skipped. Required for local sign in with Google auth.\nskip_nonce_check = false\n# If enabled, it will allow the user to successfully authenticate when the provider does not return an email address.\nemail_optional = false\n\n# Allow Solana wallet holders to sign in to your project via the Sign in with Solana (SIWS, EIP-4361) standard.\n# You can configure \"web3\" rate limit in the [auth.rate_limit] section and set up [auth.captcha] if self-hosting.\n[auth.web3.solana]\nenabled = false\n\n# Use Firebase Auth as a third-party provider alongside Supabase Auth.\n[auth.third_party.firebase]\nenabled = false\n# project_id = \"my-firebase-project\"\n\n# Use Auth0 as a third-party provider alongside Supabase Auth.\n[auth.third_party.auth0]\nenabled = false\n# tenant = \"my-auth0-tenant\"\n# tenant_region = \"us\"\n\n# Use AWS Cognito (Amplify) as a third-party provider alongside Supabase Auth.\n[auth.third_party.aws_cognito]\nenabled = false\n# user_pool_id = \"my-user-pool-id\"\n# user_pool_region = \"us-east-1\"\n\n# Use Clerk as a third-party provider alongside Supabase Auth.\n[auth.third_party.clerk]\nenabled = false\n# Obtain from https://clerk.com/setup/supabase\n# domain = \"example.clerk.accounts.dev\"\n\n# OAuth server configuration\n[auth.oauth_server]\n# Enable OAuth server functionality\nenabled = false\n# Path for OAuth consent flow UI\nauthorization_url_path = \"/oauth/consent\"\n# Allow dynamic client registration\nallow_dynamic_registration = false\n\n[edge_runtime]\nenabled = true\n# Supported request policies: `oneshot`, `per_worker`.\n# `per_worker` (default) - enables hot reload during local development.\n# `oneshot` - fallback mode if hot reload causes issues (e.g. in large repos or with symlinks).\npolicy = \"per_worker\"\n# Port to attach the Chrome inspector for debugging edge functions.\ninspector_port = 8083\n# The Deno major version to use.\ndeno_version = 2\n\n# [edge_runtime.secrets]\n# secret_key = \"env(SECRET_VALUE)\"\n\n[analytics]\nenabled = true\nport = 54327\n# Configure one of the supported backends: `postgres`, `bigquery`.\nbackend = \"postgres\"\n\n# Experimental features may be deprecated any time\n[experimental]\n# Configures S3 bucket URL, eg. <bucket_name>.s3-<region>.amazonaws.com\ns3_host = \"env(S3_HOST)\"\n# Configures S3 bucket region, eg. us-east-1\ns3_region = \"env(S3_REGION)\"\n# Configures AWS_ACCESS_KEY_ID for S3 bucket\ns3_access_key = \"env(S3_ACCESS_KEY)\"\n# Configures AWS_SECRET_ACCESS_KEY for S3 bucket\ns3_secret_key = \"env(S3_SECRET_KEY)\"\n\n# pg-delta is the schema diff engine for db diff / db pull / db remote commit.\n# Set enabled = false to fall back to the legacy migra engine.\n[experimental.pgdelta]\nenabled = true\n# Directory under `supabase/` where declarative files are written.\n# declarative_schema_path = \"./schemas\"\n# JSON string passed through to pg-delta SQL formatting. When omitted, SQL is\n# formatted with uppercase keywords, indent 2, max width 180, trailing commas,\n# and column/key alignment. Set to \"null\" to emit raw, unformatted SQL.\n# format_options = \"{\\\"keywordCase\\\":\\\"upper\\\",\\\"indent\\\":2,\\\"maxWidth\\\":180,\\\"commaStyle\\\":\\\"trailing\\\"}\"\n"
+    },
+    "vitest.config.ts": {
+      "path": "vitest.config.ts",
+      "sha": "a272390db8eccdd480d3adb6943bc9e06cf3988a",
+      "content": "import { fileURLToPath } from \"node:url\";\nimport { defineConfig } from \"vitest/config\";\n\nexport default defineConfig({\n  root: fileURLToPath(new URL(\".\", import.meta.url)),\n  test: {\n    environment: \"node\",\n    include: [\"packages/core/src/**/*.test.ts\", \"apps/web/__tests__/**/*.test.ts\"],\n    exclude: [\"**/*.integration.test.ts\", \"**/*.e2e.test.ts\"],\n    passWithNoTests: false,\n    clearMocks: true,\n    restoreMocks: true,\n    testTimeout: 5000,\n  },\n});\n"
+    },
+    ".github/workflows/identity-foundation.yml": {
+      "path": ".github/workflows/identity-foundation.yml",
+      "sha": "ce62c77386c8b25136f150aee7a74c3ff18e45f1",
+      "content": "name: Identity foundation\non:\n  push:\n    branches: [fitnest-foundation-runtime]\n  pull_request:\n    paths:\n      - 'packages/core/**'\n      - 'tooling/auth/**'\n      - 'supabase/config.toml'\n      - 'package.json'\n      - 'pnpm-lock.yaml'\n      - 'vitest.config.ts'\n      - '.github/workflows/identity-foundation.yml'\npermissions:\n  contents: read\nconcurrency:\n  group: identity-foundation-${{ github.event.pull_request.number || github.ref }}\n  cancel-in-progress: true\njobs:\n  core:\n    runs-on: ubuntu-24.04\n    timeout-minutes: 10\n    steps:\n      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683\n        with:\n          persist-credentials: false\n      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1\n        with:\n          version: 9.15.9\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020\n        with:\n          node-version: 24.19.0\n          cache: pnpm\n      - run: pnpm install --frozen-lockfile --ignore-scripts --filter fitnest-monorepo --filter @fitnest/core\n      - run: pnpm test:core\n      - run: pnpm typecheck:core\n  local-auth:\n    runs-on: ubuntu-24.04\n    timeout-minutes: 20\n    steps:\n      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683\n        with:\n          persist-credentials: false\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020\n        with:\n          node-version: 24.19.0\n      - name: Prepare an isolated Auth fixture project\n        run: |\n          mkdir -p \"$RUNNER_TEMP/fitnest-auth/supabase\"\n          cp supabase/config.toml \"$RUNNER_TEMP/fitnest-auth/supabase/config.toml\"\n      - name: Start disposable Supabase (no cloud login or production secrets)\n        run: |\n          umask 077\n          npx --yes supabase@2.121.0 start --workdir \"$RUNNER_TEMP/fitnest-auth\" -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor > \"$RUNNER_TEMP/fitnest-auth-start.log\" 2>&1\n      - name: Qualify local phone fixtures without sending SMS\n        run: |\n          umask 077\n          npx --yes supabase@2.121.0 status --workdir \"$RUNNER_TEMP/fitnest-auth\" -o json > \"$RUNNER_TEMP/fitnest-auth-status.json\"\n          node --test tooling/auth/local-auth.test.mjs\n        env:\n          FITNEST_LOCAL_STATUS: ${{ runner.temp }}/fitnest-auth-status.json\n      - name: Remove disposable services and credential file\n        if: always()\n        run: |\n          npx --yes supabase@2.121.0 stop --workdir \"$RUNNER_TEMP/fitnest-auth\" --no-backup\n          rm -f \"$RUNNER_TEMP/fitnest-auth-status.json\"\n          rm -f \"$RUNNER_TEMP/fitnest-auth-start.log\"\n"
+    },
+    "tooling/auth/local-auth.test.mjs": {
+      "path": "tooling/auth/local-auth.test.mjs",
+      "sha": "ad4784785ee9df868b2ee091ea349a3fb321b6d9",
+      "content": "/** Local Supabase fixture qualification only. This does NOT certify Fitnest guards. */\nimport assert from \"node:assert/strict\";\nimport { readFile } from \"node:fs/promises\";\nimport { test } from \"node:test\";\n\nconst statusFile = process.env.FITNEST_LOCAL_STATUS;\nassert.ok(statusFile, \"FITNEST_LOCAL_STATUS must point to local supabase status JSON\");\nconst config = JSON.parse(await readFile(statusFile, \"utf8\"));\nassert.equal(config.API_URL, \"http://127.0.0.1:54321\", \"Tests must target the local stack only\");\nassert.ok(typeof config.ANON_KEY === \"string\" && config.ANON_KEY.length > 20, \"Local anon key required\");\n\nasync function request(path, body, token) {\n  const response = await fetch(`${config.API_URL}/auth/v1/${path}`, {\n    method: body ? \"POST\" : \"GET\", redirect: \"error\",\n    headers: { apikey: config.ANON_KEY, \"Content-Type\": \"application/json\", ...(token ? { Authorization: `Bearer ${token}` } : {}) },\n    body: body ? JSON.stringify(body) : undefined,\n    signal: AbortSignal.timeout(10_000),\n  });\n  // Never emit provider response bodies or tokens into logs/assertion failures.\n  return { status: response.status, data: await response.json() };\n}\n\ntest(\"local phone fixtures reject the wrong OTP and create separate authenticated identities\", async () => {\n  const phone = \"+212600000001\";\n  assert.equal((await request(\"otp\", { phone, create_user: true })).status, 200);\n  const wrong = await request(\"verify\", { phone, token: \"000000\", type: \"sms\" });\n  assert.ok(wrong.status >= 400 && wrong.status < 500, \"Wrong OTP must be refused\");\n  const first = await request(\"verify\", { phone, token: \"123456\", type: \"sms\" });\n  assert.equal(first.status, 200);\n  assert.ok(typeof first.data.access_token === \"string\", \"Access token required\");\n  assert.ok(typeof first.data.refresh_token === \"string\", \"Refresh token required\");\n  assert.ok(/^[0-9a-f-]{36}$/.test(first.data.user?.id), \"Stable UUID required\");\n  assert.equal((await request(\"user\", undefined, first.data.access_token)).status, 200);\n\n  const secondPhone = \"+212600000002\";\n  assert.equal((await request(\"otp\", { phone: secondPhone, create_user: true })).status, 200);\n  const second = await request(\"verify\", { phone: secondPhone, token: \"234567\", type: \"sms\" });\n  assert.equal(second.status, 200);\n  assert.ok(/^[0-9a-f-]{36}$/.test(second.data.user?.id), \"Second UUID required\");\n  assert.notEqual(first.data.user.id, second.data.user.id);\n});\n"
+    }
+  },
+  "proposedWorkflow": {
+    "ref": "refs/pull/149/head",
+    "path": ".github/workflows/identity-foundation.yml",
+    "sha": "fb4bfff010408c08ec352e08a7feec61ff55a169",
+    "content": "name: Identity foundation\non:\n  push:\n    branches: [fitnest-foundation-runtime]\n  pull_request:\n    paths:\n      - 'packages/core/**'\n      - 'apps/web/**'\n      - 'pnpm-workspace.yaml'\n      - 'tooling/auth/**'\n      - 'supabase/config.toml'\n      - 'package.json'\n      - 'pnpm-lock.yaml'\n      - 'vitest.config.ts'\n      - '.github/workflows/identity-foundation.yml'\npermissions:\n  contents: read\nconcurrency:\n  group: identity-foundation-${{ github.event.pull_request.number || github.ref }}\n  cancel-in-progress: true\njobs:\n  core:\n    runs-on: ubuntu-24.04\n    timeout-minutes: 10\n    steps:\n      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683\n        with:\n          persist-credentials: false\n      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1\n        with:\n          version: 9.15.9\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020\n        with:\n          node-version: 24.19.0\n          cache: pnpm\n      - run: pnpm install --frozen-lockfile --ignore-scripts --filter fitnest-monorepo --filter @fitnest/core --filter my-v0-project\n      - name: Qualify the workspace root test command\n        run: pnpm test\n      - name: Qualify the core package test command from its own directory\n        working-directory: packages/core\n        run: pnpm test\n      - run: pnpm test:core\n      - run: pnpm typecheck:core\n  local-auth:\n    runs-on: ubuntu-24.04\n    timeout-minutes: 20\n    steps:\n      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683\n        with:\n          persist-credentials: false\n      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020\n        with:\n          node-version: 24.19.0\n      - name: Prepare an isolated Auth fixture project\n        run: |\n          mkdir -p \"$RUNNER_TEMP/fitnest-auth/supabase\"\n          cp supabase/config.toml \"$RUNNER_TEMP/fitnest-auth/supabase/config.toml\"\n      - name: Start disposable Supabase (no cloud login or production secrets)\n        run: |\n          umask 077\n          npx --yes supabase@2.121.0 start --workdir \"$RUNNER_TEMP/fitnest-auth\" -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor > \"$RUNNER_TEMP/fitnest-auth-start.log\" 2>&1\n      - name: Qualify local phone fixtures without sending SMS\n        run: |\n          umask 077\n          npx --yes supabase@2.121.0 status --workdir \"$RUNNER_TEMP/fitnest-auth\" -o json > \"$RUNNER_TEMP/fitnest-auth-status.json\"\n          node --test tooling/auth/local-auth.test.mjs\n        env:\n          FITNEST_LOCAL_STATUS: ${{ runner.temp }}/fitnest-auth-status.json\n      - name: Remove disposable services and credential file\n        if: always()\n        run: |\n          npx --yes supabase@2.121.0 stop --workdir \"$RUNNER_TEMP/fitnest-auth\" --no-backup\n          rm -f \"$RUNNER_TEMP/fitnest-auth-status.json\"\n          rm -f \"$RUNNER_TEMP/fitnest-auth-start.log\"\n"
+  },
+  "taskSource": {
+    "path": "docs/delivery/backlog.json",
+    "sha": "30f920979a313672728a0cd24448de0da97a4276",
+    "tasks": [
+      {
+        "id": "S001-T001",
+        "lot": "LOT-03",
+        "title": "Add Vitest (pinned) at workspace root and wire `pnpm test`; replace the broken `packages/core` test script (`node --experimental-s",
+        "kind": "implementation",
+        "owner": "identity/backend + QA",
+        "status": "review",
+        "outputs": [
+          "T001 implementation/evidence in source task"
+        ],
+        "acceptance": [
+          "Add Vitest (pinned) at workspace root and wire `pnpm test`; replace the broken `packages/core` test script (`node --experimental-strip-types src/__tests__/run.ts`  `vitest run`) in `packages/core/package.json` (research R7, Article XI)"
+        ],
+        "source_refs": [
+          "001:FR-001-053",
+          "D-030",
+          "D-053",
+          "D-063"
+        ],
+        "security": [
+          "SEC-32"
+        ],
+        "capabilities": [
+          "CAP-04",
+          "CAP-05",
+          "CAP-06",
+          "CAP-25",
+          "CAP-26"
+        ],
+        "allowed_paths": [
+          "specs/001-identity-account-admission/",
+          "packages/core/",
+          "apps/web/",
+          "supabase/",
+          "tests/",
+          ".github/",
+          "package.json",
+          "pnpm-lock.yaml",
+          "pnpm-workspace.yaml",
+          "vitest.config.ts"
+        ],
+        "depends_on": [
+          {
+            "task": "B01-C",
+            "condition": "contract_accepted"
+          }
+        ],
+        "start_gates": [],
+        "merge_gates": [
+          "G-CONSTITUTION"
+        ],
+        "evidence": [
+          {
+            "kind": "implementation_proposal",
+            "ref": "docs/delivery/foundation-contract.md",
+            "execution_origin": "direct_development_session"
+          }
+        ],
+        "budget_usd": null,
+        "cost_estimate_usd": null,
+        "cost_reconciled_usd": null,
+        "attempts": 0,
+        "max_attempts": null,
+        "legacy_id": "T001",
+        "review_scope": "Pinned Vitest and root/core commands pass locally (13 time cases); strict core typecheck passes. CI outcome pending."
+      },
+      {
+        "id": "S001-T002",
+        "lot": "LOT-03",
+        "title": "Add `@supabase/supabase-js` + `@supabase/ssr` (pinned) to `apps/web/package.json`; document `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUB",
+        "kind": "implementation",
+        "owner": "identity/backend + QA",
+        "status": "review",
+        "outputs": [
+          "T002 implementation/evidence in source task"
+        ],
+        "acceptance": [
+          "[P] Add `@supabase/supabase-js` + `@supabase/ssr` (pinned) to `apps/web/package.json`; document `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` entries in `.env.example` (anon key is the only client-visible value - D-059)"
+        ],
+        "source_refs": [
+          "001:FR-001-053",
+          "D-030",
+          "D-053",
+          "D-063"
+        ],
+        "security": [
+          "SEC-18",
+          "SEC-29"
+        ],
+        "capabilities": [
+          "CAP-04",
+          "CAP-05",
+          "CAP-06",
+          "CAP-25",
+          "CAP-26"
+        ],
+        "allowed_paths": [
+          "specs/001-identity-account-admission/",
+          "packages/core/",
+          "apps/web/",
+          "supabase/",
+          "tests/",
+          ".github/",
+          "package.json",
+          "pnpm-lock.yaml",
+          "pnpm-workspace.yaml",
+          "vitest.config.ts"
+        ],
+        "depends_on": [
+          {
+            "task": "B01-C",
+            "condition": "contract_accepted"
+          }
+        ],
+        "start_gates": [],
+        "merge_gates": [
+          "G-CONSTITUTION"
+        ],
+        "evidence": [
+          {
+            "kind": "implementation_proposal",
+            "ref": "docs/delivery/foundation-contract.md",
+            "execution_origin": "direct_development_session"
+          }
+        ],
+        "budget_usd": null,
+        "cost_estimate_usd": null,
+        "cost_reconciled_usd": null,
+        "attempts": 0,
+        "max_attempts": null,
+        "legacy_id": "T002",
+        "review_scope": "Supabase SDK versions pinned to existing resolutions; public/server env placeholders documented. No production auth integration claimed."
+      },
+      {
+        "id": "S001-T003",
+        "lot": "LOT-03",
+        "title": "Configure Supabase Auth phone mode with test phone numbers (fixed OTP, zero SMS - research R4) in `supabase/config.toml` for the l",
+        "kind": "implementation",
+        "owner": "identity/backend + QA",
+        "status": "review",
+        "outputs": [
+          "T003 implementation/evidence in source task"
+        ],
+        "acceptance": [
+          "[P] Configure Supabase Auth phone mode with test phone numbers (fixed OTP, zero SMS - research R4) in `supabase/config.toml` for the local stack (create via `supabase init` if absent, preserving `supabase/migrations/`); verify `supabase start` boots"
+        ],
+        "source_refs": [
+          "001:FR-001-053",
+          "D-030",
+          "D-053",
+          "D-063"
+        ],
+        "security": [
+          "SEC-01",
+          "SEC-02"
+        ],
+        "capabilities": [
+          "CAP-04",
+          "CAP-05",
+          "CAP-06",
+          "CAP-25",
+          "CAP-26"
+        ],
+        "allowed_paths": [
+          "specs/001-identity-account-admission/",
+          "packages/core/",
+          "apps/web/",
+          "supabase/",
+          "tests/",
+          ".github/",
+          "package.json",
+          "pnpm-lock.yaml",
+          "pnpm-workspace.yaml",
+          "vitest.config.ts"
+        ],
+        "depends_on": [
+          {
+            "task": "B01-C",
+            "condition": "contract_accepted"
+          }
+        ],
+        "start_gates": [],
+        "merge_gates": [
+          "G-CONSTITUTION"
+        ],
+        "evidence": [
+          {
+            "kind": "implementation_proposal",
+            "ref": "docs/delivery/foundation-contract.md",
+            "execution_origin": "direct_development_session"
+          }
+        ],
+        "budget_usd": null,
+        "cost_estimate_usd": null,
+        "cost_reconciled_usd": null,
+        "attempts": 0,
+        "max_attempts": null,
+        "legacy_id": "T003",
+        "review_scope": "Local config and fixed-OTP qualification workflow prepared. CLI configuration accepted; Docker unavailable locally. Auth integration result pending."
+      }
+    ]
+  }
+}
