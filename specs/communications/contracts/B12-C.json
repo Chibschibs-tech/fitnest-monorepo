@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "B12-C",
+  "status": "proposal",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "source": {
+    "semanticPlanSha": "2854038dfe653289c326dd33650a311918f630ad",
+    "baseSha": "46599153870b62421ff20568b0dd8679222a297b",
+    "securityBlob": "e283da2c3fad8607a5f18ae7a0ebd5a6aee320a3",
+    "baselineBlob": "3b7916574c1a640b4d29c16d1c32475a35880d15"
+  },
+  "dependsOn": [
+    {
+      "task": "B01-C",
+      "condition": "contract_accepted"
+    }
+  ],
+  "sourceRefs": [
+    "D-016",
+    "D-033",
+    "D-039",
+    "D-053",
+    "D-056",
+    "D-062",
+    "SEC-02",
+    "SEC-04",
+    "SEC-22",
+    "SEC-28",
+    "SEC-30"
+  ],
+  "files": {
+    "design": "communications-design.md",
+    "reference": "communications-reference.mjs",
+    "tests": "communications-reference.test.mjs"
+  },
+  "versionedDtos": {
+    "emailProofExchange": {
+      "version": 1,
+      "required": [
+        "version",
+        "proofId",
+        "accountId",
+        "purpose",
+        "operationId"
+      ],
+      "purposes": [
+        "email_verification",
+        "risk_recovery",
+        "number_change"
+      ],
+      "unknownFields": "deny",
+      "boundary": "proofId is an internal reference after authenticated token exchange; never a bearer secret in notifications"
+    },
+    "otpHook": {
+      "version": 1,
+      "required": [
+        "version",
+        "hookId",
+        "accountId",
+        "purpose"
+      ],
+      "purpose": "customer_phone_otp",
+      "unknownFields": "deny",
+      "boundary": "signature/freshness/shared abuse limits validated by trusted adapter; no sends in reference"
+    },
+    "notification": {
+      "version": 1,
+      "required": [
+        "version",
+        "eventId",
+        "accountId",
+        "recipientRef",
+        "channel",
+        "locale",
+        "templateVersion",
+        "kind",
+        "sourceVersion"
+      ],
+      "channels": [
+        "email",
+        "whatsapp",
+        "push"
+      ],
+      "locales": [
+        "fr",
+        "en"
+      ],
+      "kinds": [
+        "subscription_confirmed",
+        "delivery_confirmed",
+        "renewal_due",
+        "security_change",
+        "admission"
+      ],
+      "unknownFields": "deny",
+      "recipient": "opaque server-side resolver reference; never raw contact or token",
+      "content": "only reviewed generic template; no free text or health/history payload"
+    },
+    "providerReceipt": {
+      "version": 1,
+      "required": [
+        "version",
+        "key",
+        "attempt",
+        "outcome"
+      ],
+      "outcomes": [
+        "sent",
+        "not_sent",
+        "unknown"
+      ],
+      "unknownFields": "deny",
+      "boundary": "Authenticated evidence whose outcome, key and attempt exactly equal the receipt; never a browser callback or relabelled timeout."
+    },
+    "trustedProofRecord": {
+      "required": [
+        "proofId",
+        "accountId",
+        "purpose",
+        "operationId",
+        "emailRef",
+        "emailVerifiedAt",
+        "proofCompletedAt",
+        "challengeCompleted",
+        "expiresAt",
+        "used"
+      ],
+      "boundary": "Internal trusted store fixture only; historical emailVerifiedAt precedes risk, current challengeCompleted is true and proofCompletedAt is at/after risk and at/before now. Not an HTTP input."
+    }
+  },
+  "obligations": [
+    {
+      "id": "N01",
+      "requirement": "Atomically consume an authenticated proof once for exact account, purpose, operation and unique verified email. Risk/number change requires email verified before risk. Reject missing/unverified/shared/newly verified email and expired/replayed/cross-bound proof.",
+      "tests": [
+        "N01"
+      ]
+    },
+    {
+      "id": "N02",
+      "requirement": "Trusted fresh signed OTP hook and shared quotas/cooldown/attempt/spend policy before provider boundary; duplicate hook no effect. Provider failure never authenticates. Preserve non-enumeration and no victim lockout.",
+      "tests": [
+        "N02"
+      ],
+      "runtimeProofRequired": [
+        "real signature verification",
+        "shared quota concurrency",
+        "bounded retention and replay cache",
+        "non-enumeration and victim-lockout assessment"
+      ]
+    },
+    {
+      "id": "N03",
+      "requirement": "Transactional outbox dedup on event/channel/recipient; bind payload fingerprint and attempt. Unknown outcome blocks retries until authenticated reconciliation. Confirmed no-send alone permits bounded retries. Sent is terminal.",
+      "tests": [
+        "N03"
+      ],
+      "runtimeProofRequired": [
+        "Postgres atomic unique insertion",
+        "worker-crash reconciliation",
+        "provider idempotency mapping",
+        "authenticated callback replay and correlation"
+      ]
+    },
+    {
+      "id": "N04",
+      "requirement": "Push requires current opt-in and current installation/session/account binding at send time; revoked association denies. No consent inferred from other channels.",
+      "tests": [
+        "N04"
+      ]
+    },
+    {
+      "id": "N05",
+      "requirement": "Renewal_due reads actual authoritative version/state; no cancelled/opted-out/trial/invalid-mandate/no-versioned-acceptance renewal claim.",
+      "tests": [
+        "N05"
+      ]
+    },
+    {
+      "id": "N06",
+      "requirement": "Admission at launch requires explicit manual authorized dispatch; automatic transactional handling does not override D-016.",
+      "tests": [
+        "N06"
+      ]
+    },
+    {
+      "id": "N07",
+      "requirement": "Exact notification allowlist and reviewed FR/EN template only; reject raw contact/OTP/token/health/history/free text and unrecognized locale/version. Generic content, authenticated owner retrieval outside notification.",
+      "tests": [
+        "N07"
+      ]
+    }
+  ],
+  "stateMachine": {
+    "states": [
+      "absent",
+      "in_flight",
+      "unknown",
+      "not_sent",
+      "sent"
+    ],
+    "transitions": [
+      "absent->in_flight unique claim",
+      "in_flight->sent authenticated receipt",
+      "in_flight->unknown timeout or ambiguous outcome",
+      "in_flight->not_sent affirmative evidence of no effect",
+      "unknown->sent authenticated reconciliation",
+      "unknown->not_sent affirmative reconciliation of no effect",
+      "not_sent->in_flight bounded retry after current eligibility recheck"
+    ],
+    "forbidden": [
+      "unknown->new send without reconciliation",
+      "sent->not_sent",
+      "sent->new send"
+    ]
+  },
+  "releaseGates": [
+    {
+      "id": "G-PROVIDERS",
+      "status": "open",
+      "needed": "Provider/sender/template onboarding, secret references, callback authentication and failure runbooks."
+    },
+    {
+      "id": "G-PRIVACY",
+      "status": "open",
+      "needed": "Purpose/retention/processor geography and applicable release consent policy."
+    },
+    {
+      "id": "G-RECOVERY",
+      "status": "open",
+      "needed": "Assisted lost-factor recovery remains outside this automated proof exchange; delivery facts never suffice."
+    },
+    {
+      "id": "G-CONSTITUTION",
+      "status": "unchanged"
+    }
+  ],
+  "nonGoals": [
+    "provider sends",
+    "marketing communications",
+    "production authentication",
+    "provider-specific proof verification",
+    "runtime acceptance",
+    "platform orchestration",
+    "modifying accepted SEC-A/C"
+  ],
+  "validation": {
+    "command": "node --test specs/communications/contracts/communications-reference.test.mjs",
+    "kind": "synthetic synchronous semantic reference",
+    "databaseConcurrencyProven": false,
+    "providerIntegrationProven": false,
+    "independentReviewRequired": true
+  }
+}

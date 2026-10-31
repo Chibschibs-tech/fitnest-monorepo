@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "B11-C",
+  "status": "proposal",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "source": {
+    "semanticPlanSha": "2854038dfe653289c326dd33650a311918f630ad",
+    "baseSha": "46599153870b62421ff20568b0dd8679222a297b",
+    "sourceRefs": [
+      "D-044",
+      "D-049",
+      "D-054",
+      "D-055",
+      "D-058",
+      "D-060"
+    ],
+    "securityRefs": [
+      "SEC-09",
+      "SEC-10",
+      "SEC-14",
+      "SEC-15",
+      "SEC-16",
+      "SEC-17",
+      "SEC-27"
+    ]
+  },
+  "dependsOn": [
+    {
+      "task": "B01-C",
+      "condition": "contract_accepted"
+    }
+  ],
+  "mergeGates": [
+    "G-CONSTITUTION"
+  ],
+  "unresolved": [
+    {
+      "gate": "G-ROUND",
+      "status": "unresolved",
+      "decision": "Assignment/reassignment owner, useful visibility interval, necessary contact/bag/notes projection and correction ownership. No all-driver default."
+    },
+    {
+      "gate": "G-MUTATIONS",
+      "status": "unresolved",
+      "decision": "Correction/lifecycle compensation effects remain unapproved; no implied refund/credit."
+    }
+  ],
+  "versionedInterfaces": {
+    "listByRound": {
+      "version": 1,
+      "request": [
+        "roundId",
+        "windowStart",
+        "windowEnd"
+      ],
+      "response": [
+        "deliveryId",
+        "roundId",
+        "consumptionDate",
+        "productionDate",
+        "deliveryDate",
+        "status",
+        "productionVersion"
+      ],
+      "note": "Minimal synthetic projection excludes personal fields until G-ROUND ratifies necessary fields."
+    },
+    "transition": {
+      "version": 1,
+      "required": [
+        "operation",
+        "deliveryId",
+        "idempotencyKey",
+        "expectedRevision"
+      ],
+      "operations": [
+        "confirm",
+        "fail",
+        "correct"
+      ],
+      "conditional": {
+        "fail": [
+          "reason",
+          "trusted exceptionOwnerId"
+        ],
+        "correct": [
+          "reason",
+          "targetStatus",
+          "trusted accepted correction policy"
+        ]
+      },
+      "response": [
+        "eventId",
+        "replayed"
+      ],
+      "binding": [
+        "project",
+        "actor",
+        "operation",
+        "idempotencyKey"
+      ],
+      "payloadBinding": [
+        "deliveryId",
+        "reason",
+        "targetStatus"
+      ],
+      "errors": [
+        "DENIED",
+        "INVALID",
+        "CONFLICT",
+        "UNAVAILABLE"
+      ]
+    },
+    "productionAmendment": {
+      "version": 1,
+      "required": [
+        "deliveryId",
+        "expectedRevision",
+        "reason"
+      ],
+      "serverFacts": [
+        "explicitScopedLogisticsGrant",
+        "logisticsPolicyAccepted",
+        "safetyBlocked=false"
+      ],
+      "effect": "Increment immutable production version, append amendment, require new acknowledgement before handover."
+    },
+    "acknowledgement": {
+      "version": 1,
+      "required": [
+        "deliveryId",
+        "expectedRevision",
+        "productionVersion"
+      ],
+      "effect": "Append actor/version acknowledgement after live authorization; cannot acknowledge stale or unsafe version."
+    },
+    "event": {
+      "eventVersion": 1,
+      "fields": [
+        "eventId",
+        "eventType",
+        "aggregateId",
+        "aggregateVersion",
+        "occurredAt",
+        "actorId",
+        "payload"
+      ],
+      "types": [
+        "delivery.confirmed",
+        "delivery.failed",
+        "delivery.corrected",
+        "operations.safety_blocked",
+        "operations.production_amended",
+        "operations.production_acknowledged"
+      ],
+      "transport": "Atomic durable outbox; immutable event identity; at-least-once delivery."
+    },
+    "reconcile": {
+      "version": 1,
+      "counts": [
+        "planned",
+        "prepared",
+        "delivered",
+        "failed",
+        "notPrepared",
+        "unresolvedPrepared",
+        "unaccounted"
+      ],
+      "formulas": {
+        "notPrepared": "planned - prepared",
+        "unresolvedPrepared": "prepared - delivered - failed",
+        "unaccounted": "planned - delivered - failed"
+      },
+      "meaning": "Snapshot of current effective projection; prepared includes prepared and terminal states in this model. Corrections append history and adjust only effective projection."
+    }
+  },
+  "requirements": [
+    {
+      "id": "assigned_scope",
+      "statement": "Live staff + known granted permission + versioned assignment + half-open useful window; deny unknown policy, other round and unauthorized direct access."
+    },
+    {
+      "id": "immutable_delivery_effect",
+      "statement": "Append exactly one authoritative event/outbox on confirm/fail/correct; retries bind complete command payload and recheck authorization; correction keeps original event and needs explicit policy/reason."
+    },
+    {
+      "id": "safety_incident",
+      "statement": "Unsafe change creates blocking incident, preserves production version and prevents preparation/handover until reviewed resolution; no role override or silent regeneration."
+    },
+    {
+      "id": "logistics_amendment",
+      "statement": "Post-cutoff modification requires explicit scoped grant, reason, immutable amended production version and acknowledgement; no Administrator wildcard."
+    },
+    {
+      "id": "unique_consumers",
+      "statement": "Reward/notification consume same original confirmed event with unique durable receipts. Unknown external outcome requires reconciliation before another effect; corrections do not create a second referral reward."
+    },
+    {
+      "id": "honest_reconciliation",
+      "statement": "Expose not-prepared and unresolved-prepared counts; no disappearance of planned units. Failure requires exception owner and creates no credit."
+    },
+    {
+      "id": "time_authority",
+      "statement": "Consumption J, production/delivery J-1 stay distinct. Server Africa/Casablanca calculator supplies versioned absolute cutoffs; reference does not solve timezone transitions."
+    }
+  ],
+  "verification": {
+    "command": "node --test specs/operations/contracts/operations-reference.test.mjs",
+    "scope": "Design-reference tests only; independent review and qualified external acceptance still required.",
+    "unproven": [
+      "real database transactions/races/crash recovery",
+      "provider ambiguity reconciliation",
+      "all-channel authorization and actual round assignments",
+      "Casablanca timezone transitions/cutoff calculation",
+      "production/amendment printing and operator acknowledgements",
+      "whole-day safety evaluator and incident resolution"
+    ]
+  }
+}

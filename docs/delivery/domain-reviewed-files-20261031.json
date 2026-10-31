@@ -1,0 +1,73 @@
+{
+  "reviewDate": "2026-10-31",
+  "tests": {
+    "B04_C": 52,
+    "B11_C": 45,
+    "B12_C": 60,
+    "total": 157
+  },
+  "taskAcceptance": false,
+  "runtimeAcceptance": false,
+  "files": [
+    {
+      "path": "specs/food/contracts/B04-C.json",
+      "sha256": "be38c57a9edddbabae58f0910eafd232dc6b3b338e425036e4bc38302de320ed",
+      "bytes": 8559
+    },
+    {
+      "path": "specs/food/contracts/food-design.md",
+      "sha256": "ab85c801b16d53f97ea0a41e1d8f3d456308cd6de85006e051a891db50c700b8",
+      "bytes": 6267
+    },
+    {
+      "path": "specs/food/contracts/food-reference.mjs",
+      "sha256": "bf424a2caef9730f9465b4ed2f1d7c2123775b09793f867ad4dec1d0130c03dd",
+      "bytes": 9657
+    },
+    {
+      "path": "specs/food/contracts/food-reference.test.mjs",
+      "sha256": "e6a9a4eb35abed4cd0a764b24d26c11fe8fb56e58dd1282764b6cdcff72fb6e1",
+      "bytes": 10533
+    },
+    {
+      "path": "specs/operations/contracts/B11-C.json",
+      "sha256": "8f2b3a5e5751a33d7493bb79f01b9058bb5cf2836971baba393c4b47c6e6ca13",
+      "bytes": 6615
+    },
+    {
+      "path": "specs/operations/contracts/operations-design.md",
+      "sha256": "f189b5edeaa55330c0eb4a656d41ec09c5dd9d24657c424f5e5f4b250055e2b1",
+      "bytes": 6938
+    },
+    {
+      "path": "specs/operations/contracts/operations-reference.mjs",
+      "sha256": "e6e527c2e96f669e47debd845c9be5306a7e6a7ba23288ab5a66cf3ddd249575",
+      "bytes": 8842
+    },
+    {
+      "path": "specs/operations/contracts/operations-reference.test.mjs",
+      "sha256": "58fa124732096786d2a2ed3cea9892e810326da8eb3e55ecad7145fd909b62d1",
+      "bytes": 10909
+    },
+    {
+      "path": "specs/communications/contracts/B12-C.json",
+      "sha256": "f9677063764f0ac003342663ff563d4d8f97e46decaf04b1b04c69aaed2aec39",
+      "bytes": 7882
+    },
+    {
+      "path": "specs/communications/contracts/communications-design.md",
+      "sha256": "12bc3559c6844fe4613f206b7189e2651db467d0adbe15605001575573419439",
+      "bytes": 8124
+    },
+    {
+      "path": "specs/communications/contracts/communications-reference.mjs",
+      "sha256": "71fa310086feb829cd1a1686aef1e1ed4215ad0d7bfe9a966f41cf5b60a4027f",
+      "bytes": 6398
+    },
+    {
+      "path": "specs/communications/contracts/communications-reference.test.mjs",
+      "sha256": "0395761f07d027b995fc63db1180628e38b967cc9f38732d9ed3889d63ab0a04",
+      "bytes": 9296
+    }
+  ]
+}
