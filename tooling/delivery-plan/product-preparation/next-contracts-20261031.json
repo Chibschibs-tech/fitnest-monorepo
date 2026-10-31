@@ -15,7 +15,7 @@
   "tasks": [
     {
       "taskKey": "B04-C",
-      "title": "Food data, recipes and controlled import - design and contracts",
+      "title": "Food data, recipes and controlled import — design and contracts",
       "dependsOn": [
         {
           "task": "B01-C",
@@ -140,7 +140,7 @@
     },
     {
       "taskKey": "B11-C",
-      "title": "Production, preparation, incidents and delivery - design and contracts",
+      "title": "Production, preparation, incidents and delivery — design and contracts",
       "dependsOn": [
         {
           "task": "B01-C",
@@ -274,7 +274,7 @@
     },
     {
       "taskKey": "B12-C",
-      "title": "Verified email and transactional communications - design and contracts",
+      "title": "Verified email and transactional communications — design and contracts",
       "dependsOn": [
         {
           "task": "B01-C",
