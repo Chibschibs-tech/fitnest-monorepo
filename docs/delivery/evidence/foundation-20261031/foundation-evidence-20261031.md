@@ -1,4 +1,4 @@
-# T001/T002/T003 - existing implementation evidence
+# T001/T002/T003 — existing implementation evidence
 
 Observed 2026-10-31. Source: Chibschibs-tech/fitnest-monorepo at `46599153870b62421ff20568b0dd8679222a297b`.
 
