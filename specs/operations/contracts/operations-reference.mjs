@@ -6,7 +6,7 @@ const count=x=>Number.isSafeInteger(x)&&x>=0&&x<Number.MAX_SAFE_INTEGER;
 const instant=x=>Number.isSafeInteger(x)&&x>=0;
 const sameKeys=(o,keys)=>o&&Object.keys(o).every(k=>keys.includes(k));
 function authority(context,delivery,permission,now) {
-  if (!context||context.kind!=='staff'||context.live!==true||context.factorVerified!==true||
+  if (!id(delivery.roundId)||!context||context.kind!=='staff'||context.live!==true||context.factorVerified!==true||
       context.riskCleared!==true||context.lifetimeValid!==true||!id(context.actorId)||
       context.assignmentPolicyAccepted!==true||!id(context.assignmentVersion)||
       !Array.isArray(context.permissions)||!context.permissions.includes(permission)||
@@ -42,7 +42,7 @@ export function listAssigned(state,context,now) {
   return result;
 }
 export function transition(state,context,command,now) {
-  if(!command||command.version!==1||!id(command.idempotencyKey)||
+  if(!id(state.projectId)||!command||command.version!==1||!count(command.expectedRevision)||!id(command.idempotencyKey)||
       !sameKeys(command,['version','operation','deliveryId','idempotencyKey','expectedRevision','reason','targetStatus']))fail('INVALID');
   if(!['confirm','fail','correct'].includes(command.operation))fail('INVALID');
   const delivery=deliveryFor(state,command.deliveryId);
