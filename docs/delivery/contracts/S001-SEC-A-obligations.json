@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "S001-SEC-A",
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "criterion": "OTP abuse/risk/recovery design; record unresolved choices and no production writes.",
+  "status": "proposal",
+  "designDocument": "docs/delivery/adr-sec-a.md",
+  "obligations": [
+    {
+      "id": "challenge_expiry_single_use",
+      "sourceRefs": ["SEC-01"],
+      "designSection": "## Challenge Expiry and Single-Use",
+      "verification": [
+        "Fixture: identity-reference.test.mjs exercises classifySendResult/shouldConsumeReservation/allowRetry for sent/ambiguous/not_sent outcomes with no live provider or production write.",
+        "Independent design review: Security + product ratify the SEC-01 purpose-bound expiring single-use challenge model; Kimi review confirms the ADR maps SEC-01 to the fixture.",
+        "Future runtime/integration: a real Postgres/Supabase transaction proves concurrent validation consumes exactly one purpose-bound challenge and expired/replayed codes fail with no duplicate account."
+      ]
+    },
+    {
+      "id": "multi_instance_quota",
+      "sourceRefs": ["SEC-02"],
+      "designSection": "## Multi-Instance Quota",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts canReserveBeforeSend reserves only with sufficient nonnegative quota, replays a prior key at zero quota, and denies malformed inputs.",
+        "Independent design review: Security + product ratify the shared number/IP/context quota and cooldown semantics against SEC-02; Kimi review confirms source mapping to R4/SEC-02.",
+        "Future runtime/integration: prove distributing send calls across instances cannot evade the shared quota on real shared storage, and that abuse cannot permanently lock a victim out."
+      ]
+    },
+    {
+      "id": "otp_ambiguity_idempotency",
+      "sourceRefs": ["SEC-02"],
+      "designSection": "## OTP Ambiguity and Idempotency",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts classifySendResult marks missing/malformed/non-boolean delivered and invalid/true outcomeUnknown ambiguous; ambiguous consumes with no blind retry.",
+        "Independent design review: Security + product ratify ambiguous-send reconciliation and idempotency argument binding; Kimi review confirms the ADR records no mock can prove delivery.",
+        "Future runtime/integration: prove a replayed reservation returns its old state and never permits another send, and that unknown outcomes retain quota without blind retry, against the real provider."
+      ]
+    },
+    {
+      "id": "verification_attempt_bounds",
+      "sourceRefs": ["SEC-02"],
+      "designSection": "## Verification Attempt Bounds",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts verifyAttemptAllowed accepts only safe-integer counters 0..maxVerificationAttempts-1 and denies negative/fractional/malformed counters.",
+        "Independent design review: Security + product ratify the bounded-attempt threshold; the illustrative maxVerificationAttempts=5 is marked unratified, never a deployed default.",
+        "Future runtime/integration: prove bounded attempts plus cooldown cannot enumerate accounts and cannot exhaust a legitimate account's recovery path."
+      ]
+    },
+    {
+      "id": "non_enumerating_responses",
+      "sourceRefs": ["SEC-02"],
+      "designSection": "## Non-Enumerating Responses",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts accountLookupResponse always returns generic regardless of account existence.",
+        "Independent design review: Security + product ratify non-enumeration across send and verification responses including the ambiguous path.",
+        "Future runtime/integration: prove a sender learns nothing about account existence from generic send/verify outcomes, including cooldown and wrong-code cases."
+      ]
+    },
+    {
+      "id": "bounded_sessions",
+      "sourceRefs": ["FR-038"],
+      "designSection": "## Bounded Sessions",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts sessionValid denies missing/nonfinite/future-activity facts and requires now before both expiries with idle gap below the illustrative limit.",
+        "Independent design review: Security + product ratify access/idle/absolute durations and refresh-rotation behavior under G-SESSION; illustrative limits are never deployed defaults.",
+        "Future runtime/integration: prove an old access token fails after revocation and reuse outside documented provider exceptions terminates access across every exposed path (R2/R3)."
+      ]
+    },
+    {
+      "id": "prior_proof_risk",
+      "sourceRefs": ["SEC-04", "D-053"],
+      "designSection": "## Prior Proof for Risk",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts canUnlockHistory needs known risk, live session, previously-verified account/action-bound single-use unexpired proof; denies phone-only, unknown risk.",
+        "Independent design review: Security + product ratify the independent previously-verified-email proof under D-053/SEC-04/FR-038; Kimi review confirms the proof is account/action bound and single-use.",
+        "Future runtime/integration: prove a newly verified risky device cannot read prior history without independent proof, and that unavailable validation fails closed, against real records."
+      ]
+    },
+    {
+      "id": "recovery_audit_notification",
+      "sourceRefs": ["SEC-04"],
+      "designSection": "## Recovery Audit and Notification",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts recoveryDecision needs literal boolean bothFactorsLost; both-lost with evidence gives audited assistance else denies; supportApproval rejects truthy.",
+        "Independent design review: Security + support ratify assisted-recovery evidence and audit fields under G-RECOVERY; Kimi review confirms SEC-04 notification for completed assisted recovery.",
+        "Future runtime/integration: prove recovery commits audit+state+outbox atomically, deduplicates callbacks and alerts on failure; support approval alone never unlocks history."
+      ]
+    },
+    {
+      "id": "number_change_notification",
+      "sourceRefs": ["SEC-04"],
+      "designSection": "## Number Change Notification",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts securityNotificationIntent emits account_security_change with no phone/email/OTP/session/history and null for invalid, untrusted or wrong-account inputs.",
+        "Independent design review: Security + product ratify mandatory SEC-04 notification for number replacement; Kimi review confirms replay keeps the same key while a different channel changes it.",
+        "Future runtime/integration: prove a completed number change records phone history, re-verifies the new number with independent prior proof, and delivers the authenticated deduplicated notification."
+      ]
+    },
+    {
+      "id": "unresolved_choices",
+      "sourceRefs": ["D-053"],
+      "designSection": "## Unresolved Choices",
+      "verification": [
+        "Fixture: identity-reference.test.mjs loads S001-SEC-A.json and asserts exactly five unresolved entries with id/gate/status/proposal/remainingEvidence and unratified status.",
+        "Independent design review: Security + product (G-SESSION), Security + support (G-RECOVERY) and Operations + engineering with Founder + orchestrator (G-PROVIDERS/G-BUDGET) ratify each recorded choice.",
+        "Future runtime/integration: each unresolved choice closes only by its named owner with isolated evidence; no session time, device count, risk threshold, recovery policy or supplier is approved."
+      ]
+    },
+    {
+      "id": "no_production_writes",
+      "sourceRefs": ["S001-SEC-A"],
+      "designSection": "## No Production Writes",
+      "verification": [
+        "Fixture: identity-reference.test.mjs asserts authority and verification flags are all-false and runtimeAcceptance=false, and that the fixture makes no network, database or provider calls.",
+        "Independent design review: Kimi review independently confirms this proposal records no production writes, gate approval, budget approval or task acceptance.",
+        "Future runtime/integration: any production write, migration, spend or notification send requires separate T013/G-RELEASE approval and an accepted contract with attributable review evidence."
+      ]
+    }
+  ],
+  "unresolvedGateIds": ["G-BUDGET", "G-PROVIDERS", "G-RECOVERY", "G-SESSION"],
+  "runtimeAcceptance": false
+}
