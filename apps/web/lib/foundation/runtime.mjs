@@ -19,6 +19,7 @@ import {
   lockOrder,
   redactTrace,
   OK_CODE,
+  environment,
 } from '../../../../packages/core/src/foundation/runtime.mjs';
 
 const MAX_LEASE_MS = 60 * 60 * 1000; // bounded worker lease (1 hour)
@@ -56,7 +57,7 @@ function sha256(text) {
 }
 
 function actorHash(actorId) {
-  return `actor_${sha256(`actor:${actorId}`).slice(0, 16)}`;
+  return sha256(`actor:${actorId}`);
 }
 
 // Two signed 32-bit integers derived from the tenant/resource identity. Using
@@ -100,6 +101,8 @@ export function createFoundation(deps) {
     environment: envConfig,
     workerTenantId,
   } = deps || {};
+
+  if (!environment(envConfig)) throw new TypeError('Disposable synthetic sandbox environment required');
 
   if (!pool || typeof pool.connect !== 'function') {
     throw new TypeError('createFoundation requires an injected native PostgreSQL pool');
@@ -199,7 +202,7 @@ export function createFoundation(deps) {
     const { key, value, expectedVersion, reason, idempotencyKey } = body;
 
     if (!isNonEmptyString(key)) return invalid(requestId);
-    if (isForbiddenKey(key)) return deny(requestId);
+    if (isForbiddenKey(key) || !Object.hasOwn(SETTING_TYPES, key)) return invalid(requestId);
 
     const typeInfo = SETTING_TYPES[key];
     if (typeInfo) {
@@ -484,10 +487,13 @@ export function createFoundation(deps) {
       const data = await withTransaction(async (client) => {
         await setTenant(client, facts.tenantId);
 
+        // Serialize creation without UPDATE privileges on immutable snapshots.
+        const freezeLock = advisoryKey(facts.tenantId, `freeze:${consumptionDay}`);
+        await client.query('SELECT pg_advisory_xact_lock($1::int4, $2::int4)', freezeLock);
         const existing = await queryOne(
           client,
           `SELECT snapshot FROM fitnest_foundation.frozen_days
-           WHERE tenant_id = $1 AND consumption_day = $2::date FOR UPDATE`,
+           WHERE tenant_id = $1 AND consumption_day = $2::date`,
           [facts.tenantId, consumptionDay],
         );
         if (existing) {
@@ -575,7 +581,7 @@ export function createFoundation(deps) {
         }));
       });
 
-      return respond(STATUS.OK, envelope(requestId, OK_CODE, { entries }));
+      return respond(STATUS.OK, envelope(requestId, OK_CODE, entries));
     } catch (error) {
       trace(
         redactTrace({
@@ -836,6 +842,9 @@ export function createFoundation(deps) {
       throw new TypeError('withLocks requires a callback');
     }
 
+    if (resources.some(resource => !resource || resource.tenantId !== tenantId)) {
+      throw new TypeError('Lock resources must belong to the requested tenant');
+    }
     const locks = lockOrder(
       resources.map((resource) => ({
         tenantId,
