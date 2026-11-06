@@ -1,0 +1,36 @@
+name: Security reference checks
+on:
+  push:
+    paths:
+      - 'tests/security/**'
+      - 'docs/delivery/contracts/S001-SEC-A.json'
+      - '.github/workflows/security-reference.yml'
+  pull_request:
+    paths:
+      - 'tests/security/**'
+      - 'docs/delivery/contracts/S001-SEC-A.json'
+      - '.github/workflows/security-reference.yml'
+permissions:
+  contents: read
+concurrency:
+  group: security-reference-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  reference:
+    name: SEC-A reference tests (partial evidence)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+      - name: Record tested revision
+        run: git rev-parse HEAD
+      - name: Run reference tests with read-only filesystem permissions
+        run: node --permission --allow-fs-read="$GITHUB_WORKSPACE" --test --test-isolation=none tests/security/identity-reference.test.mjs
+      # This tests the proposal only. Protected acceptance fixtures, independent
+      # review and integrated-commit evidence remain separate required controls.
