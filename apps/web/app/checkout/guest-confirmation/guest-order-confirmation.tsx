@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircle, ArrowRight } from "lucide-react"
+import { CheckCircle } from "lucide-react"
 
 interface GuestInfo {
   name: string
@@ -155,16 +155,6 @@ export function GuestOrderConfirmation() {
           We've sent a confirmation email to <span className="font-medium">{guestInfo.email}</span> with your order
           details.
         </p>
-
-        <div className="inline-block border rounded-lg p-6 bg-gray-50">
-          <h3 className="font-semibold text-lg mb-3">Create an Account</h3>
-          <p className="text-gray-600 mb-4">Create an account to track your orders and manage your meal preferences.</p>
-          <Link href={`/register?email=${encodeURIComponent(guestInfo.email)}`}>
-            <Button className="bg-green-600 hover:bg-green-700">
-              Create Account <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
 
         <div className="pt-6">
           <Link href="/">

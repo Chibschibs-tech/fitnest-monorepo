@@ -6,14 +6,13 @@ const publicRoutes = [
   "/login", "/register", "/forgot-password",
   "/about", "/blog", "/careers", "/contact", "/faq", "/privacy", "/terms", "/how-it-works", "/legal",
   "/plans", "/meal-plans", "/menu", "/meals", "/catalogue", "/express-shop", "/entreprises",
-  "/waitlist", "/waitlist/success",
   "/checkout", "/checkout/guest", "/checkout/guest-details", "/checkout/guest-confirmation",
   "/cart", "/shopping-cart", "/order", "/compose-ton-plan",
 ]
 
 const publicApiPrefixes = [
   "/api/auth/", "/api/products", "/api/cart", "/api/meal-plans",
-  "/api/meals", "/api/waitlist", "/api/health", "/api/guest-orders",
+  "/api/meals", "/api/health", "/api/guest-orders",
   // Pricing must be readable by guests: the builders and plan cards call it
   // before anyone logs in.
   "/api/calculate-price",

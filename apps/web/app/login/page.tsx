@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function LoginPage() {
@@ -109,14 +109,6 @@ export default function LoginPage() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-600">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-blue-600 hover:text-blue-500">
-              Register
-            </Link>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   )

@@ -1,0 +1,74 @@
+name: Identity foundation
+on:
+  push:
+    branches: [fitnest-foundation-runtime]
+  pull_request:
+    paths:
+      - 'packages/core/**'
+      - 'apps/web/**'
+      - 'pnpm-workspace.yaml'
+      - 'tooling/auth/**'
+      - 'supabase/config.toml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'vitest.config.ts'
+      - '.github/workflows/identity-foundation.yml'
+permissions:
+  contents: read
+concurrency:
+  group: identity-foundation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts --filter fitnest-monorepo --filter @fitnest/core --filter my-v0-project
+      - name: Qualify the workspace root test command
+        run: pnpm test
+      - name: Qualify the core package test command from its own directory
+        working-directory: packages/core
+        run: pnpm test
+      - run: pnpm test:core
+      - run: pnpm typecheck:core
+  local-auth:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+      - name: Prepare an isolated Auth fixture project
+        run: |
+          mkdir -p "$RUNNER_TEMP/fitnest-auth/supabase"
+          cp supabase/config.toml "$RUNNER_TEMP/fitnest-auth/supabase/config.toml"
+      - name: Start disposable Supabase (no cloud login or production secrets)
+        run: |
+          umask 077
+          npx --yes supabase@2.121.0 start --workdir "$RUNNER_TEMP/fitnest-auth" -x realtime,storage-api,imgproxy,postgres-meta,studio,edge-runtime,logflare,vector,supavisor > "$RUNNER_TEMP/fitnest-auth-start.log" 2>&1
+      - name: Qualify local phone fixtures without sending SMS
+        run: |
+          umask 077
+          npx --yes supabase@2.121.0 status --workdir "$RUNNER_TEMP/fitnest-auth" -o json > "$RUNNER_TEMP/fitnest-auth-status.json"
+          node --test tooling/auth/local-auth.test.mjs
+        env:
+          FITNEST_LOCAL_STATUS: ${{ runner.temp }}/fitnest-auth-status.json
+      - name: Remove disposable services and credential file
+        if: always()
+        run: |
+          npx --yes supabase@2.121.0 stop --workdir "$RUNNER_TEMP/fitnest-auth" --no-backup
+          rm -f "$RUNNER_TEMP/fitnest-auth-status.json"
+          rm -f "$RUNNER_TEMP/fitnest-auth-start.log"

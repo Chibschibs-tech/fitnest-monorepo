@@ -7,7 +7,6 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2, ShoppingCart, Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useSession } from "next-auth/react"
 
 interface Product {
   id: number
@@ -20,7 +19,6 @@ interface Product {
 }
 
 export function SimpleExpressShop() {
-  const { data: session, status } = useSession()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -59,15 +57,6 @@ export function SimpleExpressShop() {
   }, [])
 
   const handleAddToCart = async (productId: number) => {
-    if (status !== "authenticated") {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to add items to your cart",
-        variant: "destructive",
-      })
-      return
-    }
-
     setAddingToCart(productId)
     try {
       const response = await fetch("/api/cart", {
@@ -132,19 +121,6 @@ export function SimpleExpressShop() {
         </p>
       </div>
 
-      {status !== "authenticated" && (
-        <div className="mb-6 rounded-md border border-yellow-200 bg-yellow-50 p-4">
-          <h2 className="mb-2 text-sm font-medium text-yellow-800">Authentication Required</h2>
-          <p className="text-sm text-yellow-700">
-            Please{" "}
-            <Link href="/login?callbackUrl=/express-shop" className="font-medium underline">
-              log in
-            </Link>{" "}
-            to add items to your cart.
-          </p>
-        </div>
-      )}
-
       {products.length === 0 ? (
         <div className="flex flex-col items-center justify-center space-y-4 py-12 text-center">
           <ShoppingCart className="h-16 w-16 text-gray-400" />
@@ -192,7 +168,7 @@ export function SimpleExpressShop() {
                 <Button
                   className="w-full"
                   onClick={() => handleAddToCart(product.id)}
-                  disabled={addingToCart === product.id || status !== "authenticated"}
+                  disabled={addingToCart === product.id}
                 >
                   {addingToCart === product.id ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

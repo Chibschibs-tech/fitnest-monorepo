@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "project": "fitnest-db",
+  "projectRef": "blboseqvdmpdrthipxdk",
+  "application": "fitnest-monorepo-web",
+  "environment": "Vercel production",
+  "observer": "Work FITNEST root",
+  "method": "targeted Vercel get_project_env DATABASE_URL; secret not retained",
+  "configuration": {
+    "username": "postgres.blboseqvdmpdrthipxdk",
+    "host": "aws-1-eu-west-3.pooler.supabase.com",
+    "port": 5432,
+    "variableUpdatedAtMilliseconds": 1774819550253
+  },
+  "inferredConfiguredDatabaseRole": "postgres",
+  "inferenceBasis": "Supabase pooler username convention role.project_ref",
+  "liveConnectionRoleObserved": false,
+  "migrationConnectionRoleObserved": false,
+  "credentialsRetained": false,
+  "findings": [
+    "Configuration implies privileged postgres runtime; metadata snapshot says postgres BYPASSRLS",
+    "Configuration is not an observation of a current deployed application's live connection"
+  ],
+  "requiredFollowup": [
+    "Observe current_user/session_user and role memberships through actual application connection without credentials",
+    "Confirm actual migration role and propose least-privilege separation in T006"
+  ],
+  "runtimeAcceptance": false
+}

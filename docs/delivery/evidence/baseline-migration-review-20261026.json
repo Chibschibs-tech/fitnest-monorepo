@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12",
+  "sourceBaseline": {
+    "path": "supabase/migrations/20260829155420_remote_schema.sql",
+    "blobSha": "e804c7f335ec254b78ffe1869ae771faf76bb6fa",
+    "publicTables": [
+      "cart_items",
+      "company_leads",
+      "compose_components",
+      "compose_settings",
+      "content_hero",
+      "custom_meals",
+      "customers",
+      "deliveries",
+      "discount_rules",
+      "meal_plan_meals",
+      "meal_plans",
+      "meal_type_prices",
+      "meals",
+      "mp_categories",
+      "notification_preferences",
+      "notifications",
+      "order_items",
+      "orders",
+      "products",
+      "sessions",
+      "subscription_requests",
+      "subscriptions",
+      "users",
+      "waitlist"
+    ]
+  },
+  "sourceNullableMigration": {
+    "path": "supabase/migrations/20260829160000_meal_type_prices_plan_name_nullable.sql",
+    "blobSha": "c3d3d2b02df8d16016abaceca39ff9b3de589a64",
+    "intendedEffect": "DROP NOT NULL on meal_type_prices.plan_name"
+  },
+  "observedMigrations": [
+    {
+      "version": "20260829155420",
+      "name": "remote_schema"
+    }
+  ],
+  "snapshotPath": "schema-inventory-2026-10-26.json",
+  "observedPlanNameNullable": "NO",
+  "comparisonScope": "public relation names and nullable-plan migration effect only; not a full schema-equivalence proof",
+  "productionReplayPerformed": false,
+  "requiredAction": "T004-T008 reconcile reviewed baseline and intended deltas in isolation; preserve T013 production gate"
+}

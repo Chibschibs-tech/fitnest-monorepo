@@ -374,19 +374,23 @@ export default function ActiveSubscription() {
                 <p className="text-sm font-medium text-gray-500">Meals</p>
                 <p>{subscription.mealCount}</p>
               </div>
-              {deliverySchedule && (
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Delivery Progress</p>
-                  <p>
-                    {deliverySchedule.completedDeliveries} of {deliverySchedule.totalDeliveries} delivered
-                  </p>
-                  {deliverySchedule.nextDeliveryDate && (
-                    <p className="text-sm text-gray-600">
-                      Next delivery: {new Date(deliverySchedule.nextDeliveryDate).toLocaleDateString()}
+              <div>
+                <p className="text-sm font-medium text-gray-500">Delivery Progress</p>
+                {deliverySchedule && deliverySchedule.totalDeliveries > 0 ? (
+                  <>
+                    <p>
+                      {deliverySchedule.completedDeliveries} of {deliverySchedule.totalDeliveries} delivered
                     </p>
-                  )}
-                </div>
-              )}
+                    {deliverySchedule.nextDeliveryDate && (
+                      <p className="text-sm text-gray-600">
+                        Next delivery: {new Date(deliverySchedule.nextDeliveryDate).toLocaleDateString()}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-600">Votre calendrier de livraisons apparaîtra ici.</p>
+                )}
+              </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Features</p>
                 <ul className="mt-1 space-y-1">

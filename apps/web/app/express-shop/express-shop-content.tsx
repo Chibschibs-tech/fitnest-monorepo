@@ -10,7 +10,6 @@ import { Loader2, ShoppingCart, Plus, Filter, AlertCircle, Bug, RefreshCcw } fro
 import Image from "next/image"
 import Link from "next/link"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { useSession } from "next-auth/react"
 
 interface Product {
   id: number | string
@@ -41,7 +40,6 @@ export function ExpressShopContent({
     initialDebugInfo,
   })
 
-  const { data: session, status } = useSession()
   const [products, setProducts] = useState<Product[]>(initialProducts)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(initialError)
@@ -58,7 +56,6 @@ export function ExpressShopContent({
       productsLength: products.length,
       error,
       debugInfo,
-      status,
     })
 
     // Add a visible indicator that the component has mounted
@@ -131,15 +128,6 @@ export function ExpressShopContent({
     activeCategory === "all" ? products : products.filter((product) => product.category === activeCategory)
 
   const handleAddToCart = async (productId: number | string) => {
-    if (status !== "authenticated") {
-      toast({
-        variant: "destructive",
-        title: "Authentication Required",
-        description: "Please log in to add items to your cart",
-      })
-      return
-    }
-
     setAddingToCart(productId)
     try {
       // Use the main cart API
@@ -276,20 +264,6 @@ export function ExpressShopContent({
         </p>
       </div>
 
-      {status !== "authenticated" && (
-        <Alert className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Authentication Required</AlertTitle>
-          <AlertDescription>
-            Please{" "}
-            <Link href="/login?callbackUrl=/express-shop" className="font-medium underline">
-              log in
-            </Link>{" "}
-            to add items to your cart.
-          </AlertDescription>
-        </Alert>
-      )}
-
       <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory} className="mb-8">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -382,7 +356,7 @@ export function ExpressShopContent({
                       <Button
                         className="w-full bg-fitnest-green hover:bg-fitnest-green/90"
                         onClick={() => handleAddToCart(product.id)}
-                        disabled={addingToCart === product.id || status !== "authenticated"}
+                        disabled={addingToCart === product.id}
                       >
                         {addingToCart === product.id ? (
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />

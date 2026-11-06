@@ -1,15 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, ShoppingCart, Plus, Minus, ArrowLeft } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import Image from "next/image"
-import Link from "next/link"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface Product {
   id: number
@@ -30,7 +27,6 @@ interface ProductDetailContentProps {
 
 export function ProductDetailContent({ product }: ProductDetailContentProps) {
   const router = useRouter()
-  const { data: session, status } = useSession()
   const [quantity, setQuantity] = useState(1)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const { toast } = useToast()
@@ -40,16 +36,6 @@ export function ProductDetailContent({ product }: ProductDetailContentProps) {
   }
 
   const handleAddToCart = async () => {
-    if (status !== "authenticated") {
-      toast({
-        variant: "destructive",
-        title: "Authentication Required",
-        description: "Please log in to add items to your cart",
-      })
-      router.push(`/login?callbackUrl=/express-shop/${product.id}`)
-      return
-    }
-
     setIsAddingToCart(true)
     try {
       // Use the main cart API
@@ -177,7 +163,7 @@ export function ProductDetailContent({ product }: ProductDetailContentProps) {
           <Button
             className="w-full bg-fitnest-green hover:bg-fitnest-green/90 py-6 text-lg"
             onClick={handleAddToCart}
-            disabled={isAddingToCart || product.stock <= 0 || status !== "authenticated"}
+            disabled={isAddingToCart || product.stock <= 0}
           >
             {isAddingToCart ? (
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -186,19 +172,6 @@ export function ProductDetailContent({ product }: ProductDetailContentProps) {
             )}
             {product.stock <= 0 ? "Out of Stock" : "Add to Cart"}
           </Button>
-
-          {status !== "authenticated" && (
-            <Alert>
-              <AlertTitle>Authentication Required</AlertTitle>
-              <AlertDescription>
-                Please{" "}
-                <Link href={`/login?callbackUrl=/express-shop/${product.id}`} className="font-medium underline">
-                  log in
-                </Link>{" "}
-                to add items to your cart.
-              </AlertDescription>
-            </Alert>
-          )}
 
           {/* Nutritional Information */}
           {nutritionalInfo && (
