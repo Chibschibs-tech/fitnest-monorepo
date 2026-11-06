@@ -1,0 +1,27 @@
+name: Domain contract references
+on:
+  pull_request:
+    paths:
+      - 'specs/food/contracts/**'
+      - 'specs/operations/contracts/**'
+      - 'specs/communications/contracts/**'
+      - '.github/workflows/domain-contract-references.yml'
+permissions:
+  contents: read
+jobs:
+  design-references:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+      - name: Food design references
+        run: node --test specs/food/contracts/*.test.mjs
+      - name: Operations design references
+        run: node --test specs/operations/contracts/*.test.mjs
+      - name: Communications design references
+        run: node --test specs/communications/contracts/*.test.mjs

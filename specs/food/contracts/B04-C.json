@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "B04-C",
+  "status": "proposal_partial_design",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "foodCertified": false,
+  "source": {
+    "repository": "Chibschibs-tech/fitnest-monorepo",
+    "semanticPlanSha": "2854038dfe653289c326dd33650a311918f630ad",
+    "baseSha": "46599153870b62421ff20568b0dd8679222a297b",
+    "baselineGitBlob": "3b7916574c1a640b4d29c16d1c32475a35880d15",
+    "schemaEvidencePath": "docs/delivery/evidence/schema-inventory-2026-10-26.json",
+    "schemaEvidenceGitBlob": "51e8dab6805248196d6179d674f4124f65fce440",
+    "schemaCapturedAt": "2026-10-26T18:27:55.491238+00:00"
+  },
+  "dependsOn": [
+    {
+      "task": "B01-C",
+      "condition": "contract_accepted"
+    }
+  ],
+  "mergeGates": [
+    "G-CONSTITUTION"
+  ],
+  "preservedGates": [
+    "G-FOOD",
+    "G-MACROS",
+    "G-T013"
+  ],
+  "schemas": {
+    "measurement": {
+      "required": [
+        "state",
+        "unit",
+        "basis",
+        "evidenceRef"
+      ],
+      "states": {
+        "unknown": {
+          "reason": "nonempty string",
+          "evidenceRef": null,
+          "value": "forbidden"
+        },
+        "known": {
+          "value": "finite >0",
+          "evidenceRef": "required"
+        },
+        "known_zero": {
+          "value": 0,
+          "evidenceRef": "required"
+        },
+        "trace": {
+          "upper": "finite >0; unit matches nutrient",
+          "evidenceRef": "required"
+        },
+        "bounded": {
+          "lower": "finite >=0",
+          "upper": "finite >lower",
+          "evidenceRef": "required"
+        }
+      },
+      "bases": [
+        "per100g_raw",
+        "per100g_finished",
+        "per_portion_finished"
+      ],
+      "additionalProperties": false
+    },
+    "nutrition": {
+      "required": {
+        "kcal": "kcal",
+        "protein": "g",
+        "carbs": "g",
+        "fat": "g",
+        "fibre": "g",
+        "sugar": "g",
+        "saturatedFat": "g",
+        "transFat": "g",
+        "cholesterol": "mg"
+      },
+      "missing": "invalid object, never zero",
+      "publication": "all values need finished-product evidence on the same basis; unknown blocks"
+    },
+    "weights": {
+      "basis": "batch",
+      "rawNetGrams": "positive measured/defined input",
+      "purchaseGrossGrams": "positive purchasing quantity",
+      "purchaseYieldRatio": "(0,1]; rawNet=purchaseGross*yield within declared numeric tolerance",
+      "finishedWeightGrams": "positive separately measured finished batch",
+      "evidence": [
+        "rawEvidenceRef",
+        "purchaseEvidenceRef",
+        "finishedEvidenceRef"
+      ],
+      "rule": "No generic finished multiplier or automatic raw nutrition declaration"
+    },
+    "foodEntityVersion": {
+      "fields": [
+        "kind",
+        "id",
+        "version",
+        "nutrition",
+        "taxonomy",
+        "taxonomyEvidenceRef"
+      ],
+      "kind": [
+        "ingredient",
+        "component"
+      ],
+      "version": "positive integer; append-only sequential per kind/id",
+      "taxonomyEvidenceRef": "null means unresolved assessment; nonempty source reference required for review eligibility"
+    },
+    "recipeVersion": {
+      "fields": [
+        "schemaVersion",
+        "recipeId",
+        "version",
+        "dishId",
+        "portionSizeId",
+        "ingredients",
+        "components",
+        "nutrition",
+        "weights",
+        "cost",
+        "taxonomy",
+        "taxonomyEvidenceRef"
+      ],
+      "schemaVersion": 1,
+      "version": "append-only positive integer per stable recipe/dish",
+      "references": "kind/id/version must resolve uniquely to immutable food entities",
+      "cost": {
+        "currency": "MAD",
+        "unit": "centime",
+        "amount": "nonnegative safe integer",
+        "sourceRef": "immutable costing evidence reference",
+        "capturedAt": "exact UTC ISO timestamp with milliseconds"
+      },
+      "immutability": "clone and deep-freeze in reference; production requires DB immutability and transaction/authorization enforcement"
+    },
+    "taxonomy": {
+      "fields": [
+        "id",
+        "kind",
+        "evidenceRef",
+        "relatedIds"
+      ],
+      "kinds": [
+        "allergen_group",
+        "substance",
+        "intolerance",
+        "preference",
+        "cross_contact"
+      ],
+      "rule": "No synonym collapse; IDs unique; referenced IDs exist; cross_contact links substances; no fixed UI chip count. Recipe must retain identical inherited source taxonomy rows; unresolved assessments block."
+    },
+    "importDraft": {
+      "fields": [
+        "schemaVersion",
+        "importId",
+        "rowId",
+        "state",
+        "candidate",
+        "candidateDigest"
+      ],
+      "state": "draft",
+      "rule": "Source publication/validation flags never become authority; SHA256 canonical candidate binds independent server review"
+    },
+    "reviewContext": {
+      "trustedServerFacts": [
+        "identityVerified",
+        "active",
+        "liveSession",
+        "totpVerified",
+        "riskClear",
+        "lifetimeBounded",
+        "actorId",
+        "permission",
+        "recipeScope",
+        "reviewedDigest"
+      ],
+      "permission": "food.publish",
+      "rule": "Synthetic server context only. Production derives these from verified live staff/session/authorization records; client-provided booleans forbidden."
+    }
+  },
+  "requirements": [
+    {
+      "id": "measurement_states",
+      "sourceRefs": [
+        "MC-02",
+        "D-041"
+      ],
+      "fixtures": "validMeasurement states and negative unit/evidence/NaN/range/zero tests"
+    },
+    {
+      "id": "weight_basis",
+      "sourceRefs": [
+        "MC-03",
+        "D-038"
+      ],
+      "fixtures": "validWeights keeps purchased/raw/finished and evidence distinct"
+    },
+    {
+      "id": "version_snapshots",
+      "sourceRefs": [
+        "MC-04"
+      ],
+      "fixtures": "appendVersion and appendFoodEntityVersion reject duplicate versions; copies are immutable; cost evidence frozen"
+    },
+    {
+      "id": "draft_review_boundary",
+      "sourceRefs": [
+        "MC-07"
+      ],
+      "fixtures": "importDraft always draft; reviewForPublication checks server authorization, exact digest, references and evidence"
+    },
+    {
+      "id": "taxonomy_separation",
+      "sourceRefs": [
+        "MC-01",
+        "D-051"
+      ],
+      "fixtures": "validTaxonomy separates types and checks inherited hazard reconciliation"
+    },
+    {
+      "id": "stored_macro_bands",
+      "sourceRefs": [
+        "D-064",
+        "D-065",
+        "MC-05"
+      ],
+      "fixtures": "macroBandMembership uses stored values without normalization; wholeDayFeasible always null"
+    }
+  ],
+  "observedMapping": [
+    {
+      "table": "meals",
+      "observed": [
+        "kcal NOT NULL",
+        "protein/carbs/fat/fiber/sodium/sugar/cholesterol/saturated_fat nullable",
+        "ingredients/allergens JSONB",
+        "published boolean"
+      ],
+      "gap": "No trans-fat column or explicit measurement state/unit/basis/evidence columns in capture; JSON content semantics not established. Existing numeric zero is not proof of measured zero."
+    },
+    {
+      "table": "compose_components",
+      "observed": [
+        "portion_grams",
+        "kcal/protein_g/carbs_g/fat_g",
+        "allergens JSONB",
+        "surcharge_mad/extra_portion_price_mad"
+      ],
+      "gap": "No full extended nutrition or immutable ingredient/component/recipe/cost version relationships shown."
+    },
+    {
+      "table": "meal_plans",
+      "observed": [
+        "id/slug/title",
+        "mp_category_id",
+        "published"
+      ],
+      "gap": "No macro-band version columns shown in captured columns; propose stored versioned bands, never code-label business keys."
+    }
+  ],
+  "unresolvedEvidence": [
+    "Public capture contains no dedicated ingredient/recipe version table; actual current schema must be refreshed before migration design.",
+    "Server recalculation, quantity/component expansion, food evidence validation and complete-day feasibility are not implemented by this reference.",
+    "G-FOOD pilot recipes, validated nutrition, allergen/cross-contact evidence, shelf life and packaging remain required.",
+    "G-MACROS display midpoint/rounding convention remains unresolved; ratified bands unchanged.",
+    "Actual source import parser, formula handling, large-sheet boundaries, persistence, RLS/privileges and transactional publication await implementation."
+  ],
+  "testCommand": "node --test specs/food/contracts/food-reference.test.mjs"
+}
