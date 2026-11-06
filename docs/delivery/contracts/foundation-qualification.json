@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "status": "proposal_not_registered",
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "semantic_plan_source": "2854038dfe653289c326dd33650a311918f630ad",
+  "integration_branch": "fitnest-foundation-runtime",
+  "preserved_acceptance": {
+    "task": "S001-SEC-A",
+    "pull_request": 134,
+    "commit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12"
+  },
+  "evidence_rules": [
+    "Bind checks, independent review and integration receipt to exact candidate and merged SHA.",
+    "This product handoff is not a registered Ekwip profile or acceptance receipt.",
+    "Do not rerun SEC-A or duplicate an existing dispatch."
+  ],
+  "tasks": [
+    {
+      "id": "B01-C",
+      "scope": "Complete platform/data design contract",
+      "requirements": [
+        "Inventory actual schemas/runtimes and exposure.",
+        "Review versioned API/error/event contracts, idempotency, outbox and lock-order requirements.",
+        "Confirm isolated environments, least privileges, migration canon and rollback/restore obligations."
+      ],
+      "remaining": [
+        "Actual privilege/exposure evidence belongs to SEC-B.",
+        "Static setup tests cannot close the whole B01-C contract."
+      ]
+    },
+    {
+      "id": "S001-T001",
+      "depends_on": [
+        "B01-C"
+      ],
+      "commands": [
+        "node tooling/foundation/check-setup.mjs",
+        "pnpm install --frozen-lockfile --ignore-scripts --filter fitnest-monorepo --filter @fitnest/core",
+        "pnpm test:core",
+        "pnpm -C packages/core test",
+        "pnpm typecheck:core"
+      ],
+      "requirements": [
+        "Pinned Vitest, working root/core test commands and nonempty discovery.",
+        "Run existing D-058 tests including Casablanca transitions.",
+        "Frozen-lockfile installation and exact-SHA CI."
+      ],
+      "remaining": [
+        "Independent review and platform acceptance."
+      ]
+    },
+    {
+      "id": "S001-T002",
+      "depends_on": [
+        "B01-C"
+      ],
+      "commands": [
+        "node tooling/foundation/check-setup.mjs",
+        "pnpm install --frozen-lockfile --ignore-scripts"
+      ],
+      "requirements": [
+        "Exact SDK pins match lockfile resolution.",
+        "Local URL/anon and server-only service-role placeholders.",
+        "No public secret variable or real credential template."
+      ],
+      "required_profile_paths": [
+        "apps/web/package.json",
+        ".env.example",
+        "pnpm-lock.yaml"
+      ],
+      "remaining": [
+        "Source allowed_paths omits .env.example although acceptance explicitly names it; reconcile through reviewed Ekwip profile.",
+        "Setup does not certify Auth activation or session behavior."
+      ]
+    },
+    {
+      "id": "S001-T003",
+      "depends_on": [
+        "B01-C"
+      ],
+      "workflow": ".github/workflows/identity-foundation.yml",
+      "job": "local-auth",
+      "commands": [
+        "node --test tooling/auth/local-auth.test.mjs"
+      ],
+      "requirements": [
+        "Disposable Supabase boots with pinned CLI/config and no hosted secrets.",
+        "Mapped local phones reject wrong OTP and yield distinct identities without SMS.",
+        "Local endpoint restriction and cleanup; no legacy migration copies."
+      ],
+      "remaining": [
+        "Real Docker-backed local-auth job at candidate and integrated SHA.",
+        "Does not prove T008 migration replay or SEC-C revocation."
+      ]
+    },
+    {
+      "id": "BX-C",
+      "owner": "Work Ekwip",
+      "requirements": [
+        "Repository/branch/task isolation with negative cross-project tests.",
+        "Ephemeral credentials, metering/reconciliation and bounded recovery.",
+        "Trusted tests, independent review and immutable acceptance evidence.",
+        "Accepted task A automatically unblocks and executes eligible task B without duplication."
+      ],
+      "remaining": [
+        "executor-gap-review.md is an October 18 historical observation, not current failure evidence.",
+        "Existing SEC-A acceptance is positive evidence; full BX-C review needs current registry/run records."
+      ]
+    }
+  ],
+  "gate_rules": [
+    "G-CONSTITUTION remains a source-plan merge prerequisite.",
+    "G-T013 production migration arbitration is unchanged.",
+    "G-SESSION and G-RECOVERY are unchanged."
+  ],
+  "protected_tests": {
+    "owner": "Work Ekwip",
+    "rule": "Review and pin trusted check blobs outside generated candidate edits. Candidate-authored checks do not self-certify."
+  },
+  "local_validation": {
+    "date": "2026-10-26",
+    "node": "24.11.1",
+    "command": "node --test tooling/foundation/check-setup.test.mjs",
+    "passed": 13,
+    "failed": 0,
+    "review": "Independent reviewer found whitespace/export env-key bypass; node:util.parseEnv and four regressions fix it.",
+    "limitations": [
+      "Static setup and negative fixtures only.",
+      "Pinned Node 24.19.0 CI, pnpm, Vitest and Docker Auth not run locally.",
+      "No task accepted and no deployment certified."
+    ]
+  }
+}
