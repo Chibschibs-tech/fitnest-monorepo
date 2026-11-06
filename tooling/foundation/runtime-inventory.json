@@ -4,10 +4,10 @@
     "apps/web/package.json": "cf57b8894f31db9ff8c6f7a3a80883b346fae69d5ca9615529866ec27879b80e",
     "packages/core/package.json": "d5abfda8f00898c94fdeb31b07c94e208b7974217e3f11e9a095522e197229e9",
     "pnpm-lock.yaml": "f4ebac5daf17028cd8856f1fd640ac8ca1fd89d61c7d6c038885c9637e7aa9fd",
-    "packages/core/src/foundation/runtime.mjs": "03ffc8bdf708cab7a52a22f95aff450baabed0a0a87161259047a00136e5cbb0",
-    "apps/web/lib/foundation/runtime.mjs": "07b83f1dfbbd866e2bdcd67880272ae119d46b1d17bcf16b6e5d8fb034e79c2b",
+    "packages/core/src/foundation/runtime.mjs": "55b6d08ce8a6191cd702e99206abf6a9335a8e9262afc3106c79e1ee70afa7b9",
+    "apps/web/lib/foundation/runtime.mjs": "426dd13e8762cf57f3c200346b9486bd215f0e8b5172e2a5b0e0feb7bbc1b521",
     "supabase/migrations/202611010001_foundation.sql": "5978fb02ecd1b8623a2f8bc78df3a0d833638cce82042e962b7a7d6b65c39015",
-    "tooling/foundation/build-public.mjs": "0c198387647f3c76f593f4f5cde67fd8b0f609c00b9324fe0b86b6dd378b3495"
+    "tooling/foundation/build-public.mjs": "0e5b4e34e88ab0dd6e0a2b9974ef7fdacbc716ac0bba1702af05f55cb82d7c2a"
   },
   "liveDeploymentConfirmed": false,
   "channels": {
