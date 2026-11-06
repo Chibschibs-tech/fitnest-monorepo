@@ -150,17 +150,17 @@ export function physicalDates(consumptionDay) {
   };
 }
 
-// lockOrder([{tenantId, rank, resourceId}]) -> sorted unique locks or null.
+// lockOrder([{tenantId, rank, resourceId}]) -> sorted unique locks; invalid inputs throw.
 // Validates a single tenant, nonempty tenant/resource ids and nonnegative safe
 // integer ranks, deduplicates identical (tenantId, rank, resourceId) entries and
 // returns the remaining locks sorted by tenant, then rank, then resource. Mixed
-// tenants or any malformed lock return null.
+// tenants or any malformed lock throw.
 export function lockOrder(locks) {
-  if (!Array.isArray(locks) || locks.length === 0) return null;
+  if (!Array.isArray(locks) || locks.length === 0) throw new TypeError('Invalid lock resources');
 
   const first = locks[0];
   if (!isPlainObject(first) || typeof first.tenantId !== 'string' || first.tenantId.length === 0) {
-    return null;
+    throw new TypeError('Invalid lock resources');
   }
   const tenantId = first.tenantId;
 
@@ -168,11 +168,11 @@ export function lockOrder(locks) {
   const ordered = [];
 
   for (const lock of locks) {
-    if (!isPlainObject(lock)) return null;
-    if (lock.tenantId !== tenantId) return null;
-    if (typeof lock.tenantId !== 'string' || lock.tenantId.length === 0) return null;
-    if (!Number.isSafeInteger(lock.rank) || lock.rank < 0) return null;
-    if (typeof lock.resourceId !== 'string' || lock.resourceId.length === 0) return null;
+    if (!isPlainObject(lock)) throw new TypeError('Invalid lock resources');
+    if (lock.tenantId !== tenantId) throw new TypeError('Invalid lock resources');
+    if (typeof lock.tenantId !== 'string' || lock.tenantId.length === 0) throw new TypeError('Invalid lock resources');
+    if (!Number.isSafeInteger(lock.rank) || lock.rank < 0) throw new TypeError('Invalid lock resources');
+    if (typeof lock.resourceId !== 'string' || lock.resourceId.length === 0) throw new TypeError('Invalid lock resources');
 
     const signature = `${lock.tenantId}\u0000${lock.rank}\u0000${lock.resourceId}`;
     if (seen.has(signature)) continue;
@@ -204,13 +204,13 @@ function isNonEmptyString(value) {
 // a matching unknown record reconciles; any binding mismatch conflicts. The
 // stored outcome is carried when the record reports one.
 export function idempotency(record, binding) {
-  if (!isPlainObject(binding)) return { action: 'conflict' };
+  if (!isPlainObject(binding)) throw new TypeError('Invalid idempotency binding');
 
   const { tenantId, actorId, operation, key, payloadHash } = binding;
   if (
     ![tenantId, actorId, operation, key, payloadHash].every(isNonEmptyString)
   ) {
-    return { action: 'conflict' };
+    throw new TypeError('Invalid idempotency binding');
   }
 
   if (record === null || record === undefined) return { action: 'create' };
@@ -288,8 +288,10 @@ export function migration(input) {
   }
 
   const localAllowed =
-    canonical === true &&
-    applied === true &&
+    Array.isArray(canonical) && canonical.length > 0 &&
+    canonical.every(isNonEmptyString) && new Set(canonical).size === canonical.length &&
+    Array.isArray(applied) && canonical.length === applied.length &&
+    canonical.every((entry, index) => entry === applied[index]) &&
     nullableMatches === true &&
     backwardCompatible === true &&
     restoreVerified === true &&
@@ -324,8 +326,8 @@ export function redactTrace(record) {
 
   const actor = pseudonym('actor', record.actorId);
   const tenant = pseudonym('tenant', record.tenantId);
-  if (actor !== null) safe.actorId = actor;
-  if (tenant !== null) safe.tenantId = tenant;
+  if (actor !== null) safe.actorHash = actor;
+  if (tenant !== null) safe.tenantHash = tenant;
 
   return safe;
 }
