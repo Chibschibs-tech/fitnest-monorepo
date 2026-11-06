@@ -74,8 +74,8 @@ function listWorkspaceFiles(dir) {
 // Public configuration: only the public URL and anon key, never a service-role
 // or database secret.
 const publicConfig = {
-  url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
-  anon: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '',
 };
 
 // --- foundation.mjs: deterministic core runtime with time import rewritten. --
@@ -126,7 +126,7 @@ for (const name of manifestFiles) {
 }
 
 const manifest = {
-  runtimeVersion: '1',
+  runtimeVersion: process.version,
   lockfileSha256,
   workspaceDigest,
   files,
