@@ -1,5 +1,5 @@
-import { GuestCheckoutForm } from "./guest-checkout-form"
+import { redirect } from "next/navigation"
 
 export default function GuestDetailsPage() {
-  return <GuestCheckoutForm />
+  redirect("/checkout")
 }
