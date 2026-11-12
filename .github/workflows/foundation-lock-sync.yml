@@ -1,0 +1,53 @@
+name: Publish verified foundation lockfile
+on:
+  push:
+    branches: [fitnest-foundation-runtime]
+    paths:
+      - 'tooling/foundation/pnpm-lock.patch'
+      - '.github/workflows/foundation-lock-sync.yml'
+permissions:
+  contents: read
+concurrency:
+  group: foundation-lock-sync
+  cancel-in-progress: false
+jobs:
+  synchronize:
+    if: github.repository == 'Chibschibs-tech/fitnest-monorepo' && github.ref == 'refs/heads/fitnest-foundation-runtime'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+      - name: Apply only the reviewed lockfile delta
+        id: patch
+        run: |
+          python3 - <<'PY'
+          import hashlib, os, subprocess
+          from pathlib import Path
+          p = Path('pnpm-lock.yaml')
+          before = 'b61595e676d1e9d957ebc00b35d0b6604c9d024147073a481db788c081a4465a'
+          after = 'f4ebac5daf17028cd8856f1fd640ac8ca1fd89d61c7d6c038885c9637e7aa9fd'
+          actual = hashlib.sha256(p.read_bytes()).hexdigest()
+          if actual == after:
+              Path(os.environ['GITHUB_OUTPUT']).write_text('changed=false\n')
+              raise SystemExit(0)
+          if actual != before:
+              raise SystemExit('Base lockfile changed; refusing to overwrite it')
+          subprocess.run(['git', 'apply', '--check', 'tooling/foundation/pnpm-lock.patch'], check=True)
+          subprocess.run(['git', 'apply', 'tooling/foundation/pnpm-lock.patch'], check=True)
+          changed = subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines()
+          if changed != ['pnpm-lock.yaml'] or hashlib.sha256(p.read_bytes()).hexdigest() != after:
+              raise SystemExit('Patch scope or digest mismatch; nothing will be published')
+          Path(os.environ['GITHUB_OUTPUT']).write_text('changed=true\n')
+          PY
+      - name: Commit the exact tested lockfile on the work branch
+        if: steps.patch.outputs.changed == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- pnpm-lock.yaml
+          git commit -m 'build: publish verified foundation dependency lock'
+          git push origin HEAD:refs/heads/fitnest-foundation-runtime

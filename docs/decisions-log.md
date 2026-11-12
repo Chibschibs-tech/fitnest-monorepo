@@ -97,6 +97,59 @@ Un brouillon rattaché au compte, repris sur n'importe quelle surface. Pas d'ét
 Toute règle métier porte sa surface, son marché s'il s'agit d'une observation Calo, et son statut : mesuré, déduit ou supposé. Aucun rapprochement entre relevés de marchés ou de sessions différents.
 **Raison :** plusieurs erreurs d'analyse sont nées de la fusion de relevés QAR et BHD, et de la transposition d'observations du site Calo vers l'app.
 
+### D-063 · 8 sept · Vestiges d'authentification retirés
+Arbitrage P4 : la page publique `/waitlist` est supprimée (écriture morte — routes manquantes/503, table email incompatible avec la file téléphone) ; le gate next-auth de l'express-shop est désactivé (mécanisme mort, le site vit sur le cookie `session-id` — famille D-027, échec silencieux) ; les composants orphelins `navbar-auth.tsx` et `mobile-nav.tsx` sont supprimés. La lecture admin de la table `waitlist` est conservée ; le sort de la table elle-même reste un nettoyage séparé.
+
+### D-059 · 8 sept · Plan 001 : contrats partagés, OTP par le worker, aucun secret client
+Le plan de la slice 001 est contraint : toutes les surfaces consomment les mêmes contrats d'API ; l'envoi d'OTP passe par le worker côté serveur (hook Send-SMS Supabase — les identifiants du fournisseur SMS ne vivent que côté serveur) ; le client ne détient aucun secret — uniquement la clé anon publique, les écritures domaine passant par les routes serveur (RLS sans écriture cliente).
+
+### D-058 · 8 sept · Horloge serveur, fuseau Africa/Casablanca
+Toute date d'admission ou de cohorte est enregistrée à l'horloge serveur — jamais celle du client. Les bornes de semaine (plafond hebdomadaire d'admission FR-042, cohortes FR-032) se calculent en semaine ISO dans le fuseau **Africa/Casablanca**. Stockage en `timestamptz` (UTC), interprétation métier dans le fuseau de Casablanca.
+
+### D-057 · 8 sept · Paramètres versionnés, invariants non désactivables
+Les `app_settings` sont **typés, bornés, versionnés** : chaque clé déclare son type et ses bornes, chaque changement est une nouvelle version horodatée et attribuée (qui, quand), la valeur courante est la dernière version — l'historique est immuable. Le journal du wallet reste immuable : c'est un **invariant**, pas un paramètre — aucun réglage ne peut le désactiver. Amendement constitutionnel afférent : Article XIV (paramètres versionnés contre invariants non désactivables).
+
+### D-053 · 8 sept · Aucune fusion d'identités ; l'email vérifié devient unique et preuve de récupération
+Arbitrage P3 : aucune réconciliation n'est construite entre `users` (legacy) et `customer_accounts` — les identités legacy sont des artefacts de test qui meurent avec la slice comptes du personnel / checkout. L'**email vérifié** devient **unique par compte** et sert de **preuve de récupération** (amende l'hypothèse « email non unique » de la spec 001 ; FR-038 et FR-040 amendés). L'email non vérifié reste non identifiant. La vérification d'email suppose l'envoi transactionnel — inexistant à ce jour : la contrainte d'unicité se pose dès maintenant (index partiel sur email vérifié), le parcours de preuve s'active quand l'email transactionnel existera.
+
+### D-052 · 8 sept · Inscription legacy et guest checkout fermés côté serveur ; /login legacy en sursis daté
+Arbitrage P1 : `/api/auth/register` et le guest checkout sont désactivés côté serveur (410) ; plus aucun chemin public ne crée de compte email+mot de passe. `/login` legacy survit **jusqu'à la slice comptes du personnel**, sans MFA — **trou connu, borné et daté** : il ne protège que le back-office de test d'un produit sans clients réels, et meurt avec le modèle personnel (échéance déjà écrite au plan 001, Complexity Tracking).
+
+### D-033 · 8 sept · Copie produit bilingue FR et EN
+Le produit sert sa copie en français **et** en anglais. Amendement constitutionnel afférent : Article X.
+
+### D-030 · 8 sept · Slice 001 web-only
+`apps/mobile` est un squelette-vitrine (Expo 51, trois écrans lecture seule, ni auth ni stockage sécurisé, non publié). Les tâches « mirror mobile » sont retirées du découpage 001. Les garanties multi-surfaces tiennent par construction — contrats d'API partagés et `@fitnest/core` agnostiques de la surface (Article XIV), FR-003 par le modèle Supabase Auth. La parité mobile est une slice dédiée ; US3/SC-006 se vérifie web ↔ web d'ici là.
+
+*Note de numérotation : les identifiants D-028 à D-062 non listés ici correspondent à des décisions fondateur arbitrées hors journal ; ils seront consignés à leur transmission.*
+
+### D-027 · 30 août · Route deliveries : la fiction est retirée — le repli silencieux est le motif de défaillance à traquer
+Une route de production (`api/subscriptions/[id]/deliveries`) servait des données fictives à deux surfaces client vivantes (`dashboard/components/active-subscription.tsx`, `dashboard/my-meal-plans/[id]/page.tsx`), masquée par un try/catch silencieux : la branche « données réelles » lisait `orders.selected_days` et `orders.selected_weeks`, colonnes inexistantes en production, échouait à chaque appel, et la branche mock fabriquait un calendrier complet — dates, statuts « delivered », prochaine livraison, éligibilité de pause — dans 100 % des cas, sans qu'aucune erreur ne remonte.
+
+Décision fondateur : suppression de toute la branche mock et du try/catch silencieux. La route renvoie une liste vide tant que les livraisons réelles n'existent pas (slice 7). Les deux surfaces affichent un état vide honnête. La branche « données réelles » n'est pas réparée : elle était morte aussi.
+
+**Même famille que le `continue` de create-unified et le `duration_weeks = 4` par défaut : un repli silencieux préféré à une erreur visible. C'est le motif de défaillance à traquer dans tout le code existant.**
+
+### D-026 · 30 août · Dépendance inter-slice : colonnes `subscriptions` écrites par la slice pricing
+La slice 001 propose trois colonnes nullables sur `subscriptions` : `customer_account_id`, `ended_at`, `price_guaranteed_until`. Leur écriture incombe à la slice pricing/checkout et doit figurer comme **exigences explicites dans sa spec** — pas seulement comme mention dans le plan 001 (contrats d'écriture, `specs/001-identity-account-admission/contracts/api.md`).
+
+`ended_at` en particulier : sans lui, FR-032 (reconstruction des cohortes — encore actifs à 4/8/12 semaines) est **inapplicable** et la courbe de rétention est perdue (Article IX). `price_guaranteed_until` porte FR-033–034 (gel jamais recalculé, remise d'affiliation incluse par D-025b). `customer_account_id` relie les abonnements au nouveau modèle d'identité — la clé de cohorte `first_subscribed_at` en dépend.
+
+### D-025 · 30 août · Fitnest Pro = remise d'affiliation — pas de grille tarifaire parallèle
+Remplace la proposition précédente du fondateur sur Fitnest Pro. Les conditions négociées sont des **remises** appliquées automatiquement selon le compte connecté. `meal_type_prices` reste la source unique et universelle des prix, quelle que soit l'affiliation — c'est ce qui préserve l'Article IV.
+
+La notion générale est une **affiliation portée par le compte**, pas un mécanisme B2B : un partenariat accordant des conditions à ses membres relève du même modèle. Les menus spéciaux sont un besoin distinct, non couvert par une remise, non traité.
+
+À prévoir sans rien construire (porté dans le plan 001) :
+- **(a)** Le moteur de prix reçoit l'identité du demandeur en entrée dès sa première version — endpoint, aperçu debouncé, cache par configuration. Aujourd'hui elle n'influence rien ; sans elle, l'ajout traverse toute la chaîne plus tard.
+- **(b)** Le gel du prix sur l'abonnement inclut la remise appliquée, au même titre que le prix et le taux de TVA. Un collaborateur quittant son entreprise ne voit pas son prix changer en cours de cycle.
+- **(c)** Cumul : la remise d'affiliation s'applique au prix du plan ; cycle et coupon conservent leur chaîne. Pas de cumul entre affiliation et coupon.
+
+Aucune remise d'affiliation n'est construite. L'exigence est que l'ajouter reste une donnée, pas une refonte (Article XIV).
+
+### D-024 · 30 août · Troisième nom de plan inventé — le motif est confirmé
+« Protein Power Plan » trouvé en dur dans `api/subscriptions/[id]/deliveries/route.ts`, après « Keto Classic » et « Balanced Essentials » dans l'ancien seed. Confirmation du motif de l'Article II : les noms de plans en dur se multiplient partout où la liaison n'est pas faite par identifiant.
+
 ### D-023 · 29 août · Six migrations fantômes en production (16–18 juillet)
 La table d'historique de migrations de la production contient six entrées appliquées via CLI entre le 16 et le 18 juillet 2026 (`20260716210751` → `20260718225536`) dont aucun fichier n'a été archivé. Le schéma qu'elles ont produit n'est reconstituable que par introspection (`supabase db dump`, effectuée le 29 août). Les entrées sont marquées `reverted` dans l'historique pour permettre la baseline versionnée — opération de bookkeeping, aucun changement de schéma.
 **Raison :** c'est la justification historique de l'Article II — du SQL appliqué en production sans fichier versionné devient irrécouvrable dès que la session qui l'a produit disparaît.
@@ -138,8 +191,31 @@ Si oui, la consommation se fera par ancienneté et chaque lot portera sa date d'
 
 ---
 
+## Dette consignée — slice pricing/configuration
+
+Défauts constatés, arbitrés « consignés, aucune action », à traiter dans la slice pricing :
+
+- Routes `/api/admin/coupons` : interrogent une table inexistante en production, échouent en silence.
+- Moteur de prix parallèle `compose_components` / `compose_settings` / `custom_meals` (`surcharge_mad`, `base_price_mad`) — violation Article IV.
+- Frais de livraison en dur, dupliqués sur deux écrans checkout (`express ? 20 : 0`) — contredit D-008.
+- Durées de cycle en dur 1/2/4 semaines (`order-process.tsx`) — contredit D-006 (1/4/12).
+- Minimums de jours en dur 3/6/10, variables par durée — contredit D-009 (uniforme 5).
+- « Choisis au moins 2 repas » en dur — contredit D-010 (plancher en valeur).
+- `duration_weeks = 4` en repli silencieux (`create-unified:165`) — même famille que le `continue` qui avale l'échec de création d'abonnement : une valeur par défaut préférée à une erreur visible, le contraire de ce qu'on veut.
+- Code mort : `db-universal.ts`, `db-connection.ts`, `database-service.ts` (joint des colonnes inexistantes).
+- Route `api/subscriptions/[id]/deliveries` : sert des données fictives à des clients réels — décision fondateur en attente (rapport du 30 août).
+
+---
+
 ## Pistes futures — aucun développement
 
 ### Réseau social in-app (V2+)
 Discussions entre clients, conseils fitness et lifestyle, avis sur les repas et produits FitNest. Ouvert aux abonnés ET aux clients Express Shop.
 **Conséquence Article XIV, à respecter dès que la notation existera :** un avis est ATTRIBUÉ et DATÉ, jamais un simple compteur agrégé. Le compteur se recalcule, l'attribution est irrécupérable.
+
+
+## 2026-10-18 — Delivery baseline synchronization
+
+The founder authorized starting the complete Fitnest delivery plan. The supplied product journal through 2026-09-11 is integrated in [the product baseline](delivery/product-baseline.md). Historical repository D-023–027 and D-052/053 collide with that journal's numbering; they remain above unchanged and are referenced as REPO-D identifiers in the new delivery package. No new business arbitration is implied.
+
+[Security requirements](delivery/security-requirements.md) and the full [backlog](delivery/backlog.json) replace the missing-English-SEC-document blocker. Implementation evidence, constitution PR #5 integration, scoped clarifications and the explicit T013 migration gate remain separate. No migration or production deployment was performed by this synchronization.

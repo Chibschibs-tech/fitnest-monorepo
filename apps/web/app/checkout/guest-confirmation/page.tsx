@@ -1,5 +1,5 @@
-import { GuestOrderConfirmation } from "./guest-order-confirmation"
+import { redirect } from "next/navigation"
 
 export default function GuestConfirmationPage() {
-  return <GuestOrderConfirmation />
+  redirect("/checkout")
 }

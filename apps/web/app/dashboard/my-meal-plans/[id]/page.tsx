@@ -475,8 +475,8 @@ export default function SubscriptionManagementPage({ params }: { params: { id: s
             {!deliverySchedule || deliverySchedule.deliveries.length === 0 ? (
               <div className="text-center py-8">
                 <Package className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-lg font-medium">No deliveries found</h3>
-                <p className="mt-1 text-sm text-gray-500">We couldn't find any deliveries for this subscription.</p>
+                <h3 className="mt-2 text-lg font-medium">Aucune livraison planifiée</h3>
+                <p className="mt-1 text-sm text-gray-500">Votre calendrier de livraisons apparaîtra ici.</p>
               </div>
             ) : (
               <>

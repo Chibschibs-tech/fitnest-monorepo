@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "S001-SEC-B",
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "criterion": "S001-SEC-B/AC-01",
+  "status": "proposal",
+  "designDocument": "docs/delivery/adr-sec-b.md",
+  "obligations": [
+    {
+      "id": "actual_inventory",
+      "sourceRefs": [
+        "S001-SEC-B"
+      ],
+      "designSection": "## Actual inventory and provenance",
+      "verification": [
+        "Pinned snapshot digest and capture identity checked by independent sec-b-independent.mjs; captured metadata coherence checked by sec-b-contract.test.mjs."
+      ]
+    },
+    {
+      "id": "schema_privileges",
+      "sourceRefs": [
+        "SEC-29"
+      ],
+      "designSection": "## Schema and privilege boundaries",
+      "verification": [
+        "Independent snapshot role/table/sequence/default findings; runtime-role-config.json distinguishes configured role inference from live and migration observations."
+      ]
+    },
+    {
+      "id": "channel_inventory",
+      "sourceRefs": [
+        "SEC-06",
+        "SEC-29"
+      ],
+      "designSection": "## Channel inventory and exposure",
+      "verification": [
+        "Compare route map blob SHAs against exact bound GitHub source; independently review root Data API configuration evidence and snapshot Storage/Realtime/public-RPC facts."
+      ]
+    },
+    {
+      "id": "owner_session_risk_boundary",
+      "sourceRefs": [
+        "SEC-06",
+        "SEC-29"
+      ],
+      "designSection": "## Owner session and risk boundary",
+      "verification": [
+        "Inventory fixtures flag grants, BYPASSRLS, views and routines even when public tables are closed; ADR assigns real-role proof to T006 and session binding to T010."
+      ]
+    },
+    {
+      "id": "baseline_migration",
+      "sourceRefs": [
+        "D-052",
+        "D-057"
+      ],
+      "designSection": "## Baseline and migration reconciliation",
+      "verification": [
+        "baseline-migration-review-20261026.json lists exact source blobs, observed history and nullable discrepancy; contract fixtures compare baseline table-name set with live snapshot."
+      ]
+    },
+    {
+      "id": "secret_audit_boundary",
+      "sourceRefs": [
+        "D-059",
+        "SEC-30"
+      ],
+      "designSection": "## Secret and audit boundary",
+      "verification": [
+        "Read-only evidence metadata and explicit no-secret retention; export paths and client/source blob pins in channel inventory permit independent review without credentials."
+      ]
+    },
+    {
+      "id": "unresolved_choices",
+      "sourceRefs": [
+        "D-053"
+      ],
+      "designSection": "## Unresolved choices and closure owners",
+      "verification": [
+        "Contract factual gaps distinguish observed configuration, partial identity/interface evidence and downstream proofs; all runtimeAcceptance/acceptance_claimed markers remain false."
+      ]
+    },
+    {
+      "id": "no_production_writes",
+      "sourceRefs": [
+        "S001-SEC-B"
+      ],
+      "designSection": "## No production writes and repeatability",
+      "verification": [
+        "Exact docs/tests output allowlist and metadata-only collector regression; documented assembly procedure; independent patch-scope and commit binding required by Ekwip."
+      ]
+    }
+  ],
+  "unresolvedGateIds": [
+    "G-CONSTITUTION",
+    "G-T013"
+  ],
+  "runtimeAcceptance": false
+}

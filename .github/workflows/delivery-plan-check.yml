@@ -1,0 +1,27 @@
+name: Delivery plan consistency
+
+on:
+  # Required acceptance check: run for every PR, including contracts-only B01-C.
+  pull_request:
+  push:
+    branches: [fitnest-v1-baseline-alignment, fitnest-foundation-runtime]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: delivery-plan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Validate coverage and dependency gates
+        run: python3 tooling/delivery-plan/validate.py --summary
+      - name: Test unsafe scheduling cases
+        run: python3 -m unittest discover -s tooling/delivery-plan -p 'test_*.py'
