@@ -248,6 +248,11 @@ export function createFoundation(deps) {
         await setTenant(client, facts.tenantId);
 
         if (idempotencyKey) {
+          // Serialize the complete key binding before its first read, including
+          // the absent-row case. A settings-head lock alone is too late.
+          await client.query('SELECT pg_advisory_xact_lock(hashtext($1))', [
+            JSON.stringify(['settings.idempotency', facts.tenantId, idempotencyKey]),
+          ]);
           const row = await queryOne(
             client,
             `SELECT tenant_id, actor_id, operation, key, payload_hash, state, outcome
@@ -336,9 +341,7 @@ export function createFoundation(deps) {
           await client.query(
             `INSERT INTO fitnest_foundation.idempotency
                (key, tenant_id, actor_id, operation, payload_hash, state, outcome)
-             VALUES ($1, $2, $3, $4, $5, 'complete', $6::jsonb)
-             ON CONFLICT (tenant_id, key)
-             DO UPDATE SET state = 'complete', outcome = EXCLUDED.outcome`,
+             VALUES ($1, $2, $3, $4, $5, 'complete', $6::jsonb)`,
             [
               idempotencyKey,
               facts.tenantId,
@@ -712,6 +715,14 @@ export function createFoundation(deps) {
           [eventId, leaseId, workerId, anchor],
         );
         if (!row) return { action: 'denied' };
+        if (row.state === 'delivered') {
+          const receipt = outcome === 'delivered' && await queryOne(client,
+            `SELECT event_id FROM fitnest_foundation.consumer_effects
+             WHERE event_id = $1 AND recipient = $2 AND channel = $3`,
+            [eventId, recipient, channel]);
+          return { action: receipt ? 'replay' : 'denied' };
+        }
+        if (!['pending', 'failed'].includes(row.state)) return { action: 'denied' };
 
         if (outcome === 'ambiguous') {
           await client.query(
@@ -790,6 +801,14 @@ export function createFoundation(deps) {
           [eventId, leaseId, workerId],
         );
         if (!row) return { action: 'denied' };
+        if (row.state === 'delivered') {
+          const receipt = providerState === 'delivered' && await queryOne(client,
+            `SELECT event_id FROM fitnest_foundation.consumer_effects
+             WHERE event_id = $1 AND recipient = $2 AND channel = $3`,
+            [eventId, recipient, channel]);
+          return { action: receipt ? 'replay' : 'denied' };
+        }
+        if (row.state !== 'ambiguous') return { action: 'denied' };
 
         if (providerState === 'delivered') {
           const existing = await queryOne(
