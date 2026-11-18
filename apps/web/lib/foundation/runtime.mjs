@@ -715,14 +715,10 @@ export function createFoundation(deps) {
           [eventId, leaseId, workerId, anchor],
         );
         if (!row) return { action: 'denied' };
-        if (row.state === 'delivered') {
-          const receipt = outcome === 'delivered' && await queryOne(client,
-            `SELECT event_id FROM fitnest_foundation.consumer_effects
-             WHERE event_id = $1 AND recipient = $2 AND channel = $3`,
-            [eventId, recipient, channel]);
-          return { action: receipt ? 'replay' : 'denied' };
-        }
-        if (!['pending', 'failed'].includes(row.state)) return { action: 'denied' };
+        // The active lease may settle multiple distinct destinations. A completed
+        // outbox row cannot accept a failure or reopen for another worker.
+        if (row.state === 'delivered' && outcome !== 'delivered') return { action: 'denied' };
+        if (!['pending', 'failed', 'delivered'].includes(row.state)) return { action: 'denied' };
 
         if (outcome === 'ambiguous') {
           await client.query(
