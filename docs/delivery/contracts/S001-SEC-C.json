@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "S001-SEC-C",
+  "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+  "status": "proposal",
+  "criterion": "Supported bounded session and revocation proof; record unresolved choices and no production writes.",
+  "authority": {
+    "taskAccepted": false,
+    "productionWritesAuthorized": false,
+    "gatesApproved": false
+  },
+  "design": {
+    "provider": "Supabase Auth",
+    "revocation": "server-owned application session_id record",
+    "tokenAloneSufficient": false,
+    "liveProviderSessionRequired": true,
+    "serverLifetimeEnforced": true,
+    "riskClearanceRequired": true,
+    "ownerRequired": true,
+    "directPathsDefaultDeny": true,
+    "singleAndBulkSameIndependentProof": true,
+    "proofRequiresCompletedChallenge": true,
+    "proofBoundToAccountActionOperation": true,
+    "atomicConsumptionRequired": true,
+    "providerAuthTableWrites": false
+  },
+  "unresolvedGates": [
+    "G-SESSION",
+    "G-RECOVERY",
+    "G-CONSTITUTION",
+    "G-T013"
+  ],
+  "allowedPaths": [
+    "docs/delivery/adr-sec-c.md",
+    "docs/delivery/contracts/S001-SEC-C.json",
+    "tests/security/session-reference.mjs",
+    "tests/security/session-reference.test.mjs",
+    "docs/delivery/contracts/S001-SEC-C-obligations.json"
+  ],
+  "verification": {
+    "command": "node --test tests/security/session-reference.test.mjs",
+    "referenceTests": 51,
+    "referenceModelOnly": true,
+    "providerBehaviorProven": false,
+    "actualDirectRoleDenialsProven": false,
+    "distributedAtomicityProven": false,
+    "independentReviewRequired": true,
+    "protectedCheckRegistrationRequired": true,
+    "fullAcceptanceClaimed": false
+  },
+  "runtimeQualification": [
+    "pinned disposable Auth and DB versions",
+    "two accounts and devices owner isolation",
+    "old and refreshed JWT after targeted and bulk revocation",
+    "idle and absolute boundary without refresh",
+    "rotation, reuse interval, active-parent exception, non-parent replay",
+    "actual anon/authenticated/runtime roles over every inventoried direct path",
+    "concurrent single-use proof consumption and atomic audit/outbox",
+    "socket/download/cache invalidation",
+    "lookup failure and secret-free logs"
+  ],
+  "coordination": {
+    "blockedWorkflow": "https://github.com/chihabJekwip/ekwip-delivery-platform/actions/runs/40243859069",
+    "ekwipHandoff": "https://github.com/chihabJekwip/ekwip-delivery-platform/pull/45",
+    "productJournal": "https://github.com/Chibschibs-tech/fitnest-monorepo/pull/135"
+  },
+  "acceptanceScope": {
+    "kind": "contract",
+    "outputs": [
+      "ADR",
+      "isolated acceptance fixtures"
+    ],
+    "acceptanceState": "awaiting_independent_review_and_registered_receipt",
+    "runtimeCertificationIncluded": false,
+    "sourceTask": "docs/delivery/backlog.json#S001-SEC-C",
+    "sourceTaskCriterionVerbatim": "Supported bounded session and revocation proof; record unresolved choices and no production writes.",
+    "designAcceptanceDoesNotApprove": [
+      "G-SESSION",
+      "G-RECOVERY",
+      "G-CONSTITUTION",
+      "G-T013"
+    ],
+    "requiredEvidence": [
+      "exact PR/head/base SHA",
+      "independent source-to-obligation review",
+      "protected CI result for all SEC-C fixture assertions at exact SHA",
+      "no production writes scope review",
+      "integration and immutable contract acceptance receipt"
+    ],
+    "runtimeOwnerTasks": [
+      "S001-T006",
+      "S001-T010",
+      "S001-T029",
+      "S001-T031",
+      "S001-T032"
+    ],
+    "receiptMustNotClaim": "runtime session/auth or production acceptance"
+  },
+  "sourceRefs": [
+    {
+      "path": "docs/delivery/backlog.json",
+      "anchor": "S001-SEC-C",
+      "sha": "2854038dfe653289c326dd33650a311918f630ad"
+    },
+    {
+      "path": "docs/delivery/security-requirements.md",
+      "anchor": "SEC-03, SEC-04, SEC-29"
+    },
+    {
+      "path": "docs/delivery/clarifications.md",
+      "anchor": "G-SESSION, G-RECOVERY"
+    },
+    {
+      "path": "specs/001-identity-account-admission/tasks.md",
+      "anchor": "T010,T029,T031,T032"
+    },
+    {
+      "path": "docs/delivery/governance.md",
+      "anchor": "Evidence and execution"
+    },
+    {
+      "path": "tests/security/identity-reference.mjs",
+      "anchor": "canUnlockHistory, CRITERION.risk",
+      "acceptedCommit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12"
+    }
+  ],
+  "designObligations": [
+    {
+      "id": "SEC-C-01",
+      "sourceRequirement": "SEC-03/29",
+      "requirement": "Verified token + matching live provider/application session; missing or unavailable evidence denies.",
+      "fixtureEvidence": "invalid token; missing provider; unavailable provider; provider owner mismatch; provider session mismatch",
+      "runtimeFollowup": "S001-T010"
+    },
+    {
+      "id": "SEC-C-02",
+      "sourceRequirement": "SEC-03; G-SESSION",
+      "requirement": "Finite server-time access/idle/absolute bounds; refresh cannot reset original absolute lifetime.",
+      "fixtureEvidence": "expired JWT; idle exact boundary; absolute boundary; SEC-C-02 scenario",
+      "runtimeFollowup": "S001-T010,T032"
+    },
+    {
+      "id": "SEC-C-03",
+      "sourceRequirement": "SEC-29",
+      "requirement": "Owner-only listing/projection and no cross-account session ID authority.",
+      "fixtureEvidence": "device list owner scope and projection never exposes token; SEC-C-03 scenario",
+      "runtimeFollowup": "S001-T010,T031"
+    },
+    {
+      "id": "SEC-C-04",
+      "sourceRequirement": "SEC-03/04",
+      "requirement": "Targeted app revocation denies old and refreshed JWT while preserving unrelated devices; no unsupported provider mutation.",
+      "fixtureEvidence": "SEC-C-04 scenario; old and refreshed JWT cannot reopen application revoked session",
+      "runtimeFollowup": "S001-T029,T031"
+    },
+    {
+      "id": "SEC-C-05",
+      "sourceRequirement": "SEC-04; accepted SEC-A canUnlockHistory",
+      "requirement": "Single/bulk require completed fresh account/action/operation-bound one-use independent proof; email predates risk.",
+      "fixtureEvidence": "revoke rejects*; bulk cannot bypass proof; SEC-C-05 scenario",
+      "runtimeFollowup": "S001-T029,T031"
+    },
+    {
+      "id": "SEC-C-06",
+      "sourceRequirement": "SEC-03",
+      "requirement": "Document both provider reuse exceptions without assuming every reuse fails; accepted refresh rechecks authorization, rejected replay closes app access.",
+      "fixtureEvidence": "refresh exceptions only request full authorization recheck; SEC-C-06 scenarios",
+      "runtimeFollowup": "S001-T029,T032"
+    },
+    {
+      "id": "SEC-C-07",
+      "sourceRequirement": "SEC-29",
+      "requirement": "All direct channels remain denied until actual exposure predicates are verified.",
+      "fixtureEvidence": "direct path denied:*; SEC-C-04 scenario",
+      "runtimeFollowup": "S001-T006,T010"
+    },
+    {
+      "id": "SEC-C-08",
+      "sourceRequirement": "SEC-C task criterion; G-SESSION/G-RECOVERY",
+      "requirement": "Unresolved choices recorded, no invented production defaults or writes.",
+      "fixtureEvidence": "live matching owner passes; no production policy defaults; ADR Unresolved decisions and acceptance split",
+      "runtimeFollowup": "S001-T013,T032"
+    }
+  ],
+  "profileHandoff": {
+    "taskKey": "S001-SEC-C",
+    "taskKind": "contract",
+    "sourceSha": "2854038dfe653289c326dd33650a311918f630ad",
+    "allowedPaths": [
+      "docs/delivery/adr-sec-c.md",
+      "docs/delivery/contracts/S001-SEC-C.json",
+      "tests/security/session-reference.mjs",
+      "tests/security/session-reference.test.mjs",
+      "docs/delivery/contracts/S001-SEC-C-obligations.json"
+    ],
+    "testCommand": "node --test tests/security/session-reference.test.mjs",
+    "reviewRequirements": [
+      "review every designObligation against source references",
+      "pin reviewed fixture and model blobs as independent protected inputs",
+      "confirm changed files exclude SEC-A and runtime code"
+    ],
+    "blockedExecutionAction": "reconcile existing failed dispatch before any new dispatch; Work Ekwip owns this action",
+    "automaticallyRegisterPolicy": false
+  },
+  "supportCI": {
+    "path": ".github/workflows/sec-c-reference.yml",
+    "includedInTaskOutputs": false,
+    "includedInExecutorAllowedFiles": false,
+    "purpose": "separately reviewed exact-commit supporting CI"
+  }
+}

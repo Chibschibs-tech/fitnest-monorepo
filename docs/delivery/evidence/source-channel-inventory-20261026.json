@@ -1,0 +1,2019 @@
+{
+  "schemaVersion": 1,
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "sourceCommit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12",
+  "deploymentBinding": "reviewed source only; currently deployed SHA not asserted",
+  "method": "recursive GitHub contents listings (120 API directories) and complete content reads of 108 route.ts files at exact commit; lexical extraction, not semantic authorization test",
+  "apiTreeComplete": true,
+  "apiRouteCount": 108,
+  "routes": [
+    {
+      "path": "apps/web/app/api/admin/compose/components/[id]/route.ts",
+      "blobSha": "462aee253781253d3cea888aedd47512473cb570",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/compose/route.ts",
+      "blobSha": "f218329580596831f3117f518d42d6bf6ae9574b",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/compose/settings/[id]/route.ts",
+      "blobSha": "bc9866b304c553dfecea0bc77f70fbcead285810",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/content/hero/route.ts",
+      "blobSha": "aaa69640365a1c9b19e322135630c571b81b9104",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/coupons/route.ts",
+      "blobSha": "ca74b5445fed5471a75b57afb6761f1e4307f2a2",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/customers/[id]/notes/route.ts",
+      "blobSha": "42d43d04150dfe3d7eb6792f4badd840e77dfba6",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/customers/[id]/route.ts",
+      "blobSha": "929e01f3f5c5908eaf8ca25304464cb7903c192d",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/customers/[id]/status/route.ts",
+      "blobSha": "d2a7cef522428aa055f5d20f4353f02d0f153c02",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/customers/[id]/subscriptions/create/route.ts",
+      "blobSha": "a95044db630eae29423ba61711035b4493a8181d",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/customers/[id]/subscriptions/route.ts",
+      "blobSha": "e5063327c93f834df0c91602b7ac236d0a9a04cf",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/customers/route.ts",
+      "blobSha": "8f6f2f046eef3d67ec2c1f032c61608f51f10876",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/error-handler",
+        "@/lib/simple-auth",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/dashboard/route.ts",
+      "blobSha": "a99c32420d591c10f799b7c541faf072915dee10",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/deliveries/[id]/status/route.ts",
+      "blobSha": "e8e03962b0872017fbc1cd08abfa7b1333790e61",
+      "methods": [
+        "PATCH"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/deliveries/route.ts",
+      "blobSha": "45d3d3dd39e78d25a941be7f7b011f8cc1ec37b1",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/generate-deliveries/route.ts",
+      "blobSha": "d7de92638b9bb99dba97b2c7e34ebebe0541a3e8",
+      "methods": [
+        "POST",
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "@/lib/delivery-service"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/get-pending-deliveries/route.ts",
+      "blobSha": "a4d21bebe02725dde94eda1f716ca5e843b6adae",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/mark-delivery-delivered/route.ts",
+      "blobSha": "a2b1dc2abc44cf818ce2b49125c9c7e32c15846f",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/meal-plans/id/items/itemid/route.ts",
+      "blobSha": "34024cba9e79a9099a1af453e882b932dd2fb54e",
+      "methods": [
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/meal-plans/id/items/route.ts",
+      "blobSha": "6b15f3e3d658a1558f59d8c9f805b3d6ecdb36c4",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/meal-plans/id/route.ts",
+      "blobSha": "36037bb431f2a0b276a645c69549c84329437c15",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/meal-plans/route.ts",
+      "blobSha": "0189cd52d9aaf06ee9994a977df3ed599b75730c",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/meals/id/route.ts",
+      "blobSha": "963fcac0bbe395428d43887c632873a7071b6a99",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/meals/route.ts",
+      "blobSha": "b377f491af941a5e8dfa34e86abd1042fb0c7476",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/mp-categories/[id]/route.ts",
+      "blobSha": "526e6e9fa80a4b566f01170d72cb7e6e864da413",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/mp-categories/route.ts",
+      "blobSha": "815f1853252fe9b5e884b640af0d850c8624ab97",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/orders/[id]/route.ts",
+      "blobSha": "a40c3360b0b2d05b4d3068cb997f53469ef9e40a",
+      "methods": [
+        "GET",
+        "PUT"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/orders/[id]/status/route.ts",
+      "blobSha": "4a041630d3b9290caf102060a8516d988f9598fe",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/orders/all/route.ts",
+      "blobSha": "4738742bcc24a0b9eb5efa5dd7705ef2f33512e4",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/orders/route.ts",
+      "blobSha": "cdfb86bc23ccaddc4134acf4cb713e78926e9ac2",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/orders/update-status/route.ts",
+      "blobSha": "47897e298755a9bde602178f45fc4a14c75bad7a",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/calculate/route.ts",
+      "blobSha": "246f0e30f45987fc7ed566abbf7e0eb030ca1cdd",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/error-handler",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/data/route.ts",
+      "blobSha": "500850fa41cc7ce236c5ea60dc83fb1ad91bfa98",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "@/lib/db",
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/discount-rules/[id]/route.ts",
+      "blobSha": "d776be43d64709274db7a15b1ebf878d6d36b0b1",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "@/lib/db",
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/discount-rules/route.ts",
+      "blobSha": "af110299d2e1836970671bc203c68956b5708f61",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "@/lib/db",
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/meal-prices/[id]/route.ts",
+      "blobSha": "dbe7c6487c72684e58df2e458c134210ad213261",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "@/lib/db",
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/meal-prices/route.ts",
+      "blobSha": "e430395f4e6d95f7f5a5e49761c5adfd5cdcc642",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "@/lib/db",
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/meal-types/route.ts",
+      "blobSha": "ea28d173a7c6973c05c146f12d3eed076e318267",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/pricing/route.ts",
+      "blobSha": "c4225cad7fff699794ffa2052547f87363aa83c1",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "@/lib/db",
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/accessories/[id]/route.ts",
+      "blobSha": "8ff04a7016c897f19bdb0f909afcb9dad80d75cc",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/accessories/bulk/route.ts",
+      "blobSha": "fd5eb22ec941eccc7d1dcdc77c617b67bb96f31d",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/accessories/export/route.ts",
+      "blobSha": "3bcb01569edd750266d33261fa5d6a01a3f15166",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": true,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/accessories/route.ts",
+      "blobSha": "406a6107455b33cdea459a8abf9050542ee002f7",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/express-shop/[id]/route.ts",
+      "blobSha": "d4c60f1b29f5db8909d754a541a172374907b42b",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/express-shop/bulk/route.ts",
+      "blobSha": "c352591752bca132e9326c17aa9e6a91b42781a3",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/express-shop/export/route.ts",
+      "blobSha": "057f7f3b4b2353321d7a75a89cb448f02cf3ec1c",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": true,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/express-shop/route.ts",
+      "blobSha": "823494eb2dde2e4396336f4935cdeaa920fd03af",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meal-plans/[id]/route.ts",
+      "blobSha": "f6ef5b6dc19262d1b25e26c33e6d13e4fd801695",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler",
+        "@/lib/plan-pricing"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meal-plans/route.ts",
+      "blobSha": "7f71e916b6e62cc312dd9f5c94e626f5df23697a",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler",
+        "@/lib/plan-pricing"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meals/[id]/route.ts",
+      "blobSha": "3940c27ead544ebdb626b4e4f7991ef4937f3748",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meals/[id]/status/route.ts",
+      "blobSha": "6393ef2ffbf50124d9d800965170a52f8f836af4",
+      "methods": [
+        "PATCH"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meals/bulk/route.ts",
+      "blobSha": "f2ef8dae44bbd3b283591be42c73d6e765e4df01",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meals/export/route.ts",
+      "blobSha": "b2674602c591ea200c3f23bf6da8a0204d2f6566",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": true,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/meals/route.ts",
+      "blobSha": "54fffb07d7f6d0e3e767001257f063ca9c98c67d",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/snacks/[id]/route.ts",
+      "blobSha": "d49dddd75200757fb632497bc233e56493cc771c",
+      "methods": [
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/snacks/bulk/route.ts",
+      "blobSha": "90578f6b7494d775b96cafd682163abe5e45a788",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/snacks/export/route.ts",
+      "blobSha": "a7af1d20e7d8ba0a0410b20dd3ceec8a1c60f193",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": true,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/products/snacks/route.ts",
+      "blobSha": "af8dc47b7eaaf80c38785a44a8d9a878f7fb2f53",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/subscription-plans/[id]/route.ts",
+      "blobSha": "0762077057cb067b03df49d6bac70cf98ac50cf2",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/subscription-plans/route.ts",
+      "blobSha": "79dade9d8e3eb4864b48f5c44fd379b445f28f91",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/subscriptions/[id]/status/route.ts",
+      "blobSha": "027f1706c21e737f837b90f19f37a7c7e03cb7bf",
+      "methods": [
+        "PUT"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/subscriptions/active/route.ts",
+      "blobSha": "463152d767ec855ea953f84b75e988aa133ba04b",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/subscriptions/paused/route.ts",
+      "blobSha": "d4399578183364dcb688945aeebb2edb68ab337a",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/subscriptions/route.ts",
+      "blobSha": "1b1548901639ecaf6f8e975ae94b302f4632073d",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/waitlist/export/route.ts",
+      "blobSha": "6b8221133a8e1cd8dfada9514496fe4d538512e6",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "next/headers"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": true,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/admin/waitlist/route.ts",
+      "blobSha": "c55f885426635b3f26f86a39b327e9a9048d0bad",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/simple-auth",
+        "@/lib/error-handler"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/auth/[...nextauth]/route.ts",
+      "blobSha": "51346221aab0a70f42b5b96cbcb16a445148ea07",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [],
+      "authIdentifiers": [
+        "authOptions"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/auth/login/route.ts",
+      "blobSha": "c2cfb9bbadf05b42ac07bdfaf5cc24b7bee5a6a5",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/auth/logout/route.ts",
+      "blobSha": "7bac4089eb2c4a86a686b687547d2984a2ea74ee",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/auth/register/route.ts",
+      "blobSha": "2a3e3d8fbc21ddc3ce21c4118af2b0ac7b2bf03e",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": true,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/auth/session/route.ts",
+      "blobSha": "7ae6892c0849ee4a1e4b3df989ce92dbbbf50091",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/auth/signout/route.ts",
+      "blobSha": "906bf1338720a1eb9546d48799845778f4f7cab2",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/calculate-price/route.ts",
+      "blobSha": "e1573155d7c8c9282462cf35fac2b64394500de8",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/cart/add/route.ts",
+      "blobSha": "3dc60ffe6f28612c2eace9fd32f3ee5e18c59b17",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db-utils"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/cart/clear/route.ts",
+      "blobSha": "6f963874cc9511de007a3366a674f5a7da0b86bd",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/cart/count/route.ts",
+      "blobSha": "e95729a05afe3b8ecfd68b0f2a684a1a31533f6d",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "next/headers"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/cart/remove/route.ts",
+      "blobSha": "24e9fb8281ab68d9e81ee4da9aae6fe344b0ebc5",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db-utils"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/cart/route.ts",
+      "blobSha": "933faf66060c277d4bcd23d3f0f8194babc10430",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "next/headers",
+        "uuid",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/cart/update/route.ts",
+      "blobSha": "650253969703c50717b86e8c72431453b59ff74f",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db-utils"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/checkout/route.ts",
+      "blobSha": "95313f6e245b8d821661eba25d38b99e18d15c29",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/error-handler",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/company-leads/route.ts",
+      "blobSha": "b5b03b35687db75d1b91804b72f4690bdf2e4b42",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/compose/meals/route.ts",
+      "blobSha": "051dc77c5b9d2e73d02de927dea62bee1e0ca2c6",
+      "methods": [
+        "GET",
+        "POST",
+        "PATCH"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "uuid",
+        "@/lib/db",
+        "@/lib/compose-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/compose/price/route.ts",
+      "blobSha": "fe86fd5220512d50373b545f9b3455ad09a5dd2a",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/compose-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/compose/route.ts",
+      "blobSha": "886cad020f69d18b93060e865b51628a935fa1cd",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/guest-orders/route.ts",
+      "blobSha": "1c5a985a88873878653007b3ae0e51f3b11c37e9",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": true,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/health/route.ts",
+      "blobSha": "80a8006b33c84e4ac209920028c06fd7726ada63",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/meal-plans/[id]/route.ts",
+      "blobSha": "92651a6dbee38e0cee09cb17422ec31dc38abf1c",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/plan-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/meal-plans/route.ts",
+      "blobSha": "cbfa851a382ae7298be10e8d8abbd439cf22282f",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/meal-preferences/route.ts",
+      "blobSha": "4c519acfa1fc036fab80ccd8769542fae6e83a93",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/meals/route.ts",
+      "blobSha": "ff683e5f3c7f8236bb32f6f05931bdca0c28fdf0",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/notification-preferences/route.ts",
+      "blobSha": "5510641aa1e8d211a9f8b4fb59673cec60c5ef5c",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "imports": [
+        "next/server",
+        "next-auth/next",
+        "@/lib/db",
+        "drizzle-orm"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/notifications/route.ts",
+      "blobSha": "820bb3052ca51f8e02d0cbf89288c64f6a3f2990",
+      "methods": [
+        "GET",
+        "POST",
+        "PATCH"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/nutrition-lookup/route.ts",
+      "blobSha": "c920f5e8bebaa05d1aecddf25eb4bcab36db91cb",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/orders/[id]/route.ts",
+      "blobSha": "9f6270aa1f37b241da43f1c6c6f7dfe705cdc437",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/orders/create-unified/route.ts",
+      "blobSha": "b06f007a3cef78092c7762ba422eee20a222049f",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/email-utils",
+        "next/headers",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/orders/create/route.ts",
+      "blobSha": "f98a04d819762782f9d6c7cd278aa12b4c27819e",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/email-utils"
+      ],
+      "authIdentifiers": [
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/orders/route.ts",
+      "blobSha": "0e3cd2bd74b4ddf117493bd2e54d59e3e05597f4",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/plan-entry-prices/route.ts",
+      "blobSha": "75b183c1159ca49539f64b32f552ab062ed93f73",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/plan-pricing"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/products/[id]/route.ts",
+      "blobSha": "bd70d0be395589eb5d32bf2a71ca3fa9096a430d",
+      "methods": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/products/route.ts",
+      "blobSha": "afe27381ce457587696873ddc4bbe6701abd314e",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/subscriptions/[id]/deliveries/route.ts",
+      "blobSha": "892debb0b80bef73cbb7cbd0666311bff05f9ee3",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/subscriptions/[id]/pause/route.ts",
+      "blobSha": "4581307d2d21842c104fca5c0c0273f338fc0183",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/subscriptions/[id]/resume/route.ts",
+      "blobSha": "1cfd3855a5c027ec3a43b05d1ea1b4de933bd9ab",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/subscriptions/create/route.ts",
+      "blobSha": "800e6b89c72c07b4a8fb75d61b9f455fb3f92f63",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@/lib/db",
+        "@/lib/subscription-pricing"
+      ],
+      "authIdentifiers": [
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/upload/route.ts",
+      "blobSha": "64afada29a7b4e901fd56f18e00bdc5334a96bf7",
+      "methods": [
+        "POST"
+      ],
+      "imports": [
+        "@vercel/blob",
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/user/dashboard/route.ts",
+      "blobSha": "431651aaff8ed502443e67a7fd4dcdd71233527a",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/user/profile/route.ts",
+      "blobSha": "c30e5312aaba7c27445e18c3664f3dc10dbfd7f4",
+      "methods": [
+        "GET",
+        "PATCH"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db",
+        "@/lib/auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/user/subscriptions/route.ts",
+      "blobSha": "1776b6153594e9885516e2b797aecc7e1c70ff6b",
+      "methods": [
+        "GET"
+      ],
+      "imports": [
+        "next/server",
+        "next/headers",
+        "@/lib/simple-auth",
+        "@/lib/db"
+      ],
+      "authIdentifiers": [
+        "session-id",
+        "user_id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    },
+    {
+      "path": "apps/web/app/api/waitlist-hero-image/route.ts",
+      "blobSha": "75be6646a2856316d1540588f174cec1d791ec70",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "imports": [
+        "next/server",
+        "@vercel/blob",
+        "next/headers",
+        "@/lib/simple-auth"
+      ],
+      "authIdentifiers": [
+        "session-id"
+      ],
+      "returns410": false,
+      "exportMarkers": false,
+      "scanScope": "lexical signals only; not an authorization verdict"
+    }
+  ],
+  "channels": [
+    {
+      "channel": "application API",
+      "state": "source_enumerated",
+      "path": "apps/web/app/api",
+      "runtimeProof": false
+    },
+    {
+      "channel": "server actions",
+      "state": "unknown",
+      "reason": "Non-API source tree not exhaustively scanned; not claimed absent",
+      "runtimeProof": false
+    },
+    {
+      "channel": "exports",
+      "state": "source_enumerated_within_API",
+      "paths": [
+        "apps/web/app/api/admin/products/accessories/export/route.ts",
+        "apps/web/app/api/admin/products/express-shop/export/route.ts",
+        "apps/web/app/api/admin/products/meals/export/route.ts",
+        "apps/web/app/api/admin/products/snacks/export/route.ts",
+        "apps/web/app/api/admin/waitlist/export/route.ts"
+      ],
+      "runtimeProof": false
+    },
+    {
+      "channel": "RPC",
+      "state": "no_public_functions_in_database_snapshot",
+      "otherSchemas": "not exhaustively inspected",
+      "runtimeProof": false
+    },
+    {
+      "channel": "GraphQL",
+      "state": "graphql_public_configured_exposed",
+      "configurationEvidence": "data-api-settings-20261026.json",
+      "runtimeProof": false
+    },
+    {
+      "channel": "Storage",
+      "state": "zero_buckets_in_database_snapshot",
+      "runtimeProof": false
+    },
+    {
+      "channel": "Realtime",
+      "state": "zero_public_publication_membership_in_database_snapshot",
+      "runtimeProof": false
+    }
+  ],
+  "middleware": {
+    "path": "apps/web/middleware.ts",
+    "blobSha": "42c491b7b88511ffb34d6d63e227fa49f1ab0ed9",
+    "finding": "Cookie presence is not validity; handlers must validate DB session. Public prefix matching includes entire auth/compose/cart paths.",
+    "runtimeProof": false
+  },
+  "unresolved": [
+    "deployment SHA binding",
+    "non-API server actions and alternative export paths",
+    "semantic route authorization review and actual transport denial under T006/T010"
+  ],
+  "runtimeAcceptance": false
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "project": "fitnest-db",
+  "projectRef": "blboseqvdmpdrthipxdk",
+  "environment": "main / Production",
+  "observedAtApprox": "2026-10-26T19:24:00Z",
+  "timestampPrecision": "approximate minute supplied by root observer",
+  "observer": "Work FITNEST root",
+  "method": "authenticated Supabase dashboard read-only UI; no setting changed",
+  "sourceUrl": "https://supabase.com/dashboard/project/blboseqvdmpdrthipxdk/integrations/data_api/settings",
+  "dataApiInstalled": true,
+  "exposedSchemas": [
+    "public",
+    "graphql_public"
+  ],
+  "exposedSchemasDisplay": "2 of 2 schemas",
+  "tablesExposedDisplay": "0 of 24 tables",
+  "functionsDisplay": "No functions available",
+  "automaticallyExposeNewTables": true,
+  "extraSearchPath": [
+    "public",
+    "extensions"
+  ],
+  "maxRows": 1000,
+  "poolSize": "automatic",
+  "claims": [
+    "Deployed Data API configuration observed by root",
+    "Configuration only; no HTTP role or cross-account test"
+  ],
+  "doesNotProve": [
+    "actual application database role",
+    "HTTP authorization",
+    "GraphQL runtime reachability",
+    "Storage/Realtime revocation",
+    "full SEC-B acceptance"
+  ],
+  "runtimeAcceptance": false
+}

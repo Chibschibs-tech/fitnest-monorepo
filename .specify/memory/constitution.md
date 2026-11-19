@@ -1,4 +1,14 @@
 <!--
+Sync Impact Report — v4.4.0 (2026-10-24)
+Consolidates governance.md's five-article alignment from existing D-003/005/007/018,
+D-033/040/052/053/057/059/061/062/063 and related recorded invariants. Ports PR5's
+founder-arbitrated v4.3 text (blob 5863f764016f1cf123994ffe414e444591cc50b9).
+No new prices, session durations, provider, recovery evidence or production authority.
+All historical reports and amendment rows are retained. G-CONSTITUTION is not
+self-approved by this proposal; T013 and every other unresolved gate remain intact.
+-->
+
+<!--
 Sync Impact Report (v4.2.0)
 - Version change: 4.1.0 → 4.2.0 (MINOR: new Article XIV — Evolvability)
 - Added sections:
@@ -93,11 +103,25 @@ Previous report (v4.0.0):
     separately (see conversation report of 2026-08-29); nothing corrected.
 -->
 
+<!--
+Sync Impact Report — v4.3.0 (2026-09-08)
+Amended: Article VIII (the server creates the payment session; card details
+are entered on the processor's hosted surface, never on a FitNest surface);
+Article X (user-facing copy served in French AND English — D-033); Article XIV
+(versioned parameters vs non-disablable invariants — D-057).
+Bump: MINOR (4.2.0 → 4.3.0). No article removed or renumbered.
+Downstream: spec 001 already amended on branch 001-identity-account-admission
+(D-053/D-057/D-058/D-059); templates unaffected. Known code divergence:
+user-facing copy is currently FR-or-EN per page, bilingual serving becomes
+the standard going forward (Article XIII.5: code is the defect).
+-->
+
 # FitNest Constitution
 
-**Version:** 4.2.0
+**Version:** 4.4.0
 **Ratified:** 26 August 2026
-**Last Amended:** 30 August 2026
+**Last Amended:** 24 October 2026
+**Status:** Proposed consolidation of already recorded founder decisions; merge and gate evidence remain separate.
 **Scope:** The entire FitNest product — one repository, one database, two surfaces (`apps/web`, `apps/mobile`), shared business logic in `packages/core`.
 
 This document supersedes all previous versions. It replaces v3.0.0 in full.
@@ -148,23 +172,16 @@ Nothing is built that Calo does not have, unless the deviation is a recorded dec
 
 ## Article IV — Pricing Engine
 
-All prices stored and displayed are **VAT-inclusive (TTC)**. The pre-tax amount is derived, never the reverse.
+All stored and displayed commercial amounts are **VAT-inclusive (TTC) integer centimes**. Invoice net and tax are derived from the frozen total and applied VAT version, never calculated independently.
 
-```
-prix_jour     = Σ price(plan, meal_type)      -- per plan × meal-type cell
-prix_semaine  = prix_jour × days_per_week
-prix_plan     = prix_semaine × weeks(cycle) × (1 − cycle discount)
-total         = prix_plan + delivery_fee
-```
-
-- **All amounts are integer centimes.** No floating point anywhere in the pricing engine.
-- **VAT is decomposed at exactly one point, at the end:** `HT = round(total / 1.10)`, then `VAT = total − HT`. VAT is computed by **subtraction, never multiplication**, so the three invoice lines always reconcile to the displayed total.
-- The payment summary shows a **single TTC amount**. The HT / VAT / TTC breakdown appears only on the invoice.
-- The VAT rate is a configured value, and the rate applied is **frozen on each subscription** at the moment of sale.
-- Prices are differentiated **per (plan × meal type) cell**, not per plan globally.
-- A **daily basket floor in monetary value**, configured per plan. No composition constraint: three breakfasts or four snacks pass if the amount is sufficient.
-- **The client never computes an authoritative price.** Preview is a debounced server call, cached per configuration, with a skeleton while loading. A local number is never displayed as final.
-- The total sent to payment is recomputed and frozen server-side. Where preview and server disagree, the server wins and the interface updates before confirmation.
+- Price cells are identified by plan and meal-type IDs. Quantities contribute to the daily calculation; display labels never select a pricing rule (D-003/005).
+- The monthly cycle supplies the reference daily price. The weekly rule adds a configured flat daily premium; the quarterly rule applies a configured percentage discount. Cycle identities, durations and rule parameters are data, not branches keyed on plan/cycle names (D-006/007).
+- Delivery is charged on the weekly cycle and included from the monthly cycle, through configured cycle rules. Trial pricing remains explicit reference data; a trial never silently inherits recurring billing (D-008/014/062).
+- A configured monetary basket floor governs validity; no arbitrary meal-type combination replaces it (D-009/010).
+- The server calculates the preview using identity, configuration and rule versions. Preview is debounced and cached in that context; the client cannot select authoritative discounts or totals (D-018).
+- The server recomputes and freezes the accepted quote before payment. Applied prices, discount/cycle rules, delivery and VAT versions remain attributable to the sale.
+- The payment summary shows one TTC total. The invoice derives HT once with the agreed rounding contract and calculates VAT as `TTC - HT`, so all lines reconcile exactly. No floating-point commercial arithmetic.
+- The recorded VAT assumption is reference data, not a legal certification. The live MAD grid, rounding fixtures, eligibility and stacking rules remain subject to G-COMMERCIAL; this article does not fabricate them.
 
 ---
 
@@ -172,34 +189,25 @@ total         = prix_plan + delivery_fee
 
 **CUSTOMERS**
 
-- Phone number is the identity anchor, verified by one-time code at
-  signup. No password.
-- The one-time code VERIFIES the number. It is not the session
-  mechanism: a verified device holds a long-lived session and is not
-  re-challenged on every return. A new code is sent only when the
-  session is lost or the device changes.
-- One phone number is one account, shared across web and mobile.
-- Email is nullable at account creation, mandatory before payment. It
-  serves invoices and communication, never identification.
-- Biometric or device sign-in may be layered on as convenience.
+- A stable internal customer identity owns history, subscriptions and wallet entries. A phone number is a verified entry credential; changing or recovering it never transfers ownership merely because another party controls that number (D-053/063).
+- Phone OTP verifies the number; it is not the session mechanism. Customers have no password. Ordinary same-device returns use bounded sessions without another SMS.
+- Access tokens are short-lived. Refresh is rotating with replay detection; idle and absolute bounds and immediate server-side revocation are enforced. Exact lifetimes, device concurrency and risk thresholds require the G-SESSION ADR; unlimited sessions are not an acceptable fallback.
+- After inactivity or risk, phone OTP alone cannot unlock historical data. Require an independent previously verified email proof bound to the account and action. Unavailable validation denies access.
+- Email may be absent at initial claim, but is required and verified before payment and remains unique. A newly supplied email, delivery knowledge, a support assertion or the challenged factor alone does not establish ownership.
+- When independent factors are unavailable, follow audited assisted recovery under G-RECOVERY; do not silently unlock history, merge identities or invent an evidence threshold.
+- Number recovery is recorded and notified. Trial eligibility retains phone-number history. Legacy identities are not merged into customer_accounts or admitted through an alternate public registration route.
+- Device or biometric convenience never bypasses these server-side ownership checks.
 
 **STAFF**
 
-- Staff accounts are separate from customer accounts, in their own
-  table, with their own lifecycle. A staff member is granted a role,
-  changes role, and is revoked — none of which applies to a customer.
-- Staff authenticate with credentials and a password. SMS is not a
-  session mechanism for internal use.
-- Roles are data. No hardcoded email, no auto-regenerating account, no
-  credential of any kind committed to the repository.
-- At least two staff accounts hold administrative rights at all times,
-  so that losing one device never locks the business out of its own
-  back office.
+- Staff and customer identities, account lifecycles, authentication and authorization are separate. Customer OTP or a customer session never establishes a staff identity.
+- Staff authenticate with email/password and **mandatory TOTP for every staff type** (D-026/052). No SMS second factor or hidden bypass account.
+- At least two named administrators and an audited recovery procedure prevent operational lockout without weakening authentication.
+- Roles and permissions are data and deny by default. Delivery and Support cannot combine Administrator; Kitchen may combine Preparation (D-050). No hardcoded/auto-regenerating staff account or repository credential.
 
 **CORPORATE**
 
-- FitNest Pro accounts are standard customer accounts carrying a company
-  code attribute. No parallel auth path.
+FitNest Pro uses the ordinary customer identity with a company-code attribute, not a parallel authentication path.
 
 ---
 
@@ -227,7 +235,9 @@ Meal delivery is a physical good. Apple In-App Purchase and Google Play Billing 
 
 The payment processor is a Moroccan gateway, **not yet selected**. No processor SDK, brand name, or vendor-specific data model appears anywhere in this repository until that decision is made. The eliminating criterion is support for **recurring tokenised charging**.
 
-The client never talks to a processor directly. It calls a FitNest server endpoint that returns an opaque payment session. Card data, PAN and CVV never touch application code or local storage. Subscription activation is confirmed server-side; a local success callback alone never activates anything.
+The client never talks to a processor directly. **The FitNest server creates the payment session**; the client receives only an opaque reference to it. **Card details are entered on the processor's own hosted surface — never on a FitNest surface.** Card data, PAN and CVV never touch application code or local storage. Subscription activation is confirmed server-side; a local success callback alone never activates anything.
+
+Recurring charging requires explicit amount/frequency, versioned acceptance, a valid recurring mandate and a one-gesture opt-out. A trial does not renew automatically. Due-date idempotency, server-confirmed payment state and billing reconciliation prevent duplicate or fictitious activation (D-062). Cancellation/refund effects and the live processor remain separately gated; no defaults are invented here.
 
 Legal pages — terms of sale, privacy policy, refund and cancellation terms — are a **blocking dependency** of this feature, not a follow-up task.
 
@@ -250,7 +260,8 @@ These are historical record. Once written, they are never overwritten by later a
 - Bottom sheets, not centre modals. Minimum 44pt touch targets. Sticky, thumb-reachable primary action.
 - **Delivery zone is resolved before configuration**, not at checkout. Nobody builds a full basket to discover they cannot be served.
 - Read-tolerant offline: menus and the active subscription render from last-known state. Writes may fail loudly; reads never show a blank screen.
-- All user-facing copy is French. Code, comments, commits, specs, and this document are English.
+- Subscriber life is in the native app. The website acquires, configures and takes payment, then hands over. Its authenticated rescue exit is limited to one-line subscription status, WhatsApp help and cancellation under the app's rules; it is not a web meals, wallet or preferences portal (D-040/061).
+- All user-facing copy is served in **French and English** (D-033). Code, comments, commits, specs, and this document are English.
 - Brand: structural green `#005033`; graphic orange `#E0633A` for graphic elements only, never text; accessible orange `#B8481F` for buttons and labels; white background. No dark mode in V1.
 - No health or certification claim that cannot be substantiated. Macros are displayed on every dish; a dish without macro data is a data error, not a rendering edge case.
 
@@ -307,6 +318,13 @@ assume the current feature set is final.
 - **Deferred is not forbidden.** A feature listed as out of scope must
   remain cheap to add. Article III governs what is built; this article
   governs what must remain possible.
+- **Configured values are versioned parameters; guarantees are
+  invariants** (D-057). Every setting is typed, bounded, and versioned
+  with an immutable change history — who changed it, when, to what.
+  Invariants — append-only ledgers, write-once historical dates,
+  deny-by-default access — are never expressible as settings, and no
+  configuration can disable them.
+- Ownership, ledger integrity, hard food compatibility and payment verification are non-disableable invariants. No role or setting bypasses them. Every retained datum has an attributable purpose and bounded retention policy (D-054/055/057).
 
 ---
 
@@ -317,3 +335,5 @@ assume the current feature set is final.
 | 2026-08-26 | 4.0.0 | Full rewrite for monorepo scope. Article II inverted from prohibition to migration discipline. Article I no longer forbids one-off purchase. Article III recast as deferred, not impossible. Pricing, identity, wallet, cohort and traceability articles added from locked decisions. |
 | 2026-08-29 | 4.1.0 | Article V restructured into CUSTOMERS / STAFF / CORPORATE. The OTP verifies the number and is not the session mechanism. Staff accounts get their own table, credential + password auth, roles as data, and a two-admin floor. Corrects the founder's earlier arbitration that extended the customer model to staff. |
 | 2026-08-30 | 4.2.0 | Article XIV — Evolvability added: business rules in data, one shared engine for all surfaces, extension over rewrite, unrecoverable data captured from day one, deferred stays cheap to add. First applied to the admission queue, specified as a switchable operating mode. |
+| 2026-09-08 | 4.3.0 | Article VIII: the server creates the payment session and card details are entered on the processor's hosted surface, never on a FitNest surface. Article X: user-facing copy served in French and English (D-033). Article XIV: versioned parameters (typed, bounded, immutable change history) distinguished from non-disablable invariants (D-057). |
+| 2026-10-24 | 4.4.0 (proposed) | Consolidate the recorded quantity/cycle pricing, stable identity and bounded recovery, staff TOTP, explicit recurring consent, native subscriber/web rescue boundary and non-disableable safety/ownership invariants. Port PR5 v4.3 without losing history. No operational values or production authority granted. |

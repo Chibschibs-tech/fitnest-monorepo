@@ -1,19 +1,10 @@
 name: Delivery plan consistency
 
 on:
+  # Required acceptance check: run for every PR, including contracts-only B01-C.
   pull_request:
-    paths:
-      - 'docs/delivery/**'
-      - 'specs/**'
-      - 'tooling/delivery-plan/**'
-      - '.github/workflows/delivery-plan-check.yml'
   push:
-    branches: [fitnest-v1-baseline-alignment]
-    paths:
-      - 'docs/delivery/**'
-      - 'specs/**'
-      - 'tooling/delivery-plan/**'
-      - '.github/workflows/delivery-plan-check.yml'
+    branches: [fitnest-v1-baseline-alignment, fitnest-foundation-runtime]
 
 permissions:
   contents: read

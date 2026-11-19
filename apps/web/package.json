@@ -9,8 +9,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "2.110.7",
+    "@supabase/ssr": "0.5.2",
     "@fitnest/core": "workspace:*",
     "@auth/core": "latest",
     "@aws-sdk/client-rds-data": "latest",
@@ -116,3 +116,4 @@
     "typescript": "^5"
   }
 }
+

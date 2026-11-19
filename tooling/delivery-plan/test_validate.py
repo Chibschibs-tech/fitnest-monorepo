@@ -17,7 +17,7 @@ class PlanningGuards(unittest.TestCase):
         result=readiness(self.plan)
         self.assertTrue(result['valid'],result)
         self.assertEqual(result['automatic_eligible'],[])
-        self.assertIn('S001-SEC-B',result['planning_ready'])
+        self.assertIn('S001-SEC-A',result['planning_ready'])
         self.assertNotIn('S001-T018',result['planning_ready'])
 
     def test_cycle_blocks_every_dispatch(self):

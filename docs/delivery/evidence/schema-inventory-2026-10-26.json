@@ -1,0 +1,3483 @@
+{
+  "project": "fitnest-db",
+  "project_ref": "blboseqvdmpdrthipxdk",
+  "source_commit": "b8911d6c2d3a1343a22ba2aca462608ab0c9ec12",
+  "source_commit_scope": "code reviewed; not asserted deployed",
+  "roles": [
+    {
+      "name": "anon",
+      "login": false,
+      "inherit": true,
+      "superuser": false,
+      "bypass_rls": false
+    },
+    {
+      "name": "authenticated",
+      "login": false,
+      "inherit": true,
+      "superuser": false,
+      "bypass_rls": false
+    },
+    {
+      "name": "authenticator",
+      "login": true,
+      "inherit": false,
+      "superuser": false,
+      "bypass_rls": false
+    },
+    {
+      "name": "postgres",
+      "login": true,
+      "inherit": true,
+      "superuser": false,
+      "bypass_rls": true
+    },
+    {
+      "name": "service_role",
+      "login": false,
+      "inherit": true,
+      "superuser": false,
+      "bypass_rls": true
+    }
+  ],
+  "schemas": [
+    {
+      "name": "auth",
+      "owner": "supabase_admin",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "extensions",
+      "owner": "postgres",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "graphql",
+      "owner": "supabase_admin",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "graphql_public",
+      "owner": "supabase_admin",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "pgbouncer",
+      "owner": "pgbouncer",
+      "anon_usage": false,
+      "auth_usage": false
+    },
+    {
+      "name": "public",
+      "owner": "pg_database_owner",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "realtime",
+      "owner": "supabase_admin",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "storage",
+      "owner": "supabase_admin",
+      "anon_usage": true,
+      "auth_usage": true
+    },
+    {
+      "name": "supabase_migrations",
+      "owner": "postgres",
+      "anon_usage": false,
+      "auth_usage": false
+    },
+    {
+      "name": "vault",
+      "owner": "supabase_admin",
+      "anon_usage": false,
+      "auth_usage": false
+    }
+  ],
+  "policies": [],
+  "functions": [],
+  "relations": [
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "cart_items",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "company_leads",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "compose_components",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "compose_settings",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "content_hero",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "custom_meals",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "customers",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "deliveries",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "discount_rules",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "meal_plan_meals",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "meal_plans",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "meal_type_prices",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "meals",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "mp_categories",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "notification_preferences",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "notifications",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "order_items",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "orders",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "products",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "sessions",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "subscription_requests",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "subscriptions",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "users",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "waitlist",
+      "owner": "postgres",
+      "schema": "public",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "p",
+      "name": "messages",
+      "owner": "supabase_realtime_admin",
+      "schema": "realtime",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": true,
+      "anon_select": true,
+      "anon_update": true,
+      "auth_delete": false,
+      "auth_insert": true,
+      "auth_select": true,
+      "auth_update": true,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": false,
+      "kind": "r",
+      "name": "schema_migrations",
+      "owner": "supabase_admin",
+      "schema": "realtime",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": false,
+      "kind": "r",
+      "name": "subscription",
+      "owner": "supabase_realtime_admin",
+      "schema": "realtime",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": true,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": true,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "buckets",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": true,
+      "anon_insert": true,
+      "anon_select": true,
+      "anon_update": true,
+      "auth_delete": true,
+      "auth_insert": true,
+      "auth_select": true,
+      "auth_update": true,
+      "anon_truncate": true,
+      "auth_truncate": true
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "buckets_analytics",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": true,
+      "anon_insert": true,
+      "anon_select": true,
+      "anon_update": true,
+      "auth_delete": true,
+      "auth_insert": true,
+      "auth_select": true,
+      "auth_update": true,
+      "anon_truncate": true,
+      "auth_truncate": true
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "buckets_vectors",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": true,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": true,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "migrations",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": false,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": false,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "objects",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": true,
+      "anon_insert": true,
+      "anon_select": true,
+      "anon_update": true,
+      "auth_delete": true,
+      "auth_insert": true,
+      "auth_select": true,
+      "auth_update": true,
+      "anon_truncate": true,
+      "auth_truncate": true
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "s3_multipart_uploads",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": true,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": true,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "s3_multipart_uploads_parts",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": true,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": true,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    },
+    {
+      "rls": true,
+      "kind": "r",
+      "name": "vector_indexes",
+      "owner": "supabase_storage_admin",
+      "schema": "storage",
+      "options": null,
+      "force_rls": false,
+      "anon_delete": false,
+      "anon_insert": false,
+      "anon_select": true,
+      "anon_update": false,
+      "auth_delete": false,
+      "auth_insert": false,
+      "auth_select": true,
+      "auth_update": false,
+      "anon_truncate": false,
+      "auth_truncate": false
+    }
+  ],
+  "sequences": [
+    {
+      "name": "cart_items_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "company_leads_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "compose_components_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "compose_settings_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "content_hero_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "custom_meals_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "customers_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "deliveries_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "discount_rules_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "meal_plan_meals_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "meal_plans_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "meal_type_prices_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "meals_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "mp_categories_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "notification_preferences_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "notifications_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "order_items_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "orders_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "products_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "subscription_requests_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "subscriptions_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "users_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    },
+    {
+      "name": "waitlist_id_seq",
+      "schema": "public",
+      "anon_usage": true,
+      "auth_usage": true,
+      "anon_update": true,
+      "auth_update": true
+    }
+  ],
+  "captured_at": "2026-10-26T18:27:55.491238+00:00",
+  "default_acl": [
+    {
+      "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "owner": "postgres",
+      "schema": "public",
+      "object_type": "f"
+    },
+    {
+      "acl": "{postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}",
+      "owner": "postgres",
+      "schema": "public",
+      "object_type": "S"
+    },
+    {
+      "acl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+      "owner": "supabase_admin",
+      "schema": "public",
+      "object_type": "S"
+    },
+    {
+      "acl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+      "owner": "supabase_admin",
+      "schema": "public",
+      "object_type": "r"
+    },
+    {
+      "acl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+      "owner": "supabase_admin",
+      "schema": "public",
+      "object_type": "f"
+    },
+    {
+      "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "owner": "postgres",
+      "schema": "public",
+      "object_type": "r"
+    }
+  ],
+  "publications": [],
+  "observer_role": "postgres",
+  "storage_buckets": [],
+  "database_version": "17.6",
+  "api_role_settings": [
+    {
+      "role": "authenticator",
+      "settings": []
+    }
+  ],
+  "columns": [
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "cart_items",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "cart_items",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "cart_items",
+      "column": "item_type",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "cart_items",
+      "column": "product_id",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "cart_items",
+      "column": "plan_name",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "cart_items",
+      "column": "meal_types",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "cart_items",
+      "column": "days_per_week",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "cart_items",
+      "column": "duration_weeks",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "cart_items",
+      "column": "quantity",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "cart_items",
+      "column": "unit_price",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "cart_items",
+      "column": "total_price",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "cart_items",
+      "column": "created_at",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "cart_items",
+      "column": "updated_at",
+      "ordinal": 13,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "company_leads",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "full_name",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "company",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "job_role",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "email",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "phone",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "need_type",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "headcount",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "date",
+      "type": "date",
+      "table": "company_leads",
+      "column": "event_date",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "company_leads",
+      "column": "message",
+      "ordinal": 10,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "company_leads",
+      "column": "status",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "company_leads",
+      "column": "created_at",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "company_leads",
+      "column": "updated_at",
+      "ordinal": 13,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_components",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "compose_components",
+      "column": "slot",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "compose_components",
+      "column": "name",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_components",
+      "column": "portion_grams",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_components",
+      "column": "kcal",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_components",
+      "column": "protein_g",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_components",
+      "column": "carbs_g",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_components",
+      "column": "fat_g",
+      "ordinal": 8,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_components",
+      "column": "surcharge_mad",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_components",
+      "column": "extra_portion_price_mad",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "compose_components",
+      "column": "allergens",
+      "ordinal": 11,
+      "nullable": "YES"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "compose_components",
+      "column": "is_active",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_components",
+      "column": "sort_order",
+      "ordinal": 13,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "compose_components",
+      "column": "created_at",
+      "ordinal": 14,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "compose_components",
+      "column": "updated_at",
+      "ordinal": 15,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_settings",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "compose_settings",
+      "column": "meal_type",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "compose_settings",
+      "column": "base_price_mad",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_settings",
+      "column": "included_protein",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_settings",
+      "column": "included_carb",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_settings",
+      "column": "included_veg",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_settings",
+      "column": "included_sauce",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "compose_settings",
+      "column": "max_extras",
+      "ordinal": 8,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "compose_settings",
+      "column": "protein_required",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "compose_settings",
+      "column": "is_active",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "compose_settings",
+      "column": "created_at",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "compose_settings",
+      "column": "updated_at",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "content_hero",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "content_hero",
+      "column": "desktop_image_url",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "content_hero",
+      "column": "mobile_image_url",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "content_hero",
+      "column": "title",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "content_hero",
+      "column": "description",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "content_hero",
+      "column": "alt_text",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "content_hero",
+      "column": "seo_title",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "content_hero",
+      "column": "seo_description",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "content_hero",
+      "column": "is_active",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "content_hero",
+      "column": "created_at",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "content_hero",
+      "column": "updated_at",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "custom_meals",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "custom_meals",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "custom_meals",
+      "column": "cart_id",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "custom_meals",
+      "column": "name",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "custom_meals",
+      "column": "meal_type",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "custom_meals",
+      "column": "components",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "custom_meals",
+      "column": "kcal",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "custom_meals",
+      "column": "protein_g",
+      "ordinal": 8,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "custom_meals",
+      "column": "carbs_g",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "custom_meals",
+      "column": "fat_g",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "custom_meals",
+      "column": "price_mad",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "custom_meals",
+      "column": "quantity_per_week",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "custom_meals",
+      "column": "created_at",
+      "ordinal": 13,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "custom_meals",
+      "column": "updated_at",
+      "ordinal": 14,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "customers",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "customers",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "customers",
+      "column": "name",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "customers",
+      "column": "email",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "customers",
+      "column": "phone",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "customers",
+      "column": "status",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "customers",
+      "column": "city",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "customers",
+      "column": "created_at",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "customers",
+      "column": "updated_at",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "deliveries",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "deliveries",
+      "column": "subscription_id",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "deliveries",
+      "column": "order_id",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "date",
+      "type": "date",
+      "table": "deliveries",
+      "column": "delivery_date",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "deliveries",
+      "column": "status",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "deliveries",
+      "column": "delivered_at",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "deliveries",
+      "column": "notes",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "deliveries",
+      "column": "created_at",
+      "ordinal": 8,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "discount_rules",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "discount_rules",
+      "column": "discount_type",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "discount_rules",
+      "column": "condition_value",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "discount_rules",
+      "column": "discount_percentage",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "discount_rules",
+      "column": "stackable",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "discount_rules",
+      "column": "is_active",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "discount_rules",
+      "column": "valid_from",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "discount_rules",
+      "column": "valid_to",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "discount_rules",
+      "column": "created_at",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "discount_rules",
+      "column": "stacking_behavior",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "discount_rules",
+      "column": "priority",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "discount_rules",
+      "column": "updated_at",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_plan_meals",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_plan_meals",
+      "column": "meal_plan_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_plan_meals",
+      "column": "meal_id",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_plan_meals",
+      "column": "sort_order",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_plans",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meal_plans",
+      "column": "slug",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meal_plans",
+      "column": "title",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "meal_plans",
+      "column": "summary",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meal_plans",
+      "column": "audience",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_plans",
+      "column": "mp_category_id",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "meal_plans",
+      "column": "published",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "meal_plans",
+      "column": "created_at",
+      "ordinal": 8,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "meal_plans",
+      "column": "image_url",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_type_prices",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meal_type_prices",
+      "column": "plan_name",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meal_type_prices",
+      "column": "meal_type",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meal_type_prices",
+      "column": "base_price_mad",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "meal_type_prices",
+      "column": "is_active",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "meal_type_prices",
+      "column": "created_at",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "meal_type_prices",
+      "column": "updated_at",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meal_type_prices",
+      "column": "meal_plan_id",
+      "ordinal": 8,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meals",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meals",
+      "column": "slug",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meals",
+      "column": "title",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "meals",
+      "column": "description",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meals",
+      "column": "meal_type",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "meals",
+      "column": "category",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "meals",
+      "column": "kcal",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "protein",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "carbs",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "fat",
+      "ordinal": 10,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "fiber",
+      "ordinal": 11,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "sodium",
+      "ordinal": 12,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "sugar",
+      "ordinal": 13,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "cholesterol",
+      "ordinal": 14,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "meals",
+      "column": "saturated_fat",
+      "ordinal": 15,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "meals",
+      "column": "allergens",
+      "ordinal": 16,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "meals",
+      "column": "tags",
+      "ordinal": 17,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "meals",
+      "column": "ingredients",
+      "ordinal": 18,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "meals",
+      "column": "image_url",
+      "ordinal": 19,
+      "nullable": "YES"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "meals",
+      "column": "published",
+      "ordinal": 20,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "meals",
+      "column": "created_at",
+      "ordinal": 21,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "mp_categories",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "mp_categories",
+      "column": "name",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "mp_categories",
+      "column": "slug",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "mp_categories",
+      "column": "description",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "mp_categories",
+      "column": "variables",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "mp_categories",
+      "column": "created_at",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "mp_categories",
+      "column": "updated_at",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "notification_preferences",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "notification_preferences",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "notification_preferences",
+      "column": "email_enabled",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "notification_preferences",
+      "column": "push_enabled",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "notification_preferences",
+      "column": "sms_enabled",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "notification_preferences",
+      "column": "updated_at",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "notifications",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "notifications",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "notifications",
+      "column": "title",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "notifications",
+      "column": "description",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "notifications",
+      "column": "type",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "notifications",
+      "column": "is_read",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "notifications",
+      "column": "created_at",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "order_items",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "order_items",
+      "column": "order_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "order_items",
+      "column": "product_id",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "order_items",
+      "column": "description",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "order_items",
+      "column": "quantity",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "order_items",
+      "column": "unit_price",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "order_items",
+      "column": "created_at",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "orders",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "orders",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "orders",
+      "column": "plan_name",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "orders",
+      "column": "total_amount",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "orders",
+      "column": "status",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "orders",
+      "column": "delivery_address",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "date",
+      "type": "date",
+      "table": "orders",
+      "column": "delivery_date",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "orders",
+      "column": "notes",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "orders",
+      "column": "created_at",
+      "ordinal": 9,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "orders",
+      "column": "updated_at",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "orders",
+      "column": "payment_method",
+      "ordinal": 11,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "orders",
+      "column": "payment_status",
+      "ordinal": 12,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "products",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "products",
+      "column": "name",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "products",
+      "column": "slug",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "products",
+      "column": "description",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "products",
+      "column": "price",
+      "ordinal": 5,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "products",
+      "column": "sale_price",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "products",
+      "column": "image_url",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "products",
+      "column": "category",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "products",
+      "column": "product_type",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "products",
+      "column": "tags",
+      "ordinal": 10,
+      "nullable": "YES"
+    },
+    {
+      "udt": "jsonb",
+      "type": "jsonb",
+      "table": "products",
+      "column": "nutritional_info",
+      "ordinal": 11,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "products",
+      "column": "stock",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "products",
+      "column": "is_active",
+      "ordinal": 13,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "products",
+      "column": "created_at",
+      "ordinal": 14,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "products",
+      "column": "updated_at",
+      "ordinal": 15,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "sessions",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "sessions",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "sessions",
+      "column": "expires_at",
+      "ordinal": 3,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "sessions",
+      "column": "created_at",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscription_requests",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscription_requests",
+      "column": "plan",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "subscription_requests",
+      "column": "meals",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscription_requests",
+      "column": "days",
+      "ordinal": 4,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscription_requests",
+      "column": "duration",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "subscription_requests",
+      "column": "total",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscription_requests",
+      "column": "full_name",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscription_requests",
+      "column": "email",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscription_requests",
+      "column": "phone",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "subscription_requests",
+      "column": "note",
+      "ordinal": 10,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "subscription_requests",
+      "column": "created_at",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscriptions",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscriptions",
+      "column": "user_id",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscriptions",
+      "column": "status",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "subscriptions",
+      "column": "starts_at",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "subscriptions",
+      "column": "renews_at",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "subscriptions",
+      "column": "pause_start_date",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "subscriptions",
+      "column": "pause_end_date",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "subscriptions",
+      "column": "pause_reason",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "subscriptions",
+      "column": "notes",
+      "ordinal": 10,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "subscriptions",
+      "column": "created_at",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscriptions",
+      "column": "payment_method",
+      "ordinal": 12,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "subscriptions",
+      "column": "payment_status",
+      "ordinal": 13,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscriptions",
+      "column": "meal_plan_id",
+      "ordinal": 14,
+      "nullable": "NO"
+    },
+    {
+      "udt": "_text",
+      "type": "ARRAY",
+      "table": "subscriptions",
+      "column": "meal_types",
+      "ordinal": 15,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscriptions",
+      "column": "days_per_week",
+      "ordinal": 16,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "subscriptions",
+      "column": "duration_weeks",
+      "ordinal": 17,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "subscriptions",
+      "column": "price_per_day_mad",
+      "ordinal": 18,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "subscriptions",
+      "column": "discount_percentage",
+      "ordinal": 19,
+      "nullable": "NO"
+    },
+    {
+      "udt": "numeric",
+      "type": "numeric",
+      "table": "subscriptions",
+      "column": "total_mad",
+      "ordinal": 20,
+      "nullable": "NO"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "users",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "email",
+      "ordinal": 2,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "name",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "password",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "phone",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "role",
+      "ordinal": 6,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "status",
+      "ordinal": 7,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "users",
+      "column": "city",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "text",
+      "type": "text",
+      "table": "users",
+      "column": "admin_notes",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "users",
+      "column": "last_login_at",
+      "ordinal": 10,
+      "nullable": "YES"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "users",
+      "column": "created_at",
+      "ordinal": 11,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "users",
+      "column": "updated_at",
+      "ordinal": 12,
+      "nullable": "NO"
+    },
+    {
+      "udt": "uuid",
+      "type": "uuid",
+      "table": "users",
+      "column": "auth_id",
+      "ordinal": 13,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "waitlist",
+      "column": "id",
+      "ordinal": 1,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "first_name",
+      "ordinal": 2,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "last_name",
+      "ordinal": 3,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "email",
+      "ordinal": 4,
+      "nullable": "NO"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "phone",
+      "ordinal": 5,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "preferred_meal_plan",
+      "ordinal": 6,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "city",
+      "ordinal": 7,
+      "nullable": "YES"
+    },
+    {
+      "udt": "bool",
+      "type": "boolean",
+      "table": "waitlist",
+      "column": "wants_notifications",
+      "ordinal": 8,
+      "nullable": "YES"
+    },
+    {
+      "udt": "int4",
+      "type": "integer",
+      "table": "waitlist",
+      "column": "position",
+      "ordinal": 9,
+      "nullable": "YES"
+    },
+    {
+      "udt": "varchar",
+      "type": "character varying",
+      "table": "waitlist",
+      "column": "status",
+      "ordinal": 10,
+      "nullable": "NO"
+    },
+    {
+      "udt": "timestamp",
+      "type": "timestamp without time zone",
+      "table": "waitlist",
+      "column": "created_at",
+      "ordinal": 11,
+      "nullable": "NO"
+    }
+  ],
+  "triggers": [],
+  "constraints": [
+    {
+      "name": "cart_items_pkey",
+      "type": "p",
+      "table": "cart_items",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "cart_items_product_id_fkey",
+      "type": "f",
+      "table": "cart_items",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "cart_items_user_id_fkey",
+      "type": "f",
+      "table": "cart_items",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "company_leads_need_type_chk",
+      "type": "c",
+      "table": "company_leads",
+      "definition": "CHECK (((need_type)::text = ANY ((ARRAY['event'::character varying, 'daily'::character varying, 'both'::character varying])::text[])))"
+    },
+    {
+      "name": "company_leads_pkey",
+      "type": "p",
+      "table": "company_leads",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "company_leads_status_chk",
+      "type": "c",
+      "table": "company_leads",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['new'::character varying, 'contacted'::character varying, 'qualified'::character varying, 'won'::character varying, 'lost'::character varying])::text[])))"
+    },
+    {
+      "name": "compose_components_pkey",
+      "type": "p",
+      "table": "compose_components",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "compose_components_slot_chk",
+      "type": "c",
+      "table": "compose_components",
+      "definition": "CHECK (((slot)::text = ANY ((ARRAY['protein'::character varying, 'carb'::character varying, 'veg'::character varying, 'sauce'::character varying, 'extra'::character varying])::text[])))"
+    },
+    {
+      "name": "compose_settings_meal_type_key",
+      "type": "u",
+      "table": "compose_settings",
+      "definition": "UNIQUE (meal_type)"
+    },
+    {
+      "name": "compose_settings_pkey",
+      "type": "p",
+      "table": "compose_settings",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "content_hero_pkey",
+      "type": "p",
+      "table": "content_hero",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "custom_meals_pkey",
+      "type": "p",
+      "table": "custom_meals",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "custom_meals_user_id_fkey",
+      "type": "f",
+      "table": "custom_meals",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "customers_pkey",
+      "type": "p",
+      "table": "customers",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "deliveries_order_id_fkey",
+      "type": "f",
+      "table": "deliveries",
+      "definition": "FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "deliveries_pkey",
+      "type": "p",
+      "table": "deliveries",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "deliveries_subscription_id_fkey",
+      "type": "f",
+      "table": "deliveries",
+      "definition": "FOREIGN KEY (subscription_id) REFERENCES subscriptions(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "discount_rules_pkey",
+      "type": "p",
+      "table": "discount_rules",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "discount_rules_stacking_behavior_chk",
+      "type": "c",
+      "table": "discount_rules",
+      "definition": "CHECK (((stacking_behavior)::text = ANY ((ARRAY['stack'::character varying, 'exclusive'::character varying, 'best'::character varying])::text[])))"
+    },
+    {
+      "name": "meal_plan_meals_meal_id_fkey",
+      "type": "f",
+      "table": "meal_plan_meals",
+      "definition": "FOREIGN KEY (meal_id) REFERENCES meals(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "meal_plan_meals_meal_plan_id_fkey",
+      "type": "f",
+      "table": "meal_plan_meals",
+      "definition": "FOREIGN KEY (meal_plan_id) REFERENCES meal_plans(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "meal_plan_meals_pkey",
+      "type": "p",
+      "table": "meal_plan_meals",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "meal_plans_mp_category_id_fkey",
+      "type": "f",
+      "table": "meal_plans",
+      "definition": "FOREIGN KEY (mp_category_id) REFERENCES mp_categories(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "meal_plans_pkey",
+      "type": "p",
+      "table": "meal_plans",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "meal_plans_slug_key",
+      "type": "u",
+      "table": "meal_plans",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "name": "meal_type_prices_meal_plan_id_fkey",
+      "type": "f",
+      "table": "meal_type_prices",
+      "definition": "FOREIGN KEY (meal_plan_id) REFERENCES meal_plans(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "meal_type_prices_meal_plan_id_meal_type_key",
+      "type": "u",
+      "table": "meal_type_prices",
+      "definition": "UNIQUE (meal_plan_id, meal_type)"
+    },
+    {
+      "name": "meal_type_prices_pkey",
+      "type": "p",
+      "table": "meal_type_prices",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "meals_pkey",
+      "type": "p",
+      "table": "meals",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "meals_slug_key",
+      "type": "u",
+      "table": "meals",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "name": "mp_categories_pkey",
+      "type": "p",
+      "table": "mp_categories",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "mp_categories_slug_key",
+      "type": "u",
+      "table": "mp_categories",
+      "definition": "UNIQUE (slug)"
+    },
+    {
+      "name": "notification_preferences_pkey",
+      "type": "p",
+      "table": "notification_preferences",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "notification_preferences_user_id_fkey",
+      "type": "f",
+      "table": "notification_preferences",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "notification_preferences_user_id_key",
+      "type": "u",
+      "table": "notification_preferences",
+      "definition": "UNIQUE (user_id)"
+    },
+    {
+      "name": "notifications_pkey",
+      "type": "p",
+      "table": "notifications",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "notifications_user_id_fkey",
+      "type": "f",
+      "table": "notifications",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "order_items_order_id_fkey",
+      "type": "f",
+      "table": "order_items",
+      "definition": "FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "order_items_pkey",
+      "type": "p",
+      "table": "order_items",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "order_items_product_id_fkey",
+      "type": "f",
+      "table": "order_items",
+      "definition": "FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "orders_pkey",
+      "type": "p",
+      "table": "orders",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "orders_user_id_fkey",
+      "type": "f",
+      "table": "orders",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL"
+    },
+    {
+      "name": "products_pkey",
+      "type": "p",
+      "table": "products",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "sessions_pkey",
+      "type": "p",
+      "table": "sessions",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "sessions_user_id_fkey",
+      "type": "f",
+      "table": "sessions",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "subscription_requests_pkey",
+      "type": "p",
+      "table": "subscription_requests",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "subscriptions_days_per_week_check",
+      "type": "c",
+      "table": "subscriptions",
+      "definition": "CHECK (((days_per_week >= 1) AND (days_per_week <= 7)))"
+    },
+    {
+      "name": "subscriptions_discount_percentage_check",
+      "type": "c",
+      "table": "subscriptions",
+      "definition": "CHECK (((discount_percentage >= (0)::numeric) AND (discount_percentage <= (100)::numeric)))"
+    },
+    {
+      "name": "subscriptions_duration_weeks_check",
+      "type": "c",
+      "table": "subscriptions",
+      "definition": "CHECK ((duration_weeks >= 1))"
+    },
+    {
+      "name": "subscriptions_meal_plan_id_fkey",
+      "type": "f",
+      "table": "subscriptions",
+      "definition": "FOREIGN KEY (meal_plan_id) REFERENCES meal_plans(id) ON DELETE RESTRICT"
+    },
+    {
+      "name": "subscriptions_pkey",
+      "type": "p",
+      "table": "subscriptions",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "subscriptions_price_per_day_mad_check",
+      "type": "c",
+      "table": "subscriptions",
+      "definition": "CHECK ((price_per_day_mad >= (0)::numeric))"
+    },
+    {
+      "name": "subscriptions_total_mad_check",
+      "type": "c",
+      "table": "subscriptions",
+      "definition": "CHECK ((total_mad >= (0)::numeric))"
+    },
+    {
+      "name": "subscriptions_user_id_fkey",
+      "type": "f",
+      "table": "subscriptions",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE"
+    },
+    {
+      "name": "users_auth_id_key",
+      "type": "u",
+      "table": "users",
+      "definition": "UNIQUE (auth_id)"
+    },
+    {
+      "name": "users_email_key",
+      "type": "u",
+      "table": "users",
+      "definition": "UNIQUE (email)"
+    },
+    {
+      "name": "users_pkey",
+      "type": "p",
+      "table": "users",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "name": "waitlist_email_key",
+      "type": "u",
+      "table": "waitlist",
+      "definition": "UNIQUE (email)"
+    },
+    {
+      "name": "waitlist_pkey",
+      "type": "p",
+      "table": "waitlist",
+      "definition": "PRIMARY KEY (id)"
+    }
+  ],
+  "column_grants": [],
+  "migrations": [
+    {
+      "version": "20260829155420",
+      "name": "remote_schema"
+    }
+  ],
+  "role_probes": [
+    {
+      "role": "anon",
+      "query": "SELECT 1 FROM public.users LIMIT 0",
+      "transaction": "READ ONLY",
+      "result_sqlstate": "42501"
+    },
+    {
+      "role": "authenticated",
+      "query": "SELECT 1 FROM public.users LIMIT 0",
+      "transaction": "READ ONLY",
+      "result_sqlstate": "42501"
+    }
+  ],
+  "limitations": [
+    "Data API configured exposed schemas unknown",
+    "Runtime credential role not observed from application connection",
+    "No disposable migration replay; Docker daemon unavailable",
+    "No HTTP authentication, cross-account, Storage, Realtime or revocation test"
+  ]
+}

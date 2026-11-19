@@ -23,6 +23,14 @@
 
 ## Phase 1: Setup
 
+Implementation review, 2026-10-18: T001 tooling is implemented with 13 local D-058
+time prototype cases and strict core typechecking; T002 pins/env placeholders are
+prepared. T003 has local config and an automated disposable Auth qualification job;
+Docker is unavailable in the editing environment, so its runtime result is pending.
+See `docs/delivery/foundation-contract.md`. No task is marked verified before its
+required review/acceptance evidence. T012 has only the pure time prototype; its
+schema-dependent scaffolding and T008 prerequisite remain open. T013 is unchanged.
+
 **Purpose**: workspace tooling for this slice.
 
 - [ ] T001 Add Vitest (pinned) at workspace root and wire `pnpm test`; replace the broken `packages/core` test script (`node --experimental-strip-types src/__tests__/run.ts` → `vitest run`) in `packages/core/package.json` (research R7, Article XI)
