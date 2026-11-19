@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "B02-C",
+  "status": "proposal",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "requirements": [
+    {
+      "id": "staff_identity_separation",
+      "statement": "Staff accounts live in a table separate from customers and sign in with email/password plus mandatory TOTP for every role (D-026, D-052, FR-S1). The same email does not implicitly link a staff account to a customer account. No SMS second factor and no customer phone-OTP path authorizes a staff session; customer identity from slice 001 stays untouched.",
+      "verification": [
+        "Provision a staff account whose email equals an existing customer email; assert staff sign-in produces a staff session independent of the customer record, no cross-table join is used for identity, and deactivating the staff account leaves the customer record unaffected.",
+        "Attempt staff sign-in without a TOTP factor and with a phone OTP/SMS only; assert both fail closed, no staff session or staff cookie is issued, and the customer OTP endpoint remains unchanged."
+      ]
+    },
+    {
+      "id": "totp_mandatory_all_roles",
+      "statement": "TOTP is mandatory for every role, with protected secrets and no SMS second factor and no hidden bypass account (D-052, SEC-05). MFA secrets are stored only in protected storage, never in business tables or logs, and are never returned by any read, export or settings API.",
+      "verification": [
+        "Enroll a TOTP secret then inspect every read path, audit export and settings response to confirm the secret never appears; attempt sign-in with a valid password but a missing, wrong, expired or reused TOTP code and assert denial with no session issued.",
+        "Attempt to provision or activate any role without an enrolled TOTP and assert the account cannot reach the authorization boundary; assert no SMS or hidden bypass credential path exists in the bootstrap procedure."
+      ]
+    },
+    {
+      "id": "invitation_single_use_expiry",
+      "statement": "Administrator invitations are expiring and single-use, enrolling account/password/TOTP before first access; there is no public self-registration (FR-S2, SEC-05). Two named administrators are bootstrapped through a documented one-time procedure with no permanent backdoor.",
+      "verification": [
+        "Replay an accepted invitation code, present it concurrently from two sessions, and present an expired invitation; assert exactly one enrollment succeeds and no second staff account is created (SEC-05 evidence).",
+        "Attempt public self-registration and any undocumented bootstrap path; assert denial. Review the bootstrap procedure and assert it names exactly two administrators and contains no persistent bypass credential."
+      ]
+    },
+    {
+      "id": "reset_recovery_single_use",
+      "statement": "Password reset/recovery uses single-use expiring proof and defined MFA recovery; completing a reset revokes affected sessions and audits/notifies the security change. Password reset alone never silently bypasses TOTP (FR-S3, SEC-05).",
+      "verification": [
+        "Type-check the versioned reset DTOs (POST /v1/staff/auth/password-reset/request, POST /v1/staff/auth/password-reset/complete, staff.security_change and staff.account.password_reset events) against the staff-design.md §13.10-13.12 contract fixtures; assert the reset-proof field is single-use and expiring, the complete request requires totpCode, and the response exposes sessionsRevoked and resetAt but never the proof, password or TOTP secret.",
+        "Complete a password reset, then replay the reset proof and reuse it against a second account; assert replay fails and only one reset is consumed. Assert all prior sessions for that account are revoked at the next request.",
+        "Attempt to reset then sign in without a valid TOTP; assert the reset did not remove the TOTP requirement. Assert a security notification and audit entry are emitted whose payload contains no OTP, token, TOTP secret or password."
+      ]
+    },
+    {
+      "id": "deactivation_next_request",
+      "statement": "Deactivating a staff account revokes existing authorization at the next request while preserving historical actor references under the retention policy; no deletion erases audit (FR-S4, SEC-07).",
+      "verification": [
+        "Sign in, deactivate the account as Administrator, then use the still-live staff cookie/token; assert the next request is denied. Assert historical staff-event rows still resolve the actor identity for past actions.",
+        "Attempt to re-enable or sign in the deactivated account without Administrator action; assert denial on every channel including exports and realtime."
+      ]
+    },
+    {
+      "id": "role_permission_matrix",
+      "statement": "Five launch roles exist with the exact D-050 permission sets: Administrator (every permission), Kitchen (dishes and nutrition, weekly menu composition/publication, consolidation, unresolved-slot views), Delivery (assigned-round list, confirmation, issues, nothing else), Support (read subscriber account/history, act within subscriber rules, read event ledger), Preparation (picking lists/labels, read-only). Kitchen may combine with Preparation; Delivery and Support are never combined with Administrator on one account.",
+      "verification": [
+        "For each of the five roles, run a matrix-driven check that every granted permission is in that role's D-050 set and every other permission is denied; assert Administrator-exclusive settings, prices, plans, meal-type, staff-account and role permissions are denied for non-admins.",
+        "Attempt to create accounts combining Delivery+Administrator and Support+Administrator; assert both are rejected as forbidden combinations while Kitchen+Preparation is accepted."
+      ]
+    },
+    {
+      "id": "permission_not_role_names",
+      "statement": "Screens and actions check permissions, never role names; unknown permissions deny; security invariants (ownership, ledger integrity, hard food filters, payment verification) are code/database guarantees, not editable grants (FR-R1, D-057).",
+      "verification": [
+        "Rename a role and reorder its permissions; assert behavior follows the granted permission keys, not the role-name string. Introduce a permission key not in the known set and assert every check denies (unknown permission denies).",
+        "Attempt to grant a role a permission key that encodes an invariant (e.g. a ledger-mutate or invariant-disable capability); assert the grant itself is rejected because invariants are not editable permission rows."
+      ]
+    },
+    {
+      "id": "every_channel_authorization",
+      "statement": "Every API route, server action, export, RPC and realtime subscription validates live identity, permission and resource scope; UI hiding is not authorization (FR-R4, SEC-06). Anonymous, customer, other-staff and cross-resource access all fail through direct calls including forged cookies.",
+      "verification": [
+        "Build a five-role by resource matrix and drive every staff endpoint, export download and realtime subscription with an anonymous token, a customer token, each non-authorized role and a forged/stale staff cookie; assert each unauthorized request returns DENIED and leaks no data.",
+        "Call a protected route directly by URL without rendering the admin shell; assert server-side denial proves navigation hiding is not the enforcement boundary and no legacy session protects a new route."
+      ]
+    },
+    {
+      "id": "self_escalation_and_combination",
+      "statement": "Role edits cannot self-escalate or create forbidden combinations, and role changes/deactivation apply to existing sessions at the next request (SEC-07, FR-R4).",
+      "verification": [
+        "As a non-administrator, attempt to add Administrator to your own account and to another account and to reorder role grants; assert denial. As Administrator, remove your own Administrator role and assert the next request loses the removed rights.",
+        "Capture a session before a role change, apply the change, and assert the pre-change token loses the removed permission at the next request without redeployment and cannot be reused to escalate."
+      ]
+    },
+    {
+      "id": "admin_origin_cookie_session",
+      "statement": "The staff surface runs at its own hostname/origin, separate from the public site and the customer app, with host-scoped Secure/HttpOnly/SameSite cookies, CSRF/Origin checks, restrictive CORS, and no business side effect on GET (FR-A1, SEC-08).",
+      "verification": [
+        "Verify cookie attributes (Secure, HttpOnly, SameSite, host-scoped Domain/Path) and that the public site origin cannot read or replay the staff cookie; assert a cross-origin CSRF POST from a third-party origin is rejected by the Origin/site check.",
+        "Attempt a GET to every mutation endpoint and assert no state change; assert CORS never reflects an untrusted origin, the admin origin is separate from the public and app origins, and no legacy session protects the new admin route."
+      ]
+    },
+    {
+      "id": "navigation_permission_rows",
+      "statement": "Navigation entries are rows tied to required permissions so a new screen registers itself without touching navigation code; a screen not permitted is unreachable by URL as well (FR-A2).",
+      "verification": [
+        "Register a navigation row for a new screen and assert it appears for accounts holding the required permission and is absent for accounts that do not. Directly request the screen's URL without the permission and assert server-side denial."
+      ]
+    },
+    {
+      "id": "typed_audited_settings",
+      "statement": "Settings are typed, bounded, versioned and audited, showing value/unit/version/actor/time and change impact; sensitive changes require reauthentication; no secret or safety invariant is administrable and changes cannot reopen frozen days (FR-A3, SEC-11, D-057).",
+      "verification": [
+        "Submit an out-of-bounds value, a wrong-type value and a stale-version edit; assert each is rejected and the previous rule version is recoverable. Attempt to reopen a frozen consumption/delivery/production day or disable an invariant via a setting; assert denial.",
+        "Change a sensitive setting and assert a reauthentication step is required and the audit row records value/unit/version/actor/time and change impact with no secret fields; confirm no business table stores a secret."
+      ]
+    },
+    {
+      "id": "staff_action_audit",
+      "statement": "Record staff action, target, reason, actor and server time in restricted immutable history with minimal payloads; audit exports are restricted and post-cutoff logistical actions require a dedicated default-deny permission, not Administrator bypass (FR-A4, SEC-30, D-055).",
+      "verification": [
+        "Perform staff actions and assert immutable append-only history rows carry actor/target/reason/server time; attempt UPDATE/DELETE of an audit row with the application role and assert the database denies it.",
+        "Attempt an audit export without export permission and without actor evidence; assert denial. Assert no role overrides a hard safety filter and that Administrator without the dedicated logistics permission cannot perform a post-cutoff action."
+      ]
+    },
+    {
+      "id": "delivery_round_scoping",
+      "statement": "A driver sees only deliveries explicitly assigned to their round within the useful time window with minimum necessary contact/address/slot/bag/notes data; consumption and physical delivery dates are distinct (FR-L1, SEC-09, D-058).",
+      "verification": [
+        "Request another round's delivery IDs and an out-of-window list by direct API; assert both fail. Assert the returned delivery projection omits fields beyond the minimum necessary for the action.",
+        "Assert delivery listing uses server Africa/Casablanca time and keeps the consumption date distinct from the physical delivery date across midnight and local date/time transitions."
+      ]
+    },
+    {
+      "id": "delivery_confirm_idempotent",
+      "statement": "Confirming a delivery uses authorized resource scope, a server timestamp, a stable idempotency key and an atomic transition/outbox; the UI shows actual delivery time; first-delivery reward and notifications consume the same authoritative event; corrections require separate permission/reason and append events with no deletion or duplicate referral credit (FR-L2, SEC-10, SEC-27).",
+      "verification": [
+        "Double-tap confirm with the same idempotency key and retry concurrently; assert exactly one confirmed transition and one outbox event. Reuse the key with a different payload; assert conflict. Assert the reward and notification consumers key on the same authoritative event.",
+        "Correct a delivery without the correction permission; assert denial. With permission, assert correction appends an event with a reason and never deletes the original event or double-credits referral."
+      ]
+    },
+    {
+      "id": "delivery_failure_record",
+      "statement": "Delivery failure records an authorized reason and exception owner; retry/compensation follow the accepted policy rather than an invented credit; planned/prepared/delivered/failed are reconciled (FR-L3, D-060).",
+      "verification": [
+        "Fail a delivery with a reason and assert the failure event carries the reason and exception owner; reconcile planned/prepared/delivered/failed counts and assert they are consistent after confirm and fail.",
+        "Attempt to fail another round's delivery and to fail without a reason; assert denial and assert no automatic credit or duplicate effect is produced by any retry."
+      ]
+    },
+    {
+      "id": "delivery_adapter_interfaces",
+      "statement": "Delivery model/state and assignment are supplied through LOT-11 as a versioned delivery adapter interface (list-by-round, confirm, fail, correct, reconcile) with G-ROUND defining assignment ownership before implementation; fixture contracts may precede LOT-11 runtime but FR-L1-3 cannot be marked delivered before real integration.",
+      "verification": [
+        "Type-check the versioned adapter DTOs (listByRound, confirm, fail, correct, reconcile) against staff-design.md §13.5 and §13.13-13.16 contract fixtures; assert each request/response/event is versioned, the listByRound projection is limited to minimum necessary fields, and the interface does not assume all drivers see all daily deliveries.",
+        "Assert G-ROUND remains unresolved and that no FR-L1-3 acceptance is claimed against a fixture-only adapter without real LOT-11 integration; the adapter DTOs are marked as pending LOT-11 ratification, not decided contracts."
+      ]
+    },
+    {
+      "id": "support_scope_and_exports",
+      "statement": "Support reads a subscriber account and history and acts for them (pause, skip, address, slot) within the same rules as the subscriber; Preparation is read-only picking/labels; out-of-scope IDs and oversized exports fail including direct download endpoints (SEC-09).",
+      "verification": [
+        "As Support, read a subscriber outside an authorized scope and request an oversized export; assert both fail. Assert support actions apply the same rules the subscriber would face and record the staff actor distinctly from the subscriber.",
+        "As Preparation, attempt any write to picking/labels; assert read-only denial across direct download endpoints."
+      ]
+    },
+    {
+      "id": "no_legacy_temporary_access",
+      "statement": "All staff account types and permissions precede menu operations; no new operational route relies on temporary founder, legacy staff login or hidden test access (D-046, D-052, D-063).",
+      "verification": [
+        "Enumerate every new operational route and assert each enforces a real staff identity and permission, and that no route falls back to a founder/legacy credential or hardcoded test admin. Assert legacy staff login remains replaced by slice 003."
+      ]
+    }
+  ]
+}
