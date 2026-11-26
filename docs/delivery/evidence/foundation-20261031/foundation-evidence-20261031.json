@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "observedOn": "2026-10-31",
+  "repository": "Chibschibs-tech/fitnest-monorepo",
+  "sourceCommit": "46599153870b62421ff20568b0dd8679222a297b",
+  "scope": "T001/T002/T003 existing-implementation evidence, static only",
+  "executionOrigin": "Work Fitnest local source verifier",
+  "acceptanceGranted": false,
+  "runtimeAcceptance": false,
+  "exactSourceBlobs": {
+    "package.json": "4166e7bcf17e8bb2db53537a8c7a23ded65e32b5",
+    "packages/core/package.json": "b77cd3f97c8439e8a09cc1742f4e416457a86ceb",
+    "apps/web/package.json": "a0ca9f22891d9ccead5d2dd4977f4eea841b24b6",
+    ".env.example": "41cef03da2662611e6a0880cec80dfbcd6b94a50",
+    "supabase/config.toml": "7a6e7b38cd170b0f2747560286ffc803bed197fd",
+    "vitest.config.ts": "a272390db8eccdd480d3adb6943bc9e06cf3988a",
+    ".github/workflows/identity-foundation.yml": "ce62c77386c8b25136f150aee7a74c3ff18e45f1",
+    "tooling/auth/local-auth.test.mjs": "ad4784785ee9df868b2ee091ea349a3fb321b6d9"
+  },
+  "taskSource": {
+    "path": "docs/delivery/backlog.json",
+    "blob": "30f920979a313672728a0cd24448de0da97a4276"
+  },
+  "checks": [
+    {
+      "id": "pinned-test-runner",
+      "task": "S001-T001",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Root Vitest is exactly 5.0.5, not a semver range."
+    },
+    {
+      "id": "root-test-command",
+      "task": "S001-T001",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Root pnpm test resolves to vitest run; this does not execute Vitest."
+    },
+    {
+      "id": "core-test-command",
+      "task": "S001-T001",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Core command uses Vitest and explicit workspace config."
+    },
+    {
+      "id": "empty-suite-fails",
+      "task": "S001-T001",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "An empty suite is not configured as success."
+    },
+    {
+      "id": "pinned-sdk",
+      "task": "S001-T002",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "SDK dependency versions are pinned in web manifest; lockfile/install not executed here."
+    },
+    {
+      "id": "public-placeholders",
+      "task": "S001-T002",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "URL/anon placeholders use local development values."
+    },
+    {
+      "id": "server-key-placeholder",
+      "task": "S001-T002",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Service role placeholder is server-only; no client bundle inspection claimed."
+    },
+    {
+      "id": "two-local-otp-fixtures",
+      "task": "S001-T003",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Two configured fixed phone fixtures; no SMS/provider invocation performed."
+    },
+    {
+      "id": "local-only-warning",
+      "task": "S001-T003",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Fixture configuration explicitly forbids remote deployment."
+    },
+    {
+      "id": "auth-test-local-boundary",
+      "task": "S001-T003",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Auth test restricts URL to local stack and refuses redirects."
+    },
+    {
+      "id": "auth-test-negative-and-isolation",
+      "task": "S001-T003",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Test source covers wrong OTP and distinct fixture identities; execution remains unknown."
+    },
+    {
+      "id": "isolated-boot-workflow",
+      "task": "S001-T003",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "Workflow boots a disposable Auth stack with pinned CLI; it does not copy product migrations."
+    },
+    {
+      "id": "existing-pr149-covers-public-commands",
+      "task": "S001-T001",
+      "status": "pass",
+      "evidenceKind": "static_source_inspection",
+      "detail": "PR149 workflow proposal includes root/core public commands; its blob is exact, head commit/CI not provided by connector."
+    }
+  ],
+  "summary": {
+    "passed": 13,
+    "failed": 0
+  },
+  "runtimeChecks": [
+    {
+      "id": "root-pnpm-test",
+      "status": "unknown",
+      "reason": "Not executed locally; dedicated GitHub connector exposes no CI logs/checks."
+    },
+    {
+      "id": "core-pnpm-test",
+      "status": "unknown",
+      "reason": "Not executed locally; must bind to exact tested commit."
+    },
+    {
+      "id": "core-typecheck",
+      "status": "unknown",
+      "reason": "Not executed during this review."
+    },
+    {
+      "id": "frozen-lockfile-install",
+      "status": "unknown",
+      "reason": "Manifest pins alone do not prove installability."
+    },
+    {
+      "id": "supabase-boot-and-otp",
+      "status": "unknown",
+      "reason": "Docker/Auth not started during this review; CI evidence unavailable."
+    },
+    {
+      "id": "full-product-migrations",
+      "status": "unknown",
+      "reason": "Existing Auth-only fixture does not copy/run product migrations."
+    },
+    {
+      "id": "acceptance-receipts",
+      "status": "unknown",
+      "reason": "No live receipt ledger read; this report must not grant acceptance."
+    }
+  ],
+  "existingProposal": {
+    "pullRequest": 149,
+    "url": "https://github.com/Chibschibs-tech/fitnest-monorepo/pull/149",
+    "ref": "refs/pull/149/head",
+    "workflowBlob": "fb4bfff010408c08ec352e08a7feec61ff55a169",
+    "headCommit": null,
+    "ciStatus": "unknown",
+    "action": "Verify existing proposal and bind results; do not manufacture a new patch."
+  },
+  "platformHandoff": [
+    {
+      "id": "T002-SCOPE",
+      "owner": "Work Ekwip",
+      "status": "open",
+      "detail": "Task requires .env.example but allowed_paths omits it. Reconcile contract/profile scope without weakening checks."
+    },
+    {
+      "id": "RECOGNIZE-EXISTING",
+      "owner": "Work Ekwip",
+      "status": "pending",
+      "detail": "Recognize verified existing implementation only after exact commit CI/runtime evidence and normal protected checks."
+    }
+  ],
+  "productChanges": [],
+  "preserved": [
+    "SEC-A",
+    "SEC-B",
+    "SEC-C",
+    "B01-C"
+  ],
+  "reproduction": "node verify-source.mjs (requires source-snapshot.json alongside it)"
+}

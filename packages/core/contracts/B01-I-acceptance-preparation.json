@@ -1,0 +1,429 @@
+{
+  "schemaVersion": 1,
+  "taskKey": "B01-I",
+  "status": "preparation_only",
+  "runtimeAcceptance": false,
+  "productionReady": false,
+  "source": {
+    "repository": "Chibschibs-tech/fitnest-monorepo",
+    "semanticPlanSha": "2854038dfe653289c326dd33650a311918f630ad",
+    "implementationBaseSha": "46599153870b62421ff20568b0dd8679222a297b",
+    "files": [
+      {
+        "path": "docs/delivery/backlog.json",
+        "gitBlob": "30f920979a313672728a0cd24448de0da97a4276"
+      },
+      {
+        "path": "packages/core/contracts/foundation-design.json",
+        "gitBlob": "ff08333ac37d96bf40d2fcce867dc57d8bf908e0"
+      },
+      {
+        "path": "packages/core/contracts/foundation-design.md",
+        "gitBlob": "5f5ad642304913790717ba6be6fce722af944d42"
+      },
+      {
+        "path": "docs/delivery/clarifications.md",
+        "gitBlob": "977ae5ee5a7e043e7e26053b9436e5525a149621"
+      }
+    ]
+  },
+  "dependsOn": [
+    {
+      "task": "B01-C",
+      "condition": "contract_accepted"
+    },
+    {
+      "task": "S001-T001",
+      "condition": "verified"
+    },
+    {
+      "task": "S001-T002",
+      "condition": "verified"
+    },
+    {
+      "task": "S001-T003",
+      "condition": "verified"
+    }
+  ],
+  "mergeGates": [
+    "G-CONSTITUTION"
+  ],
+  "preservedGates": [
+    "G-CONSTITUTION",
+    "G-RECOVERY",
+    "G-SESSION",
+    "G-T013"
+  ],
+  "allowedPaths": [
+    "packages/core/",
+    "apps/web/lib/",
+    "supabase/",
+    "tooling/",
+    ".github/"
+  ],
+  "requirements": [
+    {
+      "id": "inventory",
+      "sourceRefs": [
+        "SEC-29"
+      ],
+      "sourceSection": "## Obligation inventory",
+      "requirement": "Refresh source/runtime inventory without converting the 26 October capture into live evidence.",
+      "requiredEvidenceLevel": "source_inventory",
+      "cases": [
+        {
+          "id": "I01",
+          "exercise": "Recompute reviewed evidence and manifest digests at candidate SHA",
+          "expected": "Every bound file matches; changed runtime dependencies produce a new inventory, not reused evidence",
+          "negative": "Missing/empty/substituted file or old-source digest must fail",
+          "status": "not_run"
+        },
+        {
+          "id": "I02",
+          "exercise": "Enumerate API, actions, RPC, exports and realtime on candidate SHA",
+          "expected": "Inventory records coverage and unknowns by channel",
+          "negative": "Uninspected channel cannot be labelled protected; configured role cannot count as observed current_user",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "api_errors",
+      "sourceRefs": [
+        "SEC-06",
+        "SEC-32"
+      ],
+      "sourceSection": "## Obligation api_errors",
+      "requirement": "Implement strict shared input/output validation and server-owned authority on every changed channel.",
+      "requiredEvidenceLevel": "runtime_integration",
+      "cases": [
+        {
+          "id": "A01",
+          "exercise": "Valid versioned request through actual route/action boundary",
+          "expected": "Validated DTO reaches domain handler with server actor/request ID",
+          "negative": "Wrong type, unknown version, forged actor and malformed body fail before business write",
+          "status": "not_run"
+        },
+        {
+          "id": "A02",
+          "exercise": "Force domain/provider/database errors through transport adapters",
+          "expected": "Only version, requestId and stable code cross error boundary",
+          "negative": "SQL, stack, token, phone, OTP and health canaries absent from responses/log samples",
+          "status": "not_run"
+        },
+        {
+          "id": "A03",
+          "exercise": "Exercise stale-client direct calls without UI",
+          "expected": "Live authorization and ownership checked by server",
+          "negative": "Hidden route, old client and forged cookie cannot bypass rules",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "settings",
+      "sourceRefs": [
+        "SEC-11"
+      ],
+      "sourceSection": "## Obligation settings",
+      "requirement": "Persist typed, bounded, immutable setting versions with authorization, audit and conflict detection.",
+      "requiredEvidenceLevel": "database_integration",
+      "cases": [
+        {
+          "id": "S01",
+          "exercise": "Authorized valid update with expected version",
+          "expected": "New immutable version and audit committed atomically; prior version still readable",
+          "negative": "Wrong type, bounds violation or missing sensitive reauthentication writes nothing",
+          "status": "not_run"
+        },
+        {
+          "id": "S02",
+          "exercise": "Two concurrent edits using the same expected version",
+          "expected": "Exactly one update succeeds; loser receives CONFLICT",
+          "negative": "No lost update or two active versions",
+          "status": "not_run"
+        },
+        {
+          "id": "S03",
+          "exercise": "Change configuration after a day is frozen",
+          "expected": "Only eligible future use references new version",
+          "negative": "Cannot reopen frozen day or disable ownership, ledger, food or payment invariant; no secret fields",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "events_outbox",
+      "sourceRefs": [
+        "B01-C/AC-01"
+      ],
+      "sourceSection": "## Obligation events_outbox",
+      "requirement": "Persist durable product events and deliver at least once without duplicate consumer effects.",
+      "requiredEvidenceLevel": "database_worker_integration",
+      "cases": [
+        {
+          "id": "O01",
+          "exercise": "Commit then crash before worker pickup; retry after restart",
+          "expected": "Committed business change has its matching durable outbox event",
+          "negative": "Rollback before commit leaves neither business change nor event; split transaction is rejected",
+          "status": "not_run"
+        },
+        {
+          "id": "O02",
+          "exercise": "Two workers lease one event; lease expires and stale worker resumes",
+          "expected": "One valid lease owner applies transition; consumer receipt uniqueness prevents duplicate effect",
+          "negative": "Stale worker cannot acknowledge newer lease; duplicate delivery has no second effect",
+          "status": "not_run"
+        },
+        {
+          "id": "O03",
+          "exercise": "Provider result ambiguous after a request",
+          "expected": "Record ambiguity and reconcile before repeat effect",
+          "negative": "Timeout is not treated as definitely unsent; blind retry forbidden",
+          "status": "not_run"
+        },
+        {
+          "id": "O04",
+          "exercise": "Duplicate event for same recipient/channel",
+          "expected": "Same event/recipient/channel receipt is unique",
+          "negative": "Two recipients or two channels are not accidentally collapsed into one receipt",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "idempotency_lock_order",
+      "sourceRefs": [
+        "B01-C/AC-01"
+      ],
+      "sourceSection": "## Obligation idempotency_lock_order",
+      "requirement": "Bind idempotency and deterministic lock ordering to tenant, actor, operation and payload.",
+      "requiredEvidenceLevel": "database_concurrency",
+      "cases": [
+        {
+          "id": "K01",
+          "exercise": "Repeat complete/pending/unknown request with same binding",
+          "expected": "Return replay/wait/reconcile respectively; fresh binding creates once",
+          "negative": "Changed payloadHash, tenant, actor, operation or key conflicts; malformed binding rejected",
+          "status": "not_run"
+        },
+        {
+          "id": "K02",
+          "exercise": "Run concurrent operations on reversed resource input order",
+          "expected": "Acquire canonical tenant-rank-resource order; unique tuple set",
+          "negative": "Negative/noninteger ranks, empty IDs and cross-tenant lock sets rejected",
+          "status": "not_run"
+        },
+        {
+          "id": "K03",
+          "exercise": "Crash after business commit before HTTP response",
+          "expected": "Retry recovers original committed outcome",
+          "negative": "No duplicate ledger/outbox effect and no fabricated success if outcome unknown",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "environments",
+      "sourceRefs": [
+        "SEC-31"
+      ],
+      "sourceSection": "## Obligation environments",
+      "requirement": "Run qualification only with disposable local/CI synthetic data and sandbox providers.",
+      "requiredEvidenceLevel": "isolated_harness",
+      "cases": [
+        {
+          "id": "E01",
+          "exercise": "Start isolated local/CI harness with matching scoped credentials",
+          "expected": "Fixture boot and teardown proven; synthetic dataset and sandbox provider recorded",
+          "negative": "Production/staging names, live providers, non-synthetic data or credential mismatch rejected by disposable fixture guard",
+          "status": "not_run"
+        },
+        {
+          "id": "E02",
+          "exercise": "Scan built public assets and public configuration",
+          "expected": "Only public URL/anon configuration emitted",
+          "negative": "Server-only service-role/provider credentials and production connection strings absent",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "privileges",
+      "sourceRefs": [
+        "SEC-29"
+      ],
+      "sourceSection": "## Obligation privileges",
+      "requirement": "Use least-privilege application connections distinct from migrations without asserting unobserved production roles.",
+      "requiredEvidenceLevel": "database_roles",
+      "cases": [
+        {
+          "id": "P01",
+          "exercise": "Query current_user/session_user/memberships using isolated application connection",
+          "expected": "Runtime role is not schema owner and has no BYPASSRLS; migration connection is separate",
+          "negative": "Configured URL username alone not accepted as proof",
+          "status": "not_run"
+        },
+        {
+          "id": "P02",
+          "exercise": "Attempt forbidden DDL/schema changes and protected table/sequence access as runtime/client roles",
+          "expected": "Required application operations succeed; forbidden operations fail",
+          "negative": "No inherited migration privileges or privileged client key shortcut",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "migration_restore",
+      "sourceRefs": [
+        "B01-C/AC-01",
+        "SEC-31"
+      ],
+      "sourceSection": "## Obligation migration_restore",
+      "requirement": "Qualify schema changes and restore in isolation, retaining the production apply gate.",
+      "requiredEvidenceLevel": "isolated_database_restore",
+      "cases": [
+        {
+          "id": "M01",
+          "exercise": "Reconcile baseline history then apply candidate migrations to disposable database",
+          "expected": "Exact migration ledger and schema diff captured, including nullable-plan discrepancy",
+          "negative": "No blind replay or second Drizzle schema canon",
+          "status": "not_run"
+        },
+        {
+          "id": "M02",
+          "exercise": "Restore backup to isolated target then replay erasure requests",
+          "expected": "Integrity checks and erasure outcome verified against predeclared fixtures",
+          "negative": "Unreconciled history, untested restore, non-backward-compatible or destructive change blocked",
+          "status": "not_run"
+        },
+        {
+          "id": "M03",
+          "exercise": "Present production apply intent without concrete G-T013 approval",
+          "expected": "Apply remains blocked",
+          "negative": "Design acceptance/general development authorization cannot clear production migration gate",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "sourceRefs": [
+        "D-058",
+        "SEC-15"
+      ],
+      "sourceSection": "## Obligation time",
+      "requirement": "Use one server anchor, Casablanca business dates and half-open intervals.",
+      "requiredEvidenceLevel": "runtime_time_integration",
+      "cases": [
+        {
+          "id": "T01",
+          "exercise": "Evaluate one millisecond before/at/after cutoff and midnight",
+          "expected": "[start,end) membership exact; transaction uses one server time anchor",
+          "negative": "Client clock and device timezone cannot change business result",
+          "status": "not_run"
+        },
+        {
+          "id": "T02",
+          "exercise": "Evaluate calendar weeks crossing timezone transitions using pinned timezone data",
+          "expected": "Week boundaries computed as local calendar boundaries, allowing167/169hour elapsed weeks",
+          "negative": "Adding7*24hours or fixed UTC+1 calculation fails transition fixtures",
+          "status": "not_run"
+        },
+        {
+          "id": "T03",
+          "exercise": "Build production/delivery/consumption DTOs for consumption day J",
+          "expected": "Production J-1 daytime and delivery J-1 evening remain distinct from consumption J",
+          "negative": "Single conflated date field or implicit browser conversion rejected",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "sourceRefs": [
+        "SEC-30"
+      ],
+      "sourceSection": "## Obligation audit",
+      "requirement": "Make audit append-only, scoped and minimal, with redacted technical traces.",
+      "requiredEvidenceLevel": "database_transport_audit",
+      "cases": [
+        {
+          "id": "U01",
+          "exercise": "Perform mutation and inspect business audit transaction",
+          "expected": "Actor, target, action, server time and reason recorded; failed mutation does not invent success",
+          "negative": "Application UPDATE/DELETE audit denied",
+          "status": "not_run"
+        },
+        {
+          "id": "U02",
+          "exercise": "Read/export audit without required actor/permission/scope",
+          "expected": "Access denied and no records disclosed",
+          "negative": "Role display name or UI hiding is not evidence of authorization",
+          "status": "not_run"
+        },
+        {
+          "id": "U03",
+          "exercise": "Inject nested secret/PII canaries into success and failure paths",
+          "expected": "Structured traces redact health, OTP, phone, token; technical IDs pseudonymized",
+          "negative": "Raw nested errors, notification payloads and export logs cannot leak canaries",
+          "status": "not_run"
+        }
+      ]
+    },
+    {
+      "id": "compatibility",
+      "sourceRefs": [
+        "SEC-32"
+      ],
+      "sourceSection": "## Obligation compatibility",
+      "requirement": "Prove version compatibility, exact build provenance and rollback without changing server invariants.",
+      "requiredEvidenceLevel": "artifact_and_rollback",
+      "cases": [
+        {
+          "id": "C01",
+          "exercise": "Run current and supported older client DTO fixtures against actual boundary",
+          "expected": "Versioned result/error semantics and same server authorization",
+          "negative": "Old client cannot bypass newly required server rule; unsupported version rejected explicitly",
+          "status": "not_run"
+        },
+        {
+          "id": "C02",
+          "exercise": "Build from frozen resolved dependency graph and record artifact provenance",
+          "expected": "Lockfile digest, runtime/tool versions, sourceSHA, checks and artifact ID recorded",
+          "negative": "Floating manifest specifiers alone are not exact dependency proof; stale build not accepted",
+          "status": "not_run"
+        },
+        {
+          "id": "C03",
+          "exercise": "Deploy isolated candidate then restore prior compatible artifact",
+          "expected": "Smoke checks pass on both exact commits; rollback procedure reproducible",
+          "negative": "Preview200 or design fixture alone cannot certify implementation/runtime",
+          "status": "not_run"
+        }
+      ]
+    }
+  ],
+  "deliveryEvidence": {
+    "requiredFields": [
+      "taskKey",
+      "candidateSha",
+      "sourceSha",
+      "commands",
+      "environment",
+      "results",
+      "testReportDigest",
+      "independentReviewRef",
+      "integratedSha",
+      "acceptanceReceiptRef",
+      "testableArtifactRef"
+    ],
+    "rule": "Unknown fields remain null. Design-only models do not satisfy implementation evidence; accepted receipts and deployed checks are separate."
+  },
+  "openFacts": [
+    "T001/T002/T003 exact-commit verification remains required before B01-I start; preparation is not a dispatch instruction.",
+    "Accepted foundation JSON/ADR retain proposal labels; external acceptance receipt establishes contract status, not a rewrite of those immutable files.",
+    "Runtime role observation and migration-history reconciliation remain unresolved; isolate work and coordinate S001-T004-T008 ownership.",
+    "Retention purpose/duration and production G-T013 authorization must remain explicit; no new business defaults invented."
+  ]
+}
